@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<html>
+<!--
+Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation 
+files (the "Software"), to deal  in the Software without restriction, including without limitation the rights  to use, copy,
+modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the 
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+WARRANTIES OF MERCHANTABILITY,  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="expires" content="-1" />
+
+    <title>OData unit tests</title>
+    <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.10.0.css" type="text/css" />
+    
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
+    <!--
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.4.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.5.2.js"></script>
+    -->
+
+    <script type="text/javascript" src="http://code.jquery.com/qunit/qunit-1.10.0.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
+
+    <script type="text/javascript" src="common/ODataReadOracle.js"></script>
+    <script type="text/javascript" src="common/TestSynchronizerClient.js"></script>
+
+
+    <script type="text/javascript">
+        window.TestSynchronizer.init(QUnit);
+    </script>
+   
+    <script type="text/javascript" src="../src/datajs.js"></script>
+    <script type="text/javascript" src="../src/utils.js"></script>
+    <script type="text/javascript" src="../src/xml.js"></script>
+
+    <script type="text/javascript" src="../src/odata-utils.js"></script>
+    <script type="text/javascript" src="../src/odata-handler.js"></script>
+    <script type="text/javascript" src="../src/odata-gml.js"></script>
+    <script type="text/javascript" src="../src/odata-xml.js"></script>
+    <script type="text/javascript" src="../src/odata-net.js"></script>
+    <script type="text/javascript" src="../src/odata-json-light.js"></script>
+    <script type="text/javascript" src="../src/odata-json.js"></script>
+    <script type="text/javascript" src="../src/odata-atom.js"></script>
+    <script type="text/javascript" src="../src/odata-metadata.js"></script>
+    <script type="text/javascript" src="../src/odata-batch.js"></script>
+    <script type="text/javascript" src="../src/odata.js"></script>
+
+    <script type="text/javascript" src="../src/store-dom.js"></script>
+    <script type="text/javascript" src="../src/store-indexeddb.js"></script>
+    <script type="text/javascript" src="../src/store-memory.js"></script>
+    <script type="text/javascript" src="../src/store.js"></script>
+  
+    <script type="text/javascript" src="../src/deferred.js"></script>
+    <script type="text/javascript" src="../src/cache-source.js"></script>
+    <script type="text/javascript" src="../src/cache.js"></script>
+    
+    <script type="text/javascript" src="common/djstest.js"></script>
+
+    <script type="text/javascript" src="odata-atom-tests.js"></script>
+
+  </head>
+  <body>
+    <h1 id="qunit-header">OData Unit Tests</h1>
+    <h2 id="qunit-banner"></h2>
+    <h2 id="qunit-userAgent"></h2>
+    <ol id="qunit-tests">
+    </ol>
+  </body>
+</html>

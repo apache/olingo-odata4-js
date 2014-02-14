@@ -1,0 +1,17 @@
+<package>
+  <job>
+    <runtime>
+      <description>
+      This script is used to process files from the datajs project
+      into a variety of output script files.
+      </description>
+      <unnamed name="in" helpstring="Input to process" type="string" required="true" />
+      <named name="out" helpstring="Path to directory for output files." type="string" required="true" />
+      <named name="build-solution" helpstring="Builds the solution input by coalescing scripts." type="string" required="false" />
+      <named name="remove-internals" helpstring="Removes internal references from the input." type="string" required="false" />
+      <example>cscript djsbuildfile.wsf //Nologo /out:%djsroot%\JSLib\JSLib.sln /in:%djsroot%\out</example>
+    </runtime>
+    <script language="JScript" src="djscommon.js" />
+    <script language="JScript" src="djsbuildfile.js" />
+  </job>
+</package>

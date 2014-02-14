@@ -1,0 +1,182 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Factory="System.ServiceModel.Activation.WebScriptServiceHostFactory"
+    Service="DataJS.Tests.ODataReadOracle" %>
+
+// Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation 
+// files (the "Software"), to deal  in the Software without restriction, including without limitation the rights  to use, copy,
+// modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the 
+// Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+// WARRANTIES OF MERCHANTABILITY,  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+// ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+//uncomment this line to debug JSON serialization.
+//#define DEBUG_SERIALIZATION
+
+namespace DataJS.Tests
+{
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+    using System.Runtime.Serialization;
+    using System.ServiceModel;
+    using System.ServiceModel.Activation;
+    using System.ServiceModel.Syndication;
+    using System.ServiceModel.Web;
+    using System.Xml;
+    using System.Xml.Linq;
+    using System.Spatial;
+    using Microsoft.Data.OData;
+
+    /// <summary>
+    /// Oracle for the OData.read library function
+    /// </summary>
+    [ServiceContract]
+    [ServiceBehavior(IncludeExceptionDetailInFaults = true)]
+    [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
+    public class ODataReadOracle
+    {
+        const string jsonVerboseMediaType = "application/json;odata=verbose";
+
+        /// <summary>
+        /// Reads a URI that will return an OData ATOM feed
+        /// </summary>
+        /// <param name="url">The URL to send the request to</param>
+        /// <param name="user">The username for basic authentication</param>
+        /// <param name="password">The password for basic authentication</param>
+        /// <returns>JSON object expected to be returned by OData.read (plus type metadata markers that will need to be removed)</returns>
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json)]
+        public JsonObject ReadFeed(string url, string user, string password)
+        {
+            WebResponse response = ReaderUtils.CreateRequest(ResolveUri(url, UriKind.Absolute), user, password).GetResponse();
+            return AtomReader.ReadFeed(new StreamReader(response.GetResponseStream()));
+        }
+
+        /// <summary>
+        /// Reads a URI that will return an OData ATOM feed entry
+        /// </summary>
+        /// <param name="url">URL of the entry</param>
+        /// <param name="user">The username for basic authentication</param>
+        /// <param name="password">The password for basic authentication</param>
+        /// <returns>JSON object expected to be returned by OData.read</returns>
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json)]
+        public JsonObject ReadEntry(string url, string user, string password)
+        {
+            WebResponse response = ReaderUtils.CreateRequest(ResolveUri(url, UriKind.Absolute), user, password).GetResponse();
+            return AtomReader.ReadEntry(new StreamReader(response.GetResponseStream()));
+        }
+
+        /// <summary>
+        /// Reads a URI that will return a metadata object
+        /// </summary>
+        /// <param name="url">The URL to send the request to</param>
+        /// <returns>JSON object expected to be returned by OData.read (plus type metadata markers that will need to be removed)</returns>
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json)]
+        public JsonObject ReadMetadata(string url)
+        {
+            WebResponse response = WebRequest.Create(ResolveUri(url, UriKind.Absolute)).GetResponse();
+            return CsdlReader.ReadCsdl(new StreamReader(response.GetResponseStream()));
+        }
+
+        /// <summary>
+        /// Reads a URI that will return a metadata object
+        /// </summary>
+        /// <param name="url">The URL to send the request to</param>
+        /// <param name="mimeType">Mime type being tested to determine base URI</param>
+        /// <returns>JSON object expected to be returned by OData.read (plus type metadata markers that will need to be removed)</returns>
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json)]
+        public JsonObject ReadServiceDocument(string url, string mimeType)
+        {
+            WebResponse response = WebRequest.Create(ResolveUri(url, UriKind.Absolute)).GetResponse();
+            string baseUri = string.Empty;
+
+            // With JSON responses only relative path passed to the library is available
+            if (mimeType.Equals(jsonVerboseMediaType))
+            {
+                baseUri = ResolveUri(url, UriKind.Relative).ToString();
+            }
+            else
+            {
+                baseUri = response.ResponseUri.AbsoluteUri;
+            }
+
+            return AtomReader.ReadServiceDocument(new StreamReader(response.GetResponseStream()), baseUri);
+        }
+
+        /// <summary>
+        /// Reads a URI that will get the Json response and return the stream
+        /// </summary>
+        /// <param name="url">URL of the entry</param>
+        /// <param name="user">The username for basic authentication</param>
+        /// <param name="password">The password for basic authentication</param>
+        /// <returns>Stream of the Json response expected to be returned by OData.read</returns>
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json)]
+        public Stream ReadJson(string url, string user, string password)
+        {
+            HttpWebRequest request = (HttpWebRequest)ReaderUtils.CreateRequest(ResolveUri(url, UriKind.Absolute), user, password);
+            request.Accept = jsonVerboseMediaType + "; charset=utf-8";
+            WebResponse response = request.GetResponse();
+
+            return response.GetResponseStream();
+        }
+
+
+        /// <summary>
+        /// Loops back an ATOM feed passed to the webservice in JSON format.
+        /// </summary>
+        /// <param name="content">The ATOM feed xml stream to loopback as JSON</param>
+        /// <returns>JSON object expected to be returned by OData.read (plus type metadata markers that will need to be removed)</returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST", ResponseFormat = WebMessageFormat.Json)]
+        public JsonObject ReadFeedLoopback(Stream content)
+        {
+            return AtomReader.ReadFeed(new StreamReader(content));
+        }
+
+        /// <summary>
+        /// Loops back an ATOM entry passed to the webservice in JSON format.
+        /// </summary>
+        /// <param name="content">The ATOM entry xml stream to loopback as JSON</param>
+        /// <returns>JSON object expected to be returned by OData.read (plus type metadata markers that will need to be removed)</returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST", ResponseFormat = WebMessageFormat.Json)]
+        public JsonObject ReadEntryLoopback(Stream content)
+        {
+            return AtomReader.ReadEntry(new StreamReader(content));
+        }
+
+        /// <summary>
+        /// Resolves the given url string to a URI
+        /// </summary>
+        /// <param name="url">The given URL string</param>
+        /// <param name="urlKind">URI kind to resolve to</param>
+        /// <returns>The resolved URI</returns>
+        private static string ResolveUri(string url, UriKind uriKind)
+        {
+            Uri resolvedUri = new Uri(url, UriKind.RelativeOrAbsolute);
+            if (!resolvedUri.IsAbsoluteUri)
+            {
+                // If the given URI is relative, then base it on the Referer URI
+                Uri baseUri = new Uri(WebOperationContext.Current.IncomingRequest.Headers["Referer"]);
+                resolvedUri = new Uri(baseUri, resolvedUri);
+                if (uriKind == UriKind.Relative)
+                {
+                    resolvedUri = baseUri.MakeRelativeUri(resolvedUri);
+                }
+            }
+
+            return resolvedUri.ToString();
+        }
+    }
+}

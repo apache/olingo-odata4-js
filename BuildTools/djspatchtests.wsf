@@ -1,0 +1,14 @@
+<package>
+  <job>
+    <runtime>
+      <description>
+      This script is used to patch the html files so they can use the build output.
+      </description>
+      <named name="in" helpstring="Path to directory with the html test files to patch." type="string" required="true" />
+      <named name="replace-script" helpstring="Target script reference." type="string" required="true" />
+      <example>cscript djspatchtests.wsf //Nologo /in:%DJSOUT%\jslib.sln\tests /replace-script:"../src/datajs-%DJSVER%.js"</example>
+    </runtime>
+    <script language="JScript" src="djscommon.js" />
+    <script language="JScript" src="djspatchtests.js" />
+  </job>
+</package>

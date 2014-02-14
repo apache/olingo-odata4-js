@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+		<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+		<ProductVersion>
+		</ProductVersion>
+		<SchemaVersion>2.0</SchemaVersion>
+		<ProjectGuid>{73ADF1A7-613B-4679-885B-2AE4AFAA9A6A}</ProjectGuid>
+		<ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+		<OutputType>Library</OutputType>
+		<AppDesignerFolder>Properties</AppDesignerFolder>
+		<RootNamespace>JSLib</RootNamespace>
+		<AssemblyName>JSLib</AssemblyName>
+		<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+		<UseIISExpress>false</UseIISExpress>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>full</DebugType>
+		<Optimize>false</Optimize>
+		<OutputPath>bin\</OutputPath>
+		<DefineConstants>DEBUG;TRACE</DefineConstants>
+		<ErrorReport>prompt</ErrorReport>
+		<WarningLevel>4</WarningLevel>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+		<DebugType>pdbonly</DebugType>
+		<Optimize>true</Optimize>
+		<OutputPath>bin\</OutputPath>
+		<DefineConstants>TRACE</DefineConstants>
+		<ErrorReport>prompt</ErrorReport>
+		<WarningLevel>4</WarningLevel>
+	</PropertyGroup>
+	<ItemGroup>
+		<!-- Product code. -->
+		<Content Include="src\cache-source.js"/>
+		<Content Include="src\odata-gml.js"/>
+		<Content Include="src\utils.js"/>
+		<Content Include="src\odata-json-light.js"/>
+		<Content Include="src\datajs.js"/>
+		<Content Include="src\cache.js"/>
+		<Content Include="src\deferred.js"/>
+		<Content Include="src\odata.js"/>
+		<Content Include="src\odata-batch.js"/>
+		<Content Include="src\odata-handler.js"/>
+		<Content Include="src\odata-utils.js"/>
+		<Content Include="src\odata-xml.js"/>
+		<Content Include="src\odata-metadata.js"/>
+		<Content Include="src\odata-json.js"/>
+		<Content Include="src\odata-atom.js"/>
+		<Content Include="src\odata-net.js"/>
+		<Content Include="src\store-dom.js"/>
+		<Content Include="src\store-indexeddb.js"/>
+		<Content Include="src\store-memory.js"/>
+		<Content Include="src\store.js"/>
+		<Content Include="src\xml.js"/>
+		<Content Include="tests\common\djstest.js"/>
+		<Content Include="tests\common\ODataReadOracle.js"/>
+		<Content Include="tests\common\ODataReadOracle.svc"/>
+		<Content Include="tests\common\TestLogger.svc"/>
+		<Content Include="tests\common\TestSynchronizerClient.js"/>
+		<Content Include="tests\endpoints\FoodStoreDataServiceV3.svc"/>
+		<Content Include="tests\endpoints\FoodStoreDataService.svc"/>
+		<Content Include="tests\endpoints\FoodStoreDataServiceV2.svc"/>
+		<Content Include="tests\endpoints\web.config"/>
+		<Content Include="tests\odata-atom-tests.js"/>
+		<Content Include="tests\odata-qunit-tests.htm"/>
+		<Content Include="tests\run-tests.wsf"/>
+		<Content Include="tests\test-list.js"/>
+		<!-- Configuration file for the web project. -->
+		<Content Include="Web.config"/>
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Include="tests\code\AtomReader.cs"/>
+		<Compile Include="tests\code\CsdlReader.cs"/>
+		<Compile Include="tests\code\JsDate.cs"/>
+		<Compile Include="tests\code\JsonObject.cs"/>
+		<Compile Include="tests\code\ReaderUtils.cs"/>
+		<Compile Include="tests\code\ReflectionDataContext.cs"/>
+	</ItemGroup>
+	<ItemGroup>
+	</ItemGroup>
+	<ItemGroup>
+		<Reference Include="Microsoft.Data.Edm, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+			<HintPath>packages\Microsoft.Data.Edm.5.1.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+		</Reference>
+		<Reference Include="Microsoft.Data.OData, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+			<HintPath>packages\Microsoft.Data.OData.5.1.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
+		</Reference>
+		<Reference Include="Microsoft.Data.Services, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+			<HintPath>packages\Microsoft.Data.Services.5.1.0\lib\net40\Microsoft.Data.Services.dll</HintPath>
+		</Reference>
+		<Reference Include="Microsoft.Data.Services.Client, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+			<HintPath>packages\Microsoft.Data.Services.Client.5.1.0\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+		</Reference>
+		<Reference Include="System"/>
+		<Reference Include="System.Net"/>
+		<Reference Include="System.Runtime.Serialization"/>
+		<Reference Include="System.ServiceModel"/>
+		<Reference Include="System.ServiceModel.Activation"/>
+		<Reference Include="System.ServiceModel.Web"/>
+		<Reference Include="System.Spatial, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+			<HintPath>packages\System.Spatial.5.1.0\lib\net40\System.Spatial.dll</HintPath>
+		</Reference>
+		<Reference Include="System.Web.Extensions"/>
+		<Reference Include="System.Xml"/>
+		<Reference Include="System.Xml.Linq"/>
+	</ItemGroup>
+	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets"/>
+	<Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets"/>
+	<ProjectExtensions>
+		<VisualStudio>
+			<FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+				<WebProjectProperties>
+					<UseIIS>False</UseIIS>
+					<AutoAssignPort>True</AutoAssignPort>
+					<DevelopmentServerPort>10092</DevelopmentServerPort>
+					<DevelopmentServerVPath>/</DevelopmentServerVPath>
+					<IISUrl>
+					</IISUrl>
+					<NTLMAuthentication>False</NTLMAuthentication>
+					<UseCustomServer>False</UseCustomServer>
+					<CustomServerUrl>
+					</CustomServerUrl>
+					<SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+				</WebProjectProperties>
+			</FlavorProperties>
+		</VisualStudio>
+	</ProjectExtensions>
+</Project>

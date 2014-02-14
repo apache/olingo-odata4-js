@@ -1,0 +1,427 @@
+<!--
+Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
+files (the "Software"), to deal  in the Software without restriction, including without limitation the rights  to use, copy,
+modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+WARRANTIES OF MERCHANTABILITY,  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+<job>
+    <runtime>
+        <description>Test driver for running datajs tests - run from the same directory as the script</description>
+        <comment>
+            Result codes:
+            0 - success
+            1 - failed to launch tests
+            2 - tests failed
+        </comment>
+    </runtime>
+    <script language="JScript" src="test-list.js" />
+    <script language="JScript">
+
+        var exitCode;
+        var fso = WScript.CreateObject("Scripting.FileSystemObject");
+        var shell = WScript.CreateObject("WScript.Shell");
+
+        function attempt(action, interval, maxAttempts) {
+            /// <summary>Attempt an action at an interval, optionally for a maximum number of attempts</summary>
+            /// <param name="action">Action callback; should return boolean whether it succeeded</param>
+            /// <param name="interval">Interval (milliseconds) between attempts</param>
+            /// <param name="maxAttempts">(Optional) Maximum number of attempts. Infinite if undefined.</param>
+            /// <returns>Whether the action succeeded</returns>
+            var done = false;
+            var attempts = 0;
+            while (!done) {
+                var success = action();
+                if (maxAttempts !== undefined) {
+                    attempts++;
+                }
+                done = success === true || (maxAttempts !== undefined && attempts >= maxAttempts);
+                if (!done) {
+                    WScript.Sleep(interval);
+                }
+            }
+
+            return success;
+        }
+
+        function parseJson(text) {
+            /// <summary>Parses a JSON document, removes the 'd' wrapper.</summary>
+            try {
+                return eval("(" + text + ")").d;
+            } catch (e) {
+                throw { message: "Error parsing JSON: [" + text + "]" };
+            }
+        }
+
+        function SaveTextToFile(content, path) {
+            /// <summary>Saves text content into a file.</summary>
+            /// <param name="content" type="String">Content to save.</param>
+            /// <param name="path" type="String">Path of file to save into.</param>
+            var ForReading = 1, ForWriting = 2;
+            var file = fso.OpenTextFile(path, ForWriting, true, -1 /* open as unicode */);
+            file.Write(content);
+            file.Close();
+        }
+
+        function GetUrlSync(url) {
+            var xhr;
+            xhr = WScript.CreateObject("Msxml2.ServerXMLHTTP.6.0");
+            xhr.open("GET", url, false);
+            xhr.send();
+            return xhr.responseText;
+        }
+
+        function LaunchBrowser(browsers, serviceRoot, followingPages, url, testRunId, outputDirectory) {
+            /// <summary>Launches a browsers and waits until the service tells us the run is complete.</summary>
+            /// <param name="browsers">Browsers to run.</param>
+            /// <param name="serviceRoot" type="String">Root URL of the logging service.</param>
+            /// <param name="followingPages" type="Array">Array of pages that should follow the given url.</param>
+            /// <param name="url" type="String">URL of the page to start the browser on.</param>
+            /// <param name="testRunId" type="String">ID of the test run being monitored.</param>
+            /// <param name="outputDirectory" type="String">Directory in which to output screenshots.</param>
+
+            for (browserName in browsers) {
+                var xhr;
+                var markInProgressUrl = serviceRoot + "MarkInProgress?testRunId=" + testRunId;
+                GetUrlSync(markInProgressUrl);
+
+                // Add all the pages that follow the given URL.
+                if (followingPages && followingPages.length > 0) {
+                    var addFilesUrl = serviceRoot + "AddTestPages?testRunId=" + testRunId + "&pages=" + followingPages.join();
+                    GetUrlSync(addFilesUrl);
+                }
+
+                var setPrefixUrl = serviceRoot + "SetTestNamePrefix?testRunId=" + testRunId + "&prefix=" + browserName + "-";
+                GetUrlSync(setPrefixUrl);
+
+                exitCode = 0;
+                var response;
+
+                // Only the first location found from the browsers array is used. If none of the listed locations of the browser exist and the browser argument was 
+                // explicitly used then an exception is thrown.
+                var browserFound = false;
+                for (var i = 0; i < browsers[browserName].length && !browserFound; i++) {
+                    var path = shell.ExpandEnvironmentStrings(browsers[browserName][i]);
+                    if (fso.FileExists(path)) {
+                        browserFound = true;
+
+                        WScript.Echo("Navigating to " + url + " with " + path);
+                        var browser = shell.Exec("\"" + path + "\" " + url);
+
+                        var checkRunUrl = serviceRoot + "IsTestRunInProgress?testRunId=" + testRunId;
+                        WScript.Echo("Monitoring status on " + checkRunUrl);
+
+                        var interval = 2000;
+                        var maxAttempts = WScript.Arguments.Named.Exists("timeout") ? Math.floor((WScript.Arguments.Named.Item("timeout") / interval) * 1000) : undefined;
+                        var success = attempt(function () {
+                            return parseJson(GetUrlSync(checkRunUrl)) !== true;
+                        }, interval, maxAttempts);
+                        if (!success) {
+                            WScript.Echo("Timed out waiting for test to complete");
+                            exitCode = 2;
+                        }
+
+                        RunCommand("taskkill.exe /pid " + browser.ProcessID, true);
+                    }
+                }
+
+                // If the "/browsers" argument was explicitly used and all location have been checked, then throw an exception.
+                if (!browserFound) {
+                    var message = "Unable to find browser at: " + path;
+                    if (WScript.Arguments.Named.Exists("browsers")) {
+                        throw { message: message };
+                    } else {
+                        WScript.Echo(message);
+                    }
+                }
+            }
+        }
+
+        function WriteTestRunResults(serviceRoot, testRunId, outputDirectory) {
+            /// <summary>Writes the results of the test run to disk and updates the overall status.</summary>
+            /// <param name="serviceRoot" type="String">Root URL of the logging service.</param>
+            /// <param name="testRunId" type="String">ID of the test run being monitored.</param>
+            /// <param name="outputDirectory" type="String">Directory in which to write test result files.</param>
+
+            var getResultsUrl = serviceRoot + "GetTestRunResults?testRunId=" + testRunId;
+            WScript.Echo("Querying " + getResultsUrl);
+
+            var response = GetUrlSync(getResultsUrl);
+
+            var resultsPath = outputDirectory + "\\results.trx";
+            WScript.Echo("Writing results.trx file to " + resultsPath);
+            SaveTextToFile(response, resultsPath);
+
+            var xml = new ActiveXObject("Msxml2.DOMDocument.6.0");
+            xml.loadXML(response);
+            xml.setProperty("SelectionNamespaces", "xmlns:trx='http://microsoft.com/schemas/VisualStudio/TeamTest/2010'");
+            xml.setProperty("SelectionLanguage", "XPath");
+            var resultNode = xml.selectSingleNode("/trx:TestRun/trx:ResultSummary");
+            if (resultNode === null) {
+                throw { message: "Unable to find results summary" };
+            }
+
+            var outcome = resultNode.getAttribute("outcome");
+            if (outcome !== "Passed") {
+                WScript.Echo("Outcome: " + outcome);
+                var failedTests = xml.selectNodes("/trx:TestRun/trx:Results/trx:UnitTestResult[@outcome != 'Passed']/@testName");
+                for (var i = 0; i < failedTests.length; i++) {
+                    WScript.Echo("  Failed test: " + failedTests[i].value);
+                }
+                exitCode = 2;
+            } else {
+                WScript.Echo("All tests passed.");
+            }
+        }
+
+        function CheckUrl(url) {
+            var xhr = WScript.CreateObject("Msxml2.ServerXMLHTTP.6.0");
+            xhr.open("GET", url, false);
+            var success = false;
+            try {
+                xhr.send();
+                success = (xhr.status === 200);
+                if (!success) {
+                    WScript.Echo("status: " + xhr.status + " - " + xhr.statusText);
+                }
+            } catch (err) {
+                WScript.Echo("error: " + err.message);
+            }
+
+            return success;
+        }
+
+        function ExpandWildcard(path) {
+            var wcRegEx = /\\\*\*?\\/;
+            var wcMatch = wcRegEx.exec(path);
+
+            var paths = [];
+            if (wcMatch !== null) {
+                var recursive = wcMatch[0] === "\\**\\";
+                var basePath = path.substring(0, wcMatch.index);
+                var relativePath = path.substring(wcMatch.index + wcMatch[0].length);
+
+                if (fso.FolderExists(basePath)) {
+                    var folder = fso.GetFolder(basePath);
+                    var subFolders = new Enumerator(folder.SubFolders);
+
+                    paths = paths.concat(ExpandWildcard(basePath + "\\" + relativePath));
+
+                    for (; !subFolders.atEnd(); subFolders.moveNext()) {
+                        var expandedPath = subFolders.item().Path + "\\"
+                        if (recursive) {
+                            expandedPath += "**\\";
+                        }
+                        expandedPath += path.substring(wcMatch.index + wcMatch[0].length);
+                        paths = paths.concat(ExpandWildcard(expandedPath));
+                    }
+                }
+            } else {
+                paths.push(path);
+            }
+            return paths;
+        }
+
+        function FindFirstPath(candidates) {
+            /// <summary>Finds the first path present from a candidate list.</summary>
+            /// <param name="candidates" type="Array">Array of paths (possibly with environment variables).</param>
+            /// <returns type="String">The first folder on disk found; null if none are present.</returns>
+
+            var paths = [];
+
+            for (var i = 0; i < candidates.length; i++) {
+                var path = shell.ExpandEnvironmentStrings(candidates[i]);
+                paths = paths.concat(ExpandWildcard(path));
+            }
+
+            for (var i = 0; i < paths.length; i++) {
+                if (fso.FolderExists(paths[i]) || fso.FileExists(paths[i])) {
+                    return paths[i];
+                }
+            }
+            return null;
+        }
+
+        function RunCommand(command, waitForExit, expectedExitCode) {
+            /// <summary>Runs a command or program</summary>
+            /// <param name="command" type="String">Command to run</param>
+            /// <param name="waitForExit" type="Boolean">Whether to wait for program to exit</param>
+            /// <param name="expectedExitCode" type="Integer">If waitForExit is true, throw if the exit code is not expected</param>
+            /// <returns type="Integer">The exitcode if waitForExit is true; always 0 if waitForExit is false</returns>
+            WScript.Echo("[cmd] " + command);
+            var exitCode = shell.Run(command, 0, waitForExit);
+            if (expectedExitCode !== undefined && exitCode !== expectedExitCode) {
+                throw { message: "Process exited with unexpected exit code. (Expected: " + expectedExitCode + ", Actual: " + exitCode + ")" };
+            } else {
+                return exitCode;
+            }
+        }
+
+        function SetupWebDevServer() {
+            /// <summary>Starts up IIS Express if it's not running.</summary>
+            /// <returns type="String">The URL to the server root.</returns>
+            var siteName = "DataJS Development Site";
+            var appName = "datajs";
+            var port = "8989";
+            var result = "http://" + shell.ExpandEnvironmentStrings("%COMPUTERNAME%").toLowerCase() + ":" + port + "/" + appName + "/";
+            var url = result + "tests/common/TestLogger.svc";
+
+            var success = CheckUrl(url);
+
+            if (!success) {
+                // Assume that we need to launch this.
+                var src = fso.GetAbsolutePathName("..");
+
+                var folder = FindFirstPath([
+                    "%ProgramFiles(x86)%\\IIS Express",
+                    "%ProgramFiles%\\IIS Express"]);    
+
+                if (!folder) {
+                    throw { message: "Unable to find path to IIS Express" };
+                }
+
+                var appCmd = "\"" + folder + "\\appcmd.exe\"";
+                var iisExpress = "\"" + folder + "\\iisexpress.exe\"";
+
+                // Delete site if it already exists
+                WScript.Echo("Checking if site '" + siteName + "' already exists...");
+                if (RunCommand(appCmd + " list site \"" + siteName + "\"", true) === 0) {
+                    WScript.Echo("Deleting existing site '" + siteName + "'...");
+                    RunCommand(appCmd + " delete site \"" + siteName + "\"", true, 0);
+                }
+
+                // Create site and app
+                WScript.Echo("Creating site '" + siteName + "'...");
+                RunCommand(appCmd + " add site /name:\"" + siteName + "\" /bindings:http/*:" + port + ": /physicalPath:%IIS_BIN%\\AppServer\\empty_wwwroot", true, 0);
+
+                WScript.Echo("Creating application '" + appName + "'...");
+                RunCommand(appCmd + " add app /site.name:\"" + siteName + "\" /path:\"/" + appName + "\" /physicalPath:\"" + src + "\"", true, 0);
+
+                // Start the server
+                WScript.Echo("Starting IIS Express server...");
+                RunCommand(iisExpress + " /site:\"" + siteName + "\" /trace:error");
+
+                WScript.Sleep(2 * 1000);
+                success = attempt(function () {
+                    WScript.Echo("Waiting for server to come up, looking for " + url + " ...");
+                    return CheckUrl(url);
+                }, 5 * 1000, 3);
+
+                if (!success) {
+                    throw { message: "Unable to verify the URL at " + url };
+                }
+            }
+            return result;
+        }
+
+        function CreateTestRunId(serviceRoot) {
+            /// <summary>Creates a new test run ID from the service.</summary>
+            /// <param name="serviceRoot" type="String">Root of logger service.</param>
+            /// <returns type="String">The test run ID created.</returns>
+            var xhr = WScript.CreateObject("Msxml2.ServerXMLHTTP.6.0");
+            var url = serviceRoot + "CreateTestRun";
+            xhr.open("GET", url, false);
+            WScript.Echo("URL: " + url);
+            xhr.send();
+
+            var response = xhr.responseText;
+            var result = parseJson(response);
+            return result;
+        }
+
+        function GetBrowsers() {
+            /// <summary>Gets the browsers that should be used for running the tests.</summary>
+            /// <returns type="Object">Dictionary object containing the browser and its executable path as key value pairs.</returns>
+            var localAppData = fso.FolderExists(shell.ExpandEnvironmentStrings("%LOCALAPPDATA%")) ? "%LOCALAPPDATA%" : "%USERPROFILE%\\Local Settings\\Application Data";
+            var programFiles = fso.FolderExists(shell.ExpandEnvironmentStrings("%ProgramFiles(x86)%")) ? "%ProgramFiles(x86)%" : "%ProgramFiles%";
+            var browsers = {
+                IE8: [programFiles + "\\Internet Explorer\\iexplore.exe"],
+                Firefox4: [programFiles + "\\Mozilla Firefox\\firefox.exe"],
+                Chrome: [programFiles + "\\Google\\Chrome\\Application\\chrome.exe", localAppData + "\\Google\\Chrome\\Application\\chrome.exe"],
+                Safari5: [programFiles + "\\Safari\\safari.exe"],
+                Opera: [programFiles + "\\Opera\\opera.exe"]
+            };
+
+            var browsersToRun = {};
+
+            if (WScript.Arguments.Named.Exists("browsers")) {
+                browserNames = WScript.Arguments.Named.Item("browsers").split(',');
+                for (i in browserNames) {
+                    var browserName = browserNames[i];
+                    if (browsers[browserName]) {
+                        browsersToRun[browserName] = browsers[browserName];
+                    } else {
+                        throw { message: "Unknown browser: " + browserName };
+                    }
+                }
+            }
+            else {
+                browsersToRun = browsers;
+            }
+
+            return browsersToRun;
+        }
+
+        function GetTestFilesList() {
+            /// <summary>Gets the list of test files that are going to be executed in the test run.</summary>
+            /// <returns type="Array">The list of test files.</returns>
+            var testFilesList = null;
+            if (WScript.Arguments.Named.Exists("testFiles")) {
+                testFilesList = WScript.Arguments.Named.Item("testFiles").split(',');
+            }
+
+            if (testFilesList === null) {
+                testFilesList = getAllTestFiles();
+            }
+
+            WScript.Echo("Test files to be executed: " + testFilesList.toString());
+            return testFilesList;
+        }
+
+        function GetOutputDirectory() {
+            /// <summary>Gets the test run output directory.</summary>
+            /// <returns type="String">Output directory.</returns>
+            var result;
+            if (WScript.Arguments.Named.Exists("outputDirectory")) {
+                result = WScript.Arguments.Named.Item("outputDirectory");
+            } else {
+                result = shell.ExpandEnvironmentStrings("%DJSOUT%\\JSLib.sln\\tests");
+            }
+
+
+            return result;
+        }
+
+        try {
+            var root = SetupWebDevServer();
+            var serviceRoot = root + "tests/common/TestLogger.svc/";
+            var testRunId = CreateTestRunId(serviceRoot);
+            WScript.Echo("Test Run ID: " + testRunId);
+
+            var testFilesList = GetTestFilesList();
+            var browsers = GetBrowsers();
+            var outputDirectory = GetOutputDirectory();
+
+            if (testFilesList.length > 0) {
+                var url = root + "tests/" + testFilesList[0] + "?testRunId=" + testRunId;
+                LaunchBrowser(browsers, serviceRoot, testFilesList.splice(1, testFilesList.length), url, testRunId, outputDirectory);
+                WriteTestRunResults(serviceRoot, testRunId, outputDirectory);
+            }
+            else {
+                WScript.Echo("No test files specified to run.");
+            }
+        } catch (e) {
+            WScript.Echo("Error running tests");
+            for (var p in e) WScript.Echo(p + ": " + e[p]);
+            exitCode = 1;
+        }
+
+        WScript.Quit(exitCode);
+
+    </script>
+</job>

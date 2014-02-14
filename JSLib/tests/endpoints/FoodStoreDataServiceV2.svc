@@ -1,0 +1,442 @@
+<%@ ServiceHost Language="C#" Factory="System.Data.Services.DataServiceHostFactory, Microsoft.Data.Services, Version=5.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
+    Service="DataJS.Tests.V2.FoodStoreDataService" %>
+
+// Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation 
+// files (the "Software"), to deal  in the Software without restriction, including without limitation the rights  to use, copy,
+// modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the 
+// Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+// WARRANTIES OF MERCHANTABILITY,  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+// ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+namespace DataJS.Tests.V2
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Services;
+    using System.Data.Services.Common;
+    using System.Linq;
+    using System.ServiceModel.Web;
+    using System.Web;
+    
+    /// <summary>
+    /// Provides a service similar to FoodStoreDataService, but uses V2 
+    /// features.
+    /// </summary>
+    [System.ServiceModel.ServiceBehavior(IncludeExceptionDetailInFaults = true)]
+    public class FoodStoreDataService : DataService<FoodContainer>
+    {
+        // This method is called only once to initialize service-wide policies.
+        public static void InitializeService(DataServiceConfiguration config)
+        {
+            config.SetEntitySetAccessRule("*", EntitySetRights.All);
+            config.SetServiceOperationAccessRule("*", ServiceOperationRights.All);
+            config.UseVerboseErrors = true;
+            config.DataServiceBehavior.MaxProtocolVersion = DataServiceProtocolVersion.V2;
+            // Set Foods page size to 5 for cache testing
+            config.SetEntitySetPageSize("Foods", 5);
+            
+            // Make the Categories set paged to have a paged feed
+            config.SetEntitySetPageSize("Categories", 1);
+        }
+        
+        [WebInvoke]
+        public string ResetData()
+        {
+            this.CurrentDataSource.ResetData();
+            return "Data Reset";
+        }
+
+        [WebGet]
+        public IQueryable<string> FoodsAvailable()
+        {
+            return this.CurrentDataSource.Foods.Select(food => food.Name);
+        }
+
+        [WebGet]
+        public IQueryable<Package> PackagingTypes()
+        {
+            return this.CurrentDataSource.Foods.Select(food => food.Packaging);
+        }
+    }
+
+    public class FoodContainer : ReflectionDataContext, IUpdatable
+    {
+        private static bool dataInitialized;
+
+        public IQueryable<Category> Categories
+        {
+            get { return this.GetResourceSetEntities<Category>("Categories").AsQueryable(); }
+        }
+        
+        public IQueryable<Food> Foods
+        {
+            get { return this.GetResourceSetEntities<Food>("Foods").AsQueryable(); }
+        }
+
+        public void ResetData()
+        {
+            this.ClearData();
+            
+            int i = 0;
+            Category[] categories = new Category[]
+            {
+                new Category { CategoryID = i++, Name = "Baking Supplies" },
+                new Category { CategoryID = i++, Name = "Condiments" },
+                new Category { CategoryID = i++, Name = "Empty Category" }
+            };
+            Array.ForEach(categories, (category) => this.GetResourceSetEntities<Category>("Categories").Add(category));
+            
+            i = 0;
+            Food[] foods = new Food[]
+            {            
+                new Food()
+                {
+                    FoodID = i++,
+                    Name = "flour",
+                    UnitPrice = .19999,
+                    ServingSize = 1,
+                    MeasurementUnit = "Cup",
+                    ProteinGrams = 3,
+                    FatGrams = 1,
+                    CarbohydrateGrams = 20,
+                    CaloriesPerServing = 140,
+                    IsAvailable = true,
+                    ExpirationDate = new DateTime(2010, 12, 25, 12, 0, 0),
+                    ItemGUID = new Guid("27272727272727272727272727272727"),
+                    Weight = 10f,
+                    AvailableUnits = 1,
+                    
+                    Packaging = new Package(){
+                        Type = null, 
+                        Color = String.Empty, 
+                        NumberPerPackage = int.MaxValue, 
+                        RequiresRefridgeration = false, 
+                        PackageDimensions = new Dimensions()
+                        {
+                            Length = Decimal.MaxValue, 
+                            Height = Int16.MaxValue, 
+                            Width = Int64.MaxValue, 
+                            Volume = double.MaxValue,   
+                        },
+                        ShipDate = new DateTime(2000, 12, 29)
+                    },
+                    
+                    CookedSize = new CookedDimensions()
+                    {
+                        Height = 1,
+                        Length = 2,
+                        Width = 3,
+                        Volume = 1 * 2 * 3
+                    },
+                    
+                    Category = categories[0],
+                },
+                
+                new Food()
+                {
+                    FoodID = i++,
+                    Name = "sugar",
+                    UnitPrice = .2,
+                    ServingSize = 1,
+                    MeasurementUnit = "tsp",
+                    ProteinGrams = 0,
+                    FatGrams = 0,
+                    CarbohydrateGrams = 4,
+                    CaloriesPerServing = 16,
+                    IsAvailable = false,
+                    ExpirationDate = new DateTime(2011, 12, 28),
+                    ItemGUID = new Guid("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"),
+                    Weight = 0.1f,
+                    AvailableUnits = 0,
+
+                    Packaging = new Package(){
+                        Type = " ",
+                        Color = "BLUE",
+                        NumberPerPackage = int.MinValue,
+                        RequiresRefridgeration = true,
+                        PackageDimensions = new Dimensions(){
+                            Length = Decimal.MinValue,
+                            Height = Int16.MinValue,
+                            Width = Int64.MinValue,
+                            Volume = double.MinValue,
+                        },
+                        ShipDate = new DateTime(2000, 12, 29),
+                    },
+                    
+                    Category = categories[1],
+                },
+
+                new Food()
+                {
+                    FoodID = i++,
+                    Name = "1 Chicken Egg",
+                    UnitPrice = 0.55,
+                    MeasurementUnit = null,
+                    ServingSize = 1,
+                    ProteinGrams = 6,
+                    FatGrams = 1,
+                    CarbohydrateGrams = 1,
+                    CaloriesPerServing = 70,
+                    IsAvailable = true,
+                    ExpirationDate = new DateTime(2000, 12, 29),
+                    ItemGUID = new Guid("00000000000000000000000000000000"),
+                    Weight = 0,
+                    AvailableUnits = -128,
+                    
+                    Packaging = new Package(){
+                        Type = "18     - Carton",
+                        Color = " brown ",
+                        NumberPerPackage = 0,
+                        RequiresRefridgeration = true,
+                        PackageDimensions = null,
+                        ShipDate = new DateTime(2000, 12, 29),
+                    },
+                    
+                    Category = null,
+                },
+
+                new Food()
+                {
+                    FoodID = i++,
+                    Name = "Brown Sugar",
+                    UnitPrice = 1.6,
+                    ServingSize = 1,
+                    MeasurementUnit = "TSP.",
+                    ProteinGrams = 0,
+                    FatGrams = 0,
+                    CarbohydrateGrams = 5, 
+                    CaloriesPerServing = 16,
+                    IsAvailable = true,
+                    ExpirationDate = new DateTime(2011, 12, 28),
+                    ItemGUID = new Guid("0123456789abcdef0123456789abcdef"),
+                    Weight = 4.5f,
+                    AvailableUnits = 127,
+                    Packaging = null,
+                    Category = categories[1],
+                },
+                
+                new PreparedFood()
+                {
+                    FoodID = i++,
+                    Name = "Cobb Salad",
+                    UnitPrice = 1.99,
+                    ServingSize = -1,
+                    MeasurementUnit = "cups",
+                    ProteinGrams = 6,
+                    FatGrams = 1,
+                    CarbohydrateGrams = 3, 
+                    CaloriesPerServing = 5,
+                    IsAvailable = true,
+                    ExpirationDate = new DateTime(2000, 12, 29),
+                    ItemGUID = new Guid("0123456789abcdef0123456789abcdef"),
+                    Weight = 5.674f,
+                    AvailableUnits = 127,
+                    Packaging = null,
+                    Category = categories[1],
+                    Instructions = "1.) Open 2.) Eat",
+                    NumberOfIngredients = 4,
+                },
+                
+                new PreparedFood()
+                {
+                    FoodID = i++,
+                    Name = "Lasagna",
+                    UnitPrice = 0,
+                    ServingSize = 8,
+                    MeasurementUnit = " servings",
+                    ProteinGrams = 100,
+                    FatGrams = 4,
+                    CarbohydrateGrams = 27, 
+                    CaloriesPerServing = 389,
+                    IsAvailable = true,
+                    ExpirationDate = new DateTime(1904, 2, 29),
+                    ItemGUID = new Guid("0123456789abcdef0123456789abcdef"),
+                    Weight = 0,
+                    AvailableUnits = 4,
+                    Packaging = new Package(){
+                        Type = "box",
+                        Color = " 1 ",
+                        NumberPerPackage = 1,
+                        RequiresRefridgeration = true,
+                        PackageDimensions = new Dimensions(){
+                            Length = 3,
+                            Height = 1,
+                            Width = 5,
+                            Volume = 1.5,
+                        },
+                        ShipDate = new DateTime(2000, 12, 29),
+                    },
+                    Category = categories[0],
+                    Instructions = "Bake in oven",
+                    NumberOfIngredients = 15,
+                },
+                
+                new Food()
+                {                    
+                    FoodID = i++,
+                    Name = "Chocolate"
+                },
+                
+                new Food()
+                {                    
+                    FoodID = i++,
+                    Name = "Pizza"
+                },
+                
+                new Food()
+                {                    
+                    FoodID = i++,
+                    Name = "Avocados"
+                },
+                
+                new Food()
+                {                    
+                    FoodID = i++,
+                    Name = "Quinoa"
+                },
+                
+                new Food()
+                {                    
+                    FoodID = i++,
+                    Name = "Oatmeal"
+                },
+                
+                new Food()
+                {                    
+                    FoodID = i++,
+                    Name = "Peanut Butter"
+                },
+                
+                new Food()
+                {                    
+                    FoodID = i++,
+                    Name = "Banana"
+                },
+                
+                new Food()
+                {                    
+                    FoodID = i++,
+                    Name = "Yam"
+                },
+                
+                new Food()
+                {                    
+                    FoodID = i++,
+                    Name = "Clam"
+                },
+                
+                new Food()
+                {                    
+                    FoodID = i++,
+                    Name = "Spam"
+                }
+            };
+            Array.ForEach(foods, (food) => this.GetResourceSetEntities<Food>("Foods").Add(food));
+
+            categories[0].Foods.Add(foods[0]);
+            categories[1].Foods.Add(foods[2]);
+            categories[1].Foods.Add(foods[3]);
+        }
+
+        protected override void EnsureDataIsInitialized()
+        {
+            if (!dataInitialized)
+            {
+                this.ResetData();
+                dataInitialized = true;
+            }
+        }
+    }
+
+    /// <summary>
+    /// The Category class is a simple class with V1-compatible feed customizations.
+    /// </summary>
+    [EntityPropertyMapping("Name", SyndicationItemProperty.Title, SyndicationTextContentKind.Plaintext, true)]
+    [DataServiceKey("CategoryID")]
+    public class Category
+    {
+        public Category()
+        {
+            this.Foods = new List<Food>();
+        }
+        
+        public int CategoryID { get; set; }
+        public string Name { get; set; }
+        public List<Food> Foods { get; set; }
+    }
+    
+    /// <summary>
+    /// The Food class has a mixture of V1-compatible and incompatible feed
+    /// customizations (thus it's V2), and custom mappings.
+    /// </summary>
+    [EntityPropertyMapping("Name", SyndicationItemProperty.Title, SyndicationTextContentKind.Plaintext, true)]
+    [EntityPropertyMapping("UnitPrice", "price/@value", "pr", "http://www.example.org/price/", false)]
+    [EntityPropertyMapping("CookedSize/Length", "cooked/@length", "cooked", "http://www.example.org/cooked/", false)]
+    [EntityPropertyMapping("CookedSize/Height", "cooked/@height", "cooked", "http://www.example.org/cooked/", false)]
+    [EntityPropertyMapping("CookedSize/Width", "cooked/@width", "cooked", "http://www.example.org/cooked/", false)]
+    [EntityPropertyMapping("CookedSize/Volume", "cooked/volume", "cooked", "http://www.example.org/cooked/", false)]
+    [DataServiceKey("FoodID")]
+    public class Food
+    {
+        // Primitive types
+        public int FoodID { get; set; }
+        public string Name { get; set; }
+        public double UnitPrice { get; set; }
+        public Decimal ServingSize { get; set; }
+        public string MeasurementUnit { get; set; }
+        public Byte ProteinGrams { get; set; }
+        public Int16 FatGrams { get; set; }
+        public Int32 CarbohydrateGrams { get; set; }
+        public Int64 CaloriesPerServing { get; set; }
+        public Boolean IsAvailable { get; set; }
+        public DateTime ExpirationDate { get; set; }
+        public Guid ItemGUID { get; set; }
+        public Single Weight { get; set; }
+        public sbyte AvailableUnits { get; set; }
+        
+        // Complex types
+        public Package Packaging { get; set; }
+        public CookedDimensions CookedSize { get; set; }
+        
+        // Navigation properties
+        public Category Category { get; set; }
+    }
+
+    public class Package
+    {
+        public string Type { get; set; }
+        public string Color { get; set; }
+        public int NumberPerPackage { get; set; }
+        public Boolean RequiresRefridgeration { get; set; }
+        public DateTime ShipDate { get; set; }
+        public Dimensions PackageDimensions { get; set; }
+    }
+
+    public class Dimensions
+    {
+        public Decimal Length { get; set; }
+        public Int16 Height { get; set; }
+        public Int64 Width { get; set; }
+        public double Volume { get; set; }
+    }
+
+    public class CookedDimensions
+    {
+        public Decimal Length { get; set; }
+        public Int16 Height { get; set; }
+        public Int64 Width { get; set; }
+        public double Volume { get; set; }
+    }
+
+    public class PreparedFood : Food
+    {
+        public string Instructions { get; set; }
+        public float NumberOfIngredients { get; set; }
+    }
+}
