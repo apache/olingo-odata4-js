@@ -279,14 +279,15 @@
                             data = window.JSON.parse(window.JSON.stringify(data));
                         }
 
-
                         var headers;
-                        // Adding dataServiceVersion in case of json light ( data.d doesn't exist )
-                        if (data.d === undefined) {
-                            headers = { "Content-Type": "application/json;odata=minimalmetadata", dataServiceVersion: "3.0" };
+                        if (!formatQueryString || formatQueryString == "$format=json") {
+                            headers = { "Content-Type": "application/json;odata.metadata=minimal", "OData-Version": "4.0" };
                         } else {
-                            headers = { "Content-Type": "application/json" };
+                            // the formatQueryString should be in the format of "$format=xxx", xxx should be one of the application/json;odata.metadata=minimal(none or full)
+                            // set the content-type with the string xxx which stars from index 8.
+                            headers = { "Content-Type": formatQueryString.substring(8), "OData-Version": "4.0" };
                         }
+
                         // Call the success callback in the context of the parent window, instead of the IFRAME
                         delay(function () {
                             removeIFrame(iframe);
@@ -300,7 +301,7 @@
                 timeoutId = window.setTimeout(handleTimeout, timeoutMS);
 
                 var queryStringParams = callbackParameterName + "=parent." + name;
-                if (this.formatQueryString) {
+                if (formatQueryString) {
                     queryStringParams += "&" + formatQueryString;
                 }
 

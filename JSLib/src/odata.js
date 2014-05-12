@@ -30,8 +30,9 @@
     var metadataParser = odata.metadataParser;
 
     // CONTENT START
-
-    var handlers = [odata.jsonHandler, odata.atomHandler, odata.xmlHandler, odata.textHandler];
+    
+    // to do: disable atom scenario
+    var handlers = [odata.jsonHandler/*, odata.atomHandler*/, odata.xmlHandler, odata.textHandler];
 
     var dispatchHandler = function (handlerMethod, requestOrResponse, context) {
         /// <summary>Dispatches an operation to handlers.</summary>
@@ -77,7 +78,7 @@
         },
 
         maxDataServiceVersion: MAX_DATA_SERVICE_VERSION,
-        accept: "application/atomsvc+xml;q=0.8, application/json;odata=fullmetadata;q=0.7, application/json;q=0.5, */*;q=0.1"
+        accept: "application/json;q=0.9, application/atomsvc+xml;q=0.8, */*;q=0.1"
     };
 
     odata.defaultMetadata = [];
@@ -121,8 +122,6 @@
         request.callbackParameterName = defined(request.callbackParameterName, odata.defaultHttpClient.callbackParameterName);
         request.formatQueryString = defined(request.formatQueryString, odata.defaultHttpClient.formatQueryString);
         request.enableJsonpCallback = defined(request.enableJsonpCallback, odata.defaultHttpClient.enableJsonpCallback);
-        request.useJsonLight = defined(request.useJsonLight, odata.jsonHandler.enableJsonpCallback);
-        request.inferJsonLightFeedAsObject = defined(request.inferJsonLightFeedAsObject, odata.jsonHandler.inferJsonLightFeedAsObject);
 
         // Create the base context for read/write operations, also specifying complete settings.
         var context = {
@@ -130,9 +129,7 @@
             recognizeDates: request.recognizeDates,
             callbackParameterName: request.callbackParameterName,
             formatQueryString: request.formatQueryString,
-            enableJsonpCallback: request.enableJsonpCallback,
-            useJsonLight: request.useJsonLight,
-            inferJsonLightFeedAsObject: request.inferJsonLightFeedAsObject
+            enableJsonpCallback: request.enableJsonpCallback
         };
 
         try {

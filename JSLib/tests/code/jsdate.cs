@@ -16,8 +16,8 @@ namespace DataJS.Tests
     using System.ServiceModel.Web;
     using System.Xml;
     using System.Xml.Linq;
-    using System.Spatial;
-    using Microsoft.Data.OData;
+    using Microsoft.Spatial;
+    using Microsoft.OData.Core;
 
     [Serializable]
     public class JsDate : JsonObject

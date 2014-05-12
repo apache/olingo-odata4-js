@@ -45,6 +45,7 @@
     var parseTimezone = odata.parseTimezone;
     var payloadTypeOf = odata.payloadTypeOf;
     var traverse = odata.traverse;
+    var formatJsonLightRequestPayload = odata.formatJsonLightRequestPayload;
 
     // CONTENT START
 
@@ -132,9 +133,10 @@
         /// <returns type="Boolean">True is the content type indicates a json light payload. False otherwise.</returns>
 
         if (contentType) {
-            var odata = contentType.properties.odata;
-            return odata === "nometadata" || odata === "minimalmetadata" || odata === "fullmetadata";
+            var odata = contentType.properties["odata.metadata"];
+            return odata === "none" || odata === "minimal" || odata === "full";
         }
+
         return false;
     };
 
@@ -233,26 +235,14 @@
         /// <param name="context" type="Object">Object with parsing context.</param>
         /// <returns>An object representation of the OData payload.</returns>
 
-        var recognizeDates = defined(context.recognizeDates, handler.recognizeDates);
-        var inferJsonLightFeedAsObject = defined(context.inferJsonLightFeedAsObject, handler.inferJsonLightFeedAsObject);
-        var model = context.metadata;
         var dataServiceVersion = context.dataServiceVersion;
-        var dateParser = parseJsonDateString;
         var json = (typeof text === "string") ? window.JSON.parse(text) : text;
 
-        if ((maxVersion("3.0", dataServiceVersion) === dataServiceVersion)) {
-            if (isJsonLight(context.contentType)) {
-                return jsonLightReadPayload(json, model, recognizeDates, inferJsonLightFeedAsObject, context.contentType.properties.odata);
-            }
-            dateParser = parseDateTime;
+        if ((maxVersion("4.0", dataServiceVersion) === dataServiceVersion)) {
+            return json;
         }
 
-        json = traverse(json.d, function (key, value) {
-            return jsonApplyMetadata(value, model, dateParser, recognizeDates);
-        });
-
-        json = jsonUpdateDataFromVersion(json, context.dataServiceVersion);
-        return jsonNormalizeData(json, context.response.requestUri);
+        return undefined;
     };
 
     var jsonToString = function (data) {
@@ -283,23 +273,17 @@
         /// <param name="context" type="Object">Object with serialization context.</param>
         /// <returns type="String">The string representation of data.</returns>
 
-        var dataServiceVersion = context.dataServiceVersion || "1.0";
-        var useJsonLight = defined(context.useJsonLight, handler.useJsonLight);
+        var dataServiceVersion = context.dataServiceVersion || "4.0";
         var cType = context.contentType = context.contentType || jsonContentType;
 
         if (cType && cType.mediaType === jsonContentType.mediaType) {
-            var json = data;
-            if (useJsonLight || isJsonLight(cType)) {
-                context.dataServiceVersion = maxVersion(dataServiceVersion, "3.0");
-                json = formatJsonLight(data, context);
-                return jsonToString(json);
+            context.dataServiceVersion = maxVersion(dataServiceVersion, "4.0");
+            var newdata = formatJsonLightRequestPayload(data);
+            if (newdata) {
+                return window.JSON.stringify(newdata);
             }
-            if (maxVersion("3.0", dataServiceVersion) === dataServiceVersion) {
-                cType.properties.odata = "verbose";
-                context.contentType = cType;
-            }
-            return jsonToString(json);
         }
+
         return undefined;
     };
 
@@ -331,32 +315,8 @@
         return isSvcDoc ? normalizeServiceDocument(data, baseURI) : data;
     };
 
-    var jsonUpdateDataFromVersion = function (data, dataVersion) {
-        /// <summary>
-        /// Updates the specified data in the specified version to look
-        /// like the latest supported version.
-        /// </summary>
-        /// <param name="data" optional="false">Data to update.</param>
-        /// <param name="dataVersion" optional="true" type="String">Version the data is in (possibly unknown).</param>
-
-        // Strip the trailing comma if there.
-        if (dataVersion && dataVersion.lastIndexOf(";") === dataVersion.length - 1) {
-            dataVersion = dataVersion.substr(0, dataVersion.length - 1);
-        }
-
-        if (!dataVersion || dataVersion === "1.0") {
-            if (isArray(data)) {
-                data = { results: data };
-            }
-        }
-
-        return data;
-    };
-
     var jsonHandler = handler(jsonParser, jsonSerializer, jsonMediaType, MAX_DATA_SERVICE_VERSION);
     jsonHandler.recognizeDates = false;
-    jsonHandler.useJsonLight = false;
-    jsonHandler.inferJsonLightFeedAsObject = false;
 
     odata.jsonHandler = jsonHandler;
 
@@ -366,7 +326,6 @@
     odata.jsonParser = jsonParser;
     odata.jsonSerializer = jsonSerializer;
     odata.jsonNormalizeData = jsonNormalizeData;
-    odata.jsonUpdateDataFromVersion = jsonUpdateDataFromVersion;
     odata.normalizeServiceDocument = normalizeServiceDocument;
     odata.parseJsonDateString = parseJsonDateString;
     // DATAJS INTERNAL END

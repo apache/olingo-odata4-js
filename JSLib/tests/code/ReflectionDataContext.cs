@@ -17,8 +17,8 @@ namespace DataJS.Tests
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Data.Services;
-    using System.Data.Services.Common;
+    using Microsoft.OData.Service;
+    using Microsoft.OData.Service.Common;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;

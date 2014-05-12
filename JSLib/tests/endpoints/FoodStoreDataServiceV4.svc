@@ -1,5 +1,5 @@
-<%@ ServiceHost Language="C#" Factory="System.Data.Services.DataServiceHostFactory, Microsoft.Data.Services, Version=5.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
-    Service="DataJS.Tests.V2.FoodStoreDataService" %>
+<%@ ServiceHost Language="C#" Factory="Microsoft.OData.Service.DataServiceHostFactory, Microsoft.OData.Service, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
+    Service="DataJS.Tests.V4.FoodStoreDataService" %>
 
 // Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation 
@@ -14,18 +14,21 @@
 // COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-namespace DataJS.Tests.V2
+namespace DataJS.Tests.V4
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Services;
-    using System.Data.Services.Common;
+    using Microsoft.OData.Service;
+    using Microsoft.OData.Service.Common;
+    using Microsoft.OData.Service.Providers;
     using System.Linq;
     using System.ServiceModel.Web;
     using System.Web;
+    using System.IO;
+    using Microsoft.Spatial;
     
     /// <summary>
-    /// Provides a service similar to FoodStoreDataService, but uses V2 
+    /// Provides a service similar to FoodStoreDataService, but uses V4 and WCF Data Services 6.0.0-beta1
     /// features.
     /// </summary>
     [System.ServiceModel.ServiceBehavior(IncludeExceptionDetailInFaults = true)]
@@ -37,10 +40,8 @@ namespace DataJS.Tests.V2
             config.SetEntitySetAccessRule("*", EntitySetRights.All);
             config.SetServiceOperationAccessRule("*", ServiceOperationRights.All);
             config.UseVerboseErrors = true;
-            config.DataServiceBehavior.MaxProtocolVersion = DataServiceProtocolVersion.V2;
             // Set Foods page size to 5 for cache testing
             config.SetEntitySetPageSize("Foods", 5);
-            
             // Make the Categories set paged to have a paged feed
             config.SetEntitySetPageSize("Categories", 1);
         }
@@ -63,9 +64,23 @@ namespace DataJS.Tests.V2
         {
             return this.CurrentDataSource.Foods.Select(food => food.Packaging);
         }
+
+        [WebGet]
+        public string UserNameAndPassword()
+        {
+            var request = WebOperationContext.Current.IncomingRequest;
+            string authorization = request.Headers["Authorization"];
+            if (String.IsNullOrEmpty(authorization))
+            {
+                WebOperationContext.Current.OutgoingResponse.Headers["WWW-Authenticate"] = "Basic realm=\"localhost\"";
+                throw new DataServiceException(401, "Access denied in UserNameAndPassword");
+            }
+
+            return authorization;
+        }
     }
 
-    public class FoodContainer : ReflectionDataContext, IUpdatable
+    public class FoodContainer : ReflectionDataContext, IUpdatable, IDataServiceStreamProvider2
     {
         private static bool dataInitialized;
 
@@ -82,6 +97,13 @@ namespace DataJS.Tests.V2
         public void ResetData()
         {
             this.ClearData();
+
+            var builder = SpatialImplementation.CurrentImplementation.CreateBuilder();
+            builder.GeometryPipeline.SetCoordinateSystem(CoordinateSystem.DefaultGeography);
+            builder.GeometryPipeline.BeginGeometry(SpatialType.Collection);
+            builder.GeometryPipeline.BeginFigure(new GeometryPosition(5.0, 5.0));
+            builder.GeometryPipeline.EndFigure();
+            builder.GeometryPipeline.EndGeometry();
             
             int i = 0;
             Category[] categories = new Category[]
@@ -136,6 +158,25 @@ namespace DataJS.Tests.V2
                     },
                     
                     Category = categories[0],
+                    
+                    AlternativeNames = new List<string>() {"ground cereal", "ground grain"},
+                    
+                    Providers = new List<Provider> {
+                        new Provider() { 
+                             Name= "Flour Provider", 
+                             Aliases = new List<string>() {"fp1", "flour provider1"},
+                             Details = new ProviderDetails() {
+                                 Telephone= "555-555-555",
+                                 PreferredCode = 1001
+                             }
+                        },
+                        new Provider() { 
+                             Name= "Ground Grains", 
+                             Aliases = new List<string>()
+                        }
+                    },
+                    
+                    SpatialData = (GeometryCollection)builder.ConstructedGeometry 
                 },
                 
                 new Food()
@@ -352,13 +393,87 @@ namespace DataJS.Tests.V2
                 dataInitialized = true;
             }
         }
+
+        public Stream GetReadStream(object entity, ResourceProperty streamProperty, string etag, bool? checkETagForEquality, DataServiceOperationContext operationContext)
+        {
+            return new MemoryStream();
+        }
+
+        public Uri GetReadStreamUri(object entity, ResourceProperty streamProperty, DataServiceOperationContext operationContext)
+        {
+            if (streamProperty.Name == "Icon")
+            {
+                return null;
+            }
+            return new Uri(operationContext.AbsoluteServiceUri, streamProperty.Name);
+        }
+
+        public string GetStreamContentType(object entity, ResourceProperty streamProperty, DataServiceOperationContext operationContext)
+        {
+            if (streamProperty.Name == "Icon")
+            {
+                return "image/gif";
+            }
+            return "image/png";
+        }
+
+        public string GetStreamETag(object entity, ResourceProperty streamProperty, DataServiceOperationContext operationContext)
+        {
+            return "W/\"123456789\"";
+        }
+
+        public Stream GetWriteStream(object entity, ResourceProperty streamProperty, string etag, bool? checkETagForEquality, DataServiceOperationContext operationContext)
+        {
+            return new MemoryStream();
+        }
+
+        public void DeleteStream(object entity, DataServiceOperationContext operationContext)
+        {
+            // do nothing.
+        }
+
+        public Stream GetReadStream(object entity, string etag, bool? checkETagForEquality, DataServiceOperationContext operationContext)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Uri GetReadStreamUri(object entity, DataServiceOperationContext operationContext)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetStreamContentType(object entity, DataServiceOperationContext operationContext)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetStreamETag(object entity, DataServiceOperationContext operationContext)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Stream GetWriteStream(object entity, string etag, bool? checkETagForEquality, DataServiceOperationContext operationContext)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string ResolveType(string entitySetName, DataServiceOperationContext operationContext)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int StreamBufferSize
+        {
+            get { return 1024; }
+        }
     }
 
     /// <summary>
     /// The Category class is a simple class with V1-compatible feed customizations.
     /// </summary>
-    [EntityPropertyMapping("Name", SyndicationItemProperty.Title, SyndicationTextContentKind.Plaintext, true)]
     [DataServiceKey("CategoryID")]
+    [EntitySet("Categories")]
+    [NamedStream("Icon")]
     public class Category
     {
         public Category()
@@ -375,15 +490,14 @@ namespace DataJS.Tests.V2
     /// The Food class has a mixture of V1-compatible and incompatible feed
     /// customizations (thus it's V2), and custom mappings.
     /// </summary>
-    [EntityPropertyMapping("Name", SyndicationItemProperty.Title, SyndicationTextContentKind.Plaintext, true)]
-    [EntityPropertyMapping("UnitPrice", "price/@value", "pr", "http://www.example.org/price/", false)]
-    [EntityPropertyMapping("CookedSize/Length", "cooked/@length", "cooked", "http://www.example.org/cooked/", false)]
-    [EntityPropertyMapping("CookedSize/Height", "cooked/@height", "cooked", "http://www.example.org/cooked/", false)]
-    [EntityPropertyMapping("CookedSize/Width", "cooked/@width", "cooked", "http://www.example.org/cooked/", false)]
-    [EntityPropertyMapping("CookedSize/Volume", "cooked/volume", "cooked", "http://www.example.org/cooked/", false)]
     [DataServiceKey("FoodID")]
+    [EntitySet("Foods")]
+    [NamedStream("Picture")]
     public class Food
     {
+        private List<string> alternativeNames = new List<string>();
+        private List<Provider> providers = new List<Provider>();
+        
         // Primitive types
         public int FoodID { get; set; }
         public string Name { get; set; }
@@ -399,15 +513,48 @@ namespace DataJS.Tests.V2
         public Guid ItemGUID { get; set; }
         public Single Weight { get; set; }
         public sbyte AvailableUnits { get; set; }
-        
+
         // Complex types
         public Package Packaging { get; set; }
         public CookedDimensions CookedSize { get; set; }
-        
+
         // Navigation properties
         public Category Category { get; set; }
+
+        // Collection properties
+        public List<string> AlternativeNames
+        {
+            get { return alternativeNames; }
+            set { alternativeNames = value; }
+        }
+
+        public List<Provider> Providers
+        {
+            get { return providers; }
+            set { providers = value; }
+        }
+
+        public GeometryCollection SpatialData
+        {
+            get;
+            set;
+        }
+        
     }
 
+    public class Provider
+    {
+        public string Name { get; set; }
+        public List<string> Aliases { get; set; }
+        public ProviderDetails Details { get; set; }
+    }
+
+    public class ProviderDetails
+    {
+        public string Telephone { get; set; }
+        public int PreferredCode { get; set; }
+    }
+    
     public class Package
     {
         public string Type { get; set; }

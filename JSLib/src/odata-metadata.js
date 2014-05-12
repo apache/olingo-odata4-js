@@ -32,15 +32,8 @@
     var xmlnsNS = datajs.xmlnsNS;
     var xmlParse = datajs.xmlParse;
 
-    var createAttributeExtension = odata.createAttributeExtension;
-    var createElementExtension = odata.createElementExtension;
     var edmxNs = odata.edmxNs;
     var edmNs1 = odata.edmNs1;
-    var edmNs1_1 = odata.edmNs1_1;
-    var edmNs1_2 = odata.edmNs1_2;
-    var edmNs2a = odata.edmNs2a;
-    var edmNs2b = odata.edmNs2b;
-    var edmNs3 = odata.edmNs3;
     var handler = odata.handler;
     var MAX_DATA_SERVICE_VERSION = odata.MAX_DATA_SERVICE_VERSION;
     var odataMetaXmlNs = odata.odataMetaXmlNs;
@@ -70,20 +63,77 @@
     };
 
     // It's assumed that all elements may have Documentation children and Annotation elements.
-    // See http://msdn.microsoft.com/en-us/library/bb399292.aspx for a CSDL reference.
+    // See http://docs.oasis-open.org/odata/odata/v4.0/cs01/part3-csdl/odata-v4.0-cs01-part3-csdl.html for a CSDL reference.
     var schema = {
         elements: {
+            Action: schemaElement(
+            /*attributes*/["Name", "IsBound", "EntitySetPath"],
+            /*elements*/["ReturnType", "Parameter*", "Annotation*"]
+            ),
+            ActionImport: schemaElement(
+            /*attributes*/["Name", "Action", "EntitySet", "Annotation*"]
+            ),
+            Annotation: schemaElement(
+            /*attributes*/["Term", "Qualifier", "Binary", "Bool", "Date", "DateTimeOffset", "Decimal", "Duration", "EnumMember", "Float", "Guid", "Int", "String", "TimeOfDay", "AnnotationPath", "NavigationPropertyPath", "Path", "PropertyPath", "UrlRef"],
+            /*elements*/["Binary*", "Bool*", "Date*", "DateTimeOffset*", "Decimal*", "Duration*", "EnumMember*", "Float*", "Guid*", "Int*", "String*", "TimeOfDay*", "And*", "Or*", "Not*", "Eq*", "Ne*", "Gt*", "Ge*", "Lt*", "Le*", "AnnotationPath*", "Apply*", "Cast*", "Collection*", "If*", "IsOf*", "LabeledElement*", "LabeledElementReference*", "Null*", "NavigationPropertyPath*", "Path*", "PropertyPath*", "Record*", "UrlRef*", "Annotation*"]
+            ),
+            AnnotationPath: schemaElement(
+            /*attributes*/null,
+            /*elements*/null,
+            /*text*/true
+            ),
             Annotations: schemaElement(
             /*attributes*/["Target", "Qualifier"],
-            /*elements*/["TypeAnnotation*", "ValueAnnotation*"]
+            /*elements*/["Annotation*"]
             ),
-            Association: schemaElement(
-            /*attributes*/["Name"],
-            /*elements*/["End*", "ReferentialConstraint", "TypeAnnotation*", "ValueAnnotation*"]
+            Apply: schemaElement(
+            /*attributes*/["Function"],
+            /*elements*/["String*", "Path*", "LabeledElement*", "Annotation*"]
             ),
-            AssociationSet: schemaElement(
-            /*attributes*/["Name", "Association"],
-            /*elements*/["End*", "TypeAnnotation*", "ValueAnnotation*"]
+            And: schemaElement(
+            /*attributes*/null,
+            /*elements*/null,
+            /*text*/true
+            ),
+            Or: schemaElement(
+            /*attributes*/null,
+            /*elements*/null,
+            /*text*/true
+            ),
+            Not: schemaElement(
+            /*attributes*/null,
+            /*elements*/null,
+            /*text*/true
+            ),
+            Eq: schemaElement(
+            /*attributes*/null,
+            /*elements*/null,
+            /*text*/true
+            ),
+            Ne: schemaElement(
+            /*attributes*/null,
+            /*elements*/null,
+            /*text*/true
+            ),
+            Gt: schemaElement(
+            /*attributes*/null,
+            /*elements*/null,
+            /*text*/true
+            ),
+            Ge: schemaElement(
+            /*attributes*/null,
+            /*elements*/null,
+            /*text*/true
+            ),
+            Lt: schemaElement(
+            /*attributes*/null,
+            /*elements*/null,
+            /*text*/true
+            ),
+            Le: schemaElement(
+            /*attributes*/null,
+            /*elements*/null,
+            /*text*/true
             ),
             Binary: schemaElement(
             /*attributes*/null,
@@ -95,19 +145,19 @@
             /*elements*/null,
             /*text*/true
             ),
+            Cast: schemaElement(
+            /*attributes*/["Type"],
+            /*elements*/["Path*", "Annotation*"]
+            ),
             Collection: schemaElement(
             /*attributes*/null,
-            /*elements*/["String*", "Int*", "Float*", "Decimal*", "Bool*", "DateTime*", "DateTimeOffset*", "Guid*", "Binary*", "Time*", "Collection*", "Record*"]
-            ),
-            CollectionType: schemaElement(
-            /*attributes*/["ElementType", "Nullable", "DefaultValue", "MaxLength", "FixedLength", "Precision", "Scale", "Unicode", "Collation", "SRID"],
-            /*elements*/["CollectionType", "ReferenceType", "RowType", "TypeRef"]
+            /*elements*/["Binary*", "Bool*", "Date*", "DateTimeOffset*", "Decimal*", "Duration*", "EnumMember*", "Float*", "Guid*", "Int*", "String*", "TimeOfDay*", "And*", "Or*", "Not*", "Eq*", "Ne*", "Gt*", "Ge*", "Lt*", "Le*", "AnnotationPath*", "Apply*", "Cast*", "Collection*", "If*", "IsOf*", "LabeledElement*", "LabeledElementReference*", "Null*", "NavigationPropertyPath*", "Path*", "PropertyPath*", "Record*", "UrlRef*"]
             ),
             ComplexType: schemaElement(
-            /*attributes*/["Name", "BaseType", "Abstract"],
-            /*elements*/["Property*", "TypeAnnotation*", "ValueAnnotation*"]
+            /*attributes*/["Name", "BaseType", "Abstract", "OpenType"],
+            /*elements*/["Property*", "NavigationProperty*", "Annotation*"]
             ),
-            DateTime: schemaElement(
+            Date: schemaElement(
             /*attributes*/null,
             /*elements*/null,
             /*text*/true
@@ -122,35 +172,27 @@
             /*elements*/null,
             /*text*/true
             ),
-            DefiningExpression: schemaElement(
+            Duration: schemaElement(
             /*attributes*/null,
             /*elements*/null,
             /*text*/true
-            ),
-            Dependent: schemaElement(
-            /*attributes*/["Role"],
-            /*elements*/["PropertyRef*"]
-            ),
-            Documentation: schemaElement(
-            /*attributes*/null,
-            /*elements*/null,
-            /*text*/true
-            ),
-            End: schemaElement(
-            /*attributes*/["Type", "Role", "Multiplicity", "EntitySet"],
-            /*elements*/["OnDelete"]
             ),
             EntityContainer: schemaElement(
             /*attributes*/["Name", "Extends"],
-            /*elements*/["EntitySet*", "AssociationSet*", "FunctionImport*", "TypeAnnotation*", "ValueAnnotation*"]
+            /*elements*/["EntitySet*", "Singleton*", "ActionImport*", "FunctionImport*", "Annotation*"]
             ),
             EntitySet: schemaElement(
-            /*attributes*/["Name", "EntityType"],
-            /*elements*/["TypeAnnotation*", "ValueAnnotation*"]
+            /*attributes*/["Name", "EntityType", "IncludeInServiceDocument"],
+            /*elements*/["NavigationPropertyBinding*", "Annotation*"]
             ),
             EntityType: schemaElement(
-            /*attributes*/["Name", "BaseType", "Abstract", "OpenType"],
-            /*elements*/["Key", "Property*", "NavigationProperty*", "TypeAnnotation*", "ValueAnnotation*"]
+            /*attributes*/["Name", "BaseType", "Abstract", "OpenType", "HasStream"],
+            /*elements*/["Key*", "Property*", "NavigationProperty*", "Annotation*"]
+            ),
+            EnumMember: schemaElement(
+            /*attributes*/null,
+            /*elements*/null,
+            /*text*/true
             ),
             EnumType: schemaElement(
             /*attributes*/["Name", "UnderlyingType", "IsFlags"],
@@ -162,22 +204,29 @@
             /*text*/true
             ),
             Function: schemaElement(
-            /*attributes*/["Name", "ReturnType"],
-            /*elements*/["Parameter*", "DefiningExpression", "ReturnType", "TypeAnnotation*", "ValueAnnotation*"]
+            /*attributes*/["Name", "IsBound", "IsComposable", "EntitySetPath"],
+            /*elements*/["ReturnType", "Parameter*", "Annotation*"]
             ),
             FunctionImport: schemaElement(
-            /*attributes*/["Name", "ReturnType", "EntitySet", "IsSideEffecting", "IsComposable", "IsBindable", "EntitySetPath"],
-            /*elements*/["Parameter*", "ReturnType", "TypeAnnotation*", "ValueAnnotation*"]
+            /*attributes*/["Name", "Function", "EntitySet", "IncludeInServiceDocument", "Annotation*"]
             ),
             Guid: schemaElement(
             /*attributes*/null,
             /*elements*/null,
             /*text*/true
             ),
+            If: schemaElement(
+            /*attributes*/null,
+            /*elements*/["Path*", "String*", "Annotation*"]
+            ),
             Int: schemaElement(
             /*attributes*/null,
             /*elements*/null,
             /*text*/true
+            ),
+            IsOf: schemaElement(
+            /*attributes*/["Type", "MaxLength", "Precision", "Scale", "Unicode", "SRID", "DefaultValue", "Annotation*"],
+            /*elements*/["Path*"]
             ),
             Key: schemaElement(
             /*attributes*/null,
@@ -185,21 +234,35 @@
             ),
             LabeledElement: schemaElement(
             /*attributes*/["Name"],
-            /*elements*/["Path", "String", "Int", "Float", "Decimal", "Bool", "DateTime", "DateTimeOffset", "Guid", "Binary", "Time", "Collection", "Record", "LabeledElement", "Null"]
+            /*elements*/["Binary*", "Bool*", "Date*", "DateTimeOffset*", "Decimal*", "Duration*", "EnumMember*", "Float*", "Guid*", "Int*", "String*", "TimeOfDay*", "And*", "Or*", "Not*", "Eq*", "Ne*", "Gt*", "Ge*", "Lt*", "Le*", "AnnotationPath*", "Apply*", "Cast*", "Collection*", "If*", "IsOf*", "LabeledElement*", "LabeledElementReference*", "Null*", "NavigationPropertyPath*", "Path*", "PropertyPath*", "Record*", "UrlRef*", "Annotation*"]
+            ),
+            LabeledElementReference: schemaElement(
+            /*attributes*/["Term"],
+            /*elements*/["Binary*", "Bool*", "Date*", "DateTimeOffset*", "Decimal*", "Duration*", "EnumMember*", "Float*", "Guid*", "Int*", "String*", "TimeOfDay*", "And*", "Or*", "Not*", "Eq*", "Ne*", "Gt*", "Ge*", "Lt*", "Le*", "AnnotationPath*", "Apply*", "Cast*", "Collection*", "If*", "IsOf*", "LabeledElement*", "LabeledElementReference*", "Null*", "NavigationPropertyPath*", "Path*", "PropertyPath*", "Record*", "UrlRef*"]
             ),
             Member: schemaElement(
-            /*attributes*/["Name", "Value"]
+            /*attributes*/["Name", "Value"],
+            /*element*/["Annotation*"]
             ),
             NavigationProperty: schemaElement(
-            /*attributes*/["Name", "Relationship", "ToRole", "FromRole", "ContainsTarget"],
-            /*elements*/["TypeAnnotation*", "ValueAnnotation*"]
+            /*attributes*/["Name", "Type", "Nullable", "Partner", "ContainsTarget"],
+            /*elements*/["ReferentialConstraint*", "OnDelete*", "Annotation*"]
+            ),
+            NavigationPropertyBinding: schemaElement(
+            /*attributes*/["Path", "Target"]
+            ),
+            NavigationPropertyPath: schemaElement(
+            /*attributes*/null,
+            /*elements*/null,
+            /*text*/true
             ),
             Null: schemaElement(
             /*attributes*/null,
-            /*elements*/null
+            /*elements*/["Annotation*"]
             ),
             OnDelete: schemaElement(
-            /*attributes*/["Action"]
+            /*attributes*/["Action"],
+            /*elements*/["Annotation*"]
             ),
             Path: schemaElement(
             /*attributes*/null,
@@ -207,37 +270,34 @@
             /*text*/true
             ),
             Parameter: schemaElement(
-            /*attributes*/["Name", "Type", "Mode", "Nullable", "DefaultValue", "MaxLength", "FixedLength", "Precision", "Scale", "Unicode", "Collation", "ConcurrencyMode", "SRID"],
-            /*elements*/["CollectionType", "ReferenceType", "RowType", "TypeRef", "TypeAnnotation*", "ValueAnnotation*"]
-            ),
-            Principal: schemaElement(
-            /*attributes*/["Role"],
-            /*elements*/["PropertyRef*"]
+            /*attributes*/["Name", "Type", "Nullable", "MaxLength", "Precision", "Scale", "SRID"],
+            /*elements*/["Annotation*"]
             ),
             Property: schemaElement(
-            /*attributes*/["Name", "Type", "Nullable", "DefaultValue", "MaxLength", "FixedLength", "Precision", "Scale", "Unicode", "Collation", "ConcurrencyMode", "CollectionKind", "SRID"],
-            /*elements*/["CollectionType", "ReferenceType", "RowType", "TypeAnnotation*", "ValueAnnotation*"]
+            /*attributes*/["Name", "Type", "Nullable", "MaxLength", "Precision", "Scale", "Unicode", "SRID", "DefaultValue"],
+            /*elements*/["Annotation*"]
+            ),
+            PropertyPath: schemaElement(
+            /*attributes*/null,
+            /*elements*/null,
+            /*text*/true
             ),
             PropertyRef: schemaElement(
-            /*attributes*/["Name"]
+            /*attributes*/["Name", "Alias"]
             ),
             PropertyValue: schemaElement(
-            /*attributes*/["Property", "Path", "String", "Int", "Float", "Decimal", "Bool", "DateTime", "DateTimeOffset", "Guid", "Binary", "Time"],
-            /*Elements*/["Path", "String", "Int", "Float", "Decimal", "Bool", "DateTime", "DateTimeOffset", "Guid", "Binary", "Time", "Collection", "Record", "LabeledElement", "Null"]
+            /*attributes*/["Property", "Path"],
+            /*elements*/["Binary*", "Bool*", "Date*", "DateTimeOffset*", "Decimal*", "Duration*", "EnumMember*", "Float*", "Guid*", "Int*", "String*", "TimeOfDay*", "And*", "Or*", "Not*", "Eq*", "Ne*", "Gt*", "Ge*", "Lt*", "Le*", "AnnotationPath*", "Apply*", "Cast*", "Collection*", "If*", "IsOf*", "LabeledElement*", "LabeledElementReference*", "Null*", "NavigationPropertyPath*", "Path*", "PropertyPath*", "Record*", "UrlRef*", "Annotation*"]
             ),
-            ReferenceType: schemaElement(
-            /*attributes*/["Type"]
+            Record: schemaElement(
+            /*attributes*/null,
+            /*Elements*/["PropertyValue*", "Property*", "Annotation*"]
             ),
             ReferentialConstraint: schemaElement(
-            /*attributes*/null,
-            /*elements*/["Principal", "Dependent"]
+            /*attributes*/["Property", "ReferencedProperty", "Annotation*"]
             ),
             ReturnType: schemaElement(
-            /*attributes*/["ReturnType", "Type", "EntitySet"],
-            /*elements*/["CollectionType", "ReferenceType", "RowType"]
-            ),
-            RowType: schemaElement(
-            /*elements*/["Property*"]
+            /*attributes*/["Type", "Nullable", "MaxLength", "Precision", "Scale", "SRID"]
             ),
             String: schemaElement(
             /*attributes*/null,
@@ -246,64 +306,55 @@
             ),
             Schema: schemaElement(
             /*attributes*/["Namespace", "Alias"],
-            /*elements*/["Using*", "EntityContainer*", "EntityType*", "Association*", "ComplexType*", "Function*", "ValueTerm*", "Annotations*"]
+            /*elements*/["Action*", "Annotations*", "Annotation*", "ComplexType*", "EntityContainer", "EntityType*", "EnumType*", "Function*", "Term*", "TypeDefinition*", "Annotation*"]
             ),
-            Time: schemaElement(
+            Singleton: schemaElement(
+            /*attributes*/["Name", "Type"],
+            /*elements*/["NavigationPropertyBinding*", "Annotation*"]
+            ),
+            Term: schemaElement(
+            /*attributes*/["Name", "Type", "BaseTerm", "DefaultValue ", "AppliesTo", "Nullable", "MaxLength", "Precision", "Scale", "SRID"],
+            /*elements*/["Annotation*"]
+            ),
+            TimeOfDay: schemaElement(
             /*attributes*/null,
             /*elements*/null,
             /*text*/true
             ),
-            TypeAnnotation: schemaElement(
-            /*attributes*/["Term", "Qualifier"],
-            /*elements*/["PropertyValue*"]
+            TypeDefinition: schemaElement(
+            /*attributes*/["Name", "UnderlyingType", "MaxLength", "Unicode", "Precision", "Scale", "SRID"],
+            /*elements*/["Annotation*"]
             ),
-            TypeRef: schemaElement(
-            /*attributes*/["Type", "Nullable", "DefaultValue", "MaxLength", "FixedLength", "Precision", "Scale", "Unicode", "Collation", "SRID"]
-            ),
-            Using: schemaElement(
-            /*attributes*/["Namespace", "Alias"]
-            ),
-            ValueAnnotation: schemaElement(
-            /*attributes*/["Term", "Qualifier", "Path", "String", "Int", "Float", "Decimal", "Bool", "DateTime", "DateTimeOffset", "Guid", "Binary", "Time"],
-            /*Elements*/["Path", "String", "Int", "Float", "Decimal", "Bool", "DateTime", "DateTimeOffset", "Guid", "Binary", "Time", "Collection", "Record", "LabeledElement", "Null"]
-            ),
-            ValueTerm: schemaElement(
-            /*attributes*/["Name", "Type"],
-            /*elements*/["TypeAnnotation*", "ValueAnnotation*"]
+            UrlRef: schemaElement(
+            /*attributes*/null,
+            /*elements*/["Binary*", "Bool*", "Date*", "DateTimeOffset*", "Decimal*", "Duration*", "EnumMember*", "Float*", "Guid*", "Int*", "String*", "TimeOfDay*", "And*", "Or*", "Not*", "Eq*", "Ne*", "Gt*", "Ge*", "Lt*", "Le*", "AnnotationPath*", "Apply*", "Cast*", "Collection*", "If*", "IsOf*", "LabeledElement*", "LabeledElementReference*", "Null*", "NavigationPropertyPath*", "Path*", "PropertyPath*", "Record*", "UrlRef*", "Annotation*"]
             ),
 
             // See http://msdn.microsoft.com/en-us/library/dd541238(v=prot.10) for an EDMX reference.
             Edmx: schemaElement(
             /*attributes*/["Version"],
-            /*elements*/["DataServices", "Reference*", "AnnotationsReference*"],
+            /*elements*/["DataServices", "Reference*"],
             /*text*/false,
             /*ns*/edmxNs
             ),
             DataServices: schemaElement(
-            /*attributes*/null,
+            /*attributes*/["m:MaxDataServiceVersion", "m:DataServiceVersion"],
             /*elements*/["Schema*"],
             /*text*/false,
             /*ns*/edmxNs
+            ),
+            Reference: schemaElement(
+            /*attributes*/["Uri"],
+            /*elements*/["Include*", "IncludeAnnotations*", "Annotation*"]
+            ),
+            Include: schemaElement(
+            /*attributes*/["Namespace", "Alias"]
+            ),
+            IncludeAnnotations: schemaElement(
+            /*attributes*/["TermNamespace", "Qualifier", "TargetNamespace"]
             )
         }
     };
-
-    // See http://msdn.microsoft.com/en-us/library/ee373839.aspx for a feed customization reference.
-    var customizationAttributes = ["m:FC_ContentKind", "m:FC_KeepInContent", "m:FC_NsPrefix", "m:FC_NsUri", "m:FC_SourcePath", "m:FC_TargetPath"];
-    schema.elements.Property.attributes = schema.elements.Property.attributes.concat(customizationAttributes);
-    schema.elements.EntityType.attributes = schema.elements.EntityType.attributes.concat(customizationAttributes);
-
-    // See http://msdn.microsoft.com/en-us/library/dd541284(PROT.10).aspx for an EDMX reference.
-    schema.elements.Edmx = { attributes: ["Version"], elements: ["DataServices"], ns: edmxNs };
-    schema.elements.DataServices = { elements: ["Schema*"], ns: edmxNs };
-
-    // See http://msdn.microsoft.com/en-us/library/dd541233(v=PROT.10) for Conceptual Schema Definition Language Document for Data Services.
-    schema.elements.EntityContainer.attributes.push("m:IsDefaultEntityContainer");
-    schema.elements.Property.attributes.push("m:MimeType");
-    schema.elements.FunctionImport.attributes.push("m:HttpMethod");
-    schema.elements.FunctionImport.attributes.push("m:IsAlwaysBindable");
-    schema.elements.EntityType.attributes.push("m:HasStream");
-    schema.elements.DataServices.attributes = ["m:DataServiceVersion", "m:MaxDataServiceVersion"];
 
     var scriptCase = function (text) {
         /// <summary>Converts a Pascal-case identifier into a camel-case identifier.</summary>
@@ -333,10 +384,6 @@
         /// <param name="candidateName">XML element name to consider.</param>
         /// <returns type="Object">The schema that describes the specified element; null if not found.</returns>
 
-        if (candidateName === "Documentation") {
-            return { isArray: true, propertyName: "documentation" };
-        }
-
         var elements = parentSchema.elements;
         if (!elements) {
             return null;
@@ -360,23 +407,12 @@
         return null;
     };
 
-    // This regular expression is used to detect a feed customization element
-    // after we've normalized it into the 'm' prefix. It starts with m:FC_,
-    // followed by other characters, and ends with _ and a number.
-    // The captures are 0 - whole string, 1 - name as it appears in internal table.
-    var isFeedCustomizationNameRE = /^(m:FC_.*)_[0-9]+$/;
-
-    var isEdmNamespace = function (nsURI) {
+    var isEdmNamespace = function (nsUri) {
         /// <summary>Checks whether the specifies namespace URI is one of the known CSDL namespace URIs.</summary>
-        /// <param name="nsURI" type="String">Namespace URI to check.</param>
+        /// <param name="nsUri" type="String">Namespace URI to check.</param>
         /// <returns type="Boolean">true if nsURI is a known CSDL namespace; false otherwise.</returns>
 
-        return nsURI === edmNs1 ||
-               nsURI === edmNs1_1 ||
-               nsURI === edmNs1_2 ||
-               nsURI === edmNs2a ||
-               nsURI === edmNs2b ||
-               nsURI === edmNs3;
+        return nsUri === edmNs1;
     };
 
     var parseConceptualModelElement = function (element) {
@@ -400,7 +436,6 @@
         }
 
         var item = {};
-        var extensions = [];
         var attributes = elementSchema.attributes || [];
         xmlAttributes(element, function (attribute) {
 
@@ -426,22 +461,9 @@
             if (schemaName !== null) {
                 schemaName += localName;
 
-                // Feed customizations for complex types have additional
-                // attributes with a suffixed counter starting at '1', so
-                // take that into account when doing the lookup.
-                var match = isFeedCustomizationNameRE.exec(schemaName);
-                if (match) {
-                    schemaName = match[1];
-                }
-
                 if (contains(attributes, schemaName)) {
-                    handled = true;
                     item[scriptCase(localName)] = value;
                 }
-            }
-
-            if (!handled) {
-                extensions.push(createAttributeExtension(attribute));
             }
         });
 
@@ -459,17 +481,11 @@
                 } else {
                     item[childSchema.propertyName] = parseConceptualModelElement(child);
                 }
-            } else {
-                extensions.push(createElementExtension(child));
             }
         });
 
         if (elementSchema.text) {
             item.text = xmlInnerText(element);
-        }
-
-        if (extensions.length) {
-            item.extensions = extensions;
         }
 
         return item;

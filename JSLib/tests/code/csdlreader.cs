@@ -14,93 +14,66 @@ namespace DataJS.Tests
 
     public static class CsdlReader
     {
-        static readonly string knownNamespace = "http://schemas.microsoft.com";
+        static readonly string knownNamespace = "http://docs.oasis-open.org";
         static readonly string[] repeatingElements = 
             {
-                "End", 
-                "Property", 
-                "PropertyRef", 
-                "EntitySet", 
-                "AssociationSet", 
-                "FunctionImport", 
-                "NavigationProperty", 
-                "Parameter", 
-                "Using", 
-                "EntityContainer", 
-                "EntityType", 
-                "Association", 
-                "ComplexType", 
-                "Function", 
-                "Schema"
+                "Action",
+                "ActionImport",
+                "Annotation",
+                "Annotations",
+                "Apply",
+                "Binary",
+                "Bool",
+                "Cast",
+                "Collection",
+                "ComplexType",
+                "Date",
+                "DateTimeOffset",
+                "Decimal",
+                "Duration",
+                "EntitySet",
+                "EntityType",
+                "EnumMember",
+                "EnumType",
+                "Float",
+                "Function",
+                "FunctionImport",
+                "Guid",
+                "If",
+                "Int",
+                "IsOf",
+                "Key",
+                "LabeledElement",
+                "LabeledElementReference",
+                "Member",
+                "NavigationProperty",
+                "NavigationPropertyBinding",
+                "NavigationPropertyPath",
+                "Null",
+                "OnDelete",
+                "Path",
+                "Parameter",
+                "Property",
+                "PropertyPath",
+                "PropertyRef",
+                "PropertyValue",
+                "Record",
+                "ReferentialConstraint",
+                "String",
+                "Schema",
+                "Singleton",
+                "Term",
+                "TimeOfDay",
+                "TypeDefinition",
+                "UrlRef",
+                "Reference",
+                "Include",
+                "IncludeAnnotations"
             };
 
-        public static JsonObject ReadCsdl(TextReader payload)
+        public static Dictionary<string, object> ReadCsdl(TextReader payload)
         {
             return BuildElementJsonObject(XElement.Load(payload));
-        }
-
-        /// <summary>
-        /// Builds the extensions element object
-        /// extensions = {
-        /// name: string, // local name of the custom XML element
-        /// namespace: string, // namespace URI of the custom XML element
-        /// value: string, // value of the custom XML element
-        /// attributes: array, // array of attribute extension objects of the custom XML element
-        /// children: array // array of element extension objects of the custom XML element };
-        /// </summary>
-        /// <param name="customElement">The custom element to be made into an extension object</param>
-        /// <returns>the custom element json object</returns>
-        static JsonObject BuildExtensionsElementObject(XElement customElement)
-        {
-            string value;
-            // customElement.Value contains the value of the element's children, but these are already
-            // captured in the children propterty.
-            if (customElement.HasElements)
-            {
-                value = null;
-            }
-            else
-            {
-                if (customElement.Value == "")
-                {
-                    value = null;
-                }
-                else
-                {
-                    value = customElement.Value;
-                }
-            }
-
-            JsonObject jsonObject = BuildBaseExtensionsObject(customElement.Name.LocalName, customElement.Name.Namespace.ToString(), value);
-
-            jsonObject["attributes"] = customElement.Attributes().Select(
-                attribute => BuildBaseExtensionsObject(attribute.Name.LocalName, attribute.Name.Namespace.ToString(), attribute.Value)
-                ).ToArray();
-            jsonObject["children"] = customElement.Elements().Select(element => BuildExtensionsElementObject(element)).ToArray();
-
-            return jsonObject;
-        }
-
-        /// <summary>
-        /// Creates a generic extension object
-        /// extensions = {
-        /// name: string, // local name of the custom XML element or attribute
-        /// namespace: string, // namespace URI of the custom XML element or attribute
-        /// value: string, // value of the custom XML element or attribute }
-        /// </summary>
-        /// <param name="name">name of the object</param>
-        /// <param name="objectNamespace">namespace of the obect</param>
-        /// <param name="value">value of the object</param>
-        /// <returns></returns>
-        static JsonObject BuildBaseExtensionsObject(string name, string objectNamespace, string value)
-        {
-            JsonObject jsonObject = new JsonObject();
-
-            jsonObject["name"] = name;
-            jsonObject["namespace"] = objectNamespace;
-            jsonObject["value"] = value;
-
-            return jsonObject;
         }
 
         /// <summary>
@@ -108,30 +81,21 @@ namespace DataJS.Tests
         /// </summary>
         /// <param name="xmlAttributes">IEnumberable of XAttributes to build the attribute object</param>
         /// <returns>The JsonObject containing the name-value pairs for an element's attributes</returns>
-        static JsonObject BuildAttributeJsonObject(IEnumerable<XAttribute> xmlAttributes)
+        static Dictionary<string, object> BuildAttributeJsonObject(IEnumerable<XAttribute> xmlAttributes)
         {
-            JsonObject jsonObject = new JsonObject();
-            List<JsonObject> extensions = new List<JsonObject>();
+            Dictionary<string, object> jsonObject = new Dictionary<string, object>();
 
             foreach (XAttribute attribute in xmlAttributes)
             {
                 if (!attribute.IsNamespaceDeclaration)
                 {
                     string attributeNamespace = attribute.Name.Namespace.ToString();
-                    if (string.IsNullOrEmpty(attributeNamespace) || attributeNamespace.StartsWith(knownNamespace, StringComparison.InvariantCultureIgnoreCase))
+                    if (string.IsNullOrEmpty(attributeNamespace) ||
+                        attributeNamespace.StartsWith(knownNamespace, StringComparison.InvariantCultureIgnoreCase))
                     {
                         jsonObject[MakeFirstLetterLowercase(attribute.Name.LocalName)] = attribute.Value;
                     }
-                    else
-                    {
-                        extensions.Add(BuildBaseExtensionsObject(attribute.Name.LocalName, attribute.Name.Namespace.ToString(), attribute.Value));
-                    }
                 }
-            }
-
-            if (extensions.Count > 0)
-            {
-                jsonObject["extensions"] = extensions.ToArray();
             }
 
             return jsonObject;
@@ -143,20 +107,19 @@ namespace DataJS.Tests
         /// <param name="container">The XML container</param>
         /// <param name="buildValue">Function that builds a value from a property element</param>
         /// <returns>The JsonObject containing the name-value pairs</returns>
-        public static JsonObject BuildElementJsonObject(XElement container)
+        public static Dictionary<string, object> BuildElementJsonObject(XElement container)
         {
             if (container == null)
             {
                 return null;
             }
 
-            JsonObject jsonObject = new JsonObject();
-            List<JsonObject> extensions = new List<JsonObject>();
+            Dictionary<string, object> jsonObject = new Dictionary<string, object>();
+            string keyName = MakeFirstLetterLowercase(container.Name.LocalName);
 
             if (container.HasAttributes || container.HasElements)
             {
-                Dictionary<string, List<JsonObject>> repeatingObjectArrays = new Dictionary<string, List<JsonObject>>();
-                JsonObject extensionObject = new JsonObject();
+                Dictionary<string, List<Dictionary<string, object>>> repeatingObjectArrays = new Dictionary<string, List<Dictionary<string, object>>>();
 
                 jsonObject = BuildAttributeJsonObject(container.Attributes());
 
@@ -173,8 +136,9 @@ namespace DataJS.Tests
                             // See if property was already created as an array, if not then create it
                             if (!repeatingObjectArrays.ContainsKey(propertyName))
                             {
-                                repeatingObjectArrays.Add(propertyName, new List<JsonObject>());
+                                repeatingObjectArrays.Add(propertyName, new List<Dictionary<string, object>>());
                             }
+
                             repeatingObjectArrays[propertyName].Add(BuildElementJsonObject(propertyElement));
                         }
                         else
@@ -182,15 +146,6 @@ namespace DataJS.Tests
                             jsonObject[propertyName] = BuildElementJsonObject(propertyElement);
                         }
                     }
-                    else
-                    {
-                        extensions.Add(BuildExtensionsElementObject(propertyElement));
-                    }
-                }
-
-                if (extensions.Count > 0)
-                {
-                    jsonObject["extensions"] = extensions.ToArray();
                 }
 
                 foreach (string key in repeatingObjectArrays.Keys)

@@ -19,7 +19,6 @@
 
     var datajs = window.datajs || {};
     var odata = window.OData || {};
-
     var parseInt10 = datajs.parseInt10;
     var normalizeURICase = datajs.normalizeURICase;
 
@@ -96,7 +95,7 @@
         /// <param name="error" type="Function">Error callback.</param>
         /// <returns type="Object">Object with an abort method.</returns>
 
-        var request = queryForDataInternal(uri, options, [], success, error);
+        var request = queryForDataInternal(uri, options, {}, success, error);
         return request;
     };
 
@@ -111,14 +110,29 @@
 
         var request = buildODataRequest(uri, options);
         var currentRequest = odata.request(request, function (newData) {
-            var next = newData.__next;
-            var results = newData.results;
+            var nextLink = newData["@odata.nextLink"];
+            if (nextLink) {
+                var index = uri.indexOf(".svc/", 0);
+                if (index != -1) {
+                    nextLink = uri.substring(0, index + 5) + nextLink;
+                }
+            }
 
-            data = data.concat(results);
+            if (data.value && newData.value) {
+                data.value = data.value.concat(newData.value);
+            }
+            else {
+                for (var property in newData) {
+                    if (property != "@odata.nextLink") {
+                        data[property] = newData[property];
+                    }
+                }
+            }
 
-            if (next) {
-                currentRequest = queryForDataInternal(next, options, data, success, error);
-            } else {
+            if (nextLink) {
+                currentRequest = queryForDataInternal(nextLink, options, data, success, error);
+            }
+            else {
                 success(data);
             }
         }, error, undefined, options.httpClient, options.metadata);
@@ -137,7 +151,7 @@
 
         var that = this;
         var uri = options.source;
-        
+
         that.identifier = normalizeURICase(encodeURI(decodeURI(uri)));
         that.options = options;
 

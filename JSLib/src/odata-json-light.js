@@ -73,8 +73,9 @@
     var odataNs = "odata";
     var odataAnnotationPrefix = odataNs + ".";
 
+    var contextUrlAnnotation = "@" + odataAnnotationPrefix + "context";
+
     var bindAnnotation = "@" + odataAnnotationPrefix + "bind";
-    var metadataAnnotation = odataAnnotationPrefix + "metadata";
     var navUrlAnnotation = odataAnnotationPrefix + "navigationLinkUrl";
     var typeAnnotation = odataAnnotationPrefix + "type";
 
@@ -1044,7 +1045,7 @@
         ///     Object with kind and type fields. Null if there is no metadata annotation or the payload info cannot be obtained..
         /// </returns>
 
-        var metadataUri = data[metadataAnnotation];
+        var metadataUri = data[contextUrlAnnotation];
         if (!metadataUri || typeof metadataUri !== "string") {
             return null;
         }
@@ -1144,15 +1145,15 @@
             return data;
         }
 
-        contentTypeOdata = contentTypeOdata || "minimalmetadata";
-        var baseURI = data[metadataAnnotation];
+        contentTypeOdata = contentTypeOdata || "minimal";
+        var baseURI = data[contextUrlAnnotation];
         var payloadInfo = jsonLightPayloadInfo(data, model, inferFeedAsComplexType);
         if (assigned(payloadInfo)) {
             payloadInfo.contentTypeOdata = contentTypeOdata;
         }
         var typeName = null;
         if (payloadInfo) {
-            delete data[metadataAnnotation];
+            delete data[contextUrlAnnotation];
 
             typeName = payloadInfo.type;
             switch (payloadInfo.kind) {
@@ -1171,7 +1172,56 @@
         return jsonLightReadObject(data, payloadInfo, baseURI, model, recognizeDates);
     };
 
-    var jsonLightSerializableMetadata = ["type", "etag", "media_src", "edit_media", "content_type", "media_etag"];
+    var jsonLightSerializableMetadata = ["@odata.type", "@odata.etag", "@odata.mediaEditLink", "@odata.mediaReadLink", "@odata.mediaContentType", "@odata.mediaEtag"];
+
+    var formatJsonLightRequestPayload = function (data) {
+        if (!data) {
+            return data;
+        }
+
+        if (isPrimitive(data)) {
+            return data;
+        }
+
+        if (isArray(data)) {
+            var newArrayData = [];
+            var i, len;
+            for (i = 0, len = data.length; i < len; i++) {
+                newArrayData[i] = formatJsonLightRequestPayload(data[i]);
+            }
+
+            return newArrayData;
+        }
+
+        var newdata = {};
+        for (var property in data) {
+            if (isJsonLightSerializableProperty(property)) {
+                newdata[property] = formatJsonLightRequestPayload(data[property]);
+            }
+        }
+
+        return newdata;
+    };
+
+    var isJsonLightSerializableProperty = function (property) {
+        if (!property) {
+            return false;
+        }
+
+        if (property.indexOf("@odata.") == -1) {
+            return true;
+        }
+
+        var i, len;
+        for (i = 0, len = jsonLightSerializableMetadata.length; i < len; i++) {
+            var name = jsonLightSerializableMetadata[i];
+            if (property.indexOf(name) != -1) {
+                return true;
+            }
+        }
+
+        return false;
+    };
 
     var formatJsonLight = function (obj, context) {
         /// <summary>Converts an object in the library's internal representation to its json light representation.</summary>
@@ -1370,7 +1420,7 @@
         /// <param name="data" type="Object">Object on which the annotation is going to be stored.</param>
 
         if (value !== undefined) {
-            if(target) {
+            if (target) {
                 data[target + "@" + qName] = value;
             }
             else {
@@ -1382,6 +1432,7 @@
     // DATAJS INTERNAL START
     odata.jsonLightReadPayload = jsonLightReadPayload;
     odata.formatJsonLight = formatJsonLight;
+    odata.formatJsonLightRequestPayload = formatJsonLightRequestPayload;
     // DATAJS INTERNAL END
 
     // CONTENT END
