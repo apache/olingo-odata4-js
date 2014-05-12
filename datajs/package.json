@@ -1,0 +1,32 @@
+{
+  "name": "datajs",
+  "version": "0.0.0",
+  "title": "datajs library",
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "devDependencies": {
+    "browserify": "^3.40.0",
+    "grunt": "^0.4.4",
+    "grunt-browserify": "^2.0.3",
+    "grunt-connect-proxy": "^0.1.10",
+    "grunt-contrib-connect": "^0.7.1",
+    "grunt-contrib-copy": "^0.5.0",
+    "grunt-contrib-uglify": "^0.4.0",
+    "grunt-exorcise": "^0.1.0",
+    "grunt-open": "^0.2.3",
+    "http-proxy": "^1.1.4",
+    "mocha": "^1.18.2",
+    "uglifyify": "^2.1.1"
+  },
+  "testling": {
+    "harness": "mocha-tdd",
+    "files": "test/sampletest_mocca.js",
+    "browsers": [
+      "ie/8"
+    ]
+  },
+  "scripts": {
+    "test": "mocha --ui tdd"
+  }
+}
