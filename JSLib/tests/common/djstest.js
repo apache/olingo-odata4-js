@@ -223,6 +223,15 @@
         }
     };
 
+    djstest.addFullTest = function (disable, fn, name, arg, timeout) {
+        /// <summary>Add the unit test cases</summary>
+        /// <param name="disable">Indicate whether this test case should be disabled</param>
+        if (disable != true) {
+            djstest.addTest(fn, name, arg, timeout);
+        }
+    };
+
+
     djstest.addTest = function (fn, name, arg, timeout) {
         if (!name) {
             name = extractFunctionName(fn.toString());
@@ -237,7 +246,7 @@
             QUnit.stop();
             fn.call(this, arg);
         });
-    }
+    };
 
     djstest.assert = function (test, message) {
         /// <summary>Asserts that a condition is true.</summary>

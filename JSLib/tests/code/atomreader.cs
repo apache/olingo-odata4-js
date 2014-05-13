@@ -9,7 +9,7 @@ namespace DataJS.Tests
     using System.IO;
     using System.Linq;
     using System.ServiceModel.Syndication;
-    using System.Spatial;
+    using Microsoft.Spatial;
     using System.Xml;
     using System.Xml.Linq;
 

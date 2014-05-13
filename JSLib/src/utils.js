@@ -461,6 +461,60 @@
         }
         return binaryString;
     };
+
+    var getJsonValueArraryLength = function (data) {
+        if (data && data.value) {
+            return data.value.length;
+        }
+
+        return 0;
+    };
+
+    var sliceJsonValueArray = function (data, start, end) {
+        if (data == undefined || data.value == undefined) {
+            return data;
+        }
+
+        if (start < 0) {
+            start = 0;
+        }
+
+        var length = getJsonValueArraryLength(data);
+        if (length < end) {
+            end = length;
+        }
+
+        var newdata = {};
+        for (var property in data) {
+            if (property == "value") {
+                newdata[property] = data[property].slice(start, end);
+            } else {
+                newdata[property] = data[property];
+            }
+        }
+
+        return newdata;
+    };
+
+    var concatJsonValueArray = function (data, concatData) {
+        if (concatData == undefined || concatData.value == undefined) {
+            return data;
+        }
+
+        if (data == undefined || Object.keys(data).length == 0) {
+            return concatData;
+        }
+
+        if (data.value == undefined) {
+            data.value = concatData.value;
+            return data;
+        }
+
+        data.value = data.value.concat(concatData.value);
+
+        return data;
+    };
+
     // DATAJS INTERNAL START
 
     datajs.activeXObject = activeXObject;
@@ -484,6 +538,9 @@
     datajs.undefinedDefault = undefinedDefault;
     datajs.decodeBase64 = decodeBase64;
     datajs.convertByteArrayToHexString = convertByteArrayToHexString;
+    datajs.getJsonValueArraryLength = getJsonValueArraryLength;
+    datajs.sliceJsonValueArray = sliceJsonValueArray;
+    datajs.concatJsonValueArray = concatJsonValueArray;
     // DATAJS INTERNAL END
 
     // CONTENT END

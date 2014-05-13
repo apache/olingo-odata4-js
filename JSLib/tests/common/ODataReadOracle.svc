@@ -31,8 +31,9 @@ namespace DataJS.Tests
     using System.ServiceModel.Web;
     using System.Xml;
     using System.Xml.Linq;
-    using System.Spatial;
-    using Microsoft.Data.OData;
+    using Microsoft.Spatial;
+    using Microsoft.OData.Core;
+    using System.Web.Script.Serialization;
 
     /// <summary>
     /// Oracle for the OData.read library function
@@ -42,7 +43,7 @@ namespace DataJS.Tests
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
     public class ODataReadOracle
     {
-        const string jsonVerboseMediaType = "application/json;odata=verbose";
+        const string jsonlightMediaType = "application/json";
 
         /// <summary>
         /// Reads a URI that will return an OData ATOM feed
@@ -78,13 +79,14 @@ namespace DataJS.Tests
         /// Reads a URI that will return a metadata object
         /// </summary>
         /// <param name="url">The URL to send the request to</param>
-        /// <returns>JSON object expected to be returned by OData.read (plus type metadata markers that will need to be removed)</returns>
+        /// <returns>Stream of metadata in json light format</returns>
         [OperationContract]
-        [WebGet(ResponseFormat = WebMessageFormat.Json)]
-        public JsonObject ReadMetadata(string url)
+        [WebGet]
+        public Stream ReadMetadata(string url)
         {
             WebResponse response = WebRequest.Create(ResolveUri(url, UriKind.Absolute)).GetResponse();
-            return CsdlReader.ReadCsdl(new StreamReader(response.GetResponseStream()));
+            Dictionary<string, object> jsonObject = CsdlReader.ReadCsdl(new StreamReader(response.GetResponseStream()));
+            return ReaderUtils.ConvertDictionarytoJsonlightStream(jsonObject);
         }
 
         /// <summary>
@@ -101,7 +103,7 @@ namespace DataJS.Tests
             string baseUri = string.Empty;
 
             // With JSON responses only relative path passed to the library is available
-            if (mimeType.Equals(jsonVerboseMediaType))
+            if (mimeType.Equals(jsonlightMediaType))
             {
                 baseUri = ResolveUri(url, UriKind.Relative).ToString();
             }
@@ -122,10 +124,15 @@ namespace DataJS.Tests
         /// <returns>Stream of the Json response expected to be returned by OData.read</returns>
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json)]
-        public Stream ReadJson(string url, string user, string password)
+        public Stream ReadJson(string url, string mimeType, string user, string password)
         {
+            if (mimeType == null)
+            {
+                mimeType = jsonlightMediaType + ";odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8";
+            }
+            
             HttpWebRequest request = (HttpWebRequest)ReaderUtils.CreateRequest(ResolveUri(url, UriKind.Absolute), user, password);
-            request.Accept = jsonVerboseMediaType + "; charset=utf-8";
+            request.Accept = mimeType;
             WebResponse response = request.GetResponse();
 
             return response.GetResponseStream();

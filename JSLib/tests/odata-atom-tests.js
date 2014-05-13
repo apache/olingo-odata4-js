@@ -30,7 +30,7 @@
     };
 
     var resetFoodData = function () {
-        $.ajax({ url: "./endpoints/FoodStoreDataServiceV2.svc/ResetData", async: false, type: "POST" });
+        $.ajax({ url: "./endpoints/FoodStoreDataServiceV4.svc/ResetData", async: false, type: "POST" });
     };
 
     var customerSampleMetadataText = '' +
@@ -57,189 +57,245 @@
     '</Schema>\r\n' +
     '</edmx:DataServices></edmx:Edmx>';
 
-    var foodServiceV2FoodsSampleText = '' +
-    '<feed xml:base="http://localhost/tests/endpoints/FoodStoreDataServiceV2.svc/" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom">' +
-    '  <title type="text">Foods</title>' +
-    '  <id>http://localhost/tests/endpoints/FoodStoreDataServiceV2.svc/Foods</id>' +
-    '  <updated>2010-12-28T23:09:54Z</updated>' +
-    '  <link rel="self" title="Foods" href="Foods" />' +
-    '  <entry>' +
-    '    <id>http://localhost/tests/endpoints/FoodStoreDataServiceV2.svc/Foods(0)</id>' +
-    '    <title type="text">flour</title>' +
-    '    <updated>2010-12-28T23:09:54Z</updated>' +
-    '    <author><name /></author>' +
-    '    <link rel="edit" title="Food" href="Foods(0)" />' +
-    '    <link rel="http://schemas.microsoft.com/ado/2007/08/dataservices/related/Category" type="application/atom+xml;type=entry" title="Category" href="Foods(0)/Category" />' +
-    '    <category term="DataJS.Tests.V2.Food" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme" />' +
-    '    <content type="application/xml">' +
-    '      <m:properties>' +
-    '        <d:FoodID m:type="Edm.Int32">0</d:FoodID>' +
-    '        <d:Name>flour</d:Name>' +
-    '        <d:ServingSize m:type="Edm.Decimal">1</d:ServingSize>' +
-    '        <d:MeasurementUnit>Cup</d:MeasurementUnit>' +
-    '        <d:ProteinGrams m:type="Edm.Byte">3</d:ProteinGrams>' +
-    '        <d:FatGrams m:type="Edm.Int16">1</d:FatGrams>' +
-    '        <d:CarbohydrateGrams m:type="Edm.Int32">20</d:CarbohydrateGrams>' +
-    '        <d:CaloriesPerServing m:type="Edm.Int64">140</d:CaloriesPerServing>' +
-    '        <d:IsAvailable m:type="Edm.Boolean">true</d:IsAvailable>' +
-    '        <d:ExpirationDate m:type="Edm.DateTime">2010-12-25T12:00:00</d:ExpirationDate>' +
-    '        <d:ItemGUID m:type="Edm.Guid">27272727-2727-2727-2727-272727272727</d:ItemGUID>' +
-    '        <d:Weight m:type="Edm.Single">10</d:Weight>' +
-    '        <d:AvailableUnits m:type="Edm.SByte">1</d:AvailableUnits>' +
-    '        <d:Packaging m:type="DataJS.Tests.V2.Package">' +
-    '          <d:Type m:null="true" />' +
-    '          <d:Color></d:Color>' +
-    '          <d:NumberPerPackage m:type="Edm.Int32">2147483647</d:NumberPerPackage>' +
-    '          <d:RequiresRefridgeration m:type="Edm.Boolean">false</d:RequiresRefridgeration>' +
-    '          <d:ShipDate m:type="Edm.DateTime">0001-01-01T00:00:00</d:ShipDate>' +
-    '          <d:PackageDimensions m:type="DataJS.Tests.V2.Dimensions">' +
-    '            <d:Length m:type="Edm.Decimal">79228162514264337593543950335</d:Length>' +
-    '            <d:Height m:type="Edm.Int16">32767</d:Height>' +
-    '            <d:Width m:type="Edm.Int64">9223372036854775807</d:Width>' +
-    '            <d:Volume m:type="Edm.Double">1.7976931348623157E+308</d:Volume>' +
-    '          </d:PackageDimensions>' +
-    '        </d:Packaging>' +
-    '      </m:properties>' +
-    '    </content>' +
-    '    <cooked:cooked cooked:length="2" cooked:height="1" cooked:width="3" xmlns:cooked="http://www.example.org/cooked/">' +
-    '      <cooked:volume>6</cooked:volume>' +
-    '    </cooked:cooked>' +
-    '    <pr:price pr:value="0.19999" xmlns:pr="http://www.example.org/price/"></pr:price>' +
-    '  </entry>' +
-    '  <entry>' +
-    '    <id>http://localhost/tests/endpoints/FoodStoreDataServiceV2.svc/Foods(1)</id>' +
-    '    <title type="text">sugar</title>' +
-    '    <updated>2010-12-28T23:09:54Z</updated>' +
-    '    <author>' +
-    '      <name />' +
-    '    </author>' +
-    '    <link rel="edit" title="Food" href="Foods(1)" />' +
-    '    <link rel="http://schemas.microsoft.com/ado/2007/08/dataservices/related/Category" type="application/atom+xml;type=entry" title="Category" href="Foods(1)/Category" />' +
-    '    <category term="DataJS.Tests.V2.Food" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme" />' +
-    '    <content type="application/xml">' +
-    '      <m:properties>' +
-    '        <d:FoodID m:type="Edm.Int32">1</d:FoodID>' +
-    '        <d:Name>sugar</d:Name>' +
-    '        <d:ServingSize m:type="Edm.Decimal">1</d:ServingSize>' +
-    '        <d:MeasurementUnit>tsp</d:MeasurementUnit>' +
-    '        <d:ProteinGrams m:type="Edm.Byte">0</d:ProteinGrams>' +
-    '        <d:FatGrams m:type="Edm.Int16">0</d:FatGrams>' +
-    '        <d:CarbohydrateGrams m:type="Edm.Int32">4</d:CarbohydrateGrams>' +
-    '        <d:CaloriesPerServing m:type="Edm.Int64">16</d:CaloriesPerServing>' +
-    '        <d:IsAvailable m:type="Edm.Boolean">false</d:IsAvailable>' +
-    '        <d:ExpirationDate m:type="Edm.DateTime">2011-12-28T00:00:00</d:ExpirationDate>' +
-    '        <d:ItemGUID m:type="Edm.Guid">ffffffff-ffff-ffff-ffff-ffffffffffff</d:ItemGUID>' +
-    '        <d:Weight m:type="Edm.Single">0.1</d:Weight>' +
-    '        <d:AvailableUnits m:type="Edm.SByte">0</d:AvailableUnits>' +
-    '        <d:Packaging m:type="DataJS.Tests.V2.Package">' +
-    '          <d:Type xml:space="preserve"> </d:Type>' +
-    '          <d:Color>BLUE</d:Color>' +
-    '          <d:NumberPerPackage m:type="Edm.Int32">-2147483648</d:NumberPerPackage>' +
-    '          <d:RequiresRefridgeration m:type="Edm.Boolean">true</d:RequiresRefridgeration>' +
-    '          <d:ShipDate m:type="Edm.DateTime">0001-01-01T00:00:00</d:ShipDate>' +
-    '          <d:PackageDimensions m:type="DataJS.Tests.V2.Dimensions">' +
-    '            <d:Length m:type="Edm.Decimal">-79228162514264337593543950335</d:Length>' +
-    '            <d:Height m:type="Edm.Int16">-32768</d:Height>' +
-    '            <d:Width m:type="Edm.Int64">-9223372036854775808</d:Width>' +
-    '            <d:Volume m:type="Edm.Double">-1.7976931348623157E+308</d:Volume>' +
-    '          </d:PackageDimensions>' +
-    '        </d:Packaging>' +
-    '        <d:CookedSize m:type="DataJS.Tests.V2.CookedDimensions" m:null="true" />' +
-    '      </m:properties>' +
-    '    </content>' +
-    '    <cooked:cooked cooked:length="" cooked:height="" cooked:width="" xmlns:cooked="http://www.example.org/cooked/">' +
-    '      <cooked:volume></cooked:volume>' +
-    '    </cooked:cooked>' +
-    '    <pr:price pr:value="0.2" xmlns:pr="http://www.example.org/price/"></pr:price>' +
-    '  </entry>' +
+    var foodServiceV4FoodsSampleText = '' +
+    '<feed xml:base="http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Foods">' +
+	'<id>http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Foods</id>' +
+	'<title type="text">Foods</title>' +
+	'<updated>2013-12-30T05:45:07Z</updated>' +
+	'<link rel="self" title="Foods" href="Foods" />' +
+	'<entry>' +
+	'	<id>http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Foods(0)</id>' +
+	'	<category term="#DataJS.Tests.V4.Food" scheme="http://docs.oasis-open.org/odata/ns/scheme" />' +
+	'	<link rel="edit" title="Food" href="Foods(0)" />' +
+	'	<link rel="http://docs.oasis-open.org/odata/ns/related/Category" type="application/atom+xml;type=entry" title="Category" href="Foods(0)/Category" />' +
+	'	<title />' +
+	'	<updated>2013-12-30T05:45:07Z</updated>' +
+	'	<author>' +
+	'		<name />' +
+	'	</author>' +
+	'	<link rel="http://docs.oasis-open.org/odata/ns/mediaresource/Picture" type="image/png" title="Picture" href="http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Picture" />' +
+	'	<link rel="http://docs.oasis-open.org/odata/ns/edit-media/Picture" type="image/png" title="Picture" href="Foods(0)/Picture" m:etag="W/&quot;123456789&quot;" />' +
+	'	<content type="application/xml">' +
+	'		<m:properties>' +
+	'			<d:FoodID m:type="Int32">0</d:FoodID>' +
+	'			<d:Name>flour</d:Name>' +
+	'			<d:UnitPrice m:type="Double">0.19999</d:UnitPrice>' +
+	'			<d:ServingSize m:type="Decimal">1</d:ServingSize>' +
+	'			<d:MeasurementUnit>Cup</d:MeasurementUnit>' +
+	'			<d:ProteinGrams m:type="Byte">3</d:ProteinGrams>' +
+	'			<d:FatGrams m:type="Int16">1</d:FatGrams>' +
+	'			<d:CarbohydrateGrams m:type="Int32">20</d:CarbohydrateGrams>' +
+	'			<d:CaloriesPerServing m:type="Int64">140</d:CaloriesPerServing>' +
+	'			<d:IsAvailable m:type="Boolean">true</d:IsAvailable>' +
+	'			<d:ExpirationDate m:type="DateTimeOffset">2010-12-25T12:00:00Z</d:ExpirationDate>' +
+	'			<d:ItemGUID m:type="Guid">27272727-2727-2727-2727-272727272727</d:ItemGUID>' +
+	'			<d:Weight m:type="Single">10</d:Weight>' +
+	'			<d:AvailableUnits m:type="SByte">1</d:AvailableUnits>' +
+	'			<d:Packaging m:type="#DataJS.Tests.V4.Package">' +
+	'				<d:Type m:null="true" />' +
+	'				<d:Color></d:Color>' +
+	'				<d:NumberPerPackage m:type="Int32">2147483647</d:NumberPerPackage>' +
+	'				<d:RequiresRefridgeration m:type="Boolean">false</d:RequiresRefridgeration>' +
+	'				<d:ShipDate m:type="DateTimeOffset">2000-12-29T00:00:00Z</d:ShipDate>' +
+	'				<d:PackageDimensions m:type="#DataJS.Tests.V4.Dimensions">' +
+	'					<d:Length m:type="Decimal">79228162514264337593543950335</d:Length>' +
+	'					<d:Height m:type="Int16">32767</d:Height>' +
+	'					<d:Width m:type="Int64">9223372036854775807</d:Width>' +
+	'					<d:Volume m:type="Double">1.7976931348623157E+308</d:Volume>' +
+	'				</d:PackageDimensions>' +
+	'			</d:Packaging>' +
+	'			<d:CookedSize m:type="#DataJS.Tests.V4.CookedDimensions">' +
+	'				<d:Length m:type="Decimal">2</d:Length>' +
+	'				<d:Height m:type="Int16">1</d:Height>' +
+	'				<d:Width m:type="Int64">3</d:Width>' +
+	'				<d:Volume m:type="Double">6</d:Volume>' +
+	'			</d:CookedSize>' +
+	'			<d:AlternativeNames m:type="#Collection(String)">' +
+	'				<m:element>ground cereal</m:element>' +
+	'				<m:element>ground grain</m:element>' +
+	'			</d:AlternativeNames>' +
+	'			<d:Providers m:type="#Collection(DataJS.Tests.V4.Provider)">' +
+	'				<m:element>' +
+	'					<d:Name>Flour Provider</d:Name>' +
+	'					<d:Aliases m:type="#Collection(String)">' +
+	'						<m:element>fp1</m:element>' +
+	'						<m:element>flour provider1</m:element>' +
+	'					</d:Aliases>' +
+	'					<d:Details m:type="#DataJS.Tests.V4.ProviderDetails">' +
+	'						<d:Telephone>555-555-555</d:Telephone>' +
+	'						<d:PreferredCode m:type="Int32">1001</d:PreferredCode>' +
+	'					</d:Details>' +
+	'				</m:element>' +
+	'				<m:element>' +
+	'					<d:Name>Ground Grains</d:Name>' +
+	'					<d:Aliases m:type="#Collection(String)" />' +
+	'					<d:Details m:null="true" />' +
+	'				</m:element>' +
+	'			</d:Providers>' +
+	'			<d:SpatialData m:type="GeometryCollection">' +
+	'				<gml:MultiGeometry gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">' +
+	'					<gml:geometryMembers>' +
+	'						<gml:Point>' +
+	'							<gml:pos>5 5</gml:pos>' +
+	'						</gml:Point>' +
+	'					</gml:geometryMembers>' +
+	'				</gml:MultiGeometry>' +
+	'			</d:SpatialData>' +
+	'		</m:properties>' +
+	'	</content>' +
+	'</entry>' +
+	'<entry>' +
+	'	<id>http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Foods(1)</id>' +
+	'	<category term="#DataJS.Tests.V4.Food" scheme="http://docs.oasis-open.org/odata/ns/scheme" />' +
+	'	<link rel="edit" title="Food" href="Foods(1)" />' +
+	'	<link rel="http://docs.oasis-open.org/odata/ns/related/Category" type="application/atom+xml;type=entry" title="Category" href="Foods(1)/Category" />' +
+	'	<title />' +
+	'	<updated>2013-12-30T05:45:07Z</updated>' +
+	'	<author>' +
+	'		<name />' +
+	'	</author>' +
+	'	<link rel="http://docs.oasis-open.org/odata/ns/mediaresource/Picture" type="image/png" title="Picture" href="http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Picture" />' +
+	'	<link rel="http://docs.oasis-open.org/odata/ns/edit-media/Picture" type="image/png" title="Picture" href="Foods(1)/Picture" m:etag="W/&quot;123456789&quot;" />' +
+	'	<content type="application/xml">' +
+	'		<m:properties>' +
+	'			<d:FoodID m:type="Int32">1</d:FoodID>' +
+	'			<d:Name>sugar</d:Name>' +
+	'			<d:UnitPrice m:type="Double">0.2</d:UnitPrice>' +
+	'			<d:ServingSize m:type="Decimal">1</d:ServingSize>' +
+	'			<d:MeasurementUnit>tsp</d:MeasurementUnit>' +
+	'			<d:ProteinGrams m:type="Byte">0</d:ProteinGrams>' +
+	'			<d:FatGrams m:type="Int16">0</d:FatGrams>' +
+	'			<d:CarbohydrateGrams m:type="Int32">4</d:CarbohydrateGrams>' +
+	'			<d:CaloriesPerServing m:type="Int64">16</d:CaloriesPerServing>' +
+	'			<d:IsAvailable m:type="Boolean">false</d:IsAvailable>' +
+	'			<d:ExpirationDate m:type="DateTimeOffset">2011-12-28T00:00:00Z</d:ExpirationDate>' +
+	'			<d:ItemGUID m:type="Guid">ffffffff-ffff-ffff-ffff-ffffffffffff</d:ItemGUID>' +
+	'			<d:Weight m:type="Single">0.1</d:Weight>' +
+	'			<d:AvailableUnits m:type="SByte">0</d:AvailableUnits>' +
+	'			<d:Packaging m:type="#DataJS.Tests.V4.Package">' +
+	'				<d:Type xml:space="preserve"> </d:Type>' +
+	'				<d:Color>BLUE</d:Color>' +
+	'				<d:NumberPerPackage m:type="Int32">-2147483648</d:NumberPerPackage>' +
+	'				<d:RequiresRefridgeration m:type="Boolean">true</d:RequiresRefridgeration>' +
+	'				<d:ShipDate m:type="DateTimeOffset">2000-12-29T00:00:00Z</d:ShipDate>' +
+	'				<d:PackageDimensions m:type="#DataJS.Tests.V4.Dimensions">' +
+	'					<d:Length m:type="Decimal">-79228162514264337593543950335</d:Length>' +
+	'					<d:Height m:type="Int16">-32768</d:Height>' +
+	'					<d:Width m:type="Int64">-9223372036854775808</d:Width>' +
+	'					<d:Volume m:type="Double">-1.7976931348623157E+308</d:Volume>' +
+	'				</d:PackageDimensions>' +
+	'			</d:Packaging>' +
+	'			<d:CookedSize m:null="true" />' +
+	'			<d:AlternativeNames m:type="#Collection(String)" />' +
+	'			<d:Providers m:type="#Collection(DataJS.Tests.V4.Provider)" />' +
+	'			<d:SpatialData m:null="true" />' +
+	'		</m:properties>' +
+	'	</content>' +
+	'</entry>' +
     '</feed>';
 
-    var foodServiceV2MetadataText = '' +
-    '<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx">' +
-    '  <edmx:DataServices xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" m:DataServiceVersion="2.0">' +
-    '    <Schema Namespace="DataJS.Tests.V2" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns="http://schemas.microsoft.com/ado/2007/05/edm">' +
-    '      <EntityType Name="Category">' +
-    '        <Key>' +
-    '          <PropertyRef Name="CategoryID" />' +
-    '        </Key>' +
-    '        <Property Name="CategoryID" Type="Edm.Int32" Nullable="false" />' +
-    '        <Property Name="Name" Type="Edm.String" Nullable="true" m:FC_TargetPath="SyndicationTitle" m:FC_ContentKind="text" m:FC_KeepInContent="true" />' +
-    '        <NavigationProperty Name="Foods" Relationship="DataJS.Tests.V2.Category_Foods" FromRole="Category" ToRole="Foods" />' +
-    '      </EntityType>' +
-    '      <EntityType Name="PreparedFood" BaseType="DataJS.Tests.V2.Food">' +
-    '        <Property Name="Instructions" Type="Edm.String" Nullable="true" />' +
-    '        <Property Name="NumberOfIngredients" Type="Edm.Single" Nullable="false" />' +
-    '      </EntityType>' +
-    '      <EntityType Name="Food">' +
-    '        <Key>' +
-    '          <PropertyRef Name="FoodID" />' +
-    '        </Key>' +
-    '        <Property Name="FoodID" Type="Edm.Int32" Nullable="false" />' +
-    '        <Property Name="Name" Type="Edm.String" Nullable="true" m:FC_TargetPath="SyndicationTitle" m:FC_ContentKind="text" m:FC_KeepInContent="true" />' +
-    '        <Property Name="UnitPrice" Type="Edm.Double" Nullable="false" m:FC_TargetPath="price/@value" m:FC_NsUri="http://www.example.org/price/" m:FC_NsPrefix="pr" m:FC_KeepInContent="false" />' +
-    '        <Property Name="ServingSize" Type="Edm.Decimal" Nullable="false" />' +
-    '        <Property Name="MeasurementUnit" Type="Edm.String" Nullable="true" />' +
-    '        <Property Name="ProteinGrams" Type="Edm.Byte" Nullable="false" />' +
-    '        <Property Name="FatGrams" Type="Edm.Int16" Nullable="false" />' +
-    '        <Property Name="CarbohydrateGrams" Type="Edm.Int32" Nullable="false" />' +
-    '        <Property Name="CaloriesPerServing" Type="Edm.Int64" Nullable="false" />' +
-    '        <Property Name="IsAvailable" Type="Edm.Boolean" Nullable="false" />' +
-    '        <Property Name="ExpirationDate" Type="Edm.DateTime" Nullable="false" />' +
-    '        <Property Name="ItemGUID" Type="Edm.Guid" Nullable="false" />' +
-    '        <Property Name="Weight" Type="Edm.Single" Nullable="false" />' +
-    '        <Property Name="AvailableUnits" Type="Edm.SByte" Nullable="false" />' +
-    '        <Property Name="Packaging" Type="DataJS.Tests.V2.Package" Nullable="false" />' +
-    '        <Property Name="CookedSize" Type="DataJS.Tests.V2.CookedDimensions" Nullable="false" m:FC_TargetPath="cooked/volume" m:FC_NsUri="http://www.example.org/cooked/" m:FC_NsPrefix="cooked" m:FC_SourcePath="Volume" m:FC_KeepInContent="false" m:FC_TargetPath_1="cooked/@width" m:FC_NsUri_1="http://www.example.org/cooked/" m:FC_NsPrefix_1="cooked" m:FC_SourcePath_1="Width" m:FC_KeepInContent_1="false" m:FC_TargetPath_2="cooked/@height" m:FC_NsUri_2="http://www.example.org/cooked/" m:FC_NsPrefix_2="cooked" m:FC_SourcePath_2="Height" m:FC_KeepInContent_2="false" m:FC_TargetPath_3="cooked/@length" m:FC_NsUri_3="http://www.example.org/cooked/" m:FC_NsPrefix_3="cooked" m:FC_SourcePath_3="Length" m:FC_KeepInContent_3="false" />' +
-    '        <NavigationProperty Name="Category" Relationship="DataJS.Tests.V2.Food_Category" FromRole="Food" ToRole="Category" />' +
-    '      </EntityType>' +
-    '      <ComplexType Name="Package">' +
-    '        <Property Name="Type" Type="Edm.String" Nullable="true" />' +
-    '        <Property Name="Color" Type="Edm.String" Nullable="true" />' +
-    '        <Property Name="NumberPerPackage" Type="Edm.Int32" Nullable="false" />' +
-    '        <Property Name="RequiresRefridgeration" Type="Edm.Boolean" Nullable="false" />' +
-    '        <Property Name="ShipDate" Type="Edm.DateTime" Nullable="false" />' +
-    '        <Property Name="PackageDimensions" Type="DataJS.Tests.V2.Dimensions" Nullable="false" />' +
-    '      </ComplexType>' +
-    '      <ComplexType Name="Dimensions">' +
-    '        <Property Name="Length" Type="Edm.Decimal" Nullable="false" />' +
-    '        <Property Name="Height" Type="Edm.Int16" Nullable="false" />' +
-    '        <Property Name="Width" Type="Edm.Int64" Nullable="false" />' +
-    '        <Property Name="Volume" Type="Edm.Double" Nullable="false" />' +
-    '      </ComplexType>' +
-    '      <ComplexType Name="CookedDimensions">' +
-    '        <Property Name="Length" Type="Edm.Decimal" Nullable="false" />' +
-    '        <Property Name="Height" Type="Edm.Int16" Nullable="false" />' +
-    '        <Property Name="Width" Type="Edm.Int64" Nullable="false" />' +
-    '        <Property Name="Volume" Type="Edm.Double" Nullable="false" />' +
-    '      </ComplexType>' +
-    '      <Association Name="Category_Foods">' +
-    '        <End Role="Category" Type="DataJS.Tests.V2.Category" Multiplicity="*" />' +
-    '        <End Role="Foods" Type="DataJS.Tests.V2.Food" Multiplicity="*" />' +
-    '      </Association>' +
-    '      <Association Name="Food_Category">' +
-    '        <End Role="Food" Type="DataJS.Tests.V2.Food" Multiplicity="*" />' +
-    '        <End Role="Category" Type="DataJS.Tests.V2.Category" Multiplicity="0..1" />' +
-    '      </Association>' +
-    '      <EntityContainer Name="FoodContainer" m:IsDefaultEntityContainer="true">' +
-    '        <EntitySet Name="Categories" EntityType="DataJS.Tests.V2.Category" />' +
-    '        <EntitySet Name="Foods" EntityType="DataJS.Tests.V2.Food" />' +
-    '        <AssociationSet Name="Category_Foods" Association="DataJS.Tests.Category_Foods">' +
-    '          <End Role="Category" EntitySet="Categories" />' +
-    '          <End Role="Foods" EntitySet="Foods" />' +
-    '        </AssociationSet>' +
-    '        <AssociationSet Name="Food_Category" Association="DataJS.Tests.V2.Food_Category">' +
-    '          <End Role="Food" EntitySet="Foods" />' +
-    '          <End Role="Category" EntitySet="Categories" />' +
-    '        </AssociationSet>' +
-    '        <FunctionImport Name="ResetData" m:HttpMethod="POST" />' +
-    '        <FunctionImport Name="FoodsAvailable" ReturnType="Collection(Edm.String)" m:HttpMethod="GET" />' +
-    '        <FunctionImport Name="PackagingTypes" ReturnType="Collection(DataJS.Tests.V2.Package)" m:HttpMethod="GET" />' +
-    '      </EntityContainer>' +
-    '    </Schema>' +
-    '  </edmx:DataServices>' +
+    var foodServiceV4MetadataText = '' +
+    '<?xml version="1.0" encoding="utf-8"?>\r\n' +
+    '<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">\r\n' +
+	'<edmx:DataServices>\r\n' +
+	'	<Schema Namespace="DataJS.Tests.V4" xmlns="http://docs.oasis-open.org/odata/ns/edm">\r\n' +
+	'		<EntityType Name="Category">\r\n' +
+	'			<Key>\r\n' +
+	'				<PropertyRef Name="CategoryID" />\r\n' +
+	'			</Key>\r\n' +
+	'			<Property Name="Icon" Type="Edm.Stream" Nullable="false" />\r\n' +
+	'			<Property Name="CategoryID" Type="Edm.Int32" Nullable="false" />\r\n' +
+	'			<Property Name="Name" Type="Edm.String" />\r\n' +
+	'			<NavigationProperty Name="Foods" Type="Collection(DataJS.Tests.V4.Food)" Partner="Category" />\r\n' +
+	'		</EntityType>\r\n' +
+	'		<EntityType Name="Food">\r\n' +
+	'			<Key>\r\n' +
+	'				<PropertyRef Name="FoodID" />\r\n' +
+	'			</Key>\r\n' +
+	'			<Property Name="Picture" Type="Edm.Stream" Nullable="false" />\r\n' +
+	'			<Property Name="FoodID" Type="Edm.Int32" Nullable="false" />\r\n' +
+	'			<Property Name="Name" Type="Edm.String" />\r\n' +
+	'			<Property Name="UnitPrice" Type="Edm.Double" Nullable="false" />\r\n' +
+	'			<Property Name="ServingSize" Type="Edm.Decimal" Nullable="false" />\r\n' +
+	'			<Property Name="MeasurementUnit" Type="Edm.String" />\r\n' +
+	'			<Property Name="ProteinGrams" Type="Edm.Byte" Nullable="false" />\r\n' +
+	'			<Property Name="FatGrams" Type="Edm.Int16" Nullable="false" />\r\n' +
+	'			<Property Name="CarbohydrateGrams" Type="Edm.Int32" Nullable="false" />\r\n' +
+	'			<Property Name="CaloriesPerServing" Type="Edm.Int64" Nullable="false" />\r\n' +
+	'			<Property Name="IsAvailable" Type="Edm.Boolean" Nullable="false" />\r\n' +
+	'			<Property Name="ExpirationDate" Type="Edm.DateTimeOffset" Nullable="false" />\r\n' +
+	'			<Property Name="ItemGUID" Type="Edm.Guid" Nullable="false" />\r\n' +
+	'			<Property Name="Weight" Type="Edm.Single" Nullable="false" />\r\n' +
+	'			<Property Name="AvailableUnits" Type="Edm.SByte" Nullable="false" />\r\n' +
+	'			<Property Name="Packaging" Type="DataJS.Tests.V4.Package" />\r\n' +
+	'			<Property Name="CookedSize" Type="DataJS.Tests.V4.CookedDimensions" />\r\n' +
+	'			<Property Name="AlternativeNames" Type="Collection(Edm.String)" Nullable="false" />\r\n' +
+	'			<Property Name="Providers" Type="Collection(DataJS.Tests.V4.Provider)" Nullable="false" />\r\n' +
+	'			<Property Name="SpatialData" Type="Edm.GeometryCollection" SRID="Variable" />\r\n' +
+	'			<NavigationProperty Name="Category" Type="DataJS.Tests.V4.Category" Partner="Foods" />\r\n' +
+	'		</EntityType>\r\n' +
+	'		<EntityType Name="PreparedFood" BaseType="DataJS.Tests.V4.Food">\r\n' +
+	'			<Property Name="Instructions" Type="Edm.String" />\r\n' +
+	'			<Property Name="NumberOfIngredients" Type="Edm.Single" Nullable="false" />\r\n' +
+	'		</EntityType>\r\n' +
+	'		<ComplexType Name="Package">\r\n' +
+	'			<Property Name="Type" Type="Edm.String" />\r\n' +
+	'			<Property Name="Color" Type="Edm.String" />\r\n' +
+	'			<Property Name="NumberPerPackage" Type="Edm.Int32" Nullable="false" />\r\n' +
+	'			<Property Name="RequiresRefridgeration" Type="Edm.Boolean" Nullable="false" />\r\n' +
+	'			<Property Name="ShipDate" Type="Edm.DateTimeOffset" Nullable="false" />\r\n' +
+	'			<Property Name="PackageDimensions" Type="DataJS.Tests.V4.Dimensions" />\r\n' +
+	'		</ComplexType>\r\n' +
+	'		<ComplexType Name="Dimensions">\r\n' +
+	'			<Property Name="Length" Type="Edm.Decimal" Nullable="false" />\r\n' +
+	'			<Property Name="Height" Type="Edm.Int16" Nullable="false" />\r\n' +
+	'			<Property Name="Width" Type="Edm.Int64" Nullable="false" />\r\n' +
+	'			<Property Name="Volume" Type="Edm.Double" Nullable="false" />\r\n' +
+	'		</ComplexType>\r\n' +
+	'		<ComplexType Name="CookedDimensions">\r\n' +
+	'			<Property Name="Length" Type="Edm.Decimal" Nullable="false" />\r\n' +
+	'			<Property Name="Height" Type="Edm.Int16" Nullable="false" />\r\n' +
+	'			<Property Name="Width" Type="Edm.Int64" Nullable="false" />\r\n' +
+	'			<Property Name="Volume" Type="Edm.Double" Nullable="false" />\r\n' +
+	'		</ComplexType>\r\n' +
+	'		<ComplexType Name="Provider">\r\n' +
+	'			<Property Name="Name" Type="Edm.String" />\r\n' +
+	'			<Property Name="Aliases" Type="Collection(Edm.String)" Nullable="false" />\r\n' +
+	'			<Property Name="Details" Type="DataJS.Tests.V4.ProviderDetails" />\r\n' +
+	'		</ComplexType>\r\n' +
+	'		<ComplexType Name="ProviderDetails">\r\n' +
+	'			<Property Name="Telephone" Type="Edm.String" />\r\n' +
+	'			<Property Name="PreferredCode" Type="Edm.Int32" Nullable="false" />\r\n' +
+	'		</ComplexType>\r\n' +
+	'		<Action Name="ResetData">\r\n' +
+	'			<ReturnType Type="Edm.String" />\r\n' +
+	'		</Action>\r\n' +
+	'		<Function Name="FoodsAvailable" IsComposable="true">\r\n' +
+	'			<ReturnType Type="Collection(Edm.String)" />\r\n' +
+	'		</Function>\r\n' +
+	'		<Function Name="PackagingTypes" IsComposable="true">\r\n' +
+	'			<ReturnType Type="Collection(DataJS.Tests.V4.Package)" />\r\n' +
+	'		</Function>\r\n' +
+	'		<Function Name="UserNameAndPassword">\r\n' +
+	'			<ReturnType Type="Edm.String" />\r\n' +
+	'		</Function>\r\n' +
+	'		<EntityContainer Name="FoodContainer">\r\n' +
+	'			<EntitySet Name="Categories" EntityType="DataJS.Tests.V4.Category">\r\n' +
+	'				<NavigationPropertyBinding Path="Foods" Target="Foods" />\r\n' +
+	'			</EntitySet>\r\n' +
+	'			<EntitySet Name="Foods" EntityType="DataJS.Tests.V4.Food">\r\n' +
+	'				<NavigationPropertyBinding Path="Category" Target="Categories" />\r\n' +
+	'			</EntitySet>\r\n' +
+	'			<ActionImport Name="ResetData" Action="DataJS.Tests.V4.ResetData" />\r\n' +
+	'			<FunctionImport Name="FoodsAvailable" Function="DataJS.Tests.V4.FoodsAvailable" IncludeInServiceDocument="true" />\r\n' +
+	'			<FunctionImport Name="PackagingTypes" Function="DataJS.Tests.V4.PackagingTypes" IncludeInServiceDocument="true" />\r\n' +
+	'			<FunctionImport Name="UserNameAndPassword" Function="DataJS.Tests.V4.UserNameAndPassword" IncludeInServiceDocument="true" />\r\n' +
+	'		</EntityContainer>\r\n' +
+	'	</Schema>\r\n' +
+	'</edmx:DataServices>\r\n' +
     '</edmx:Edmx>';
 
-    djstest.addTest(function applyEntryCustomizationToEntryTest() {
+    djstest.addFullTest(true, function applyEntryCustomizationToEntryTest() {
         var metadata = parseMetadataHelper(customerSampleMetadataText);
         var data = { __metadata: { type: "Ns.Customer" }, Name: "Name", LastName: "Last Name", Address: { Street: "Street Value", City: "City Value" }, FavoriteNumber: 123 };
         var request = { data: data, headers: { "Content-Type": "application/atom+xml"} };
@@ -277,45 +333,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function normalizeHeadersReadTest() {
-        // Verifies that headers are normalized for reading.
-        // See issue at http://datajs.codeplex.com/workitem/148
-        window.MockHttpClient.clear().addResponse("/foo", {
-            statusCode: 200,
-            body: foodServiceV2FoodsSampleText,
-            headers: { "Accept": "application/json", "unknown": "u", "content-type": "application/atom+xml", "dataserviceversion": "2.0" }
-        });
-
-        OData.read("/foo", function (data, response) {
-            djstest.assertAreEqual(data.results.length, 2, "data.results.length has two entries");
-            djstest.assertAreEqual(response.headers.Accept, "application/json", "Accept available");
-            djstest.assertAreEqual(response.headers.unknown, "u", "u unmodified");
-            djstest.assertAreEqual(response.headers["Content-Type"], "application/atom+xml", "Content-Type available");
-            djstest.assertAreEqual(response.headers["DataServiceVersion"], "2.0", "DataServiceVersion available");
-            djstest.done();
-        }, undefined, undefined, MockHttpClient);
-    });
-
-    djstest.addTest(function normalizeHeadersWriteTest() {
-        // Verifies that headers are normalized for writing.
-        // See issue at http://datajs.codeplex.com/workitem/148
-        window.MockHttpClient.clear().addRequestVerifier("/foo", function (request) {
-            djstest.assertAreEqual(request.headers["Content-Type"], "application/atom+xml", "json found");
-            djstest.assert(request.body.indexOf(":bar") !== -1, "format recognized and applied as XML");
-            djstest.done();
-        });
-
-        var request = {
-            method: "POST",
-            requestUri: "/foo",
-            data: { "bar": 123 },
-            headers: { "content-type": "application/atom+xml" }
-        };
-        OData.request(request, function (data) {
-        }, undefined, undefined, MockHttpClient);
-    });
-
-    djstest.addTest(function testParsePrimitivePropertiesBasic() {
+    djstest.addFullTest(true, function testParsePrimitivePropertiesBasic() {
         var feed = "\
         <entry xml:base=\'http://services.odata.org/OData/OData.svc/\' \r\n\
                xmlns:d=\'http://schemas.microsoft.com/ado/2007/08/dataservices\' \r\n\
@@ -354,7 +372,7 @@
         });
     });
 
-    djstest.addTest(function deserializeCustomizationsNullAndXhtmlTest() {
+    djstest.addFullTest(true, function deserializeCustomizationsNullAndXhtmlTest() {
         var payload = "<entry " +
         ' xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" \r\n' +
         " xmlns:m='http://schemas.microsoft.com/ado/2007/08/dataservices/metadata' \r\n" +
@@ -376,9 +394,9 @@
         djstest.done();
     });
 
-    djstest.addTest(function parseCustomizationSampleTest() {
-        var payload = foodServiceV2FoodsSampleText;
-        var metadata = parseMetadataHelper(foodServiceV2MetadataText);
+    djstest.addFullTest(true, function parseCustomizationSampleTest() {
+        var payload = foodServiceV4FoodsSampleText;
+        var metadata = parseMetadataHelper(foodServiceV4MetadataText);
         var response = { body: payload, headers: { "Content-Type": "application/atom+xml"} };
         OData.atomHandler.read(response, { metadata: metadata });
 
@@ -386,13 +404,13 @@
         djstest.assert(response.data.results !== null, "response.data.results !== null");
 
         var r = response.data.results;
-        djstest.assertAreEqual(r[0].__metadata.type, "DataJS.Tests.V2.Food", "r[0].__metadata.type");
+        djstest.assertAreEqual(r[0].__metadata.type, "DataJS.Tests.V4.Food", "r[0].__metadata.type");
         djstest.assertAreEqual(r[0].Name, "flour", "r[0].Name");
         djstest.assertAreEqual(r[0].UnitPrice, 0.19999, "r[0].UnitPrice");
         djstest.assertAreEqual(r[0].ServingSize, 1, "r[0].ServingSize");
 
         // CONSIDER: we intended to have complex type have their type annotation out-of-band, but JSON has it in-line; do we want to normalize this out everywhere?
-        // djstest.assertAreEqual(r[0].Packaging.__metadata.type, "DataJS.Tests.PackageV2", "r[0].Packaging.__metadata.type");
+        // djstest.assertAreEqual(r[0].Packaging.__metadata.type, "DataJS.Tests.PackageV4", "r[0].Packaging.__metadata.type");
         djstest.assertAreEqual(r[0].Packaging.Type, null, "package type for flour is null");
         djstest.assertAreEqual(r[0].Packaging.PackageDimensions.Height, 32767, "r[0].Packaging.PackageDimensions.Height");
 
@@ -402,58 +420,96 @@
         djstest.done();
     });
 
-    djstest.addTest(function parseIntoPropertiesTest() {
+    djstest.addFullTest(true, function parseIntoPropertiesTest() {
         var payload = '' +
-            '<entry xml:base="http://localhost/tests/endpoints/FoodStoreDataServiceV2.svc/" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom">' +
-            '  <id>http://localhost/tests/endpoints/FoodStoreDataServiceV2.svc/Foods(0)</id>' +
-            '  <title type="text">flour</title>' +
-            '  <updated>2010-12-28T23:09:54Z</updated>' +
-            '  <author><name /></author>' +
-            '  <link rel="edit" title="Food" href="Foods(0)" />' +
-            '  <link rel="http://schemas.microsoft.com/ado/2007/08/dataservices/related/Category" type="application/atom+xml;type=entry" title="Category" href="Foods(0)/Category" />' +
-            '  <category term="DataJS.Tests.V2.Food" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme" />' +
-            '  <content type="application/xml">' +
-            '    <m:properties>' +
-            '      <d:FoodID m:type="Edm.Int32">0</d:FoodID>' +
-            '      <d:Name>flour</d:Name>' +
-            '      <d:ServingSize m:type="Edm.Decimal">1</d:ServingSize>' +
-            '      <d:MeasurementUnit>Cup</d:MeasurementUnit>' +
-            '      <d:ProteinGrams m:type="Edm.Byte">3</d:ProteinGrams>' +
-            '      <d:FatGrams m:type="Edm.Int16">1</d:FatGrams>' +
-            '      <d:CarbohydrateGrams m:type="Edm.Int32">20</d:CarbohydrateGrams>' +
-            '      <d:CaloriesPerServing m:type="Edm.Int64">140</d:CaloriesPerServing>' +
-            '      <d:IsAvailable m:type="Edm.Boolean">true</d:IsAvailable>' +
-            '      <d:ExpirationDate m:type="Edm.DateTime">2010-12-25T12:00:00</d:ExpirationDate>' +
-            '      <d:ItemGUID m:type="Edm.Guid">27272727-2727-2727-2727-272727272727</d:ItemGUID>' +
-            '      <d:Weight m:type="Edm.Single">10</d:Weight>' +
-            '      <d:AvailableUnits m:type="Edm.SByte">1</d:AvailableUnits>' +
-            '      <d:Packaging m:type="DataJS.Tests.V2.Package">' +
-            '        <d:Type m:null="true" />' +
-            '        <d:Color></d:Color>' +
-            '        <d:NumberPerPackage m:type="Edm.Int32">2147483647</d:NumberPerPackage>' +
-            '        <d:RequiresRefridgeration m:type="Edm.Boolean">false</d:RequiresRefridgeration>' +
-            '        <d:ShipDate m:type="Edm.DateTime">0001-01-01T00:00:00</d:ShipDate>' +
-            '        <d:PackageDimensions m:type="DataJS.Tests.V2.Dimensions">' +
-            '          <d:Length m:type="Edm.Decimal">79228162514264337593543950335</d:Length>' +
-            '          <d:Height m:type="Edm.Int16">32767</d:Height>' +
-            '          <d:Width m:type="Edm.Int64">9223372036854775807</d:Width>' +
-            '          <d:Volume m:type="Edm.Double">1.7976931348623157E+308</d:Volume>' +
-            '        </d:PackageDimensions>' +
-            '      </d:Packaging>' +
-            '    </m:properties>' +
-            '  </content>' +
-            '  <cooked:cooked cooked:length="2" cooked:height="1" cooked:width="3" xmlns:cooked="http://www.example.org/cooked/">' +
-            '    <cooked:volume>6</cooked:volume>' +
-            '  </cooked:cooked>' +
-            '  <pr:price pr:value="0.19999" xmlns:pr="http://www.example.org/price/"></pr:price>' +
-            '</entry>';
+    '<entry xml:base="http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Foods/$entity">' +
+	'<id>http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Foods(0)</id>' +
+	'<category term="#DataJS.Tests.V4.Food" scheme="http://docs.oasis-open.org/odata/ns/scheme" />' +
+	'<link rel="edit" title="Food" href="Foods(0)" />' +
+	'<link rel="http://docs.oasis-open.org/odata/ns/related/Category" type="application/atom+xml;type=entry" title="Category" href="Foods(0)/Category" />' +
+	'<title />' +
+	'<updated>2013-12-30T06:01:30Z</updated>' +
+	'<author>' +
+	'	<name />' +
+	'</author>' +
+	'<link rel="http://docs.oasis-open.org/odata/ns/mediaresource/Picture" type="image/png" title="Picture" href="http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Picture" />' +
+	'<link rel="http://docs.oasis-open.org/odata/ns/edit-media/Picture" type="image/png" title="Picture" href="Foods(0)/Picture" m:etag="W/&quot;123456789&quot;" />' +
+	'<content type="application/xml">' +
+	'	<m:properties>' +
+	'		<d:FoodID m:type="Int32">0</d:FoodID>' +
+	'		<d:Name>flour</d:Name>' +
+	'		<d:UnitPrice m:type="Double">0.19999</d:UnitPrice>' +
+	'		<d:ServingSize m:type="Decimal">1</d:ServingSize>' +
+	'		<d:MeasurementUnit>Cup</d:MeasurementUnit>' +
+	'		<d:ProteinGrams m:type="Byte">3</d:ProteinGrams>' +
+	'		<d:FatGrams m:type="Int16">1</d:FatGrams>' +
+	'		<d:CarbohydrateGrams m:type="Int32">20</d:CarbohydrateGrams>' +
+	'		<d:CaloriesPerServing m:type="Int64">140</d:CaloriesPerServing>' +
+	'		<d:IsAvailable m:type="Boolean">true</d:IsAvailable>' +
+	'		<d:ExpirationDate m:type="DateTimeOffset">2010-12-25T12:00:00Z</d:ExpirationDate>' +
+	'		<d:ItemGUID m:type="Guid">27272727-2727-2727-2727-272727272727</d:ItemGUID>' +
+	'		<d:Weight m:type="Single">10</d:Weight>' +
+	'		<d:AvailableUnits m:type="SByte">1</d:AvailableUnits>' +
+	'		<d:Packaging m:type="#DataJS.Tests.V4.Package">' +
+	'			<d:Type m:null="true" />' +
+	'			<d:Color></d:Color>' +
+	'			<d:NumberPerPackage m:type="Int32">2147483647</d:NumberPerPackage>' +
+	'			<d:RequiresRefridgeration m:type="Boolean">false</d:RequiresRefridgeration>' +
+	'			<d:ShipDate m:type="DateTimeOffset">2000-12-29T00:00:00Z</d:ShipDate>' +
+	'			<d:PackageDimensions m:type="#DataJS.Tests.V4.Dimensions">' +
+	'				<d:Length m:type="Decimal">79228162514264337593543950335</d:Length>' +
+	'				<d:Height m:type="Int16">32767</d:Height>' +
+	'				<d:Width m:type="Int64">9223372036854775807</d:Width>' +
+	'				<d:Volume m:type="Double">1.7976931348623157E+308</d:Volume>' +
+	'			</d:PackageDimensions' +
+	'		</d:Packaging>' +
+	'		<d:CookedSize m:type="#DataJS.Tests.V4.CookedDimensions">' +
+	'			<d:Length m:type="Decimal">2</d:Length>' +
+	'			<d:Height m:type="Int16">1</d:Height>' +
+	'			<d:Width m:type="Int64">3</d:Width>' +
+	'			<d:Volume m:type="Double">6</d:Volume>' +
+	'		</d:CookedSize>' +
+	'		<d:AlternativeNames m:type="#Collection(String)">' +
+	'			<m:element>ground cereal</m:element>' +
+	'			<m:element>ground grain</m:element>' +
+	'		</d:AlternativeNames>' +
+	'		<d:Providers m:type="#Collection(DataJS.Tests.V4.Provider)">' +
+	'			<m:element>' +
+	'				<d:Name>Flour Provider</d:Name>' +
+	'				<d:Aliases m:type="#Collection(String)">' +
+	'					<m:element>fp1</m:element>' +
+	'					<m:element>flour provider1</m:element>' +
+	'				</d:Aliases' +
+	'				<d:Details m:type="#DataJS.Tests.V4.ProviderDetails">' +
+	'					<d:Telephone>555-555-555</d:Telephone>' +
+	'					<d:PreferredCode m:type="Int32">1001</d:PreferredCode>' +
+	'				</d:Details>' +
+	'			</m:element>' +
+	'			<m:element>' +
+	'				<d:Name>Ground Grains</d:Name>' +
+	'				<d:Aliases m:type="#Collection(String)" />' +
+	'				<d:Details m:null="true" />' +
+	'			</m:element>' +
+	'		</d:Providers>' +
+	'		<d:SpatialData m:type="GeometryCollection">' +
+	'			<gml:MultiGeometry gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">' +
+	'				<gml:geometryMembers>' +
+	'					<gml:Point>' +
+	'						<gml:pos>5 5</gml:pos>' +
+	'					</gml:Point>' +
+	'				</gml:geometryMembers>' +
+	'			</gml:MultiGeometry>' +
+	'		</d:SpatialData>' +
+	'	</m:properties>' +
+	'</content>' +
+    '</entry>';
 
-        var metadata = parseMetadataHelper(foodServiceV2MetadataText);
+        var metadata = parseMetadataHelper(foodServiceV4MetadataText);
         var response = { body: payload, headers: { "Content-Type": "application/atom+xml"} };
         OData.atomHandler.read(response, { metadata: metadata });
 
         djstest.assert(response.data !== null, "response.data !== null");
-        djstest.assertAreEqual(response.data.__metadata.type, "DataJS.Tests.V2.Food", "types match");
+        djstest.assertAreEqual(response.data.__metadata.type, "DataJS.Tests.V4.Food", "types match");
         djstest.assertAreEqual(response.data.UnitPrice, 0.19999, "Price is as expected");
         djstest.assertAreEqual(response.data.__metadata.properties.UnitPrice.type, "Edm.Double", "Price was marked as a double");
 
@@ -465,28 +521,42 @@
         djstest.done();
     });
 
-    djstest.addTest(function parseNullInlineTest() {
+    djstest.addFullTest(true, function parseNullInlineTest() {
         // Shorter version of:
         // OData.read("/tests/endpoints/FoodStoreDataService.svc/Foods?$expand=Category&$filter=Category eq null", function(data, response) {
 
         var body = '' +
-        '<feed xml:base="http://localhost/tests/endpoints/FoodStoreDataService.svc/" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom">' +
-        '  <entry>' +
-        '    <id>http://localhost/tests/endpoints/FoodStoreDataService.svc/Foods(2)</id>' +
-        '    <link rel="edit" title="Food" href="Foods(2)" />' +
-        '    <link rel="http://schemas.microsoft.com/ado/2007/08/dataservices/related/Category" type="application/atom+xml;type=entry" title="Category" href="Foods(2)/Category">' +
-        '      <m:inline />' +
-        '    </link>' +
-        '    <category term="DataJS.Tests.Food" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme" />' +
-        '    <content type="application/xml">' +
-        '      <m:properties>' +
-        '        <d:FoodID m:type="Edm.Int32">2</d:FoodID>' +
-        '        <d:Name>1 Chicken Egg</d:Name>' +
-        '        <d:UnitPrice m:type="Edm.Double">0.55</d:UnitPrice>' +
-        '      </m:properties>' +
-        '    </content>' +
-        '  </entry>' +
-        '</feed>';
+    '<feed xml:base="http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Foods">' +
+	'<id>http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Foods</id>' +
+	'<title type="text">Foods</title>' +
+	'<updated>2013-12-30T06:09:18Z</updated>' +
+	'<link rel="self" title="Foods" href="Foods" />' +
+	'<entry>' +
+	'	<id>http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Foods(2)</id>' +
+	'	<category term="#DataJS.Tests.V4.Food" scheme="http://docs.oasis-open.org/odata/ns/scheme" />' +
+	'	<link rel="edit" title="Food" href="Foods(2)" />' +
+	'	<link rel="http://docs.oasis-open.org/odata/ns/related/Category" type="application/atom+xml;type=entry" title="Category" href="Foods(2)/Category">' +
+	'		<m:inline />' +
+	'	</link>' +
+	'	<title />' +
+	'	<updated>2013-12-30T06:09:18Z</updated>' +
+	'	<author>' +
+	'		<name />' +
+	'	</author>' +
+	'	<link rel="http://docs.oasis-open.org/odata/ns/mediaresource/Picture" type="image/png" title="Picture" href="http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Picture" />' +
+	'	<link rel="http://docs.oasis-open.org/odata/ns/edit-media/Picture" type="image/png" title="Picture" href="Foods(2)/Picture" m:etag="W/&quot;123456789&quot;" />' +
+	'	<content type="application/xml">' +
+	'		<m:properties>' +
+	'			<d:FoodID m:type="Int32">2</d:FoodID>' +
+	'			<d:Name>1 Chicken Egg</d:Name>' +
+	'			<d:UnitPrice m:type="Double">0.55</d:UnitPrice>' +
+	'			<d:ServingSize m:type="Decimal">1</d:ServingSize>' +
+	'			<d:MeasurementUnit m:null="true" />' +
+	'			<d:ProteinGrams m:type="Byte">6</d:ProteinGrams>' +
+	'		</m:properties>' +
+	'	</content>' +
+	'</entry>' +
+    '</feed>';
         var response = { body: body, headers: { "Content-Type": "application/atom+xml"} };
         OData.atomHandler.read(response, {});
         var data = response.data;
@@ -498,9 +568,9 @@
         djstest.done();
     });
 
-    djstest.addTest(function serializeEpmTest() {
-        var metadata = parseMetadataHelper(foodServiceV2MetadataText);
-        var data = { __metadata: { type: "DataJS.Tests.V2.Food" }, FoodID: 123, Name: "name", CookedSize: { Length: 1, Height: 2, Width: 3, Volume: 4} };
+    djstest.addFullTest(true, function serializeEpmTest() {
+        var metadata = parseMetadataHelper(foodServiceV4MetadataText);
+        var data = { __metadata: { type: "DataJS.Tests.V4.Food" }, FoodID: 123, Name: "name", CookedSize: { Length: 1, Height: 2, Width: 3, Volume: 4} };
         var request = { data: data, headers: { "Content-Type": "application/atom+xml"} };
         OData.atomHandler.write(request, { metadata: metadata });
         djstest.assert(request.body.indexOf("CookedSize") === -1, "CookedSize element is missing from payload");
@@ -511,14 +581,14 @@
         djstest.done();
     });
 
-    djstest.addTest(function writeNullComplexTypeTest() {
+    djstest.addFullTest(true, function writeNullComplexTypeTest() {
 
         // Verify that the server can be updated to set a complex value to null.
-        var foodSetUrl = "./endpoints/FoodStoreDataServiceV2.svc/Foods";
+        var foodSetUrl = "./endpoints/FoodStoreDataServiceV4.svc/Foods";
         resetFoodData();
 
         // Without metadata, this will fail because the server version won't be set to 2.0.
-        var metadata = parseMetadataHelper(foodServiceV2MetadataText);
+        var metadata = parseMetadataHelper(foodServiceV4MetadataText);
         OData.read(foodSetUrl + "?$top=1", function (data) {
             var item = data.results[0];
             djstest.assert(item.Packaging, "item.Packaging is not null");
@@ -539,11 +609,11 @@
         }, djstest.failAndDoneCallback("Failed to read food"), null, null, metadata);
     });
 
-    djstest.addTest(function writeNonNullLinkTest() {
+    djstest.addFullTest(true, function writeNonNullLinkTest() {
         // Verify that the server can be updated to set a link to null.
         resetFoodData();
-        var foodSetUrl = "./endpoints/FoodStoreDataServiceV2.svc/Foods";
-        var metadata = parseMetadataHelper(foodServiceV2MetadataText);
+        var foodSetUrl = "./endpoints/FoodStoreDataServiceV4.svc/Foods";
+        var metadata = parseMetadataHelper(foodServiceV4MetadataText);
         OData.read(foodSetUrl + "?$top=1", function (data) {
             var item = data.results[0];
 
@@ -564,11 +634,11 @@
         }, djstest.failAndDoneCallback("Failed to read food"), null, null, metadata);
     });
 
-    djstest.addTest(function writeNullLinkTest() {
+    djstest.addFullTest(true, function writeNullLinkTest() {
         // Verify that the server can be updated to set a link to null.
         resetFoodData();
-        var foodSetUrl = "./endpoints/FoodStoreDataServiceV2.svc/Foods";
-        var metadata = parseMetadataHelper(foodServiceV2MetadataText);
+        var foodSetUrl = "./endpoints/FoodStoreDataServiceV4.svc/Foods";
+        var metadata = parseMetadataHelper(foodServiceV4MetadataText);
         OData.read(foodSetUrl + "?$top=1", function (data) {
             var item = data.results[0];
 
@@ -590,7 +660,7 @@
     });
 
     // DATAJS INTERNAL START
-    djstest.addTest(function lookupEntityTypeInSchemaTest() {
+    djstest.addFullTest(true, function lookupEntityTypeInSchemaTest() {
         var schemaEmpty = {};
         var schemaZero = {
             namespace: "Zero",
@@ -648,7 +718,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function testLookupEntityType() {
+    djstest.addFullTest(true, function testLookupEntityType() {
         var schemaZero = {
             namespace: "Zero",
             entityType: [
@@ -698,7 +768,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function testParseSimpleServiceDocument() {
+    djstest.addFullTest(true, function testParseSimpleServiceDocument() {
         var serviceDocString = "\
         <service xml:base=\"http://services.odata.org/OData/OData.svc/\" \r\n\
                  xmlns:atom=\"http://www.w3.org/2005/Atom\" \r\n\
@@ -742,7 +812,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function testServiceDocMustHaveAtLeastOneWorkspaceElement() {
+    djstest.addFullTest(true, function testServiceDocMustHaveAtLeastOneWorkspaceElement() {
         // Construct a service doc with no workspaces and verify that the parser throws.
         var serviceDocString = "\
         <service xml:base=\"http://services.odata.org/OData/OData.svc/\" \r\n\
@@ -758,7 +828,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function testServiceDocMayHaveMoreThanOneWorkspaceElement() {
+    djstest.addFullTest(true, function testServiceDocMayHaveMoreThanOneWorkspaceElement() {
         var serviceDocString = "\
         <service xml:base=\"http://services.odata.org/OData/OData.svc/\" \r\n\
                  xmlns:atom=\"http://www.w3.org/2005/Atom\" \r\n\
@@ -827,7 +897,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function testCollectionTitlesAndHrefsMayBeDifferent() {
+    djstest.addFullTest(true, function testCollectionTitlesAndHrefsMayBeDifferent() {
         var serviceDocString = "\
         <service xml:base=\"http://services.odata.org/OData/OData.svc/\" \r\n\
                  xmlns:atom=\"http://www.w3.org/2005/Atom\" \r\n\
@@ -867,7 +937,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function testParserShouldTreatMissingWorkspaceTitleAsBlank() {
+    djstest.addFullTest(true, function testParserShouldTreatMissingWorkspaceTitleAsBlank() {
         // Per RFC 5023 Section 8.3.2.1, the workspace element MUST have a title but
         // in the interests of being permissive, we should treat this as blank.
         var serviceDocString = "\
@@ -899,7 +969,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function testWorkspaceMayHaveNoCollections() {
+    djstest.addFullTest(true, function testWorkspaceMayHaveNoCollections() {
         var serviceDocString = "\
         <service xml:base=\"http://services.odata.org/OData/OData.svc/\" \r\n\
                  xmlns:atom=\"http://www.w3.org/2005/Atom\" \r\n\
@@ -922,7 +992,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function testCollectionMustHaveTitleElement() {
+    djstest.addFullTest(true, function testCollectionMustHaveTitleElement() {
         var serviceDocString = "\
         <service xml:base=\"http://services.odata.org/OData/OData.svc/\" \r\n\
                  xmlns:atom=\"http://www.w3.org/2005/Atom\" \r\n\
@@ -943,7 +1013,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function testCollectionMustHaveHrefAttribute() {
+    djstest.addFullTest(true, function testCollectionMustHaveHrefAttribute() {
         var serviceDocString = "\
         <service xml:base=\"http://services.odata.org/OData/OData.svc/\" \r\n\
                  xmlns:atom=\"http://www.w3.org/2005/Atom\" \r\n\
@@ -965,7 +1035,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadDocumentTest() {
+    djstest.addFullTest(true, function atomReadDocumentTest() {
         var emptyServiceString = "\
         <service xml:base=\"http://services.odata.org/OData/OData.svc/\" \r\n\
                  xmlns:atom=\"http://www.w3.org/2005/Atom\" \r\n\
@@ -1013,88 +1083,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadFeedV1Test() {
-        var simpleFeedString = "\
-        <feed xml:base=\'http://services.odata.org/OData/OData.svc/\' \r\n\
-              xmlns:app=\'http://www.w3.org/2007/app\' \r\n\
-              xmlns:m=\'http://schemas.microsoft.com/ado/2007/08/dataservices/metadata\' \r\n\
-              xmlns=\'http://www.w3.org/2005/Atom\'> \r\n\
-           <id>feed id</id> \r\n\
-           <title>test feed</title> \r\n\
-           <entry> \r\n\
-             <id>entry id</id> \r\n\
-             <title>empty entry</title> \r\n\
-           </entry> \r\n\
-        </feed> \r\n";
-
-        var expectedFeed = {
-            __metadata: {
-                uri: "http://services.odata.org/OData/OData.svc/feed id",
-                uri_extensions: [],
-                title: "test feed",
-                title_extensions: [],
-                feed_extensions: []
-            },
-            results: [
-                { __metadata: {
-                    uri: "http://services.odata.org/OData/OData.svc/entry id",
-                    uri_extensions: []
-                }
-                }
-           ]
-        };
-
-        var feed = OData.atomReadFeed(datajs.xmlParse(simpleFeedString).documentElement);
-
-        djstest.assert(feed, "atomReadFeed didn't return a feed object for a V1 payload");
-        djstest.assertAreEqualDeep(feed, expectedFeed, "atomReadFeed didn't return the expected feed");
-        djstest.done();
-    });
-
-    djstest.addTest(function atomReadFeedV2Test() {
-        var simpleFeedString = "\
-        <feed xml:base=\'http://services.odata.org/OData/OData.svc/\' \r\n\
-              xmlns:app=\'http://www.w3.org/2007/app\' \r\n\
-              xmlns:m=\'http://schemas.microsoft.com/ado/2007/08/dataservices/metadata\' \r\n\
-              xmlns=\'http://www.w3.org/2005/Atom\'> \r\n\
-           <id>feed id</id> \r\n\
-           <title>test feed</title> \r\n\
-           <m:count>2</m:count> \r\n\
-           <entry> \r\n\
-             <id>entry id</id> \r\n\
-             <title>empty entry</title> \r\n\
-           </entry> \r\n\
-           <link rel=\'next\' href=\'http://nexturi\'/> \r\n\
-        </feed> \r\n";
-
-        var expectedFeed = {
-            __count: 2,
-            __metadata: {
-                uri: "http://services.odata.org/OData/OData.svc/feed id",
-                uri_extensions: [],
-                title: "test feed",
-                title_extensions: [],
-                feed_extensions: [],
-                next_extensions: []
-            },
-            __next: "http://nexturi",
-            results: [
-                { __metadata: {
-                    uri: "http://services.odata.org/OData/OData.svc/entry id",
-                    uri_extensions: []
-                }
-                }
-           ]
-        };
-
-        var feed = OData.atomReadFeed(datajs.xmlParse(simpleFeedString).documentElement);
-
-        djstest.assert(feed, "atomReadFeed didn't return a feed object for a V2 payload");
-        djstest.assertAreEqualDeep(feed, expectedFeed, "atomReadFeed didn't return the expected feed");
-        djstest.done();
-    });
-
-    djstest.addTest(function atomReadFeedWithActionsAndFunctionsTest() {
+    djstest.addFullTest(true, function atomReadFeedWithActionsAndFunctionsTest() {
         var feed = "\r\n\
         <feed xml:base='http://services.odata.org/OData/OData.svc/' \r\n\
               xmlns:app='http://www.w3.org/2007/app' \r\n\
@@ -1162,14 +1151,14 @@
             results: []
         };
 
-        var response = { headers: { "Content-Type": "application/atom+xml", "DataServiceVersion": "3.0" }, body: feed };
+        var response = { headers: { "Content-Type": "application/atom+xml", "OData-Version": "4.0" }, body: feed };
 
         OData.atomHandler.read(response);
         djstest.assertAreEqualDeep(response.data, expected, "atomReadEntry didn't return the expected entry object");
         djstest.done();
     });
 
-    djstest.addTest(function atomReadFeedExtensionsTest() {
+    djstest.addFullTest(true, function atomReadFeedExtensionsTest() {
         var feedWithExtensionsString = "\
          <feed xml:base=\'http://services.odata.org/OData/OData.svc/\' \r\n\
               xmlns:app=\'http://www.w3.org/2007/app\' \r\n\
@@ -1190,7 +1179,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadFeedLinksTest() {
+    djstest.addFullTest(true, function atomReadFeedLinksTest() {
         var feedLinksString = "\
         <feed xml:base=\'http://services.odata.org/OData/OData.svc/\' \r\n\
               xmlns:app=\'http://www.w3.org/2007/app\' \r\n\
@@ -1215,7 +1204,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadLinkTest() {
+    djstest.addFullTest(true, function atomReadLinkTest() {
         var linkString = "\
         <link xmlns:me=\'http://myExtensions\' \r\n\
               xmlns=\'http://www.w3.org/2005/Atom\' \r\n\
@@ -1237,7 +1226,7 @@
 
     });
 
-    djstest.addTest(function atomReadLinkThrowHrefMissingTest() {
+    djstest.addFullTest(true, function atomReadLinkThrowHrefMissingTest() {
         var linkString = "\
         <link xmlns:me=\'http://myExtensions\' \r\n\
               xmlns=\'http://www.w3.org/2005/Atom\' \r\n\
@@ -1255,7 +1244,7 @@
 
     });
 
-    djstest.addTest(function atomReadExtensionElementTest() {
+    djstest.addFullTest(true, function atomReadExtensionElementTest() {
         var extensionString = "\
         <me:ext xmlns:me=\'http://myExtensions\' me:attr1=\'a1\' attr2=\'a2\'> \r\n\
           <ext>e1</ext> \r\n\
@@ -1278,7 +1267,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadExtensionAttributesTest() {
+    djstest.addFullTest(true, function atomReadExtensionAttributesTest() {
         var extensionString = "\
         <me:ext xmlns:me=\'http://myExtensions\' me:attr1=\'a1\' attr2=\'a2\' /> \r\n";
 
@@ -1287,7 +1276,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadExtensionAttributeTest() {
+    djstest.addFullTest(true, function atomReadExtensionAttributeTest() {
 
         var tests = {
             "extension with namespace": {
@@ -1310,7 +1299,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadEntryTest() {
+    djstest.addFullTest(true, function atomReadEntryTest() {
         var entryString = "\
         <entry xml:base=\'http://services.odata.org/OData/OData.svc/\' \r\n\
                xmlns:d2=\'http://schemas.microsoft.com/ado/2007/08/dataservices\' \r\n\
@@ -1360,7 +1349,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadEntryGmlCRSValueTest() {
+    djstest.addFullTest(true, function atomReadEntryGmlCRSValueTest() {
         var entryXml =
             "<entry                                                                          \r\n\
                xmlns:m='http://schemas.microsoft.com/ado/2007/08/dataservices/metadata'      \r\n\
@@ -1420,7 +1409,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadEntryGmlUnknownCRSValueThrowsTest() {
+    djstest.addFullTest(true, function atomReadEntryGmlUnknownCRSValueThrowsTest() {
         var entryXml =
             "<entry                                                                          \r\n\
                xmlns:m='http://schemas.microsoft.com/ado/2007/08/dataservices/metadata'      \r\n\
@@ -1448,7 +1437,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadEntryGmlPointValueTest() {
+    djstest.addFullTest(true, function atomReadEntryGmlPointValueTest() {
         var entryXml =
             "<entry                                                                          \r\n\
                xmlns:m='http://schemas.microsoft.com/ado/2007/08/dataservices/metadata'      \r\n\
@@ -1541,7 +1530,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadEntryGmlLineStringValueTest() {
+    djstest.addFullTest(true, function atomReadEntryGmlLineStringValueTest() {
         var entryXml =
             "<entry                                                                          \r\n\
                xmlns:m='http://schemas.microsoft.com/ado/2007/08/dataservices/metadata'      \r\n\
@@ -1633,7 +1622,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadEntryGmlLineStringValueWithOddPosListTest() {
+    djstest.addFullTest(true, function atomReadEntryGmlLineStringValueWithOddPosListTest() {
         var entryXml =
             "<entry                                                                          \r\n\
                xmlns:m='http://schemas.microsoft.com/ado/2007/08/dataservices/metadata'      \r\n\
@@ -1661,7 +1650,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadEntryGmlPolygonValueTest() {
+    djstest.addFullTest(true, function atomReadEntryGmlPolygonValueTest() {
         var entryXml =
             "<entry                                                                          \r\n\
                xmlns:m='http://schemas.microsoft.com/ado/2007/08/dataservices/metadata'      \r\n\
@@ -1791,7 +1780,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadEntryGmlMultiPointValueTest() {
+    djstest.addFullTest(true, function atomReadEntryGmlMultiPointValueTest() {
         var entryXml =
             "<entry                                                                          \r\n\
                xmlns:m='http://schemas.microsoft.com/ado/2007/08/dataservices/metadata'      \r\n\
@@ -1866,7 +1855,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadEntryGmlMultiListStringValueTest() {
+    djstest.addFullTest(true, function atomReadEntryGmlMultiListStringValueTest() {
         var entryXml =
             "<entry                                                                          \r\n\
                xmlns:m='http://schemas.microsoft.com/ado/2007/08/dataservices/metadata'      \r\n\
@@ -1942,7 +1931,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadEntryGmlMultiPolygonValueTest() {
+    djstest.addFullTest(true, function atomReadEntryGmlMultiPolygonValueTest() {
         var entryXml =
             "<entry                                                                          \r\n\
                xmlns:m='http://schemas.microsoft.com/ado/2007/08/dataservices/metadata'      \r\n\
@@ -2056,7 +2045,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadEntryGmlMultiGeometryValueTest() {
+    djstest.addFullTest(true, function atomReadEntryGmlMultiGeometryValueTest() {
         var entryXml =
             "<entry                                                                          \r\n\
                xmlns:m='http://schemas.microsoft.com/ado/2007/08/dataservices/metadata'      \r\n\
@@ -2250,7 +2239,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadEntryGeometryProperties() {
+    djstest.addFullTest(true, function atomReadEntryGeometryProperties() {
         var entryXml =
             "<entry                                                                          \r\n\
                xmlns:m='http://schemas.microsoft.com/ado/2007/08/dataservices/metadata'      \r\n\
@@ -2352,7 +2341,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadEntryGeographyProperties() {
+    djstest.addFullTest(true, function atomReadEntryGeographyProperties() {
         var entryXml =
             "<entry                                                                          \r\n\
                xmlns:m='http://schemas.microsoft.com/ado/2007/08/dataservices/metadata'      \r\n\
@@ -2542,7 +2531,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadEntryMediaLinkEntryTest() {
+    djstest.addFullTest(true, function atomReadEntryMediaLinkEntryTest() {
         var entryString = "\
         <entry xml:base=\'http://services.odata.org/OData/OData.svc/\' \r\n\
                xmlns:m=\'http://schemas.microsoft.com/ado/2007/08/dataservices/metadata\' \r\n\
@@ -2589,7 +2578,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadEntryTypeTest() {
+    djstest.addFullTest(true, function atomReadEntryTypeTest() {
         var categoryString = "\
         <category term=\'the type\' \r\n\
                   scheme=\'http://schemas.microsoft.com/ado/2007/08/dataservices/scheme\' \r\n\
@@ -2605,7 +2594,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadEntryTypeIgnoresCategoryTest() {
+    djstest.addFullTest(true, function atomReadEntryTypeIgnoresCategoryTest() {
         var categoryString = "\
         <category term=\'the type\' \r\n\
                   attr1=\'a1\' me:attr2=\'a2\' \r\n\
@@ -2619,7 +2608,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadEntryTypeThrowsWithMultipleCategoryTest() {
+    djstest.addFullTest(true, function atomReadEntryTypeThrowsWithMultipleCategoryTest() {
         var categoryString = "\
          <entry> \r\n\
             <category term=\'the type\' \r\n\
@@ -2642,7 +2631,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadEntryContentThrowsWithNoTypeAttributeTest() {
+    djstest.addFullTest(true, function atomReadEntryContentThrowsWithNoTypeAttributeTest() {
         var contentString = "\
             <content src=\'http://mediasource\' xmlns=\'http://www.w3.org/2005/Atom\'/> \r\n"
 
@@ -2655,7 +2644,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadEntryContentThrowsWithSrcAndChildrenTest() {
+    djstest.addFullTest(true, function atomReadEntryContentThrowsWithSrcAndChildrenTest() {
         var contentString = "\
             <content type=\'applicaton/xml\' src=\'http://mediasource\' \r\n\
                      xmlns=\'http://www.w3.org/2005/Atom\' \r\n\
@@ -2675,7 +2664,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadEntryEditMediaLinkTest() {
+    djstest.addFullTest(true, function atomReadEntryEditMediaLinkTest() {
         var linkString = "\
         <link m:etag=\'etag\' rel=\'edit-media\' href=\'http://editmediauri\' \r\n\
               attr1=\'a1\' me:attr2=\'a2\' \r\n\
@@ -2693,7 +2682,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadEntryLink() {
+    djstest.addFullTest(true, function atomReadEntryLink() {
         var linksString = "\
         <entry xmlns=\'http://www.w3.org/2005/Atom\'> \r\n\
          <link rel=\'edit-media\' href=\'http://editmediauri\' />\r\n\
@@ -2733,7 +2722,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadEntryNavigationPropertyTest() {
+    djstest.addFullTest(true, function atomReadEntryNavigationPropertyTest() {
         var entryString = "\
         <entry xml:base='http://baseuri.org/' \r\n\
                xmlns='http://www.w3.org/2005/Atom' \r\n\
@@ -2805,7 +2794,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadEntryStructuralObjectTest() {
+    djstest.addFullTest(true, function atomReadEntryStructuralObjectTest() {
         var content = "\
            <d:Data m:type = \"Data\" \r\n \
                       xmlns:d=\"http://schemas.microsoft.com/ado/2007/08/dataservices\" \r\n \
@@ -2868,7 +2857,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadEntryWithComplexTypePropertiesTest() {
+    djstest.addFullTest(true, function atomReadEntryWithComplexTypePropertiesTest() {
         var entryString = "\
         <entry xml:base=\'http://services.odata.org/OData/OData.svc/\' \r\n\
                xmlns:m2=\'http://schemas.microsoft.com/ado/2007/08/dataservices/metadata\' \r\n\
@@ -2969,7 +2958,7 @@
     });
 
 
-    djstest.addTest(function atomReadEntryWithActionsAndFunctionsTest() {
+    djstest.addFullTest(true, function atomReadEntryWithActionsAndFunctionsTest() {
         var entryString = "\
         <entry xml:base='http://services.odata.org/OData/OData.svc/' \r\n\
                xmlns:m='http://schemas.microsoft.com/ado/2007/08/dataservices/metadata' \r\n\
@@ -3037,7 +3026,7 @@
             }
         };
 
-        var response = { headers: { "Content-Type": "application/atom+xml", "DataServiceVersion": "3.0" }, body: entryString };
+            var response = { headers: { "Content-Type": "application/atom+xml", "OData-Version": "4.0" }, body: entryString };
 
         OData.atomHandler.read(response);
         djstest.assertAreEqualDeep(response.data, expected, "atomReadEntry didn't return the expected entry object");
@@ -3045,7 +3034,7 @@
 
     });
 
-    djstest.addTest(function atomReadEntryWithNamedStreamsTest() {
+    djstest.addFullTest(true, function atomReadEntryWithNamedStreamsTest() {
         var entryString = "\
         <entry xml:base='http://services.odata.org/OData/OData.svc/' \r\n\
                xmlns:m2='http://schemas.microsoft.com/ado/2007/08/dataservices/metadata' \r\n\
@@ -3114,7 +3103,7 @@
             }
         };
 
-        var response = { headers: { "Content-Type": "application/atom+xml", "DataServiceVersion": "3.0" }, body: entryString };
+        var response = { headers: { "Content-Type": "application/atom+xml", "OData-Version": "4.0" }, body: entryString };
 
         OData.atomHandler.read(response);
         djstest.assertAreEqualDeep(response.data, expected, "atomReadEntry didn't return the expected entry object");
@@ -3122,7 +3111,7 @@
     });
 
 
-    djstest.addTest(function atomReadEntryWithCollectionPropertiesTest() {
+    djstest.addFullTest(true, function atomReadEntryWithCollectionPropertiesTest() {
         var entryString = "\
         <entry xml:base='http://services.odata.org/OData/OData.svc/' \r\n\
                xmlns:m2='http://schemas.microsoft.com/ado/2007/08/dataservices/metadata\' \r\n\
@@ -3279,7 +3268,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomSerializeFeedTest() {
+    djstest.addFullTest(true, function atomSerializeFeedTest() {
         var feed = {
             __metadata: {
                 feed_extensions: []
@@ -3316,7 +3305,7 @@
                 });
     });
 
-    djstest.addTest(function atomSerializeEntryTest() {
+    djstest.addFullTest(true, function atomSerializeEntryTest() {
         var entry = {
             __metadata: {
                 uri: "http://services.odata.org/OData/OData.svc/entry id",
@@ -3347,7 +3336,7 @@
         });
     });
 
-    djstest.addTest(function atomSerializeEntryWithNamedStreamsTest() {
+    djstest.addFullTest(true, function atomSerializeEntryWithNamedStreamsTest() {
         var entry = {
             __metadata: {
                 uri: "http://services.odata.org/OData/OData.svc/entry id",
@@ -3484,7 +3473,7 @@
         });
     });
 
-    djstest.addTest(function atomSerializeComplexEntryTest() {
+    djstest.addFullTest(true, function atomSerializeComplexEntryTest() {
         var entry = {
             __metadata: {
                 uri: "http://services.odata.org/OData/OData.svc/entry id",
@@ -3543,7 +3532,7 @@
         });
     });
 
-    djstest.addTest(function atomSerializeInlinedDeferredEntryTest() {
+    djstest.addFullTest(true, function atomSerializeInlinedDeferredEntryTest() {
         var entry = {
             __metadata: {
                 uri: "http://services.odata.org/OData/OData.svc/entry id",
@@ -3606,7 +3595,7 @@
         });
     });
 
-    djstest.addTest(function atomSerializeJsObjectTest() {
+    djstest.addFullTest(true, function atomSerializeJsObjectTest() {
         var entryData = {
             Color: 0x0000ff,
             Height: 500,
@@ -3644,7 +3633,7 @@
         });
     });
 
-    djstest.addTest(function atomSerializePrimitiveTypesTest() {
+    djstest.addFullTest(true, function atomSerializePrimitiveTypesTest() {
         // Currently DateTime, Time and DateTimeOffset primitive types are not being covered.
         // DateTimeOffset and Time are not covered because they aren't supported by current WCF DataServices implementations.
         // DateTime follow non standard ways of being represented in JSON streams.
@@ -3788,7 +3777,7 @@
         });
     });
 
-    djstest.addTest(function atomSerializeSpatialPropertyTest() {
+    djstest.addFullTest(true, function atomSerializeSpatialPropertyTest() {
         var entry = {
             __metadata: {
                 properties: {
@@ -3829,10 +3818,10 @@
         OData.atomHandler.write(request, {});
         var entryXml = request.body;
 
-        djstest.assertAreEqual("3.0", request.headers["DataServiceVersion"], "Request data service version is the expected one");
+        djstest.assertAreEqual("4.0", request.headers["OData-Version"], "Request data service version is the expected one");
 
         var response = {
-            headers: { "Content-Type": "application/atom+xml", "DataServiceVersion": "3.0" },
+            headers: { "Content-Type": "application/atom+xml", "OData-Version": "4.0" },
             body: entryXml
         };
 
@@ -3845,7 +3834,7 @@
         });
     });
 
-    djstest.addTest(function atomSerializeSpatialPointTest() {
+    djstest.addFullTest(true, function atomSerializeSpatialPointTest() {
         var entry = {
             __metadata: {
                 properties: {
@@ -3874,10 +3863,10 @@
         OData.atomHandler.write(request, {});
         var entryXml = request.body;
 
-        djstest.assertAreEqual("3.0", request.headers["DataServiceVersion"], "Request data service version is the expected one");
+        djstest.assertAreEqual("4.0", request.headers["OData-Version"], "Request data service version is the expected one");
 
         var response = {
-            headers: { "Content-Type": "application/atom+xml", "DataServiceVersion": "3.0" },
+            headers: { "Content-Type": "application/atom+xml", "OData-Version": "4.0" },
             body: entryXml
         };
 
@@ -3890,7 +3879,7 @@
         });
     });
 
-    djstest.addTest(function atomSerializeSpatialLineStringTest() {
+    djstest.addFullTest(true, function atomSerializeSpatialLineStringTest() {
         var entry = {
             __metadata: {
                 properties: {
@@ -3928,10 +3917,10 @@
         OData.atomHandler.write(request, {});
         var entryXml = request.body;
 
-        djstest.assertAreEqual("3.0", request.headers["DataServiceVersion"], "Request data service version is the expected one");
+        djstest.assertAreEqual("4.0", request.headers["OData-Version"], "Request data service version is the expected one");
 
         var response = {
-            headers: { "Content-Type": "application/atom+xml", "DataServiceVersion": "3.0" },
+            headers: { "Content-Type": "application/atom+xml", "OData-Version": "4.0" },
             body: entryXml
         };
 
@@ -3944,7 +3933,7 @@
         });
     });
 
-    djstest.addTest(function atomSerializeSpatialPolygonTest() {
+    djstest.addFullTest(true, function atomSerializeSpatialPolygonTest() {
         var entry = {
             __metadata: {
                 properties: {
@@ -3987,10 +3976,10 @@
         OData.atomHandler.write(request, {});
         var entryXml = request.body;
 
-        djstest.assertAreEqual("3.0", request.headers["DataServiceVersion"], "Request data service version is the expected one");
+        djstest.assertAreEqual("4.0", request.headers["OData-Version"], "Request data service version is the expected one");
 
         var response = {
-            headers: { "Content-Type": "application/atom+xml", "DataServiceVersion": "3.0" },
+            headers: { "Content-Type": "application/atom+xml", "OData-Version": "4.0" },
             body: entryXml
         };
 
@@ -4003,7 +3992,7 @@
         });
     });
 
-    djstest.addTest(function atomSerializeSpatialMultiPointTest() {
+    djstest.addFullTest(true, function atomSerializeSpatialMultiPointTest() {
         var entry = {
             geometryMultiPoint: {
                 __metadata: { type: "Edm.GeometryMultiPoint" },
@@ -4026,10 +4015,10 @@
         OData.atomHandler.write(request, {});
         var entryXml = request.body;
 
-        djstest.assertAreEqual("3.0", request.headers["DataServiceVersion"], "Request data service version is the expected one");
+        djstest.assertAreEqual("4.0", request.headers["OData-Version"], "Request data service version is the expected one");
 
         var response = {
-            headers: { "Content-Type": "application/atom+xml", "DataServiceVersion": "3.0" },
+            headers: { "Content-Type": "application/atom+xml", "OData-Version": "4.0" },
             body: entryXml
         };
 
@@ -4042,7 +4031,7 @@
         });
     });
 
-    djstest.addTest(function atomSerializeSpatialMultiLineStringTest() {
+    djstest.addFullTest(true, function atomSerializeSpatialMultiLineStringTest() {
         var entry = {
             geometryMultiLineString: {
                 __metadata: { type: "Edm.GeometryMultiLineString" },
@@ -4065,10 +4054,10 @@
         OData.atomHandler.write(request, {});
         var entryXml = request.body;
 
-        djstest.assertAreEqual("3.0", request.headers["DataServiceVersion"], "Request data service version is the expected one");
+        djstest.assertAreEqual("4.0", request.headers["OData-Version"], "Request data service version is the expected one");
 
         var response = {
-            headers: { "Content-Type": "application/atom+xml", "DataServiceVersion": "3.0" },
+            headers: { "Content-Type": "application/atom+xml", "OData-Version": "4.0" },
             body: entryXml
         };
 
@@ -4081,7 +4070,7 @@
         });
     });
 
-    djstest.addTest(function atomSerializeSpatialMultiLinePolygonTest() {
+    djstest.addFullTest(true, function atomSerializeSpatialMultiLinePolygonTest() {
         var entry = {
             geometryMultiLineString: {
                 __metadata: { type: "Edm.GeometryMultiPolygon" },
@@ -4104,10 +4093,10 @@
         OData.atomHandler.write(request, {});
         var entryXml = request.body;
 
-        djstest.assertAreEqual("3.0", request.headers["DataServiceVersion"], "Request data service version is the expected one");
+        djstest.assertAreEqual("4.0", request.headers["OData-Version"], "Request data service version is the expected one");
 
         var response = {
-            headers: { "Content-Type": "application/atom+xml", "DataServiceVersion": "3.0" },
+            headers: { "Content-Type": "application/atom+xml", "OData-Version": "4.0" },
             body: entryXml
         };
 
@@ -4120,7 +4109,7 @@
         });
     });
 
-    djstest.addTest(function atomSerializeSpatialGeometryCollectionTest() {
+    djstest.addFullTest(true, function atomSerializeSpatialGeometryCollectionTest() {
         var entry = {
             geometryCollection: {
                 __metadata: { type: "Edm.GeometryCollection" },
@@ -4173,10 +4162,10 @@
         OData.atomHandler.write(request, {});
         var entryXml = request.body;
 
-        djstest.assertAreEqual("3.0", request.headers["DataServiceVersion"], "Request data service version is the expected one");
+        djstest.assertAreEqual("4.0", request.headers["OData-Version"], "Request data service version is the expected one");
 
         var response = {
-            headers: { "Content-Type": "application/atom+xml", "DataServiceVersion": "3.0" },
+            headers: { "Content-Type": "application/atom+xml", "OData-Version": "4.0" },
             body: entryXml
         };
 
@@ -4189,7 +4178,7 @@
         });
     });
 
-    djstest.addTest(function atomSerializeCollectionPropertiesTest() {
+    djstest.addFullTest(true, function atomSerializeCollectionPropertiesTest() {
         var entry = {
             __metadata: {
                 uri: "http://services.odata.org/OData/OData.svc/the id",
@@ -4245,7 +4234,7 @@
         var entryXml = request.body;
 
         var response = {
-            headers: { "Content-Type": "application/atom+xml", "DataServiceVersion": "3.0" },
+            headers: { "Content-Type": "application/atom+xml", "OData-Version": "4.0" },
             body: entryXml
         };
 
@@ -4258,7 +4247,7 @@
         });
     });
 
-    //    djstest.addTest(function atomSerializeInvalidPayloadTest() {
+    //    djstest.addFullTest(true, function atomSerializeInvalidPayloadTest() {
     //        djstest.expectException(function () {
     //            OData.atomSerializer(OData.atomHandler, { EntitySets: [] });
     //        }, "expected exception for serializing a service document");
@@ -4274,7 +4263,7 @@
     //        djstest.done();
     //    });
 
-    djstest.addTest(function atomSetEntryValueByPathTest() {
+    djstest.addFullTest(true, function atomSetEntryValueByPathTest() {
         var target = {};
 
         // simple property added.
@@ -4301,7 +4290,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function getXmlPathValueTest() {
+    djstest.addFullTest(true, function getXmlPathValueTest() {
         // Tests with expected value and result based on doc.
         var doc = datajs.xmlParse(
         "<atom:entry xmlns:atom='http://www.w3.org/2005/Atom' xmlns:c='custom'>" +
@@ -4350,7 +4339,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomApplyCustomizationToEntryObjectTest() {
+    djstest.addFullTest(true, function atomApplyCustomizationToEntryObjectTest() {
         var entryXml =
             "<atom:entry xmlns:atom='http://www.w3.org/2005/Atom' xmlns:c='custom'>" +
             " <atom:title>title</atom:title>" +
@@ -4395,7 +4384,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadCustomizedEntryWithNoTypeInformation() {
+    djstest.addFullTest(true, function atomReadCustomizedEntryWithNoTypeInformation() {
         var entryXml =
         "<atom:entry xmlns:atom='http://www.w3.org/2005/Atom' xmlns:c='custom'>" +
         " <atom:title>title</atom:title>" +
@@ -4416,7 +4405,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadCustomizedEntryWithMismatchedType() {
+    djstest.addFullTest(true, function atomReadCustomizedEntryWithMismatchedType() {
         var entryXml =
         "<atom:entry xmlns:atom='http://www.w3.org/2005/Atom' xmlns:c='custom'>" +
         " <atom:title>title</atom:title>" +
@@ -4440,7 +4429,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function atomReadCustomizedEntryTest() {
+    djstest.addFullTest(true, function atomReadCustomizedEntryTest() {
         var entryXml =
         "<atom:entry xmlns:atom='http://www.w3.org/2005/Atom' xmlns:c='custom'>" +
         " <atom:title>title</atom:title>" +
@@ -4525,7 +4514,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function lookupPropertyTypeTest() {
+    djstest.addFullTest(true, function lookupPropertyTypeTest() {
         // Tests are in metadata / entity / path / expected name form.
 
         var schema = {
@@ -4585,7 +4574,7 @@
         return result;
     };
 
-    djstest.addTest(function parseDateTimeTest() {
+    djstest.addFullTest(true, function parseDateTimeTest() {
 
         // This function is used to create dates with out-of-range years; it works only on Safari
         var createDateWithLargeYear = function (dateString, actualYear) {
@@ -4653,7 +4642,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function parseDateTimeOffsetTest() {
+    djstest.addFullTest(true, function parseDateTimeOffsetTest() {
         // Each test has input, expected value in text form, and expected offset text.
         var tests = [
         // Valid values.
@@ -4679,7 +4668,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function parseTimeTest() {
+    djstest.addFullTest(true, function parseTimeTest() {
         var error;
         try {
             OData.parseTime("00:01:02");
@@ -4693,7 +4682,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function formatDateTimeOffsetTest() {
+    djstest.addFullTest(true, function formatDateTimeOffsetTest() {
         // Input values that should simply round-trip.
         var tests = [
             "2000-01-02T03:04:05Z",
@@ -4721,7 +4710,7 @@
         djstest.done();
     });
 
-    djstest.addTest(function malformedXmlTest() {
+    djstest.addFullTest(true, function malformedXmlTest() {
         // Verifies that malformed XML documents (typically incomplete payloads) do indeed throw an error.
         var xmlText = "<top>text <another /> <item> </item> <!-- top not closed -->";
         var err = null;

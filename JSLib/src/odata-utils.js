@@ -726,10 +726,27 @@
     };
 
     var normalHeaders = {
-        "accept": "Accept",
+        // Headers shared by request and response
         "content-type": "Content-Type",
-        "dataserviceversion": "DataServiceVersion",
-        "maxdataserviceversion": "MaxDataServiceVersion"
+        "content-encoding": "Content-Encoding",
+        "content-length": "Content-Length",
+        "odata-version": "OData-Version",
+        
+        // Headers used by request
+        "accept": "Accept",
+        "accept-charset": "Accept-Charset",
+        "if-match": "If-Match",
+        "if-none-match": "If-None-Match",
+        "odata-isolation": "OData-Isolation",
+        "odata-maxversion": "OData-MaxVersion",
+        "prefer": "Prefer",
+        
+        // Headers used by response
+        "etag": "ETag",
+        "location": "Location",
+        "odata-entityid": "OData-EntityId",
+        "preference-applied": "Preference-Applied",
+        "retry-after": "Retry-After"
     };
 
     var normalizeHeaders = function (headers) {
@@ -982,8 +999,8 @@
             handler.write(request, context);
         }
 
-        if (!assigned(request.headers.MaxDataServiceVersion)) {
-            request.headers.MaxDataServiceVersion = handler.maxDataServiceVersion || "1.0";
+        if (!assigned(request.headers["OData-MaxVersion"])) {
+            request.headers["OData-MaxVersion"] = handler.maxDataServiceVersion || "4.0";
         }
     };
 

@@ -1,4 +1,8 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Web.Script.Serialization;
+
 namespace DataJS.Tests
 {
     public static class ReaderUtils
@@ -42,6 +46,22 @@ namespace DataJS.Tests
             }
 
             return request;
+        }
+
+        public static Stream ConvertDictionarytoJsonlightStream(Dictionary<string, object> dict)
+        {
+            MemoryStream stream = new MemoryStream();
+            if (dict == null)
+            {
+                return stream;
+            }
+
+            string jsonString = new JavaScriptSerializer().Serialize(dict);
+            StreamWriter writer = new StreamWriter(stream);
+            writer.Write(jsonString);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
         }
 
     }

@@ -100,9 +100,9 @@
     var atomXmlNs = w3org + "2005/Atom";                    // http://www.w3.org/2005/Atom
     var appXmlNs = w3org + "2007/app";                      // http://www.w3.org/2007/app
 
-    var odataEditMediaPrefix = adoDs + "/edit-media/";        // http://schemas.microsoft.com/ado/2007/08/dataservices/edit-media
-    var odataMediaResourcePrefix = adoDs + "/mediaresource/"; // http://schemas.microsoft.com/ado/2007/08/dataservices/mediaresource
-    var odataRelatedLinksPrefix = adoDs + "/relatedlinks/";   // http://schemas.microsoft.com/ado/2007/08/dataservices/relatedlinks
+    var odataEditMediaPrefix = adoDs + "/edit-media/";        // http://docs.oasis-open.org/odata/ns/edit-media
+    var odataMediaResourcePrefix = adoDs + "/mediaresource/"; // http://docs.oasis-open.org/odata/ns/mediaresource
+    var odataRelatedLinksPrefix = adoDs + "/relatedlinks/";   // http://docs.oasis-open.org/odata/ns/relatedlinks
 
     var atomAcceptTypes = ["application/atom+xml", "application/atomsvc+xml", "application/xml"];
     var atomMediaType = atomAcceptTypes[0];

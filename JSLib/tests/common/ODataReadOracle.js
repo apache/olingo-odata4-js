@@ -14,7 +14,7 @@
 // Client for the odata.read oracle service
 
 (function (window, undefined) {
-    var jsonMime = "application/json;odata=verbose";
+    var jsonMime = "application/json";
     var universalMime = "*/*";
     var atomMime = "application/atom+xml";
 
@@ -25,9 +25,6 @@
         /// <param name="mimeType" type="String">The MIME media type in the Accept header</param>
         var readMethod = getReadMethod(mimeType, "ReadFeed");
         oracleRequest("GET", readMethod, typeof url === "string" ? { url: url} : url, mimeType, recognizeDates, function (data) {
-            if (!data.results) {
-                data = { results: data };
-            }
             success(data);
         });
     };
@@ -72,9 +69,6 @@
         readJson(
             url,
             function (data) {
-                if (!data.results) {
-                    data = { results: data };
-                }
                 success(data);
             }
         );
@@ -84,13 +78,7 @@
         /// <summary>Calls the ReadMetadata endpoint with the specified URL</summary>
         /// <param name="url" type="String">The URL to read the metadata from</param>
         /// <param name="success" type="Function">The success callback function</param>
-        $.getJSON(
-            "./common/ODataReadOracle.svc/ReadMetadata?url=" + escape(url),
-            function (data) {
-                removeProperty(data.d, "__type");
-                success(data.d);
-            }
-        );
+        oracleRequest("GET", "ReadMetadata", typeof url === "string" ? { url: url} : url, null, null, success);
     };
 
     var readServiceDocument = function (url, success, mimeType) {
@@ -98,20 +86,8 @@
         /// <param name="url" type="String">The URL to the service</param>
         /// <param name="success" type="Function">The success callback function</param>
         /// <param name="mimeType" type="String">The MIME type being tested</param>
-
-        $.getJSON(
-            "./common/ODataReadOracle.svc/ReadServiceDocument?url=" + escape(url) + "&mimeType=" + mimeType,
-            function (data) {
-                removeProperty(data.d, "__type");
-                if (mimeType == jsonMime) {
-                    removeProperty(data.d, "extensions");
-                    $.each(data.d["workspaces"], function (_, workspace) {
-                        delete workspace["title"];
-                    });
-                }
-                success(data.d);
-            }
-        );
+        var readMethod = getReadMethod(mimeType, "ReadServiceDocument");
+        oracleRequest("GET", readMethod, typeof url === "string" ? { url: url} : url, mimeType, null, success);
     };
 
     var readJson = function (url, success) {
@@ -121,43 +97,59 @@
             dataType: "json",
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Accept", jsonMime);
-                xhr.setRequestHeader("MaxDataServiceVersion", "3.0");
+                xhr.setRequestHeader("OData-MaxVersion", "4.0");
             },
             success: function (data) {
-                success(data.d);
+                success(data);
             }
         });
     };
 
     var readJsonAcrossServerPages = function (url, success) {
-        var data = [];
+        var data = {};
         var readPage = function (url) {
             readJson(url, function (feedData) {
-                var results = feedData.results || feedData;
-                var next = feedData.__next;
+                var nextLink = feedData["@odata.nextLink"];
+                if (nextLink) {
+                    var index = url.indexOf(".svc/", 0);
+                    if (index != -1) {
+                        nextLink = url.substring(0, index + 5) + nextLink;
+                    }
+                }
 
-                data = data.concat(results);
-                if (next) {
-                    readPage(next);
-                } else {
+                if (data.value && feedData.value) {
+                    data.value = data.value.concat(feedData.value);
+                }
+                else {
+                    for (var property in feedData) {
+                        if (property != "@odata.nextLink") {
+                            data[property] = feedData[property];
+                        }
+                    }
+                }
+
+                if (nextLink) {
+                    readPage(nextLink);
+                }
+                else {
                     success(data);
                 }
             });
         };
 
         readPage(url);
-    }
+    };
 
     var getReadMethod = function (mimeType, defaultEndpoint) {
         switch (mimeType) {
-            case universalMime:
             case atomMime:
                 return defaultEndpoint;
             case jsonMime:
+            case universalMime:
             default:
                 return "ReadJson";
         }
-    }
+    };
 
     var oracleRequest = function (method, endpoint, data, mimeType, recognizeDates, success) {
         /// <summary>Requests a JSON object from the oracle service, removing WCF-specific artifacts</summary>
@@ -166,17 +158,19 @@
         /// <param name="data" type="Object">The data to send with the request</param>
         /// <param name="reviver" type="Function">The reviver function to run on each deserialized object</param>
         /// <param name="success" type="Function">Success callback</param>
-        var reviver = mimeType === jsonMime || mimeType === undefined ? (recognizeDates ? odataDateReviver : undefined) : oracleDateReviver;
         var url = "./common/ODataReadOracle.svc/" + endpoint;
+        if (mimeType) {
+            data.mimeType = mimeType;
+        }
+
         $.ajax({
             type: method,
             url: url,
             data: data,
             dataType: "text",
             success: function (data) {
-                var json = JSON.parse(data, reviver);
-                removeProperty(json.d, "__type");
-                success(json.d);
+                var json = JSON.parse(data);
+                success(json);
             }
         });
     };
@@ -194,70 +188,6 @@
                 removeProperty(data[prop], property);
             }
         }
-    }
-
-    var oracleDateReviver = function (key, value) {
-        /// <summary>Revives date objects received from the oracle service</summary>
-        if (value && value["__type"] && value["__type"].search("JsDate") > -1) {
-            var data = new Date(value.milliseconds);
-            if (value["__edmType"]) {
-                data["__edmType"] = value["__edmType"];
-            }
-
-            if (value["__offset"]) {
-                data["__offset"] = value["__offset"];
-            }
-
-            return data;
-        }
-
-        return value;
-    }
-
-    var odataDateReviver = function (key, value) {
-        /// <summary>Revives date objects received from OData JSON payloads</summary>
-        var regexp = /^\/Date\((-?\d+)(\+|-)?(\d+)?\)\/$/;
-        var matches = regexp.exec(value);
-        if (matches) {
-            var milliseconds = parseInt(matches[1], 10);
-            if (!isNaN(milliseconds)) {
-                var result = new Date(milliseconds);
-                if (matches[2]) {
-                    var sign = matches[2];
-                    var offsetMinutes = parseInt(matches[3], 10);
-                    if (sign === "-") {
-                        offsetMinutes = -offsetMinutes;
-                    }
-
-                    result.setUTCMinutes(result.getUTCMinutes() - offsetMinutes);
-                    result["__edmType"] = "Edm.DateTimeOffset";
-                    result["__offset"] = minutesToOffset(offsetMinutes);
-                }
-                return result;
-            }
-        }
-
-        return value;
-    }
-
-    var minutesToOffset = function (minutes) {
-        var padIfNeeded = function (value) {
-            var result = value.toString(10);
-            return result.length < 2 ? "0" + result : result;
-        };
-
-        var sign;
-        if (minutes < 0) {
-            sign = "-";
-            minutes = -minutes;
-        } else {
-            sign = "+";
-        }
-
-        var hours = Math.floor(minutes / 60);
-        minutes = minutes - (60 * hours);
-
-        return sign + padIfNeeded(hours) + ":" + padIfNeeded(minutes);
     };
 
     window.ODataReadOracle = {

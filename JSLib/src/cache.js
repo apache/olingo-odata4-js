@@ -31,6 +31,9 @@
     var createDeferred = datajs.createDeferred;
     var DjsDeferred = datajs.DjsDeferred;
     var ODataCacheSource = datajs.ODataCacheSource;
+    var getJsonValueArraryLength = datajs.getJsonValueArraryLength;
+    var sliceJsonValueArray = datajs.sliceJsonValueArray;
+    var concatJsonValueArray = datajs.concatJsonValueArray;
 
     // CONTENT START
 
@@ -40,11 +43,14 @@
         /// <param name="page" type="Object">Page with (i)ndex, (c)ount and (d)ata.</param>
 
         var intersection = intersectRanges(operation, page);
+        var start = 0;
+        var end = 0;
         if (intersection) {
-            var start = intersection.i - page.i;
-            var end = start + (operation.c - operation.d.length);
-            operation.d = operation.d.concat(page.d.slice(start, end));
+            start = intersection.i - page.i;
+            end = start + (operation.c - getJsonValueArraryLength(operation.d));
         }
+
+        operation.d = concatJsonValueArray(operation.d, sliceJsonValueArray(page.d, start, end));
     };
 
     var intersectRanges = function (x, y) {
@@ -523,7 +529,7 @@
             var deferred = createDeferred();
 
             // Merging read operations would be a nice optimization here.
-            var op = new DataCacheOperation(readStateMachine, deferred, true, index, count, [], 0);
+            var op = new DataCacheOperation(readStateMachine, deferred, true, index, count, {}, 0);
             queueAndStart(op, readOperations);
 
             return extend(deferred.promise(), {
@@ -558,13 +564,13 @@
                 var successCallback = function (data) {
                     if (!disposed) {
                         var i, len;
-                        for (i = 0, len = data.length; i < len; i++) {
+                        for (i = 0, len = data.value.length; i < len; i++) {
                             // The wrapper automatically checks for Dispose
                             // on the observer, so we don't need to check it here.
-                            obs.OnNext(data[i]);
+                            obs.OnNext(data.value[i]);
                         }
 
-                        if (data.length < pageSize) {
+                        if (data.value.length < pageSize) {
                             obs.OnCompleted();
                         } else {
                             index += pageSize;
@@ -683,7 +689,8 @@
             var canceled = false;
 
             var request = source.read(start, pageSize, function (data) {
-                var page = { i: start, c: data.length, d: data };
+                var length = getJsonValueArraryLength(data);
+                var page = { i: start, c: length, d: data };
                 deferred.resolve(page);
             }, function (err) {
                 deferred.reject(err);
@@ -727,32 +734,37 @@
             index = Math.max(index, 0);
 
             var deferred = createDeferred();
-            var arr = [];
+            var returnData = {};
+            returnData.value = [];
             var canceled = false;
             var pendingReadRange = null;
 
             var readMore = function (readIndex, readCount) {
                 if (!canceled) {
-                    if (count >= 0 && arr.length >= count) {
-                        deferred.resolve(arr);
+                    if (count > 0 && returnData.value.length >= count) {
+                        deferred.resolve(returnData);
                     } else {
                         pendingReadRange = that.readRange(readIndex, readCount).then(function (data) {
-                            for (var i = 0, length = data.length; i < length && (count < 0 || arr.length < count); i++) {
+                            if (data["@odata.context"] && !returnData["@odata.context"]) {
+                                returnData["@odata.context"] = data["@odata.context"];
+                            }
+                            
+                            for (var i = 0, length = data.value.length; i < length && (count < 0 || returnData.value.length < count); i++) {
                                 var dataIndex = backwards ? length - i - 1 : i;
-                                var item = data[dataIndex];
+                                var item = data.value[dataIndex];
                                 if (predicate(item)) {
                                     var element = {
                                         index: readIndex + dataIndex,
                                         item: item
                                     };
 
-                                    backwards ? arr.unshift(element) : arr.push(element);
+                                    backwards ? returnData.value.unshift(element) : returnData.value.push(element);
                                 }
                             }
 
                             // Have we reached the end of the collection?
-                            if ((!backwards && data.length < readCount) || (backwards && readIndex <= 0)) {
-                                deferred.resolve(arr);
+                            if ((!backwards && data.value.length < readCount) || (backwards && readIndex <= 0)) {
+                                deferred.resolve(returnData);
                             } else {
                                 var nextIndex = backwards ? Math.max(readIndex - pageSize, 0) : readIndex + readCount;
                                 readMore(nextIndex, pageSize);
@@ -1149,7 +1161,7 @@
                         if (cacheState === CACHE_STATE_IDLE || cacheState === CACHE_STATE_PREFETCH) {
                             // Signal the cache that a read operation is running.
                             changeState(CACHE_STATE_READ);
-                            if (operation.c > 0) {
+                            if (operation.c >= 0) {
                                 // Snap the requested range to a page boundary.
                                 var range = snapToPageBoundaries(operation.i, operation.c, pageSize);
                                 transition(READ_STATE_LOCAL, range.i);
@@ -1164,7 +1176,7 @@
                         // continue processing.
                         // Data is expected to be the read page.
                         appendPage(operation, data);
-                        var len = operation.d.length;
+                        var len = getJsonValueArraryLength(operation.d);
                         // Are we done?
                         if (operation.c === len || data.c < pageSize) {
                             // Update the stats, request for a prefetch operation.
