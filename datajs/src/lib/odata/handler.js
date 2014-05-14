@@ -1,4 +1,7 @@
-//SK name /odata/odata-handler.js
+/* {
+    oldname:'odata-handler.js',
+    updated:'20140514 12:59'
+}*/
 // Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
 // files (the "Software"), to deal  in the Software without restriction, including without limitation the rights  to use, copy,
@@ -27,7 +30,7 @@ var maxVersion = oDataUtils.maxVersion;
 
 // CONTENT START
 
-var MAX_DATA_SERVICE_VERSION = "3.0";
+var MAX_DATA_SERVICE_VERSION = "4.0";
 
 var contentType = function (str) {
     /// <summary>Parses a string into an object with media type and properties.</summary>
@@ -111,8 +114,8 @@ var fixDataServiceVersionHeader = function (request, version) {
 
     if (request) {
         var headers = request.headers;
-        var dsv = headers["DataServiceVersion"];
-        headers["DataServiceVersion"] = dsv ? maxVersion(dsv, version) : version;
+        var dsv = headers["OData-Version"];
+        headers["OData-Version"] = dsv ? maxVersion(dsv, version) : version;
     }
 };
 
@@ -140,7 +143,7 @@ var getDataServiceVersion = function (requestOrResponse) {
     /// <param name="requestOrResponse">Object representing a request or a response.</param>
     /// <returns type="String">Data service version; undefined if the header cannot be found.</returns>
 
-    var value = getRequestOrResponseHeader(requestOrResponse, "DataServiceVersion");
+    var value = getRequestOrResponseHeader(requestOrResponse, "OData-Version");
     if (value) {
         var matches = versionRE.exec(value);
         if (matches && matches.length) {
@@ -213,10 +216,10 @@ var handlerWrite = function (handler, serializeCallback, request, context) {
         request.body = serializeCallback(handler, request.data, writeContext);
 
         if (request.body !== undefined) {
-            fixDataServiceVersionHeader(request, writeContext.dataServiceVersion || "1.0");
+            fixDataServiceVersionHeader(request, writeContext.dataServiceVersion || "4.0");
 
             fixRequestHeader(request, "Content-Type", contentTypeToString(writeContext.contentType));
-            fixRequestHeader(request, "MaxDataServiceVersion", handler.maxDataServiceVersion);
+            fixRequestHeader(request, "OData-MaxVersion", handler.maxDataServiceVersion);
             return true;
         }
     }

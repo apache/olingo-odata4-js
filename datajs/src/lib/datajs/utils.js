@@ -1,4 +1,7 @@
-﻿//SK name /datajs/utils.js
+﻿/* {
+    oldname:'utils.js',
+    updated:'20140514 12:59'
+}*/
 // Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation 
 // files (the "Software"), to deal  in the Software without restriction, including without limitation the rights  to use, copy,
@@ -460,6 +463,59 @@ var addBase64Padding = function (binaryString) {
 
 };
 
+var getJsonValueArraryLength = function (data) {
+    if (data && data.value) {
+        return data.value.length;
+    }
+
+    return 0;
+};
+
+var sliceJsonValueArray = function (data, start, end) {
+    if (data == undefined || data.value == undefined) {
+        return data;
+    }
+
+    if (start < 0) {
+        start = 0;
+    }
+
+    var length = getJsonValueArraryLength(data);
+    if (length < end) {
+        end = length;
+    }
+
+    var newdata = {};
+    for (var property in data) {
+        if (property == "value") {
+            newdata[property] = data[property].slice(start, end);
+        } else {
+            newdata[property] = data[property];
+        }
+    }
+
+    return newdata;
+};
+
+var concatJsonValueArray = function (data, concatData) {
+    if (concatData == undefined || concatData.value == undefined) {
+        return data;
+    }
+
+    if (data == undefined || Object.keys(data).length == 0) {
+        return concatData;
+    }
+
+    if (data.value == undefined) {
+        data.value = concatData.value;
+        return data;
+    }
+
+    data.value = data.value.concat(concatData.value);
+
+    return data;
+};
+
 // DATAJS INTERNAL START
 exports.activeXObject = activeXObject;
 exports.assigned = assigned;
@@ -482,6 +538,9 @@ exports.trimString = trimString;
 exports.undefinedDefault = undefinedDefault;
 exports.decodeBase64 = decodeBase64;
 exports.convertByteArrayToHexString = convertByteArrayToHexString;
+exports.getJsonValueArraryLength = getJsonValueArraryLength;
+exports.sliceJsonValueArray = sliceJsonValueArray;
+exports.concatJsonValueArray = concatJsonValueArray;
 // DATAJS INTERNAL END
 
     

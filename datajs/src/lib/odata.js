@@ -1,4 +1,7 @@
-//SK name odata.js
+/* {
+    oldname:'odata.js',
+    updated:'20140514 12:59'
+}*/
 // Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
 // files (the "Software"), to deal  in the Software without restriction, including without limitation the rights  to use, copy,
@@ -46,7 +49,8 @@ var metadataParser = odataMetadata.metadataParser;
 
 // CONTENT START
 
-var handlers = [odataJson.jsonHandler, odataAtom.atomHandler, odataXml.xmlHandler, odataHandler.textHandler];
+// to do: disable atom scenario
+var handlers = [odata.jsonHandler/*, odata.atomHandler*/, odata.xmlHandler, odata.textHandler];
 
 var dispatchHandler = function (handlerMethod, requestOrResponse, context) {
     /// <summary>Dispatches an operation to handlers.</summary>
@@ -63,7 +67,39 @@ var dispatchHandler = function (handlerMethod, requestOrResponse, context) {
     }
 };
 
+exports.defaultSuccess = function (data) {
+    /// <summary>Default success handler for OData.</summary>
+    /// <param name="data">Data to process.</param>
 
+    window.alert(window.JSON.stringify(data));
+};
+
+exports.defaultError = throwErrorCallback;
+
+exports.defaultHandler = {
+        read: function (response, context) {
+            /// <summary>Reads the body of the specified response by delegating to JSON and ATOM handlers.</summary>
+            /// <param name="response">Response object.</param>
+            /// <param name="context">Operation context.</param>
+
+            if (response && assigned(response.body) && response.headers["Content-Type"]) {
+                dispatchHandler("read", response, context);
+            }
+        },
+
+        write: function (request, context) {
+            /// <summary>Write the body of the specified request by delegating to JSON and ATOM handlers.</summary>
+            /// <param name="request">Reques tobject.</param>
+            /// <param name="context">Operation context.</param>
+
+            dispatchHandler("write", request, context);
+        },
+
+        maxDataServiceVersion: MAX_DATA_SERVICE_VERSION,
+        accept: "application/json;q=0.9, application/atomsvc+xml;q=0.8, */*;q=0.1"
+    };
+
+exports.defaultMetadata = [];
 
 exports.read = function (urlOrRequest, success, error, handler, httpClient, metadata) {
     /// <summary>Reads data from the specified URL.</summary>
@@ -83,54 +119,6 @@ exports.read = function (urlOrRequest, success, error, handler, httpClient, meta
 
     return exports.request(request, success, error, handler, httpClient, metadata);
 };
-
-
-
-exports.parseMetadata = function (csdlMetadataDocument) {
-    /// <summary>Parses the csdl metadata to DataJS metatdata format. This method can be used when the metadata is retrieved using something other than DataJS</summary>
-    /// <param name="atomMetadata" type="string">A string that represents the entire csdl metadata.</param>
-    /// <returns type="Object">An object that has the representation of the metadata in Datajs format.</returns>
-
-    return metadataParser(null, csdlMetadataDocument);
-};
-
-
-exports.defaultSuccess = function (data) {
-    /// <summary>Default success handler for OData.</summary>
-    /// <param name="data">Data to process.</param>
-
-    window.alert(window.JSON.stringify(data));
-};
-
-exports.defaultError = utils.throwErrorCallback;
-
-exports.defaultHandler = {
-    read: function (response, context) {
-        /// <summary>Reads the body of the specified response by delegating to JSON and ATOM handlers.</summary>
-        /// <param name="response">Response object.</param>
-        /// <param name="context">Operation context.</param>
-
-        if (response && assigned(response.body) && response.headers["Content-Type"]) {
-            dispatchHandler("read", response, context);
-        }
-    },
-
-    write: function (request, context) {
-        /// <summary>Write the body of the specified request by delegating to JSON and ATOM handlers.</summary>
-        /// <param name="request">Reques tobject.</param>
-        /// <param name="context">Operation context.</param>
-
-        dispatchHandler("write", request, context);
-    },
-
-    maxDataServiceVersion: odataHandler.MAX_DATA_SERVICE_VERSION,
-    accept: "application/atomsvc+xml;q=0.8, application/json;odata=fullmetadata;q=0.7, application/json;q=0.5, */*;q=0.1"
-};
-
-// Configure the batch handler to use the default handler for the batch parts.
-exports.batchHandler.partHandler = exports.defaultHandler;
-exports.defaultMetadata = [];
-
 
 exports.request = function (request, success, error, handler, httpClient, metadata) {
     /// <summary>Sends a request containing OData payload to a server.</summary>
@@ -152,8 +140,6 @@ exports.request = function (request, success, error, handler, httpClient, metada
     request.callbackParameterName = utils.defined(request.callbackParameterName, odataNet.defaultHttpClient.callbackParameterName);
     request.formatQueryString = utils.defined(request.formatQueryString, odataNet.defaultHttpClient.formatQueryString);
     request.enableJsonpCallback = utils.defined(request.enableJsonpCallback, odataNet.defaultHttpClient.enableJsonpCallback);
-    request.useJsonLight = utils.defined(request.useJsonLight, odataJson.jsonHandler.useJsonLight);
-    request.inferJsonLightFeedAsObject = utils.defined(request.inferJsonLightFeedAsObject, odataJson.jsonHandler.inferJsonLightFeedAsObject);
 
     // Create the base context for read/write operations, also specifying complete settings.
     var context = {
@@ -162,9 +148,7 @@ exports.request = function (request, success, error, handler, httpClient, metada
         callbackParameterName: request.callbackParameterName,
         formatQueryString: request.formatQueryString,
         enableJsonpCallback: request.enableJsonpCallback,
-        useJsonLight: request.useJsonLight,
-        inferJsonLightFeedAsObject: request.inferJsonLightFeedAsObject
-    };
+s    };
 
     try {
         odataUtils.prepareRequest(request, handler, context);
@@ -172,4 +156,16 @@ exports.request = function (request, success, error, handler, httpClient, metada
     } catch (err) {
         error(err);
     }
+
 };
+
+exports.parseMetadata = function (csdlMetadataDocument) {
+    /// <summary>Parses the csdl metadata to DataJS metatdata format. This method can be used when the metadata is retrieved using something other than DataJS</summary>
+    /// <param name="atomMetadata" type="string">A string that represents the entire csdl metadata.</param>
+    /// <returns type="Object">An object that has the representation of the metadata in Datajs format.</returns>
+
+    return metadataParser(null, csdlMetadataDocument);
+};
+
+// Configure the batch handler to use the default handler for the batch parts.
+exports.batchHandler.partHandler = exports.defaultHandler;

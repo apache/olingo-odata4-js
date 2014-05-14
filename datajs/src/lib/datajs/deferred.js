@@ -1,4 +1,7 @@
-﻿//SK name deferred.js
+﻿/* {
+    oldname:'deferred.js',
+    updated:'20140514 12:59'
+}*/
 /// <reference path="odata-utils.js" />
 
 // Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.

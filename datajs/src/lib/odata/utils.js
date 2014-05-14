@@ -1,4 +1,7 @@
-﻿//SK name /odata/odata-utils.js
+﻿/* {
+    oldname:'odata-utils.js',
+    updated:'20140514 12:59'
+}*/
 // Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation 
 // files (the "Software"), to deal  in the Software without restriction, including without limitation the rights  to use, copy,
@@ -723,10 +726,27 @@ var maxVersion = function (left, right) {
 };
 
 var normalHeaders = {
-    "accept": "Accept",
+    // Headers shared by request and response
     "content-type": "Content-Type",
-    "dataserviceversion": "DataServiceVersion",
-    "maxdataserviceversion": "MaxDataServiceVersion"
+    "content-encoding": "Content-Encoding",
+    "content-length": "Content-Length",
+    "odata-version": "OData-Version",
+    
+    // Headers used by request
+    "accept": "Accept",
+    "accept-charset": "Accept-Charset",
+    "if-match": "If-Match",
+    "if-none-match": "If-None-Match",
+    "odata-isolation": "OData-Isolation",
+    "odata-maxversion": "OData-MaxVersion",
+    "prefer": "Prefer",
+    
+    // Headers used by response
+    "etag": "ETag",
+    "location": "Location",
+    "odata-entityid": "OData-EntityId",
+    "preference-applied": "Preference-Applied",
+    "retry-after": "Retry-After"
 };
 
 var normalizeHeaders = function (headers) {
@@ -979,8 +999,8 @@ var prepareRequest = function (request, handler, context) {
         handler.write(request, context);
     }
 
-    if (!assigned(request.headers.MaxDataServiceVersion)) {
-        request.headers.MaxDataServiceVersion = handler.maxDataServiceVersion || "1.0";
+    if (!assigned(request.headers["OData-MaxVersion"])) {
+        request.headers["OData-MaxVersion"] = handler.maxDataServiceVersion || "4.0";
     }
 };
 
@@ -1108,3 +1128,4 @@ exports.prepareRequest = prepareRequest;
 exports.removeNamespace = removeNamespace;
 exports.traverse = traverse;
 // DATAJS INTERNAL END
+

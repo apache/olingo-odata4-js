@@ -1,4 +1,7 @@
-//SK name /odata/odata-net.js
+/* {
+    oldname:'odata-net.js',
+    updated:'20140514 12:59'
+}*/
 // Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation 
 // files (the "Software"), to deal  in the Software without restriction, including without limitation the rights  to use, copy,
@@ -278,12 +281,14 @@ exports.defaultHttpClient = {
 
 
                     var headers;
-                    // Adding dataServiceVersion in case of json light ( data.d doesn't exist )
-                    if (data.d === undefined) {
-                        headers = { "Content-Type": "application/json;odata=minimalmetadata", dataServiceVersion: "3.0" };
+                    if (!formatQueryString || formatQueryString == "$format=json") {
+                        headers = { "Content-Type": "application/json;odata.metadata=minimal", "OData-Version": "4.0" };
                     } else {
-                        headers = { "Content-Type": "application/json" };
+                        // the formatQueryString should be in the format of "$format=xxx", xxx should be one of the application/json;odata.metadata=minimal(none or full)
+                        // set the content-type with the string xxx which stars from index 8.
+                        headers = { "Content-Type": formatQueryString.substring(8), "OData-Version": "4.0" };
                     }
+
                     // Call the success callback in the context of the parent window, instead of the IFRAME
                     delay(function () {
                         removeIFrame(iframe);
@@ -297,7 +302,7 @@ exports.defaultHttpClient = {
             timeoutId = window.setTimeout(handleTimeout, timeoutMS);
 
             var queryStringParams = callbackParameterName + "=parent." + name;
-            if (this.formatQueryString) {
+            if (formatQueryString) {
                 queryStringParams += "&" + formatQueryString;
             }
 

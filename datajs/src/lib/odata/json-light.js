@@ -1,4 +1,7 @@
-﻿//SK name /odata/odata-json-light.js
+﻿/* {
+    oldname:'odata-json-light.js',
+    updated:'20140514 12:59'
+}*/
 // Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation 
 // files (the "Software"), to deal  in the Software without restriction, including without limitation the rights  to use, copy,
@@ -72,8 +75,9 @@ var PAYLOADTYPE_LINKS = "l";
 var odataNs = "odata";
 var odataAnnotationPrefix = odataNs + ".";
 
+var contextUrlAnnotation = "@" + odataAnnotationPrefix + "context";
+
 var bindAnnotation = "@" + odataAnnotationPrefix + "bind";
-var metadataAnnotation = odataAnnotationPrefix + "metadata";
 var navUrlAnnotation = odataAnnotationPrefix + "navigationLinkUrl";
 var typeAnnotation = odataAnnotationPrefix + "type";
 
@@ -1043,7 +1047,7 @@ var jsonLightPayloadInfo = function (data, model, inferFeedAsComplexType) {
     ///     Object with kind and type fields. Null if there is no metadata annotation or the payload info cannot be obtained..
     /// </returns>
 
-    var metadataUri = data[metadataAnnotation];
+    var metadataUri = data[contextUrlAnnotation];
     if (!metadataUri || typeof metadataUri !== "string") {
         return null;
     }
@@ -1143,15 +1147,15 @@ var jsonLightReadPayload = function (data, model, recognizeDates, inferFeedAsCom
         return data;
     }
 
-    contentTypeOdata = contentTypeOdata || "minimalmetadata";
-    var baseURI = data[metadataAnnotation];
+    contentTypeOdata = contentTypeOdata || "minimal";
+    var baseURI = data[contextUrlAnnotation];
     var payloadInfo = jsonLightPayloadInfo(data, model, inferFeedAsComplexType);
     if (assigned(payloadInfo)) {
         payloadInfo.contentTypeOdata = contentTypeOdata;
     }
     var typeName = null;
     if (payloadInfo) {
-        delete data[metadataAnnotation];
+        delete data[contextUrlAnnotation];
 
         typeName = payloadInfo.type;
         switch (payloadInfo.kind) {
@@ -1170,7 +1174,56 @@ var jsonLightReadPayload = function (data, model, recognizeDates, inferFeedAsCom
     return jsonLightReadObject(data, payloadInfo, baseURI, model, recognizeDates);
 };
 
-var jsonLightSerializableMetadata = ["type", "etag", "media_src", "edit_media", "content_type", "media_etag"];
+var jsonLightSerializableMetadata = ["@odata.type", "@odata.etag", "@odata.mediaEditLink", "@odata.mediaReadLink", "@odata.mediaContentType", "@odata.mediaEtag"];
+
+var formatJsonLightRequestPayload = function (data) {
+    if (!data) {
+        return data;
+    }
+
+    if (isPrimitive(data)) {
+        return data;
+    }
+
+    if (isArray(data)) {
+        var newArrayData = [];
+        var i, len;
+        for (i = 0, len = data.length; i < len; i++) {
+            newArrayData[i] = formatJsonLightRequestPayload(data[i]);
+        }
+
+        return newArrayData;
+    }
+
+    var newdata = {};
+    for (var property in data) {
+        if (isJsonLightSerializableProperty(property)) {
+            newdata[property] = formatJsonLightRequestPayload(data[property]);
+        }
+    }
+
+    return newdata;
+};
+
+var isJsonLightSerializableProperty = function (property) {
+    if (!property) {
+        return false;
+    }
+
+    if (property.indexOf("@odata.") == -1) {
+        return true;
+    }
+
+    var i, len;
+    for (i = 0, len = jsonLightSerializableMetadata.length; i < len; i++) {
+        var name = jsonLightSerializableMetadata[i];
+        if (property.indexOf(name) != -1) {
+            return true;
+        }
+    }
+
+    return false;
+};
 
 var formatJsonLight = function (obj, context) {
     /// <summary>Converts an object in the library's internal representation to its json light representation.</summary>
@@ -1381,4 +1434,5 @@ var formatJsonLightAnnotation = function (qName, target, value, data) {
 // DATAJS INTERNAL START
 exports.jsonLightReadPayload = jsonLightReadPayload;
 exports.formatJsonLight = formatJsonLight;
+exports.formatJsonLightRequestPayload = formatJsonLightRequestPayload;
 // DATAJS INTERNAL END

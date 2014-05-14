@@ -1,4 +1,7 @@
-//SK name /odata/odata-atom.js
+/* {
+    oldname:'odata-atom.js',
+    updated:'20140514 12:59'
+}*/
 /// <reference path="odata-utils.js" />
 /// <reference path="odata-handler.js" />
 /// <reference path="odata-xml.js" />
@@ -31,11 +34,11 @@ var contains  = utils.contains;
 var djsassert = utils.djsassert;
 var isArray   = utils.isArray;
 var isObject  = utils.isObject;
-
+var isXmlNSDeclaration = xml.isXmlNSDeclaration;
 var normalizeURI = utils.normalizeURI;
 var parseInt10 = utils.parseInt10;
 
-var isXmlNSDeclaration = xml.isXmlNSDeclaration;
+
 var xmlAppendChild = xml.xmlAppendChild;
 var xmlAppendChildren = xml.xmlAppendChildren
 var xmlAttributes = xml.xmlAttributes;
@@ -109,9 +112,9 @@ var atomPrefix = "a";
 var atomXmlNs = w3org + "2005/Atom";                    // http://www.w3.org/2005/Atom
 var appXmlNs = w3org + "2007/app";                      // http://www.w3.org/2007/app
 
-var odataEditMediaPrefix = adoDs + "/edit-media/";        // http://schemas.microsoft.com/ado/2007/08/dataservices/edit-media
-var odataMediaResourcePrefix = adoDs + "/mediaresource/"; // http://schemas.microsoft.com/ado/2007/08/dataservices/mediaresource
-var odataRelatedLinksPrefix = adoDs + "/relatedlinks/";   // http://schemas.microsoft.com/ado/2007/08/dataservices/relatedlinks
+var odataEditMediaPrefix = adoDs + "/edit-media/";        // http://docs.oasis-open.org/odata/ns/edit-media
+var odataMediaResourcePrefix = adoDs + "/mediaresource/"; // http://docs.oasis-open.org/odata/ns/mediaresource
+var odataRelatedLinksPrefix = adoDs + "/relatedlinks/";   // http://docs.oasis-open.org/odata/ns/relatedlinks
 
 var atomAcceptTypes = ["application/atom+xml", "application/atomsvc+xml", "application/xml"];
 var atomMediaType = atomAcceptTypes[0];

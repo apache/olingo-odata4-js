@@ -1,4 +1,7 @@
-﻿//SK name /cache/cache-source.js
+﻿/* {
+    oldname:'cache_source.js',
+    updated:'20140514 12:59'
+}*/
 /// <reference path="odata-utils.js" />
 
 // Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.
@@ -95,39 +98,54 @@ var queryForData = function (uri, options, success, error) {
     /// <param name="error" type="Function">Error callback.</param>
     /// <returns type="Object">Object with an abort method.</returns>
 
-    var request = queryForDataInternal(uri, options, [], success, error);
+    var request = queryForDataInternal(uri, options, {}, success, error);
     return request;
 };
 
-var queryForDataInternal = function (uri, options, data, success, error) {
-    /// <summary>Gets data from an OData service taking into consideration server side paging.</summary>
-    /// <param name="uri" type="String">URI to the OData service.</param>
-    /// <param name="options" type="Object">Object with additional well-known request options.</param>
-    /// <param name="data" type="Array">Array that stores the data provided by the OData service.</param>
-    /// <param name="success" type="Function">Success callback.</param>
-    /// <param name="error" type="Function">Error callback.</param>
-    /// <returns type="Object">Object with an abort method.</returns>
+    var queryForDataInternal = function (uri, options, data, success, error) {
+        /// <summary>Gets data from an OData service taking into consideration server side paging.</summary>
+        /// <param name="uri" type="String">URI to the OData service.</param>
+        /// <param name="options" type="Object">Object with additional well-known request options.</param>
+        /// <param name="data" type="Array">Array that stores the data provided by the OData service.</param>
+        /// <param name="success" type="Function">Success callback.</param>
+        /// <param name="error" type="Function">Error callback.</param>
+        /// <returns type="Object">Object with an abort method.</returns>
 
-    var request = buildODataRequest(uri, options);
-    var currentRequest = oRta_request.request(request, function (newData) {
-        var next = newData.__next;
-        var results = newData.results;
+        var request = buildODataRequest(uri, options);
+        var currentRequest = odata.request(request, function (newData) {
+            var nextLink = newData["@odata.nextLink"];
+            if (nextLink) {
+                var index = uri.indexOf(".svc/", 0);
+                if (index != -1) {
+                    nextLink = uri.substring(0, index + 5) + nextLink;
+                }
+            }
 
-        data = data.concat(results);
+            if (data.value && newData.value) {
+                data.value = data.value.concat(newData.value);
+            }
+            else {
+                for (var property in newData) {
+                    if (property != "@odata.nextLink") {
+                        data[property] = newData[property];
+                    }
+                }
+            }
 
-        if (next) {
-            currentRequest = queryForDataInternal(next, options, data, success, error);
-        } else {
-            success(data);
-        }
-    }, error, undefined, options.httpClient, options.metadata);
+            if (nextLink) {
+                currentRequest = queryForDataInternal(nextLink, options, data, success, error);
+            }
+            else {
+                success(data);
+            }
+        }, error, undefined, options.httpClient, options.metadata);
 
-    return {
-        abort: function () {
-            currentRequest.abort();
-        }
+        return {
+            abort: function () {
+                currentRequest.abort();
+            }
+        };
     };
-};
 
 var ODataCacheSource = function (options) {
     /// <summary>Creates a data cache source object for requesting data from an OData service.</summary>

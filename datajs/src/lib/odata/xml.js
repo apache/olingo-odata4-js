@@ -1,4 +1,7 @@
-//SK name /odata/odata-xml.js
+/* {
+    oldname:'odata-xml.js',
+    updated:'20140514 12:59'
+}*/
 // Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation 
 // files (the "Software"), to deal  in the Software without restriction, including without limitation the rights  to use, copy,
@@ -124,24 +127,16 @@ var MAX_DATA_SERVICE_VERSION = odataHandler.MAX_DATA_SERVICE_VERSION;
 
 var xmlMediaType = "application/xml";
 
-var ado = http + "schemas.microsoft.com/ado/";      // http://schemas.microsoft.com/ado/
-var adoDs = ado + "2007/08/dataservices";           // http://schemas.microsoft.com/ado/2007/08/dataservices
+var ado = http + "docs.oasis-open.org/odata/";      // http://docs.oasis-open.org/odata/
+var adoDs = ado + "ns";                             // http://docs.oasis-open.org/odata/ns
 
-var edmxNs = ado + "2007/06/edmx";                  // http://schemas.microsoft.com/ado/2007/06/edmx
-var edmNs1 = ado + "2006/04/edm";                   // http://schemas.microsoft.com/ado/2006/04/edm
-var edmNs1_1 = ado + "2007/05/edm";                 // http://schemas.microsoft.com/ado/2007/05/edm
-var edmNs1_2 = ado + "2008/01/edm";                 // http://schemas.microsoft.com/ado/2008/01/edm
+var edmxNs = adoDs + "/edmx";                       // http://docs.oasis-open.org/odata/ns/edmx
+var edmNs1 = adoDs + "/edm";                        // http://docs.oasis-open.org/odata/ns/edm
 
-// There are two valid namespaces for Edm 2.0
-var edmNs2a = ado + "2008/09/edm";                  // http://schemas.microsoft.com/ado/2008/09/edm
-var edmNs2b = ado + "2009/08/edm";                  // http://schemas.microsoft.com/ado/2009/08/edm
-
-var edmNs3 = ado + "2009/11/edm";                   // http://schemas.microsoft.com/ado/2009/11/edm
-
-var odataXmlNs = adoDs;                             // http://schemas.microsoft.com/ado/2007/08/dataservices
-var odataMetaXmlNs = adoDs + "/metadata";           // http://schemas.microsoft.com/ado/2007/08/dataservices/metadata
-var odataRelatedPrefix = adoDs + "/related/";       // http://schemas.microsoft.com/ado/2007/08/dataservices/related
-var odataScheme = adoDs + "/scheme";                // http://schemas.microsoft.com/ado/2007/08/dataservices/scheme
+var odataXmlNs = adoDs;                             // http://docs.oasis-open.org/odata/ns
+var odataMetaXmlNs = adoDs + "/metadata";           // http://docs.oasis-open.org/odata/ns/metadata
+var odataRelatedPrefix = adoDs + "/related/";       // http://docs.oasis-open.org/odata/ns/related
+var odataScheme = adoDs + "/scheme";                // http://docs.oasis-open.org/odata/ns/scheme
 
 var odataPrefix = "d";
 var odataMetaPrefix = "m";
@@ -628,7 +623,7 @@ var xmlNewODataEdmProperty = function (dom, name, value, typeName) {
 
     var propertyValue = xmlNewODataPrimitiveValue(value, typeName);
     var property = xmlNewODataProperty(dom, name, typeName, propertyValue);
-    return xmlNewODataElementInfo(property, /*dataServiceVersion*/"1.0");
+    return xmlNewODataElementInfo(property, /*dataServiceVersion*/"4.0");
 };
 
 var xmlNewODataNullProperty = function (dom, name, typeName, model) {
@@ -680,7 +675,7 @@ var xmlNewODataCollectionProperty = function (dom, name, value, typeName, collec
 
         xmlAppendChild(xmlProperty, item.element);
     }
-    return xmlNewODataElementInfo(xmlProperty, /*dataServiceVersion*/"3.0");
+    return xmlNewODataElementInfo(xmlProperty, /*dataServiceVersion*/"4.0");
 };
 
 var xmlNewODataComplexProperty = function (dom, name, value, typeName, propertyMetadata, propertyModel, model) {
@@ -701,7 +696,7 @@ var xmlNewODataComplexProperty = function (dom, name, value, typeName, propertyM
     var complexTypePropertiesMetadata = propertyMetadata.properties || {};
     var complexTypeModel = lookupComplexType(typeName, model) || {};
 
-    var dataServiceVersion = "1.0";
+    var dataServiceVersion = "4.0";
 
     for (var key in value) {
         if (key !== "__metadata") {
@@ -733,7 +728,7 @@ var xmlNewODataSpatialProperty = function (dom, name, value, typeName, isGeograp
     var gmlRoot = gmlNewODataSpatialValue(dom, value, geoJsonType, isGeography);
     var xmlProperty = xmlNewODataProperty(dom, name, typeName, gmlRoot);
 
-    return xmlNewODataElementInfo(xmlProperty, "3.0");
+    return xmlNewODataElementInfo(xmlProperty, "4.0");
 };
 
 var xmlNewODataDataElement = function (dom, name, value, dataItemMetadata, dataItemModel, model) {
@@ -832,11 +827,6 @@ exports.createAttributeExtension = createAttributeExtension;
 exports.createElementExtension = createElementExtension;
 exports.edmxNs = edmxNs;
 exports.edmNs1 = edmNs1;
-exports.edmNs1_1 = edmNs1_1;
-exports.edmNs1_2 = edmNs1_2
-exports.edmNs2a = edmNs2a;
-exports.edmNs2b = edmNs2b;
-exports.edmNs3 = edmNs3;
 exports.odataMetaXmlNs = odataMetaXmlNs;
 exports.odataMetaPrefix = odataMetaPrefix;
 exports.odataXmlNs = odataXmlNs;
