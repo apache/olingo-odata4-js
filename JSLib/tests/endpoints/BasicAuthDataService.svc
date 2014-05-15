@@ -1,0 +1,108 @@
+<%@ ServiceHost Language="C#" Factory="Microsoft.OData.Service.DataServiceHostFactory, Microsoft.OData.Service, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
+    Service="DataJS.Tests.BasicAuthDataService" %>
+
+namespace DataJS.Tests
+{
+    using System;
+    using System.Collections.Generic;
+    using Microsoft.OData.Service;
+    using Microsoft.OData.Service.Common;
+    using System.Linq;
+    using System.ServiceModel;
+    using System.ServiceModel.Web;
+    using System.Text;
+    using System.Web;
+
+    [ServiceBehavior(IncludeExceptionDetailInFaults = true)]
+    public class BasicAuthDataService : DataService<BasicAuthDataSource>
+    {
+        const string Username = "djsUser";
+        const string Password = "djsPassword";
+        
+        // This method is called only once to initialize service-wide policies.
+        public static void InitializeService(DataServiceConfiguration config)
+        {
+            config.SetEntitySetAccessRule("*", EntitySetRights.All);
+            config.SetServiceOperationAccessRule("*", ServiceOperationRights.All);
+            config.DataServiceBehavior.MaxProtocolVersion = DataServiceProtocolVersion.V4;
+            config.UseVerboseErrors = true;
+        }
+
+        public BasicAuthDataService()
+            : base()
+        {
+            this.ProcessingPipeline.ProcessingRequest += OnRequest;
+        }
+
+        [WebInvoke]
+        public void ResetData()
+        {
+            this.CurrentDataSource.ResetData();
+        }
+
+        private static void UnauthorizedRequest(DataServiceOperationContext context)
+        {
+            context.ResponseHeaders["WWW-Authenticate"] = "Basic realm=\"DataJS.Tests\"";
+            throw new DataServiceException(401, "401 Unauthorized");
+        }
+
+        private void OnRequest(object sender, DataServiceProcessingPipelineEventArgs e)
+        {
+            string authHeader = e.OperationContext.RequestHeaders["Authorization"];
+            
+            // Validate the Authorization header
+            if (authHeader == null || !authHeader.StartsWith("Basic"))
+            {
+                UnauthorizedRequest(e.OperationContext);
+            }
+
+            // Decode the username and password from the header
+            string base64Credentials = authHeader.Substring(6);
+            string[] credentials = Encoding.ASCII.GetString(Convert.FromBase64String(base64Credentials)).Split(':');
+            if (credentials.Length != 2 || !(credentials[0].Equals(Username) && credentials[1].Equals(Password)))
+            {
+                UnauthorizedRequest(e.OperationContext);
+            }
+        }
+    }
+
+    public class BasicAuthDataSource : ReflectionDataContext, IUpdatable
+    {
+        private static bool dataInitialized;
+
+        public IQueryable<Customer> Customers
+        {
+            get { return this.GetResourceSetEntities<Customer>("Customers").AsQueryable(); }
+        }
+
+        public void ResetData()
+        {
+            this.ClearData();
+
+            IList<Customer> customers = this.GetResourceSetEntities<Customer>("Customers");
+            foreach (int i in Enumerable.Range(1, 16))
+            {
+                customers.Add(new Customer()
+                {
+                    ID = i,
+                    Name = "Customer " + i
+                });
+            }
+        }
+
+        protected override void EnsureDataIsInitialized()
+        {
+            if (!dataInitialized)
+            {
+                this.ResetData();
+                dataInitialized = true;
+            }
+        }
+    }
+
+    public class Customer
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+    }
+}
