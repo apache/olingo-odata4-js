@@ -1,6 +1,6 @@
 
 
-window.dataJS = require('./lib/datajs.js');
+window.datajs = require('./lib/datajs.js');
 window.OData = require('./lib/odata.js');
 
 

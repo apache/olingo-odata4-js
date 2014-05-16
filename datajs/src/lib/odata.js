@@ -50,7 +50,7 @@ var metadataParser = odataMetadata.metadataParser;
 // CONTENT START
 
 // to do: disable atom scenario
-var handlers = [odata.jsonHandler/*, odata.atomHandler*/, odata.xmlHandler, odata.textHandler];
+var handlers = [odataJson.jsonHandler/*, odata.atomHandler*/, odataXml.xmlHandler, odataHandler.textHandler];
 
 var dispatchHandler = function (handlerMethod, requestOrResponse, context) {
     /// <summary>Dispatches an operation to handlers.</summary>
@@ -148,7 +148,7 @@ exports.request = function (request, success, error, handler, httpClient, metada
         callbackParameterName: request.callbackParameterName,
         formatQueryString: request.formatQueryString,
         enableJsonpCallback: request.enableJsonpCallback,
-s    };
+    };
 
     try {
         odataUtils.prepareRequest(request, handler, context);

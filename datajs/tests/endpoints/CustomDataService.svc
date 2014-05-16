@@ -1,0 +1,76 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Factory="System.ServiceModel.Activation.WebServiceHostFactory"
+    Service="DataJS.Tests.CustomDataService" %>
+
+// Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation 
+// files (the "Software"), to deal  in the Software without restriction, including without limitation the rights  to use, copy,
+// modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the 
+// Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+// WARRANTIES OF MERCHANTABILITY,  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+// ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+using System.Collections;
+using System.IO;
+
+namespace DataJS.Tests
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.ServiceModel;
+    using System.ServiceModel.Activation;
+    using System.ServiceModel.Web;
+
+    /// <summary>
+    /// Custom data service that does not use OData
+    /// </summary>
+    [ServiceContract]
+    [ServiceBehavior(IncludeExceptionDetailInFaults = true)]
+    [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
+    public class CustomDataService
+    {
+        static readonly Item[] data = Enumerable.Range(0, 16).Select(i => new Item
+        {
+            ID = i,
+            Name = "Item " + i
+        }).ToArray();
+
+        // This uses the same URI template as OData so that the CacheOracle can be reused
+        [OperationContract]
+        [WebGet(UriTemplate = "ReadRange?$skip={skip}&$top={top}")]
+        public Stream ReadRange(int skip, int top)
+        {
+            IEnumerable selectData = data.Skip(skip).Take(top);
+            Dictionary<string, object> result = new Dictionary<string, object>();
+            List<Dictionary<string, string>> value = new List<Dictionary<string, string>>(); 
+            foreach (Item d in selectData)
+            {
+                Dictionary<string, string> item = new Dictionary<string, string>();
+                item.Add("ID", d.ID.ToString());
+                item.Add("Name", d.Name);
+                value.Add(item);
+            }
+            
+            result.Add("value", value);
+            return ReaderUtils.ConvertDictionarytoJsonlightStream(result);
+        }
+
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json)]
+        public int Count()
+        {
+            return data.Count();
+        }
+    }
+
+    public class Item
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+    }
+}

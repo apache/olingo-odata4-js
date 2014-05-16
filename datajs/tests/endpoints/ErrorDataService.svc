@@ -1,0 +1,56 @@
+<%@ ServiceHost Language="C#" Factory="Microsoft.OData.Service.DataServiceHostFactory, Microsoft.OData.Service, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
+    Service="DataJS.Tests.ErrorDataService" %>
+
+namespace DataJS.Tests
+{
+    using System;
+    using System.Collections.Generic;
+    using Microsoft.OData.Service;
+    using Microsoft.OData.Service.Common;
+    using System.Linq;
+
+    /// <summary>
+    /// A data service that contains in-stream errors
+    /// </summary>
+    public class ErrorDataService : DataService<ErrorDataSource>
+    {
+        // This method is called only once to initialize service-wide policies.
+        public static void InitializeService(DataServiceConfiguration config)
+        {
+            config.SetEntitySetAccessRule("*", EntitySetRights.All);
+            config.DataServiceBehavior.MaxProtocolVersion = DataServiceProtocolVersion.V4;
+        }
+    }
+
+    public class ErrorDataSource
+    {
+        public IQueryable<ErrorType> Entities
+        {
+            get
+            {
+                ErrorType[] entities = new ErrorType[]
+                {
+                    new ErrorType(() => 0),
+                    new ErrorType(() => { throw new ApplicationException(); })
+                };
+
+                return entities.AsQueryable();
+            }
+        }
+    }
+    
+    public class ErrorType
+    {
+        Func<int> generateID;
+        
+        public ErrorType(Func<int> generateID)
+        {
+            this.generateID = generateID;
+        }
+        
+        public int ID
+        {
+            get { return this.generateID(); }
+        }
+    }
+}

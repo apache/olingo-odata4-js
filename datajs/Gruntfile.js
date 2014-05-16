@@ -58,26 +58,41 @@ module.exports = function(grunt) {
         https: true,
         port: 44355,
         rejectUnauthorized: false, 
-      },{
+      }/*,{
         context: "/tests/endpoints/",  // When the url contains this...
         host: "localhost",
         changeOrigin: true,
         https: false,
-        port: 10092,
+        port: 46541,
         rejectUnauthorized: false, 
       },{
         context: "/tests/common/",  // When the url contains this...
         host: "localhost",
         changeOrigin: true,
         https: false,
-        port: 10092,
+        port: 46541,
         rejectUnauthorized: false, 
-      }],
+      }*/],
       demo: {
         options: {
           port: 4001 ,
           hostname: "localhost",
           base: "demo",
+          keepalive : true,
+          middleware: function (connect, options) {
+            return [
+              require("grunt-connect-proxy/lib/utils").proxyRequest ,
+              connect.static(options.base),   // static content
+              connect.directory(options.base) // browse directories
+            ];
+          },
+        },
+      },
+      test: {
+        options: {
+          port: 4002 ,
+          hostname: "localhost",
+          base: "",
           keepalive : true,
           middleware: function (connect, options) {
             return [
@@ -111,5 +126,6 @@ module.exports = function(grunt) {
   // Default task.
   grunt.registerTask('build', ['browserify:datajs', 'copy:toDemo']);
   grunt.registerTask('run', ['configureProxies', 'connect:demo']);
+  grunt.registerTask('test', ['configureProxies', 'connect:test']);
 };
 

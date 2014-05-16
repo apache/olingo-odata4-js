@@ -1,0 +1,846 @@
+<%@ ServiceHost Language="C#" Debug="true" Factory="DataJS.Tests.TestSynchronizerFactory" Service="DataJS.Tests.TestSynchronizer" %>
+
+// Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation 
+// files (the "Software"), to deal  in the Software without restriction, including without limitation the rights  to use, copy,
+// modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the 
+// Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+// WARRANTIES OF MERCHANTABILITY,  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+// ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+namespace DataJS.Tests
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.ServiceModel;
+    using System.ServiceModel.Activation;
+    using System.ServiceModel.Channels;
+    using System.ServiceModel.Description;
+    using System.ServiceModel.Dispatcher;
+    using System.ServiceModel.Web;
+    using System.Text;
+    using System.Threading;
+    using System.Xml;
+    
+    /// <summary>
+    /// This factory supports reconfiguring the service to allow incoming messages
+    /// to be larger than the default.
+    /// </summary>
+    public class TestSynchronizerFactory : WebScriptServiceHostFactory
+    {
+        protected override ServiceHost CreateServiceHost(Type serviceType, Uri[] baseAddresses)
+        {
+            var result = base.CreateServiceHost(serviceType, baseAddresses);
+            result.Opening += ServiceHostOpening;
+            return result;
+        }
+
+        private static void UpdateService(ServiceDescription description)
+        {
+            const long LargeMaxReceivedMessageSize = 1024 * 1024 * 16;
+            foreach (var endpoint in description.Endpoints)
+            {
+                var basic = endpoint.Binding as BasicHttpBinding;
+                if (basic != null)
+                {
+                    basic.MaxReceivedMessageSize = LargeMaxReceivedMessageSize;
+                }
+
+                var http = endpoint.Binding as WebHttpBinding;
+                if (http != null)
+                {
+                    http.MaxReceivedMessageSize = LargeMaxReceivedMessageSize;
+                }
+            }
+        }
+
+        private void ServiceHostOpening(object sender, EventArgs e)
+        {
+            UpdateService((sender as ServiceHost).Description);
+        }        
+    }
+
+    /// <summary>Use this class to log test activity.</summary>
+    /// <remarks>
+    /// A test run can be created by invoking CreateTestRun. With a test
+    /// run ID, the following operations can be invoked:
+    ///
+    /// - AddTestPages: adds test pages to be made available to future callers (typically to support tests from different files)
+    /// - SetTestNamePrefix: sets a string that will be prefixed to every test name in logs (typically to include a browser name)
+    /// - MarkInProgress: resets the test run to "in-progress" for another variation (typically to run a different browser)
+    /// - IsTestRunInProgress: checks whether it's still in progress
+    /// - GetTestRunResults: returns the test results in TRX format
+    /// - LogAssert: logs a single assertion in the current test for the run
+    /// - LogTestStart: logs a test that has begun execution
+    /// - LogTestDone: logs a test that has ended execution
+    /// - TestCompleted: logs that a test has completed execution; returns the next page with tests or an empty string
+    /// </remarks>
+    [ServiceContract]
+    [ServiceBehavior(IncludeExceptionDetailInFaults = true)]
+    [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
+    public class TestSynchronizer
+    {
+        private static readonly Dictionary<string, TestRunContext> testRuns = new Dictionary<string, TestRunContext>();
+        private const string Inconclusive = "Inconclusive";
+        private const string InProgress = "InProgress";
+        private const string Failed = "Failed";
+        private const string Passed = "Passed";
+        private const string Completed = "Completed";
+        
+        /// <summary>
+        /// Adds test pages to the specified runs; replaces existing files (helps with reliablity when something
+        /// fails part-way).
+        /// </summary>
+        /// <remarks>This method is typically called by the test harness.</remarks>
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json)]
+        public int AddTestPages(string testRunId, string pages, string filter)
+        {
+            DisableResponseCaching();
+            
+            TestRunContext context = GetTestRunContext(testRunId);
+            lock (context)
+            {
+                context.TestPages.Clear();
+                context.TestPages.AddRange(pages.Split(',').Select(page => page + "?testRunId=" + testRunId + (filter == null ? string.Empty : "?filter=" + filter)));
+                return context.TestPages.Count;
+            }
+        }
+
+        /// <remarks>This method is typically called by the test harness.</remarks>
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json)]
+        public string CreateTestRun()
+        {
+            DisableResponseCaching();
+
+            Guid value = Guid.NewGuid();
+            string result = value.ToString();
+            TestRunContext context = CreateTestRunContextWithId(value);
+            
+            lock (testRuns)
+            {
+                testRuns.Add(result, context);
+            }
+
+            return result;
+        }
+
+        /// <summary>Checks whether the test run is in progress.</summary>
+        /// <remarks>This method is typically called by the test harness.</remarks>
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json)]
+        public bool IsTestRunInProgress(string testRunId)
+        {
+            DisableResponseCaching();
+
+            TestRunContext context = GetTestRunContext(testRunId);
+            return context.TestRun.ResultSummary.Outcome == InProgress;
+        }
+        
+        /// <summary>Provides a list of all test runs being tracked.</summary>
+        [OperationContract]
+        [WebGet(ResponseFormat=WebMessageFormat.Json)]
+        public IEnumerable<string> GetActiveTestRuns()
+        {
+            DisableResponseCaching();
+
+            List<string> result;
+            lock (testRuns)
+            {
+                result = new List<string>(testRuns.Keys);
+            }
+            
+            return result;
+        }
+
+        /// <remarks>This method is typically called by the test harness.</remarks>
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Xml)]
+        public Message GetTestRunResults(string testRunId)
+        {
+            DisableResponseCaching();
+
+            TestRunContext context = GetTestRunContext(testRunId);
+            lock (context)
+            {
+                TestRun run = context.TestRun;
+                this.CompleteTestRun(run);
+
+                TestRunXmlBodyWriter writer = new TestRunXmlBodyWriter(run);
+                return Message.CreateMessage(
+                    MessageVersion.None,
+                    OperationContext.Current.OutgoingMessageHeaders.Action,
+                    writer);
+            }
+        }
+
+        /// <remarks>This method is typically called by the test case.</remarks>
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json)]
+        public void LogAssert(string testRunId, bool pass, string message, string name, string actual, string expected)
+        {
+            DisableResponseCaching();
+
+            TestRunContext context = GetTestRunContext(testRunId);
+            lock (context)
+            {
+                TestRun run = context.TestRun;
+                string prefixedName = context.TestNamePrefix + name;
+                TestResult result = run.TestResults.LastOrDefault(r => r.TestName == prefixedName);
+                if (result == null)
+                {
+                    throw new InvalidOperationException("Unable to find test " + prefixedName + " in run " + testRunId);
+                }
+                
+                result.DebugTrace.AppendLine(message);
+                if (!pass)
+                {
+                    result.ErrorMessages.AppendLine(message);
+                    result.ErrorMessages.AppendLine("Expected: " + expected);
+                    result.ErrorMessages.AppendLine("Actual: " + actual);
+                }
+            }
+        }
+        
+        /// <remarks>This method is typically called by the test case.</remarks>
+        [OperationContract]
+        [WebInvoke(ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
+        public void LogBatch(string[] urls)
+        {
+            DisableResponseCaching();
+            
+            foreach (var url in urls)
+            {
+                Uri parsed = new Uri(OperationContext.Current.Channel.LocalAddress.Uri, url);
+                string methodName = parsed.Segments[parsed.Segments.Length - 1];
+                System.Reflection.MethodInfo method = this.GetType().GetMethod(methodName);
+                System.Reflection.ParameterInfo[] parameterInfos = method.GetParameters();
+                object[] parameters = new object[parameterInfos.Length];
+                System.Collections.Specialized.NameValueCollection query = System.Web.HttpUtility.ParseQueryString(parsed.Query);
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                    object value = query[parameterInfos[i].Name];
+                    parameters[i] = Convert.ChangeType(value, parameterInfos[i].ParameterType, System.Globalization.CultureInfo.InvariantCulture);
+                }
+                
+                method.Invoke(this, parameters);
+            }            
+        }
+
+        /// <remarks>This method is typically called by the test case.</remarks>
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json)]
+        public void LogTestStart(string testRunId, string name, DateTime startTime)
+        {
+            DisableResponseCaching();
+            
+            TestRunContext context = GetTestRunContext(testRunId);
+            lock (context)
+            {
+                TestRun run = context.TestRun;
+                string prefixedName = context.TestNamePrefix + name;
+                Guid testId = Guid.NewGuid();
+                Guid executionId = Guid.NewGuid();
+                Guid testListId = run.TestLists.Single().Id;
+                run.TestDefinitions.Add(new TestDefinition()
+                {
+                    Id = testId,
+                    Name = prefixedName,
+                    ExecutionId = executionId,
+                });
+                run.TestEntries.Add(new TestEntry()
+                {
+                    TestId = testId,
+                    ExecutionId = executionId,
+                    TestListId = testListId
+                });
+                run.TestResults.Add(new TestResult()
+                {
+                    ExecutionId = executionId,
+                    TestId = testId,
+                    TestListId = testListId,
+                    TestName = prefixedName,
+                    ComputerName = Environment.MachineName,
+                    StartTime = startTime,
+                    EndTime = startTime,
+                    TestType = Guid.Parse("13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b"),
+                    Outcome = InProgress,
+                    // RelativeResultsDirectory?
+                });
+            }
+        }
+
+        /// <remarks>This method is typically called by the test case.</remarks>
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json)]
+        public void LogTestDone(string testRunId, string name, int failures, int total, DateTime endTime)
+        {
+            DisableResponseCaching();
+
+            TestRunContext context = GetTestRunContext(testRunId);
+            lock (context)
+            {
+                TestRun run = context.TestRun;
+                string prefixedName = context.TestNamePrefix + name;
+                TestResult result = run.TestResults.LastOrDefault(r => r.TestName == prefixedName);
+                if (failures > 0)
+                {
+                    result.Outcome = Failed;
+                }
+                else
+                {
+                    result.Outcome = Passed;
+                }
+
+                result.EndTime = endTime;
+            }
+        }
+
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json)]
+        public void MarkInProgress(string testRunId)
+        {
+            DisableResponseCaching();
+
+            TestRunContext context = GetTestRunContext(testRunId);
+            lock (context)
+            {
+                context.TestRun.ResultSummary.Outcome = InProgress;
+            }
+        }
+
+        /// <remarks>This method is typically called by the test harness.</remarks>
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json)]
+        public void SetTestNamePrefix(string testRunId, string prefix)
+        {
+            DisableResponseCaching();
+            
+            TestRunContext context = GetTestRunContext(testRunId);
+            lock (context)
+            {
+                context.TestNamePrefix = prefix;
+            }
+        }
+
+        /// <remarks>This method is typically called by the test case.</remarks>
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json)]
+        public string TestCompleted(string testRunId, int failures, int total)
+        {
+            DisableResponseCaching();
+            
+            var context = GetTestRunContext(testRunId);
+            lock (context)
+            {
+                string result;
+                if (context.TestPages.Count == 0)
+                {
+                    context.TestRun.ResultSummary.Outcome = Completed;
+                    result = "";
+                }
+                else
+                {
+                    result = context.TestPages[0];
+                    context.TestPages.RemoveAt(0);
+                }
+
+                return result;
+            }
+        }
+
+        private static TestRunContext CreateTestRunContextWithId(Guid value)
+        {
+            TestRun run = new TestRun();
+            run.Id = value;
+            run.Name = "Test run";
+            run.TestTimes.Creation = DateTime.Now;
+            run.TestTimes.Queueing = DateTime.Now;
+            run.TestLists.Add(new TestList()
+            {
+                Name = "All Results",
+                Id = Guid.NewGuid()
+            });
+
+            // For the time being, set up a fake test settings.
+            run.TestSettings.Id = Guid.NewGuid();
+
+            run.ResultSummary.Outcome = InProgress;
+
+            TestRunContext context = new TestRunContext();
+            context.TestRun = run;
+
+            return context;
+        }
+
+        private static void DisableResponseCaching()
+        {
+            WebOperationContext.Current.OutgoingResponse.Headers[HttpResponseHeader.CacheControl] = "no-cache";            
+        }
+
+        private static TestRunContext GetTestRunContext(string testRunId)
+        {
+            if (testRunId == null)
+            {
+                throw new ArgumentNullException("testRunId");
+            }
+            
+            lock (testRuns)
+            {
+                // For an 0-filled GUID, allow create-on-demand to simplify ad-hoc testing.
+                // Something like:
+                // http://localhost:8989/tests/odata-qunit-tests.htm?testRunId=00000000-0000-0000-0000-000000000000
+                if (!testRuns.ContainsKey(testRunId))
+                {
+                    Guid value = Guid.Parse(testRunId);
+                    if (value == Guid.Empty)
+                    {
+                        TestRunContext context = CreateTestRunContextWithId(value);
+                        testRuns.Add(testRunId, context);
+                    }
+                }
+                
+                return testRuns[testRunId];
+            }
+        }
+
+        private void CompleteTestRun(TestRun run)
+        {
+            run.TestTimes.Finish = DateTime.Now;
+
+            // Fill counts in result object.
+            var summary = run.ResultSummary;
+            summary.Executed = 0;
+            summary.Error = 0;
+            summary.Failed = 0;
+            summary.Timeout = 0;
+            summary.Aborted = 0;
+            summary.Inconclusive = 0;
+            summary.PassedButRunAborted = 0;
+            summary.NotRunnable = 0;
+            summary.NotExecuted = 0;
+            summary.Disconnected = 0;
+            summary.Warning = 0;
+            summary.Passed = 0;
+            summary.Completed = 0;
+            summary.InProgress = 0;
+            summary.Pending = 0;
+
+            foreach (var testResult in run.TestResults)
+            {
+                string outcome = testResult.Outcome;
+                switch (outcome)
+                {
+                    case InProgress:
+                        summary.Executed++;
+                        summary.InProgress++;
+                        break;
+                    case Failed:
+                        summary.Executed++;
+                        summary.Completed++;
+                        summary.Failed++;
+                        break;
+                    case Passed:
+                        summary.Executed++;
+                        summary.Completed++;
+                        summary.Passed++;
+                        break;
+                    default:
+                        summary.Failed++;
+                        break;
+                }
+            }
+
+            summary.Total = run.TestResults.Count;
+
+            if (summary.Failed != 0)
+            {
+                summary.Outcome = Failed;
+            }
+            else if (summary.Total <= 0 || summary.Passed < summary.Total)
+            {
+                summary.Outcome = Inconclusive;
+            }
+            else
+            {
+                summary.Outcome = Passed;
+            }
+        }
+    }
+
+    public class TestRunContext
+    {
+        public TestRunContext()
+        {
+            this.TestPages = new List<string>();
+        }
+        
+        public TestRun TestRun { get; set; }
+        public string TestNamePrefix { get; set; }
+        public List<string> TestPages { get; set; }
+    }
+
+    public class TestResultWriter
+    {
+        private const string TestNamespace = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010";
+
+        public static void WriteTestRun(TestRun run, string path)
+        {
+            if (run == null)
+            {
+                throw new ArgumentNullException("run");
+            }
+            if (path == null)
+            {
+                throw new ArgumentNullException("path");
+            }
+
+            using (XmlWriter writer = XmlWriter.Create(path))
+            {
+                WriteTestRun(run, path);
+            }
+        }
+
+        public static void WriteTestRun(TestRun run, XmlWriter writer)
+        {
+            if (run == null)
+            {
+                throw new ArgumentNullException("run");
+            }
+            if (writer == null)
+            {
+                throw new ArgumentNullException("writer");
+            }
+
+            writer.WriteStartElement("TestRun", TestNamespace);
+            writer.WriteGuidIfPresent("id", run.Id);
+            writer.WriteAttributeString("name", run.Name);
+            writer.WriteAttributeString("runUser", run.RunUser);
+
+            WriteTestSettings(run.TestSettings, writer);
+            WriteResultSummary(run.ResultSummary, writer);
+
+            // Write test definitions.
+            writer.WriteStartElement("TestDefinitions", TestNamespace);
+            foreach (var definition in run.TestDefinitions)
+            {
+                WriteTestDefinition(definition, writer);
+            }
+
+            writer.WriteEndElement();
+
+            // Write test lists.
+            writer.WriteStartElement("TestLists", TestNamespace);
+            foreach (var list in run.TestLists)
+            {
+                WriteTestList(list, writer);
+            }
+
+            writer.WriteEndElement();
+
+            // Write test entries.
+            writer.WriteStartElement("TestEntries", TestNamespace);
+            foreach (var entry in run.TestEntries)
+            {
+                WriteTestEntry(entry, writer);
+            }
+
+            writer.WriteEndElement();
+
+            // Write test results.
+            writer.WriteStartElement("Results", TestNamespace);
+            foreach (var result in run.TestResults)
+            {
+                WriteTestResults(result, writer);
+            }
+
+            writer.WriteEndElement();
+
+            // Close the test run element.
+            writer.WriteEndElement();
+        }
+
+        private static void WriteTestResults(TestResult result, XmlWriter writer)
+        {
+            if (result == null)
+            {
+                throw new ArgumentNullException("result");
+            }
+
+            writer.WriteStartElement("UnitTestResult", TestNamespace);
+            writer.WriteGuidIfPresent("testId", result.TestId);
+            writer.WriteGuidIfPresent("testListId", result.TestListId);
+            writer.WriteGuidIfPresent("executionId", result.ExecutionId);
+            writer.WriteGuidIfPresent("RelativeResultsDirectory", result.RelativeResultsDirectory);
+
+            writer.WriteAttributeString("testName", result.TestName);
+            writer.WriteAttributeString("computerName", result.ComputerName);
+            writer.WriteAttributeString("duration", result.Duration.ToString());
+            writer.WriteAttributeString("startTime", XmlConvert.ToString(result.StartTime));
+            writer.WriteAttributeString("endTime", XmlConvert.ToString(result.EndTime));
+            writer.WriteAttributeString("outcome", result.Outcome);
+
+            writer.WriteGuidIfPresent("testType", result.TestType);
+
+            if (result.DebugTrace.Length > 0)
+            {
+                writer.WriteStartElement("Output");
+
+                writer.WriteStartElement("DebugTrace");
+                writer.WriteString(result.DebugTrace.ToString());
+                writer.WriteEndElement();
+
+                writer.WriteStartElement("ErrorInfo");
+                writer.WriteStartElement("Message");
+                writer.WriteString(result.ErrorMessages.ToString());
+                writer.WriteEndElement();
+                writer.WriteEndElement();
+
+                writer.WriteEndElement();
+            }
+            
+            writer.WriteEndElement();
+        }
+
+        private static void WriteTestEntry(TestEntry entry, XmlWriter writer)
+        {
+            if (entry == null)
+            {
+                throw new ArgumentNullException("entry");
+            }
+
+            writer.WriteStartElement("TestEntry", TestNamespace);
+            writer.WriteGuidIfPresent("testId", entry.TestId);
+            writer.WriteGuidIfPresent("testListId", entry.TestListId);
+            writer.WriteGuidIfPresent("executionId", entry.ExecutionId);
+            writer.WriteEndElement();
+        }
+
+        private static void WriteTestList(TestList list, XmlWriter writer)
+        {
+            if (list == null)
+            {
+                throw new ArgumentNullException("list");
+            }
+
+            writer.WriteStartElement("TestList", TestNamespace);
+            writer.WriteAttributeString("name", list.Name);
+            writer.WriteGuidIfPresent("id", list.Id);
+            writer.WriteEndElement();
+        }
+
+        private static void WriteTestDefinition(TestDefinition definition, XmlWriter writer)
+        {
+            if (definition == null)
+            {
+                throw new ArgumentNullException("definition");
+            }
+
+            writer.WriteStartElement("UnitTest", TestNamespace);
+            writer.WriteAttributeString("name", definition.Name);
+            writer.WriteAttributeString("storage", definition.Storage);
+            writer.WriteGuidIfPresent("id", definition.Id);
+            
+            // There are more thing we could write here: DeploymentItems, Execution, TestMethod
+            
+            // This is the minimum needed to load the test in the IDE.
+            writer.WriteStartElement("Execution", TestNamespace);
+            writer.WriteGuidIfPresent("id", definition.ExecutionId);
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("TestMethod", TestNamespace);
+            writer.WriteAttributeString("codeBase", "fake-test-file.js");
+            writer.WriteAttributeString("adapterTypeName", "Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
+            writer.WriteAttributeString("className", "FakeClassName, TestLogging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
+            writer.WriteAttributeString("name", definition.Name);
+            writer.WriteEndElement();
+            
+            writer.WriteEndElement();
+        }
+
+        private static void WriteResultSummary(ResultSummary resultSummary, XmlWriter writer)
+        {
+            if (resultSummary == null)
+            {
+                throw new ArgumentNullException("resultSummary");
+            }
+
+            writer.WriteStartElement("ResultSummary", TestNamespace);
+            writer.WriteAttributeString("outcome", resultSummary.Outcome);
+
+            writer.WriteStartElement("Counters", TestNamespace);
+            
+            foreach (var p in typeof(ResultSummary).GetProperties())
+            {
+                if (p.PropertyType != typeof(int))
+                {
+                    continue;
+                }
+
+                int value = (int)p.GetValue(resultSummary, null);
+                string attributeName = p.Name;
+                attributeName = attributeName.Substring(0, 1).ToLowerInvariant() +  attributeName.Substring(1);
+                writer.WriteAttributeString(attributeName, value.ToString());
+            }
+            
+            writer.WriteEndElement();
+            writer.WriteEndElement();
+        }
+
+        private static void WriteTestSettings(TestSettings testSettings, XmlWriter writer)
+        {
+            if (testSettings == null)
+            {
+                throw new ArgumentNullException("testSettings");
+            }
+            
+            writer.WriteStartElement("TestSettings", TestNamespace);
+            writer.WriteAttributeString("name", testSettings.Name);
+            writer.WriteGuidIfPresent("id", testSettings.Id);
+            // There are more things we could write here.
+            writer.WriteEndElement();
+        }
+    }
+
+    public static class XmlWriterExtensions
+    {
+        public static void WriteGuidIfPresent(this XmlWriter writer, string attributeName, Guid value)
+        {
+            if (value != Guid.Empty)
+            {
+                writer.WriteAttributeString(attributeName, value.ToString());
+            }
+        }
+    }
+
+    public class TestRun
+    {
+        public TestRun()
+        {
+            this.TestDefinitions = new List<TestDefinition>();
+            this.TestLists = new List<TestList>();
+            this.TestEntries = new List<TestEntry>();
+            this.TestResults = new List<TestResult>();
+            this.ResultSummary = new ResultSummary();
+            this.TestTimes = new TestTimes();
+            this.TestSettings = new TestSettings();
+            
+            this.Id = Guid.NewGuid();
+            this.RunUser = Environment.UserDomainName + "\\" + Environment.UserName;
+        }
+
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string RunUser { get; set; }
+        public TestSettings TestSettings { get; set; }
+        public TestTimes TestTimes { get; set; }
+        public ResultSummary ResultSummary { get; set; }
+        public List<TestDefinition> TestDefinitions { get; set; }
+        public List<TestList> TestLists { get; set; }
+        public List<TestEntry> TestEntries { get; set; }
+        public List<TestResult> TestResults { get; set; }
+    }
+
+    public class TestSettings
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class TestTimes
+    {
+        public DateTime Creation { get; set; }
+        public DateTime Queueing { get; set; }
+        public DateTime Start { get; set; }
+        public DateTime Finish { get; set; }
+    }
+
+    public class ResultSummary
+    {
+        public string Outcome { get; set; }
+        public int Total { get; set; }
+        public int Executed { get; set; }
+        public int Error { get; set; }
+        public int Failed { get; set; }
+        public int Timeout { get; set; }
+        public int Aborted { get; set; }
+        public int Inconclusive { get; set; }
+        public int PassedButRunAborted { get; set; }
+        public int NotRunnable { get; set; }
+        public int NotExecuted { get; set; }
+        public int Disconnected { get; set; }
+        public int Warning { get; set; }
+        public int Passed { get; set; }
+        public int Completed { get; set; }
+        public int InProgress { get; set; }
+        public int Pending { get; set; }
+    }
+
+    public class TestDefinition
+    {
+        public string Name { get; set; }
+        public string Storage { get; set; }
+        public Guid Id { get; set; }
+        public Guid ExecutionId { get; set; }
+    }
+
+    public class TestList
+    {
+        public string Name { get; set; }
+        public Guid Id { get; set; }
+    }
+
+    public class TestEntry
+    {
+        public Guid TestId { get; set; }
+        public Guid ExecutionId { get; set; }
+        public Guid TestListId { get; set; }
+    }
+
+    public class TestResult
+    {
+        public TestResult()
+        {
+            this.DebugTrace = new StringBuilder();
+            this.ErrorMessages = new StringBuilder();
+        }
+        
+        public Guid ExecutionId { get; set; }
+        public Guid TestId { get; set; }
+        public string TestName { get; set; }
+        public string ComputerName { get; set; }
+        public TimeSpan Duration { get { return this.EndTime - this.StartTime; } }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+        public Guid TestType { get; set; }
+        public string Outcome { get; set; }
+        public Guid TestListId { get; set; }
+        public Guid RelativeResultsDirectory { get; set; }
+        public StringBuilder DebugTrace { get; set; }
+        public StringBuilder ErrorMessages { get; set; }
+    }
+
+    class TestRunXmlBodyWriter : BodyWriter
+    {
+        private readonly TestRun run;
+
+        public TestRunXmlBodyWriter(TestRun run)
+            : base(true)
+        {
+            this.run = run;
+        }
+
+        protected override void OnWriteBodyContents(XmlDictionaryWriter writer)
+        {
+            TestResultWriter.WriteTestRun(this.run, writer);
+        }
+    }
+}

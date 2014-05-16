@@ -1,0 +1,192 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>OData Long Haul Tests</title>
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="expires" content="-1" />
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.4.js"></script>
+    <script type="text/javascript" src="../src/datajs.js"></script>
+    <script type="text/javascript" src="../src/utils.js"></script>
+    <script type="text/javascript" src="../src/xml.js"></script>
+    <script type="text/javascript" src="../src/odata-utils.js"></script>
+    <script type="text/javascript" src="../src/odata-handler.js"></script>
+    <script type="text/javascript" src="../src/odata-gml.js"></script>
+    <script type="text/javascript" src="../src/odata-xml.js"></script>
+    <script type="text/javascript" src="../src/odata-net.js"></script>
+    <script type="text/javascript" src="../src/odata-json.js"></script>
+    <script type="text/javascript" src="../src/odata-atom.js"></script>
+    <script type="text/javascript" src="../src/odata-metadata.js"></script>
+    <script type="text/javascript" src="../src/odata-batch.js"></script>
+    <script type="text/javascript" src="../src/odata.js"></script>
+    <script type="text/javascript" src="../src/store-dom.js"></script>
+    <script type="text/javascript" src="../src/store-indexeddb.js"></script>
+    <script type="text/javascript" src="../src/store-memory.js"></script>
+    <script type="text/javascript" src="../src/store.js"></script>
+    <script type="text/javascript" src="../src/deferred.js"></script>
+    <script type="text/javascript" src="../src/cache-source.js"></script>
+    <script type="text/javascript" src="../src/cache.js"></script>
+    <script type="text/javascript" src="common/djstest.js"></script>
+    <script type="text/javascript" src="common/Instrument.js"></script>
+    <script type="text/javascript">
+        var cache;
+        var clearBetweenReads;
+        var currentRunTimeMS;
+        var failureCount;
+        var hourMS = 60 * 60 * 1000;
+        var goalRunTimeMS = hourMS;
+        var isTotalIncreaseHigh;
+        var itemsInCollection = 16;
+        var iterationsRun;
+        var memoryDelta = 5000000;
+        var getBrowserMemorySize;
+        var startMemorySize;
+        var startTimeMs = 0;
+        var testFeed = "http://odata.netflix.com/Catalog/Titles";
+
+        var makeUnexpectedErrorHandler = function () {
+            return function (err) {
+                failureCount++;
+                if (failureCount < 50) {
+                    $("#errors").append("<p>Iteration: " + iterationsRun + " Error reading cache: " + err.message + "<p>");
+                }
+            };
+        };
+
+        var checkMemoryIncrease = function (memorySizeBefore) {
+            getBrowserMemorySize(function (memorySizeAfter) {
+                var incrementalIncreaseInMemory = memorySizeAfter - memorySizeBefore;
+                var totalIncreaseInMemory = memorySizeAfter - startMemorySize;
+                if (incrementalIncreaseInMemory > memoryDelta) {
+                    failureCount++;
+                    if (failureCount < 50) {
+                        $("#errors").append("<p>Iteration: " + iterationsRun + " Memory usage increase in read: " + incrementalIncreaseInMemory + "<p>");
+                    }
+                }
+
+                if (totalIncreaseInMemory > memoryDelta && !isTotalIncreaseHigh) {
+                    isTotalIncreaseHigh = true;
+                    failureCount++;
+                    if (failureCount < 50) {
+                        $("#errors").append("<p>Iteration: " + iterationsRun + " Total memory usage increase over duration: " + totalIncreaseInMemory + "<p>");
+                    }
+                }
+
+                iterationsRun++;
+                nextIteration();
+            });
+        };
+
+        var readRangePrefetchTest = function () {
+            var readPage = 6;
+
+            getBrowserMemorySize(function (memorySizeBefore) {
+                callReadRangeRepeatedly(0, readPage, function () { checkMemoryIncrease(memorySizeBefore) });
+            });
+        };
+
+        var callReadRangeRepeatedly = function (index, count, done) {
+            /// <summary>Calls readRange over the whole collection and done when all items have been read.</summary>
+            /// <param name="index" type="Integer">Index to start the read.</param>
+            /// <param name="count" type="String">The count of each readRange.</param>
+            /// <param name="done" type="Function">Function to be called when all items in collection have been read.</param>
+            var cacheRead = function () {
+                cache.readRange(index, count).then(function () {
+                    if (index < itemsInCollection) {
+                        index += count;
+                        callReadRangeRepeatedly(index, count, done);
+                    }
+                    else {
+                        done();
+                    }
+                }, makeUnexpectedErrorHandler(cache));
+            };
+
+            if (clearBetweenReads) {
+                cache.clear().then(cacheRead(), makeUnexpectedErrorHandler(cache));
+            }
+            else {
+                cacheRead(); 
+            }
+        }
+
+        function startTest() {
+            var prefetchSize =
+                $('input[name=PrefetchEnabled]').attr('checked') ? -1 : 0;
+            clearBetweenReads = $('input[name=ClearBetweenReads]').attr('checked');
+            var inputHours = parseFloat($('#time').val());
+
+            if (inputHours !== undefined && typeof inputHours === "number" && !isNaN(inputHours) && isFinite(inputHours) && inputHours > 0) {
+                goalRunTimeMS = hourMS * inputHours;
+            }
+            OData.defaultHttpClient.enableJsonpCallback = true;
+            cache = datajs.createDataCache({ name: "cache" + new Date().valueOf(), source: testFeed, pageSize: 5, prefetchSize: prefetchSize });
+            failureCount = 0;
+            iterationsRun = 0;
+            currentRunTimeMS = 0;
+            isTotalIncreaseHigh = false;
+            $("#errors").empty();
+            getBrowserMemorySize = Instrument.getBrowserMemorySize;
+            getBrowserMemorySize(function (memorySizeStart) {
+                startMemorySize = memorySizeStart;
+                $("#starting-memory").text("Starting memory size: " + startMemorySize);
+            });
+            startTimeMs = new Date().getTime();
+
+            nextIteration();
+        }
+
+        function nextIteration() {
+            currentRunTimeMS = new Date().getTime() - startTimeMs;
+            if (currentRunTimeMS > goalRunTimeMS) {
+                getBrowserMemorySize(function (memorySizeAfter) {
+                    $("#stress-status").text("Tests complete. Iterations: " + iterationsRun + " Failures: " + failureCount +
+                    " Start memory: " + startMemorySize + " End memory: " + memorySizeAfter);
+                });
+
+                cache.clear();
+                return;
+            }
+
+            if (iterationsRun % 100 === 0) {
+                getBrowserMemorySize(function (memorySizeAfter) {
+                    var text = "Running tests (iterationsRun=" + iterationsRun;
+                    text += ", Time run: " + currentRunTimeMS + "ms";
+                    text += ", Remaining time: " + (goalRunTimeMS - currentRunTimeMS) + "ms";
+                    text += "). Failures: " + failureCount;
+                    text += " Current memory size: " + memorySizeAfter;
+                    $("#stress-status").text(text);
+                });
+            }
+
+            readRangePrefetchTest();
+        }
+
+        $(document).ready(function () {
+            $("#start-button").click(startTest);
+        });
+    </script>
+</head>
+<body>
+    <h1>
+        OData Long Haul</h1>
+    <p>
+        Repeatedly runs an action and checks the memory usage.
+    </p>
+    <p>
+        <input name="time" id="time" type="text" />Length of time to run test</p>
+    <p>
+        <input type="checkbox" name="PrefetchEnabled" value="false" />Prefetch Enabled</p>
+    <p>
+        <input type="checkbox" name="ClearBetweenReads" value="false" />Clear Between Reads</p>
+    <button id='start-button'>
+        Start</button>
+    <p id='errors'>
+    </p>
+    <p id='stress-status'>
+    </p>
+    <p id='starting-memory'>
+    </p>
+</body>
+</html>
