@@ -52,13 +52,6 @@ module.exports = function(grunt) {
     },
     connect: {
       proxies: [{
-        context: "/sap/bc/ds/odata/v2/",  // When the url contains this...
-        host: "ldcigmd.wdf.sap.corp",
-        changeOrigin: true,
-        https: true,
-        port: 44355,
-        rejectUnauthorized: false, 
-      },{
         context: "/tests/endpoints/",  // When the url contains this...
         host: "localhost",
         changeOrigin: true,
