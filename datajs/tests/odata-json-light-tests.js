@@ -293,7 +293,7 @@
     var verifyReadJsonLightData = function (input, expected, message, model) {
         var response = { headers: { "Content-Type": "application/json;odata.metadata=full", DataServiceVersion: "4.0" }, body: JSON.stringify(input) };
 
-        OData.jsonHandler.read(response, { metadata: model });
+        OData.json.jsonHandler.read(response, { metadata: model });
         djstest.assertAreEqualDeep(response.data, expected, message);
     };
 

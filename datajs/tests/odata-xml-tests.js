@@ -24,7 +24,7 @@
 
         var i, len;
         for (i = 0, len = tests.length; i < len; i++) {
-            var actual = datajs.getURIInfo(tests[i].input);
+            var actual = datajs.utils.getURIInfo(tests[i].input);
             djstest.assertAreEqualDeep(actual, tests[i].expected, "test " + i + "didn't return the expected URI parts");
         }
         djstest.done();
@@ -40,7 +40,7 @@
 
         var i, len;
         for (i = 0, len = tests.length; i < len; i++) {
-            var actual = datajs.normalizeURICase(tests[i].uri, tests[i].base);
+            var actual = datajs.utils.normalizeURICase(tests[i].uri, tests[i].base);
             djstest.assertAreEqual(actual, tests[i].expected, "test " + i + "didn't return the expected URI");
         }
         djstest.done();
@@ -68,7 +68,7 @@
 
         var i, len;
         for (i = 0, len = tests.length; i < len; i++) {
-            var actual = datajs.normalizeURI(tests[i].uri, tests[i].base);
+            var actual = datajs.utils.normalizeURI(tests[i].uri, tests[i].base);
             djstest.assertAreEqual(actual, tests[i].expected, "test " + i + "didn't return the expected normalized URI");
         }
         djstest.done();
@@ -76,7 +76,7 @@
 
     djstest.addTest(function xmlParseTest() {
         var xml = '<root xmlns:n1="http://namespace1" xml:base="http://base.org" />';
-        var root = datajs.xmlParse(xml);
+        var root = datajs.xml.xmlParse(xml);
         djstest.assert(root, "xml._parse didn't return a xml dom object");
         djstest.done();
     });
@@ -88,12 +88,12 @@
            <element base=\"this is not a xml base attribute\" /> \r\n\
          </root>\r\n";
 
-        var doc = datajs.xmlParse(xml);
-        var root = datajs.xmlFirstChildElement(doc);
-        var child = datajs.xmlFirstChildElement(root);
+        var doc = datajs.xml.xmlParse(xml);
+        var root = datajs.xml.xmlFirstChildElement(doc);
+        var child = datajs.xml.xmlFirstChildElement(root);
 
-        djstest.assertAreEqual(datajs.xmlBaseURI(root), "http://base.org", "xml._baseURI didn't return the expected value");
-        djstest.assert(!datajs.xmlBaseURI(child), "xml._baseURI returned a value when it wasn't expected");
+        djstest.assertAreEqual(datajs.xml.xmlBaseURI(root), "http://base.org", "xml._baseURI didn't return the expected value");
+        djstest.assert(!datajs.xml.xmlBaseURI(child), "xml._baseURI returned a value when it wasn't expected");
         djstest.done();
     });
 
@@ -104,13 +104,13 @@
         <element attribute=\"value\" n1:nsAttribute=\"nsValue\" /> \r\n\
      </root> \r\n";
 
-        var doc = datajs.xmlParse(xml);
-        var root = datajs.xmlFirstChildElement(doc);
-        var child = datajs.xmlFirstChildElement(root);
+        var doc = datajs.xml.xmlParse(xml);
+        var root = datajs.xml.xmlFirstChildElement(doc);
+        var child = datajs.xml.xmlFirstChildElement(root);
 
-        djstest.assertAreEqual(datajs.xmlAttributeValue(child, "attribute"), "value", "xml._attribute didn't return the expected value for attribute");
-        djstest.assertAreEqual(datajs.xmlAttributeValue(child, "nsAttribute", "http://namespace1"), "nsValue", "xml._attribute didn't return the expected value for nsAttribute");
-        djstest.assert(!datajs.xmlAttributeValue(child, "nsAttribute"), "xml._attribute returned a value for nsAttribute without specifying a namespace");
+        djstest.assertAreEqual(datajs.xml.xmlAttributeValue(child, "attribute"), "value", "xml._attribute didn't return the expected value for attribute");
+        djstest.assertAreEqual(datajs.xml.xmlAttributeValue(child, "nsAttribute", "http://namespace1"), "nsValue", "xml._attribute didn't return the expected value for nsAttribute");
+        djstest.assert(!datajs.xml.xmlAttributeValue(child, "nsAttribute"), "xml._attribute returned a value for nsAttribute without specifying a namespace");
 
         djstest.done();
     });
@@ -118,10 +118,10 @@
     djstest.addTest(function xmlLocalNameTest() {
         var xml = "<root xmlns:n1=\"http://namespace1\" /> \r\n";
 
-        var doc = datajs.xmlParse(xml);
-        var root = datajs.xmlFirstChildElement(doc);
+        var doc = datajs.xml.xmlParse(xml);
+        var root = datajs.xml.xmlFirstChildElement(doc);
 
-        djstest.assertAreEqual(datajs.xmlLocalName(root), "root", "xml._localName didn't return the expected localName of the root element");
+        djstest.assertAreEqual(datajs.xml.xmlLocalName(root), "root", "xml._localName didn't return the expected localName of the root element");
         djstest.done();
     });
 
@@ -134,11 +134,11 @@
          </root>\r\n";
 
 
-        var doc = datajs.xmlParse(xml);
-        var root = datajs.xmlFirstChildElement(doc);
-        var child = datajs.xmlFirstChildElement(root);
+        var doc = datajs.xml.xmlParse(xml);
+        var root = datajs.xml.xmlFirstChildElement(doc);
+        var child = datajs.xml.xmlFirstChildElement(root);
 
-        djstest.assertAreEqual(datajs.xmlLocalName(child), "element1", "xml.firstElement returned didn't return the expected element");
+        djstest.assertAreEqual(datajs.xml.xmlLocalName(child), "element1", "xml.firstElement returned didn't return the expected element");
         djstest.done();
     });
 
@@ -159,14 +159,14 @@
 
         var actual = [];
 
-        var doc = datajs.xmlParse(xml);
-        var root = datajs.xmlFirstChildElement(doc);
+        var doc = datajs.xml.xmlParse(xml);
+        var root = datajs.xml.xmlFirstChildElement(doc);
     
-        datajs.xmlChildElements(root, function (child) {
+        datajs.xml.xmlChildElements(root, function (child) {
             djstest.log("in child elements callback");
             actual.push({
-                localName: datajs.xmlLocalName(child),
-                nsURI: datajs.xmlNamespaceURI(child)
+                localName: datajs.xml.xmlLocalName(child),
+                nsURI: datajs.xml.xmlNamespaceURI(child)
             });
         });
 
@@ -190,15 +190,15 @@
 
         var actual = {};
 
-        var doc = datajs.xmlParse(xml);
-        var root = datajs.xmlFirstChildElement(doc);
+        var doc = datajs.xml.xmlParse(xml);
+        var root = datajs.xml.xmlFirstChildElement(doc);
 
-        datajs.xmlAttributes(root, function (attribute) {
+        datajs.xml.xmlAttributes(root, function (attribute) {
             djstest.log("in child elements callback");
-            var localName = datajs.xmlLocalName(attribute);
+            var localName = datajs.xml.xmlLocalName(attribute);
             actual[localName] = {
                 localName: localName, 
-                nsURI: datajs.xmlNamespaceURI(attribute),
+                nsURI: datajs.xml.xmlNamespaceURI(attribute),
                 value: attribute.value
             };
         });
@@ -224,7 +224,7 @@
 
         var i, len;
         for (i = 0, len = tests.length; i < len; i++) {
-            var result = datajs.hasLeadingOrTrailingWhitespace(tests[i].t);
+            var result = datajs.xml.hasLeadingOrTrailingWhitespace(tests[i].t);
             djstest.assertAreEqual(result, tests[i].r, "match for " + tests[i].t);
         }
 
@@ -247,8 +247,8 @@
         var i, len;
         for (i = 0, len = tests.length; i < len; i++) {
             var test = tests[i];
-            var doc = datajs.xmlParse(test.t);
-            var actual = datajs.xmlInnerText(doc);
+            var doc = datajs.xml.xmlParse(test.t);
+            var actual = datajs.xml.xmlInnerText(doc);
             djstest.assertAreEqual(actual, test.r, "test for [" + test.t + "]");
         }
 
