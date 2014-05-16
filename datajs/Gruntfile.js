@@ -58,14 +58,14 @@ module.exports = function(grunt) {
         https: true,
         port: 44355,
         rejectUnauthorized: false, 
-      }/*,{
+      },{
         context: "/tests/endpoints/",  // When the url contains this...
         host: "localhost",
         changeOrigin: true,
         https: false,
         port: 46541,
         rejectUnauthorized: false, 
-      },{
+      }/*,{
         context: "/tests/common/",  // When the url contains this...
         host: "localhost",
         changeOrigin: true,

@@ -129,27 +129,27 @@
             {
                 response: { headers: { "Content-Type": "application/json", "OData-Version": "4.0" }, body: "response 0" },
                 shouldHit: true,
-                context: { contentType: OData.contentType("application/json"), dataServiceVersion: "4.0" }
+                context: { contentType: OData.handler.contentType("application/json"), dataServiceVersion: "4.0" }
             },
             {
                 response: { headers: { "Content-Type": "application/json" }, body: "response 1" },
                 shouldHit: true,
-                context: { contentType: OData.contentType("application/json"), dataServiceVersion: "" }
+                context: { contentType: OData.handler.contentType("application/json"), dataServiceVersion: "" }
             },
             {
                 response: { headers: { "Content-Type": "otherMediaType" }, body: "response 2" },
                 shouldHit: false,
-                context: { contentType: OData.contentType("otherMediaType"), dataServiceVersion: "" }
+                context: { contentType: OData.handler.contentType("otherMediaType"), dataServiceVersion: "" }
             },
             {
                 response: { headers: { "Content-Type": "application/json", "OData-Version": "4.0" }, body: "response 3" },
                 shouldHit: true,
-                context: { contentType: OData.contentType("application/json"), dataServiceVersion: "4.0" }
+                context: { contentType: OData.handler.contentType("application/json"), dataServiceVersion: "4.0" }
             },
             {
                 response: { body: "response 4" },
                 shouldHit: false,
-                context: { contentType: OData.contentType("application/json"), dataServiceVersion: "" }
+                context: { contentType: OData.handler.contentType("application/json"), dataServiceVersion: "" }
             },
             {
                 response: null,
@@ -173,7 +173,7 @@
             return body;
         };
 
-        var testHandler = OData.handler(testRead, null, "application/json", "4.0");
+        var testHandler = OData.handler.handler(testRead, null, "application/json", "4.0");
 
         var len, expectedAssertCount = 0;
         for (i = 0, len = tests.length; i < len; i++) {
@@ -196,17 +196,17 @@
             {
                 request: { headers: { "Content-Type": "application/json", "OData-Version": "4.0" }, data: "request 0" },
                 shouldHit: true,
-                context: { contentType: OData.contentType("application/json"), dataServiceVersion: "4.0" }
+                context: { contentType: OData.handler.contentType("application/json"), dataServiceVersion: "4.0" }
             },
             {
                 request: { headers: { "Content-Type": "application/json" }, data: "request 1" },
                 shouldHit: true,
-                context: { contentType: OData.contentType("application/json"), dataServiceVersion: undefined }
+                context: { contentType: OData.handler.contentType("application/json"), dataServiceVersion: undefined }
             },
             {
                 request: { headers: { "Content-Type": "otherMediaType" }, data: "request 2" },
                 shouldHit: false,
-                context: { contentType: OData.contentType("otherMediaType"), dataServiceVersion: undefined }
+                context: { contentType: OData.handler.contentType("otherMediaType"), dataServiceVersion: undefined }
             },
             {
                 request: { headers: {}, data: "request 3" },
@@ -216,7 +216,7 @@
             {
                 request: { headers: { "Content-Type": "application/json", "OData-Version": "4.0" }, data: "request 4" },
                 shouldHit: true,
-                context: { contentType: OData.contentType("application/json"), dataServiceVersion: "4.0" }
+                context: { contentType: OData.handler.contentType("application/json"), dataServiceVersion: "4.0" }
             },
             {
                 request: null,
@@ -239,7 +239,7 @@
             return data;
         };
 
-        var testHandler = OData.handler(null, testWrite, "application/json", "4.0");
+        var testHandler = OData.handler.handler(null, testWrite, "application/json", "4.0");
 
         var i, len, expectedAssertCount = 0;
         for (i = 0, len = tests.length; i < len; i++) {
@@ -258,11 +258,11 @@
 
     djstest.addTest(function handlerWriteUpdatesRequestContentTypeTest() {
         var testWrite = function (handler, data, context) {
-            context.contentType = OData.contentType("my new content type");
+            context.contentType = OData.handler.contentType("my new content type");
             return data;
         };
 
-        var testHandler = OData.handler(null, testWrite, "application/json", "4.0");
+        var testHandler = OData.handler.handler(null, testWrite, "application/json", "4.0");
 
         var tests = [
             { request: { headers: { "Content-Type": "application/json" }, data: "request 0" }, expected: "application/json" },
@@ -289,13 +289,13 @@
 
         var i, len, cTypeString;
         for (i = 0, len = tests.length; i < len; i++) {
-            var actual = OData.contentType(tests[i].contentType);
+            var actual = OData.handler.contentType(tests[i].contentType);
             djstest.assertAreEqual(actual.mediaType, tests[i].expected.mediaType, "Content type media type is parsed correctly");
             djstest.assertAreEqualDeep(actual.properties, tests[i].expected.properties, "Content type properties are parsed correctly");
         }
 
-        djstest.assert(!OData.contentType(undefined), "contentType returns undefined for undefined input");
-        djstest.assert(!OData.contentType(null), "contentType returns undefined for null input");
+        djstest.assert(!OData.handler.contentType(undefined), "contentType returns undefined for undefined input");
+        djstest.assert(!OData.handler.contentType(null), "contentType returns undefined for null input");
 
         djstest.done();
     });
@@ -309,7 +309,7 @@
 
         var i, len, cTypeString;
         for (i = 0, len = tests.length; i < len; i++) {
-            cTypeString = OData.contentTypeToString(tests[i].contentType);
+            cTypeString = OData.handler.contentTypeToString(tests[i].contentType);
             djstest.assertAreEqual(cTypeString, tests[i].expected, "contentTypeToString returns the correct contentType string");
         }
 
