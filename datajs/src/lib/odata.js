@@ -27,7 +27,7 @@ exports.jsonLight =                  require('./odata/json-light.js');
 exports.json      = odataJson =      require('./odata/json.js');
 exports.atom      = odataAtom =      require('./odata/atom.js');
 exports.xml       = odataXml =       require('./odata/xml.js');
-exports.batchHandler =               require('./odata/batch.js');
+exports.batch     =                  require('./odata/batch.js');
 
 exports.metadataHandler =            odataMetadata.metadataHandler;
 
@@ -168,4 +168,4 @@ exports.parseMetadata = function (csdlMetadataDocument) {
 };
 
 // Configure the batch handler to use the default handler for the batch parts.
-exports.batchHandler.partHandler = exports.defaultHandler;
+exports.batch.batchHandler.partHandler = exports.defaultHandler;
