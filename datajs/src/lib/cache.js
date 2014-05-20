@@ -20,7 +20,7 @@
 // cache.js
 
 
-exports.storeReq = require("./store.js");
+
 
 var utils = require('./datajs.js').utils;
 
@@ -43,7 +43,7 @@ var ODataCacheSource = require('./cache/source').ODataCacheSource;
 var getJsonValueArraryLength = utils.getJsonValueArraryLength;
 var sliceJsonValueArray = utils.sliceJsonValueArray;
 var concatJsonValueArray = utils.concatJsonValueArray;
-
+var storeReq = require('./datajs.js').store;
 
 // CONTENT START
 

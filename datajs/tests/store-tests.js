@@ -78,7 +78,7 @@
         module("Unit", {
             mechanism: mechanism,
             createStore: function (name) {
-                var store = datajs.createStore(name + "_" + this.mechanism, this.mechanism);
+                var store = datajs.store.createStore(name + "_" + this.mechanism, this.mechanism);
                 this.stores.push(store);
                 return store;
             },
@@ -641,7 +641,7 @@
         for (i = 0, len = tests.length; i < len; i++) {
             try {
                 var test = tests[i];
-                var store = datajs.createStore("testStore" + i, tests[i].mechanism);
+                var store = datajs.store.createStore("testStore" + i, tests[i].mechanism);
 
                 if (!test.exception) {
                     djstest.assertAreEqual(store.mechanism, test.expected, "Created store of the expected mechanism");
@@ -672,7 +672,7 @@
             ];
 
             for (var i in tests) {
-                var store = datajs.createStore("best store ever " + i, tests[i]);
+                var store = datajs.store.createStore("best store ever " + i, tests[i]);
                 djstest.assertAreEqual(store.mechanism, bestMechanism, "Mechanisms match");
             }
         } else {

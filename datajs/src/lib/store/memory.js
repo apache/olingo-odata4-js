@@ -228,7 +228,7 @@ MemoryStore.prototype.defaultError = throwErrorCallback;
 MemoryStore.prototype.mechanism = "memory";
 
 // DATAJS INTERNAL START
-exports.MemoryStore = MemoryStore;
+module.exports = MemoryStore;
 // DATAJS INTERNAL END
 
     // CONTENT END

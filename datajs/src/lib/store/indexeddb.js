@@ -413,7 +413,7 @@ IndexedDBStore.prototype.update = function (key, value, success, error) {
 };
 
 // DATAJS INTERNAL START
-exports.IndexedDBStore = IndexedDBStore;
+module.exports = IndexedDBStore;
 // DATAJS INTERNAL END
 
 // CONTENT END

@@ -20,7 +20,7 @@
 // cache-source.js
 
 var utils = require("./../datajs.js").utils;
-var odataRequest = require("./../odata.js").request;
+var odataRequest = require("./../odata.js");
 
 var parseInt10 = utils.parseInt10;
 var normalizeURICase = utils.normalizeURICase;
@@ -112,7 +112,7 @@ var queryForData = function (uri, options, success, error) {
         /// <returns type="Object">Object with an abort method.</returns>
 
         var request = buildODataRequest(uri, options);
-        var currentRequest = odata.request(request, function (newData) {
+        var currentRequest = odataRequest.request(request, function (newData) {
             var nextLink = newData["@odata.nextLink"];
             if (nextLink) {
                 var index = uri.indexOf(".svc/", 0);

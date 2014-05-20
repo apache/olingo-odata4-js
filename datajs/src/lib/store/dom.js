@@ -315,5 +315,5 @@ DomStore.prototype.update = function (key, value, success, error) {
 };
 
 // DATAJS INTERNAL START
-exports.DomStore = DomStore;
+module.exports = DomStore;
 // DATAJS INTERNAL END

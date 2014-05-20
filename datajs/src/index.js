@@ -2,10 +2,12 @@
 
 window.datajs = require('./lib/datajs.js');
 window.OData = require('./lib/odata.js');
+/**/
+window.datajs.store = require('./lib/store.js');
+window.datajs.cache = require('./lib/cache.js');
 
-
-extend(window.OData, require('./lib/store.js'));
-extend(window.OData, require('./lib/cache.js'));
+//extend(window.OData, require('./lib/store.js'));
+//extend(window.OData, require('./lib/cache.js'));
 
 
 
