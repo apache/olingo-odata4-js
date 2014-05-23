@@ -87,6 +87,7 @@ module.exports = function(grunt) {
           hostname: "localhost",
           base: "",
           keepalive : true,
+          //changeOrigin: true,
           middleware: function (connect, options) {
             return [
               require("grunt-connect-proxy/lib/utils").proxyRequest ,

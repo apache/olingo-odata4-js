@@ -58,13 +58,13 @@
     '</edmx:DataServices></edmx:Edmx>';
 
     var foodServiceV4FoodsSampleText = '' +
-    '<feed xml:base="http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Foods">' +
-	'<id>http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Foods</id>' +
+    '<feed xml:base="http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Foods">' +
+	'<id>http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods</id>' +
 	'<title type="text">Foods</title>' +
 	'<updated>2013-12-30T05:45:07Z</updated>' +
 	'<link rel="self" title="Foods" href="Foods" />' +
 	'<entry>' +
-	'	<id>http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Foods(0)</id>' +
+	'	<id>http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods(0)</id>' +
 	'	<category term="#DataJS.Tests.V4.Food" scheme="http://docs.oasis-open.org/odata/ns/scheme" />' +
 	'	<link rel="edit" title="Food" href="Foods(0)" />' +
 	'	<link rel="http://docs.oasis-open.org/odata/ns/related/Category" type="application/atom+xml;type=entry" title="Category" href="Foods(0)/Category" />' +
@@ -73,7 +73,7 @@
 	'	<author>' +
 	'		<name />' +
 	'	</author>' +
-	'	<link rel="http://docs.oasis-open.org/odata/ns/mediaresource/Picture" type="image/png" title="Picture" href="http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Picture" />' +
+	'	<link rel="http://docs.oasis-open.org/odata/ns/mediaresource/Picture" type="image/png" title="Picture" href="http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Picture" />' +
 	'	<link rel="http://docs.oasis-open.org/odata/ns/edit-media/Picture" type="image/png" title="Picture" href="Foods(0)/Picture" m:etag="W/&quot;123456789&quot;" />' +
 	'	<content type="application/xml">' +
 	'		<m:properties>' +
@@ -145,7 +145,7 @@
 	'	</content>' +
 	'</entry>' +
 	'<entry>' +
-	'	<id>http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Foods(1)</id>' +
+	'	<id>http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods(1)</id>' +
 	'	<category term="#DataJS.Tests.V4.Food" scheme="http://docs.oasis-open.org/odata/ns/scheme" />' +
 	'	<link rel="edit" title="Food" href="Foods(1)" />' +
 	'	<link rel="http://docs.oasis-open.org/odata/ns/related/Category" type="application/atom+xml;type=entry" title="Category" href="Foods(1)/Category" />' +
@@ -154,7 +154,7 @@
 	'	<author>' +
 	'		<name />' +
 	'	</author>' +
-	'	<link rel="http://docs.oasis-open.org/odata/ns/mediaresource/Picture" type="image/png" title="Picture" href="http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Picture" />' +
+	'	<link rel="http://docs.oasis-open.org/odata/ns/mediaresource/Picture" type="image/png" title="Picture" href="http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Picture" />' +
 	'	<link rel="http://docs.oasis-open.org/odata/ns/edit-media/Picture" type="image/png" title="Picture" href="Foods(1)/Picture" m:etag="W/&quot;123456789&quot;" />' +
 	'	<content type="application/xml">' +
 	'		<m:properties>' +
@@ -422,8 +422,8 @@
 
     djstest.addFullTest(true, function parseIntoPropertiesTest() {
         var payload = '' +
-    '<entry xml:base="http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Foods/$entity">' +
-	'<id>http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Foods(0)</id>' +
+    '<entry xml:base="http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Foods/$entity">' +
+	'<id>http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods(0)</id>' +
 	'<category term="#DataJS.Tests.V4.Food" scheme="http://docs.oasis-open.org/odata/ns/scheme" />' +
 	'<link rel="edit" title="Food" href="Foods(0)" />' +
 	'<link rel="http://docs.oasis-open.org/odata/ns/related/Category" type="application/atom+xml;type=entry" title="Category" href="Foods(0)/Category" />' +
@@ -432,7 +432,7 @@
 	'<author>' +
 	'	<name />' +
 	'</author>' +
-	'<link rel="http://docs.oasis-open.org/odata/ns/mediaresource/Picture" type="image/png" title="Picture" href="http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Picture" />' +
+	'<link rel="http://docs.oasis-open.org/odata/ns/mediaresource/Picture" type="image/png" title="Picture" href="http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Picture" />' +
 	'<link rel="http://docs.oasis-open.org/odata/ns/edit-media/Picture" type="image/png" title="Picture" href="Foods(0)/Picture" m:etag="W/&quot;123456789&quot;" />' +
 	'<content type="application/xml">' +
 	'	<m:properties>' +
@@ -526,13 +526,13 @@
         // OData.read("/tests/endpoints/FoodStoreDataService.svc/Foods?$expand=Category&$filter=Category eq null", function(data, response) {
 
         var body = '' +
-    '<feed xml:base="http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Foods">' +
-	'<id>http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Foods</id>' +
+    '<feed xml:base="http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Foods">' +
+	'<id>http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods</id>' +
 	'<title type="text">Foods</title>' +
 	'<updated>2013-12-30T06:09:18Z</updated>' +
 	'<link rel="self" title="Foods" href="Foods" />' +
 	'<entry>' +
-	'	<id>http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Foods(2)</id>' +
+	'	<id>http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods(2)</id>' +
 	'	<category term="#DataJS.Tests.V4.Food" scheme="http://docs.oasis-open.org/odata/ns/scheme" />' +
 	'	<link rel="edit" title="Food" href="Foods(2)" />' +
 	'	<link rel="http://docs.oasis-open.org/odata/ns/related/Category" type="application/atom+xml;type=entry" title="Category" href="Foods(2)/Category">' +
@@ -543,7 +543,7 @@
 	'	<author>' +
 	'		<name />' +
 	'	</author>' +
-	'	<link rel="http://docs.oasis-open.org/odata/ns/mediaresource/Picture" type="image/png" title="Picture" href="http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Picture" />' +
+	'	<link rel="http://docs.oasis-open.org/odata/ns/mediaresource/Picture" type="image/png" title="Picture" href="http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Picture" />' +
 	'	<link rel="http://docs.oasis-open.org/odata/ns/edit-media/Picture" type="image/png" title="Picture" href="Foods(2)/Picture" m:etag="W/&quot;123456789&quot;" />' +
 	'	<content type="application/xml">' +
 	'		<m:properties>' +

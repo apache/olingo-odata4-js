@@ -268,9 +268,9 @@ OData-Version: 4.0;\r\n\
 Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8\r\n\
 X-Content-Type-Options: nosniff\r\n\
 Cache-Control: no-cache\r\n\
-Location: http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(42)\r\n\
+Location: http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(42)\r\n\
 \r\n\
-{\"@odata.context\":\"http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Categories/$entity\",\"Icon@odata.mediaContentType\":\"image/gif\",\"CategoryID\":42,\"Name\":\"New Category\"}\r\n\
+{\"@odata.context\":\"http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Categories/$entity\",\"Icon@odata.mediaContentType\":\"image/gif\",\"CategoryID\":42,\"Name\":\"New Category\"}\r\n\
 --batchresponse_b61ab173-39c7-45ea-ade4-941efae85ab9\r\n\
 Content-Type: application/http\r\n\
 Content-Transfer-Encoding: binary\r\n\
@@ -280,9 +280,9 @@ OData-Version: 4.0;\r\n\
 Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8\r\n\
 X-Content-Type-Options: nosniff\r\n\
 Cache-Control: no-cache\r\n\
-Location: http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(43)\r\n\
+Location: http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(43)\r\n\
 \r\n\
-{\"@odata.context\":\"http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Categories/$entity\",\"Icon@odata.mediaContentType\":\"image/gif\",\"CategoryID\":43,\"Name\":\"New Category\"}\r\n\
+{\"@odata.context\":\"http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Categories/$entity\",\"Icon@odata.mediaContentType\":\"image/gif\",\"CategoryID\":43,\"Name\":\"New Category\"}\r\n\
 --batchresponse_b61ab173-39c7-45ea-ade4-941efae85ab9--\r\n\
 "
         };
@@ -290,8 +290,8 @@ Location: http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Cate
         MockHttpClient.clear().addResponse("http://testuri.org", response);
         OData.read("http://testuri.org", function (data, response) {
             djstest.assert(data.__batchResponses, "data.__batchResponses is defined");
-            djstest.assertAreEqual(data.__batchResponses[0].headers["Location"], "http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(42)", "part 1 of the response was read");
-            djstest.assertAreEqual(data.__batchResponses[1].headers["Location"], "http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(43)", "part 2 of the response was read");
+            djstest.assertAreEqual(data.__batchResponses[0].headers["Location"], "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(42)", "part 1 of the response was read");
+            djstest.assertAreEqual(data.__batchResponses[1].headers["Location"], "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(43)", "part 2 of the response was read");
             djstest.assertAreEqual(data.__batchResponses[0].data["CategoryID"], 42, "part 1 data of the response was read");
             djstest.assertAreEqual(data.__batchResponses[1].data["CategoryID"], 43, "part 2 data of the response was read");
             djstest.done();
@@ -317,9 +317,9 @@ OData-Version: 4.0;\r\n\
 Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8\r\n\
 X-Content-Type-Options: nosniff\r\n\
 Cache-Control: no-cache\r\n\
-Location: http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(42)\r\n\
+Location: http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(42)\r\n\
 \r\n\
-{\"@odata.context\":\"http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Categories/$entity\",\"Icon@odata.mediaContentType\":\"image/gif\",\"CategoryID\":42,\"Name\":\"New Category\"}\r\n\
+{\"@odata.context\":\"http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Categories/$entity\",\"Icon@odata.mediaContentType\":\"image/gif\",\"CategoryID\":42,\"Name\":\"New Category\"}\r\n\
 --changesetresponse_905a1494-fd76-4846-93f9-a3431f0bf5a2\r\n\
 Content-Type: application/http\r\n\
 Content-Transfer-Encoding: binary\r\n\
@@ -340,9 +340,9 @@ OData-Version: 4.0;\r\n\
 Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8\r\n\
 X-Content-Type-Options: nosniff\r\n\
 Cache-Control: no-cache\r\n\
-Location: http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(41)\r\n\
+Location: http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(41)\r\n\
 \r\n\
-{\"@odata.context\":\"http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Categories/$entity\",\"Icon@odata.mediaContentType\":\"image/gif\",\"CategoryID\":41,\"Name\":\"New Category\"}\r\n\
+{\"@odata.context\":\"http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Categories/$entity\",\"Icon@odata.mediaContentType\":\"image/gif\",\"CategoryID\":41,\"Name\":\"New Category\"}\r\n\
 --batchresponse_fb681875-73dc-4e62-9898-a0af89021341\r\n\
 Content-Type: multipart/mixed; boundary=changesetresponse_92cc2ae8-a5f2-47fc-aaa3-1ff9e7453b07\r\n\
 \r\n\
@@ -355,9 +355,9 @@ OData-Version: 4.0;\r\n\
 Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8\r\n\
 X-Content-Type-Options: nosniff\r\n\
 Cache-Control: no-cache\r\n\
-Location: http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(43)\r\n\
+Location: http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(43)\r\n\
 \r\n\
-{\"@odata.context\":\"http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Categories/$entity\",\"Icon@odata.mediaContentType\":\"image/gif\",\"CategoryID\":43,\"Name\":\"New Category\"}\r\n\
+{\"@odata.context\":\"http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Categories/$entity\",\"Icon@odata.mediaContentType\":\"image/gif\",\"CategoryID\":43,\"Name\":\"New Category\"}\r\n\
 --changesetresponse_92cc2ae8-a5f2-47fc-aaa3-1ff9e7453b07\r\n\
 Content-Type: application/http\r\n\
 Content-Transfer-Encoding: binary\r\n\
@@ -385,15 +385,15 @@ OData-Version: 4.0;\r\n\
             djstest.assert(changesetResponses3, "batch response 3 contains the change set responses");
             
             djstest.assertAreEqual(batchResponses[0].data, undefined, "No data defined for batch response 1");
-            djstest.assertAreEqual(changesetResponses[0].headers["Location"], "http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(42)", "part 1 of the changeset response of the response 1 was read");
+            djstest.assertAreEqual(changesetResponses[0].headers["Location"], "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(42)", "part 1 of the changeset response of the response 1 was read");
             djstest.assertAreEqual(changesetResponses[0].data["CategoryID"], 42, "part 1 data of the changeset response of the response 1 was read");
             djstest.assertAreEqual(changesetResponses[1].data, undefined, "No data defined for no content only response in part 2 of the changeset response of the response 1");
             
-            djstest.assertAreEqual(batchResponses[1].headers["Location"], "http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(41)", "response 2 was read");
+            djstest.assertAreEqual(batchResponses[1].headers["Location"], "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(41)", "response 2 was read");
             djstest.assertAreEqual(batchResponses[1].data["CategoryID"], 41, "response 2 data was read");
             
             djstest.assertAreEqual(batchResponses[2].data, undefined, "No data defined for");
-            djstest.assertAreEqual(changesetResponses3[0].headers["Location"], "http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(43)", "part 1 of the changeset response of the response 3 was read");
+            djstest.assertAreEqual(changesetResponses3[0].headers["Location"], "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(43)", "part 1 of the changeset response of the response 3 was read");
             djstest.assertAreEqual(changesetResponses3[0].data["CategoryID"], 43, "part 1 data of the changeset response of the response 3 was read");
             djstest.assertAreEqual(changesetResponses3[1].data, undefined, "No data defined for no content only response in part 2 of the changeset response of the response 3");
             djstest.done();
@@ -415,7 +415,7 @@ HTTP/1.1 200 OK\r\n\
 Cache-Control: no-cache\r\n\
 OData-Version: 4.0;\r\n\
 Content-Type: application/json;charset=utf-8\r\n\
-Location: http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(1)\r\n\
+Location: http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(1)\r\n\
 \r\n\
 {\"error\":{\"code\":\"\",\"message\":\"Resource not found for the segment 'Categories(1)'.\"}}\r\n\
 --batchresponse_9402a3ab-260f-4fa4-af01-0b30db397c8d\r\n\
@@ -435,7 +435,7 @@ Content-Type: application/json\r\n\
             var batchResponses = data.__batchResponses;
             djstest.assert(batchResponses, "data.__batchResponses is defined");
             djstest.assertAreEqual(batchResponses.length, 2, "batch contains two responses");
-            djstest.assertAreEqual(batchResponses[0].headers["Location"], "http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(1)", "part 1 of the response was read");
+            djstest.assertAreEqual(batchResponses[0].headers["Location"], "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(1)", "part 1 of the response was read");
             djstest.assert(batchResponses[1].response, "part 2 of the response was read");
             djstest.done();
         }, null, OData.batch.batchHandler, MockHttpClient);
@@ -457,7 +457,7 @@ HTTP/1.1 200 OK\r\n\
 Cache-Control: no-cache\r\n\
 OData-Version: 4.0;\r\n\
 Content-Type: application/json;charset=utf-8\r\n\
-Location: http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(1)\r\n\
+Location: http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(1)\r\n\
 \r\n\
 {\"error\":{\"code\":\"\",\"message\":\"Resource not found for the segment 'Categories(1)'.\"}}\r\n\
 --batchresponse_fb681875-73dc-4e62-9898-a0af89021341\r\n\
@@ -483,7 +483,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             var batchResponses = data.__batchResponses;
             djstest.assert(batchResponses, "data.__batchResponses is defined");
             djstest.assertAreEqual(batchResponses.length, 2, "batch contains two responses");
-            djstest.assertAreEqual(batchResponses[0].headers["Location"], "http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(1)", "part 1 of the response was read");
+            djstest.assertAreEqual(batchResponses[0].headers["Location"], "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(1)", "part 1 of the response was read");
 
             var error = batchResponses[1].__changeResponses[0];
             djstest.assert(error.response.body.indexOf("GET operation cannot be specified in a change set") > -1, "Response contains expected message");
