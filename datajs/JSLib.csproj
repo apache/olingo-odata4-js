@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{73ADF1A7-613B-4679-885B-2AE4AFAA9A6A}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>JSLib</RootNamespace>
+    <AssemblyName>JSLib</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <UseIISExpress>false</UseIISExpress>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Product code. -->
+    <Content Include="tests\cache-tests.js" />
+    <Content Include="tests\common\CacheOracle.js" />
+    <Content Include="tests\common\Instrument.svc" />
+    <Content Include="tests\common\Instrument.js" />
+    <Content Include="tests\common\mockXMLHttpRequest.js" />
+    <Content Include="tests\common\mockHttpClient.js" />
+    <Content Include="tests\common\djstest.js" />
+    <Content Include="tests\common\gpo-ie8-tour-disable.reg" />
+    <Content Include="tests\common\ObservableHttpClient.js" />
+    <Content Include="tests\common\ODataReadOracle.js" />
+    <Content Include="tests\common\ODataReadOracle.svc" />
+    <Content Include="tests\common\rx.js" />
+    <Content Include="tests\common\TestLogger.svc" />
+    <Content Include="tests\common\TestSynchronizerClient.js" />
+    <Content Include="tests\odata-json-light-tests.js" />
+    <Content Include="tests\datajs-startup-perf-test.html" />
+    <Content Include="tests\endpoints\BasicAuthDataService.svc" />
+    <Content Include="tests\endpoints\FoodStoreDataServiceV4.svc" />
+    <Content Include="tests\endpoints\CustomAnnotations.xml" />
+    <Content Include="tests\endpoints\CustomDataService.svc" />
+    <Content Include="tests\endpoints\EpmDataService.svc" />
+    <Content Include="tests\endpoints\ErrorDataService.svc" />
+    <Content Include="tests\endpoints\LargeCollectionService.svc" />
+    <Content Include="tests\endpoints\web.config" />
+    <Content Include="tests\datajs-cache-large-collection-functional-tests.html" />
+    <Content Include="tests\datajs-cache-large-collection-functional-tests.js" />
+    <Content Include="tests\datajs-cache-long-haul-tests.html" />
+    <Content Include="tests\odata-atom-tests.js" />
+    <Content Include="tests\odata-batch-functional-tests.html" />
+    <Content Include="tests\odata-batch-functional-tests.js" />
+    <Content Include="tests\odata-batch-tests.js" />
+    <Content Include="tests\odata-cache-filter-functional-tests.html" />
+    <Content Include="tests\odata-cache-filter-functional-tests.js" />
+    <Content Include="tests\odata-cache-fperf-tests.html" />
+    <Content Include="tests\odata-cache-fperf-tests.js" />
+    <Content Include="tests\odata-cache-functional-tests.html" />
+    <Content Include="tests\odata-cache-functional-tests.js" />
+    <Content Include="tests\odata-cache-rx-functional-tests.html" />
+    <Content Include="tests\odata-cache-rx-functional-tests.js" />
+    <Content Include="tests\odata-fuzz.html" />
+    <Content Include="tests\odata-metadata-tests.js" />
+    <Content Include="tests\odata-handler-tests.js" />
+    <Content Include="tests\odata-json-tests.js" />
+    <Content Include="tests\odata-links-functional-tests.html" />
+    <Content Include="tests\odata-links-functional-tests.js" />
+    <Content Include="tests\odata-metadata-awareness-functional-tests.html" />
+    <Content Include="tests\odata-metadata-awareness-functional-tests.js" />
+    <Content Include="tests\odata-net-tests.js" />
+    <Content Include="tests\odata-perf-tests.html" />
+    <Content Include="tests\odata-perf-tests.js" />
+    <Content Include="tests\odata-read-crossdomain-functional-tests.html" />
+    <Content Include="tests\odata-read-crossdomain-functional-tests.js" />
+    <Content Include="tests\odata-read-functional-tests.html" />
+    <Content Include="tests\odata-request-functional-tests.html" />
+    <Content Include="tests\odata-request-functional-tests.js" />
+    <Content Include="tests\odata-read-functional-tests.js" />
+    <Content Include="tests\odata-qunit-tests.htm" />
+    <Content Include="tests\odata-tests.js" />
+    <Content Include="tests\odata-xml-tests.js" />
+    <Content Include="tests\run-tests.wsf" />
+    <Content Include="tests\store-indexeddb-tests.js" />
+    <Content Include="tests\store-tests.js" />
+    <Content Include="tests\test-list.js" />
+    <Content Include="tests\test-manager.html" />
+    <!-- Configuration file for the web project. -->
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="tests\code\AtomReader.cs" />
+    <Compile Include="tests\code\CsdlReader.cs" />
+    <Compile Include="tests\code\JsDate.cs" />
+    <Compile Include="tests\code\JsonObject.cs" />
+    <Compile Include="tests\code\ReaderUtils.cs" />
+    <Compile Include="tests\code\ReflectionDataContext.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.OData.Client, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.OData.Client.6.0.0-beta1\lib\net40\Microsoft.OData.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.OData.Core">
+      <HintPath>packages\Microsoft.OData.Core.6.0.0-beta1\lib\portable-net40+sl5+wp8+win8\Microsoft.OData.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.OData.Edm">
+      <HintPath>packages\Microsoft.OData.Edm.6.0.0-beta1\lib\portable-net40+sl5+wp8+win8\Microsoft.OData.Edm.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.OData.Service, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.OData.Service.6.0.0-beta1\lib\net40\Microsoft.OData.Service.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Spatial">
+      <HintPath>packages\Microsoft.Spatial.6.0.0-beta1\lib\portable-net40+sl5+wp8+win8\Microsoft.Spatial.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activation" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>4002</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>
