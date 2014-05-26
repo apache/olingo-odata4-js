@@ -322,7 +322,7 @@
             };
 
             this.observableHttpClient = new ObservableHttpClient();
-            OData.defaultHttpClient = this.observableHttpClient;
+            OData.net.defaultHttpClient = this.observableHttpClient;
             this.caches = [];
             var that = this;
 
@@ -332,7 +332,7 @@
         },
 
         teardown: function () {
-            OData.defaultHttpClient = this.observableHttpClient.provider;
+            OData.net.defaultHttpClient = this.observableHttpClient.provider;
             var clearActions = [];
             var that = this;
 

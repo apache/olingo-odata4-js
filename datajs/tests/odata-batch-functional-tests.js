@@ -33,7 +33,7 @@
                 djstest.assertAreEqual(data.__batchResponses.length, batchRequests.length, "Verify batch response count");
                 verifyBatchResponses(batchRequests, elementTypes, serviceRoot, data.__batchResponses, done);
             },
-            unexpectedErrorHandler, OData.batchHandler);
+            unexpectedErrorHandler, OData.batch.batchHandler);
     };
 
     var verifyBatchResponses = function (batchRequests, elementTypes, serviceRoot, batchResponses, done) {
@@ -234,7 +234,7 @@
             function (data, response) {
                 djstest.assert(response.body.indexOf("An error occurred while processing this request.") > -1, "Verify response error message");
                 djstest.done();
-            }, unexpectedErrorHandler, OData.batchHandler
+            }, unexpectedErrorHandler, OData.batch.batchHandler
         );
     }, "Update outside changeset");
 
@@ -265,6 +265,6 @@
                 batchRequests.splice(3, 1);
                 batchResponses.splice(3, 1);
                 verifyBatchResponses(batchRequests, ["entry", null], service, batchResponses, function () { djstest.done(); });
-            }, unexpectedErrorHandler, OData.batchHandler);
+            }, unexpectedErrorHandler, OData.batch.batchHandler);
     }, "Retrieve inside changeset");
 })(this);

@@ -8,7 +8,7 @@
 
     var slowHttpClient = {
         latency: 750,
-        provider: OData.defaultHttpClient,
+        provider: OData.net.defaultHttpClient,
         request: function (request, success, error) {
             setTimeout(function () {
                 slowHttpClient.provider.request(request, success, error);
@@ -22,10 +22,10 @@
 
     module("Functional", {
         setup: function () {
-            OData.defaultHttpClient = slowHttpClient;
+            OData.net.defaultHttpClient = slowHttpClient;
         },
         teardown: function () {
-            OData.defaultHttpClient = slowHttpClient.provider;
+            OData.net.defaultHttpClient = slowHttpClient.provider;
         }
     });
 
@@ -44,7 +44,7 @@
         /// <param name="threshold">The average read time threshold for test to pass; if not specified, defaults to the slowHttpClient latency</param>
         /// <returns>The test function</param>
         return function () {
-            var cache = datajs.createDataCache({ name: "cache" + new Date().valueOf(), source: source, pageSize: pageSize, prefetchSize: prefetchSize });
+            var cache = datajs.cache.createDataCache({ name: "cache" + new Date().valueOf(), source: source, pageSize: pageSize, prefetchSize: prefetchSize });
             var totalTime = 0;
             var readCount = 0;
 

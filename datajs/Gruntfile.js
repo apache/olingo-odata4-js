@@ -14,25 +14,24 @@ module.exports = function(grunt) {
           browserifyOptions: {
           } ,
           bundleOptions: {
-            debug: true
+            /*debug: true*/
           },
         }
       }
     },
-    /*
     uglify: {
       options: {
-        banner: '<%= banner %>',
+        /*banner: '<%= banner %>',*/
         sourceMap : true,
         sourceMapName :  'build/<%= filename %>.map',
         sourceMapIncludeSources :true,
-        --sourceMapIn : 'build/<%= filename %>.split_map',--
+        /*--sourceMapIn : 'build/<%= filename %>.split_map',*/
       },
       build: {
         src: 'build/<%= filename %>.js',
         dest: 'build/<%= filename %>.min.js'
       }
-    },*/
+    },
     copy: {
       saveOrig : {
         files: [
@@ -110,7 +109,7 @@ module.exports = function(grunt) {
 
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-browserify');
-  //grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks("grunt-connect-proxy");
   grunt.loadNpmTasks("grunt-contrib-connect");
@@ -118,7 +117,7 @@ module.exports = function(grunt) {
   
 
   // Default task.
-  grunt.registerTask('build', ['browserify:datajs', 'copy:toDemo']);
+  grunt.registerTask('build', ['browserify:datajs', 'copy:toDemo', "uglify:build"]);
   grunt.registerTask('run', ['configureProxies', 'connect:demo']);
   grunt.registerTask('test', ['configureProxies', 'connect:test']);
 };

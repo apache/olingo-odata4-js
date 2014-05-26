@@ -207,7 +207,7 @@
         djstest.assertsExpected(2);
         var options = { name: "cache" + new Date().valueOf(), source: params.feed, pageSize: params.pageSize, prefetchSize: params.prefetchSize };
 
-        var cache = datajs.createDataCache(options);
+        var cache = datajs.cache.createDataCache(options);
         var cacheOracle = new CacheOracle(params.feed, params.pageSize, itemsInCollection);
         var session = this.observableHttpClient.newSession();
         validateFilterResultsAndRequests(params.feed, cache, params.index, params.count, params.predicate, function () { djstest.destroyCacheAndDone(cache) }, params.backwards, session, cacheOracle);
@@ -217,7 +217,7 @@
         djstest.assertsExpected(3);
         var options = { name: "cache" + new Date().valueOf(), source: params.feed, pageSize: params.pageSize, prefetchSize: params.prefetchSize };
 
-        var cache = datajs.createDataCache(options);
+        var cache = datajs.cache.createDataCache(options);
         var cacheOracle = new CacheOracle(params.feed, params.pageSize, itemsInCollection);
         var session = this.observableHttpClient.newSession();
 
@@ -232,7 +232,7 @@
         djstest.assertsExpected(2);
         var options = { name: "cache" + new Date().valueOf(), source: params.feed, pageSize: params.pageSize, prefetchSize: params.prefetchSize };
 
-        var cache = datajs.createDataCache(options);
+        var cache = datajs.cache.createDataCache(options);
 
         var firstfilter = function (finished) {
             validateFilterResultsAndRequests(params.feed, cache, params.firstIndex, params.firstCount, params.predicate, finished, params.backwards);
@@ -251,7 +251,7 @@
         djstest.assertsExpected(4);
         var options = { name: "cache" + new Date().valueOf(), source: params.feed, pageSize: params.pageSize, prefetchSize: params.prefetchSize };
 
-        var cache = datajs.createDataCache(options);
+        var cache = datajs.cache.createDataCache(options);
         var cacheOracle = new CacheOracle(params.feed, params.pageSize, itemsInCollection);
         var session = this.observableHttpClient.newSession();
 
@@ -277,11 +277,11 @@
     module("Functional", {
         setup: function () {
             this.observableHttpClient = new ObservableHttpClient();
-            OData.defaultHttpClient = this.observableHttpClient;
+            OData.net.defaultHttpClient = this.observableHttpClient;
         },
 
         teardown: function () {
-            OData.defaultHttpClient = this.observableHttpClient.provider;
+            OData.net.defaultHttpClient = this.observableHttpClient.provider;
         }
     });
 
@@ -372,7 +372,7 @@
                 function (params) {
                     djstest.assertsExpected(1);
                     var options = { name: "cache" + new Date().valueOf(), source: params.feed };
-                    var cache = datajs.createDataCache(options);
+                    var cache = datajs.cache.createDataCache(options);
                     try {
                         params.backwards ?
                             cache.filterForward(params.index, params.count, params.predicate).then(function (results) {
@@ -396,7 +396,7 @@
                 function (params) {
                     djstest.assertsExpected(1);
                     var options = { name: "cache" + new Date().valueOf(), source: params.feed };
-                    var cache = datajs.createDataCache(options);
+                    var cache = datajs.cache.createDataCache(options);
                     try {
                         params.backwards ?
                             cache.filterBack(params.index, params.count, params.predicate).then(function (results) {

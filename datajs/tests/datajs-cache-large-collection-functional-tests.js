@@ -62,7 +62,7 @@
     module("Functional", {
         setup: function () {
             this.observableHttpClient = new ObservableHttpClient();
-            OData.defaultHttpClient = this.observableHttpClient;
+            OData.net.defaultHttpClient = this.observableHttpClient;
             this.caches = [];
             var that = this;
 
@@ -72,7 +72,7 @@
         },
 
         teardown: function () {
-            OData.defaultHttpClient = this.observableHttpClient.provider;
+            OData.net.defaultHttpClient = this.observableHttpClient.provider;
             var clearActions = [];
             var that = this;
 
@@ -111,7 +111,7 @@
                         mechanism: params.mechanism, cacheSize: params.cacheSize
                     };
 
-                    var cache = datajs.createDataCache(options);
+                    var cache = datajs.cache.createDataCache(options);
                     this.caches.push({ name: options.name,
                         cache: cache
                     });
@@ -144,7 +144,7 @@
                             mechanism: params.mechanism, cacheSize: params.cacheSize
                         };
 
-                        var cache = datajs.createDataCache(options);
+                        var cache = datajs.cache.createDataCache(options);
                         this.caches.push({ name: options.name, cache: cache });
 
                         var cacheOracle = new CacheOracle(params.feed, params.pageSize, itemsInCollection);
