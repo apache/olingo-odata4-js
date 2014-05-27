@@ -11,7 +11,7 @@
 
     var timedHttpClient = {
         duration: 0,
-        provider: OData.defaultHttpClient,
+        provider: OData.net.defaultHttpClient,
         request: function (request, success, error) {
             var startTime = new Date();
             return timedHttpClient.provider.request(request, function () {
@@ -40,11 +40,11 @@
             });
         },
         teardown: function () {
-            OData.defaultHttpClient = timedHttpClient.provider;
+            OData.net.defaultHttpClient = timedHttpClient.provider;
         }
     });
 
-    OData.defaultHttpClient.enableJsonpCallback = true;
+    OData.net.defaultHttpClient.enableJsonpCallback = true;
     $.each(feeds, function (_, feed) {
         $.each([5, 500], function (_, items) {
             var params = $.extend({}, feed, { items: items, readUri: feed.uri + "?$top=" + items });
@@ -58,7 +58,7 @@
                     }, unexpectedErrorHandler, undefined, undefined, metadata);
                 };
 
-                OData.defaultHttpClient = timedHttpClient;
+                OData.net.defaultHttpClient = timedHttpClient;
                 djstest.assertsExpected(1);
                 if (params.metadata) {
                     OData.read(params.service + "$metadata", measureRead, unexpectedErrorHandler, OData.metadataHandler);
@@ -151,7 +151,7 @@
                     }, unexpectedErrorHandler, undefined, undefined, metadata);
                 };
 
-                OData.defaultHttpClient = timedHttpClient;
+                OData.net.defaultHttpClient = timedHttpClient;
                 djstest.assertsExpected(1);
 
                 if (params.metadata) {
@@ -181,7 +181,7 @@
                     });
                 };
 
-                OData.defaultHttpClient = timedHttpClient;
+                OData.net.defaultHttpClient = timedHttpClient;
                 djstest.assertsExpected(1);
 
                 if (params.metadata) {
@@ -215,7 +215,7 @@
                     });
                 };
 
-                OData.defaultHttpClient = timedHttpClient;
+                OData.net.defaultHttpClient = timedHttpClient;
                 djstest.assertsExpected(1);
 
                 if (params.metadata) {

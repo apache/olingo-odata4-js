@@ -57,7 +57,7 @@
             djstest.wait(function (done) {
                 $.post(service + "ResetData", done);
             });
-            OData.jsonHandler.recognizeDates = false;
+            OData.json.jsonHandler.recognizeDates = false;
         }
     });
 
@@ -534,7 +534,7 @@
     djstest.addFullTest(true, function metadataElementExtensionsTest() {
         var csdlFile = "./endpoints/CustomAnnotations.xml";
         var modifyTypeHttpClient = {};
-        var originalHttpClient = OData.defaultHttpClient;
+        var originalHttpClient = OData.net.defaultHttpClient;
 
         // Modify the content-type of the response so that it is accepted by the metadataHandler.
         // By default, the content-type of CustomAnnotations.xml comes back as text/xml
@@ -545,7 +545,7 @@
             }, error);
         }
 
-        OData.defaultHttpClient = modifyTypeHttpClient;
+        OData.net.defaultHttpClient = modifyTypeHttpClient;
 
         OData.read({ requestUri: csdlFile, headers: { Accept: "text/xml"} },
             function (data) {

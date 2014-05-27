@@ -44,11 +44,11 @@
 
     module("CrossDomain", {
         setup: function () {
-            this.oldEnableJsonpCallback = OData.defaultHttpClient.enableJsonpCallback;
-            OData.defaultHttpClient.enableJsonpCallback = true;
+            this.oldEnableJsonpCallback = OData.net.defaultHttpClient.enableJsonpCallback;
+            OData.net.defaultHttpClient.enableJsonpCallback = true;
         },
         teardown: function () {
-            OData.defaultHttpClient.enableJsonpCallback = this.oldEnableJsonpCallback;
+            OData.net.defaultHttpClient.enableJsonpCallback = this.oldEnableJsonpCallback;
         }
     });
 
@@ -104,8 +104,8 @@
 
     var dataCacheReadRangeSingleTest = function (params) {
         var options = { name: "cache", source: params.feed, pageSize: params.pageSize, prefetchSize: params.prefetchSize, cacheSize: params.cacheSize };
-        OData.defaultHttpClient.enableJsonpCallback = true;
-        var cache = datajs.createDataCache(options);
+        OData.net.defaultHttpClient.enableJsonpCallback = true;
+        var cache = datajs.cache.createDataCache(options);
         cache.readRange(params.skip, params.take).then(function (data) {
             validateExpectedRange(cache, data, params.feed, params.skip, params.take);
         }, unexpectedErrorHandler);
