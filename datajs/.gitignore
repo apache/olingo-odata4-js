@@ -1,5 +1,5 @@
 demo/jscripts/
 demo/jscripts/*
-demo/jscripts/datajs-0.0.0.js
+demo/jscripts/datajs-2.0.0.js
 node_modules/
 build

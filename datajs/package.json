@@ -1,10 +1,26 @@
 {
   "name": "datajs",
-  "version": "0.0.0",
   "title": "datajs library",
+  "version": "2.0.0",
+  "description": "datajs is a new cross-browser JavaScript library that enables data-centric web applications by leveraging modern protocols such as JSON and OData and HTML5-enabled browser features. It's designed to be small, fast and easy to use.",
+  "homepage": "http://olingo.apache.org",
+  "repository": {
+    "type": "git",
+    "url": "http://git-wip-us.apache.org/repos/asf/olingo-odata4-js.git"
+  },
   "engines": {
     "node": ">= 0.10.0"
   },
+  "contributors": [
+    {
+      "name": "Bing Li",
+      "email": "????@apache.org"
+    },
+    {
+      "name": "Sven Kobler-Morris",
+      "email": "koblers@apache.org"
+    }
+  ],
   "testling": {
     "harness": "mocha-tdd",
     "files": "test/sampletest_mocca.js",

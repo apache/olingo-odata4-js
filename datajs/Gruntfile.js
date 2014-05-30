@@ -14,18 +14,15 @@ module.exports = function(grunt) {
           browserifyOptions: {
           } ,
           bundleOptions: {
-            /*debug: true*/
           },
         }
       }
     },
     uglify: {
       options: {
-        /*banner: '<%= banner %>',*/
         sourceMap : true,
         sourceMapName :  'build/<%= filename %>.map',
         sourceMapIncludeSources :true,
-        /*--sourceMapIn : 'build/<%= filename %>.split_map',*/
       },
       build: {
         src: 'build/<%= filename %>.js',
