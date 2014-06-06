@@ -397,7 +397,7 @@ var init = function (window) {
     // Disable caching to ensure that every test-related AJAX request is actually being sent,
     // and set up a default error handler
     if (window !== undefined) {//TODO improve
-        /*$.ajaxSetup({
+        $.ajaxSetup({
             cache: false,
             error: function (jqXHR, textStatus, errorThrown) {
                 // Work around bug in IE-Mobile on Windows Phone 7
@@ -411,7 +411,7 @@ var init = function (window) {
                 }
                 djstest.done();
             }
-        });*/
+        });
     }
 
     return djstest;
