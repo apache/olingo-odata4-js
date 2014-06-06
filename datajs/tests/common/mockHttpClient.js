@@ -44,12 +44,9 @@
 //    MockHttpClient will throw an exception if it receives a request to a URI that is not mapped to either a request verifier or a response.
 //
 
-(function (window, undefined) {
-    if (!window.MockHttpClient) {
-        window.MockHttpClient = {};
-    }
+var init = function (window, undefined) {
 
-    var httpClient = window.MockHttpClient;
+    var httpClient = {};
 
     var responses = {};
     var requestVerifiers = {};
@@ -123,4 +120,17 @@
         this.async = value;
         return this;
     };
-})(this);
+
+    return httpClient;
+};
+
+
+
+if (typeof window !== 'undefined') {
+    //in browser call init() directly window as context
+    window.MockHttpClient = init(window);
+} else {
+    //expose function init to be called with a custom context
+    module.exports.init = init;
+}
+

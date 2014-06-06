@@ -20,8 +20,8 @@
 // odata-tests.js
 
 (function (window, undefined) {
-
-    // DATAJS INTERNAL START
+   
+    
     djstest.addTest(function isArrayTest() {
         djstest.assert(datajs.utils.isArray([]));
         djstest.assert(datajs.utils.isArray([1, 2]));
@@ -192,7 +192,7 @@
 
         var i, len;
         for (i = 0, len = tests.length; i < len; i++) {
-            var data = window.JSON.stringify(tests[i].expected);
+            var data = JSON.stringify(tests[i].expected);
             var actual = OData.json.jsonParser(OData.json.jsonHandler, data, tests[i].context);
             djstest.assertAreEqualDeep(actual, tests[i].expected, "test " + i + "didn't return the expected data");
         }
@@ -834,7 +834,7 @@
         for (i = 0, len = tests.length; i < len; i++) {
             var data = tests[i].data ? tests[i].data : tests[i].expected;
             var actual = OData.json.jsonSerializer(OData.json.jsonHandler, data, tests[i].context);
-            var expected = window.JSON.stringify(tests[i].expected);
+            var expected = JSON.stringify(tests[i].expected);
             djstest.assertAreEqualDeep(actual, expected, "test " + i + "didn't return the expected data");
         }
         djstest.done();
@@ -843,7 +843,9 @@
     djstest.addTest(function normalizeHeadersReadTest() {
         // Verifies that headers are normalized for reading.
         // See issue at http://datajs.codeplex.com/workitem/148
-        window.MockHttpClient.clear().addResponse("/foo", {
+        MockHttpClient.clear();
+
+        MockHttpClient.clear().addResponse("/foo", {
             statusCode: 200,
             body: { "@odata.context": "http://foo", value: [] },
             headers: { "unknown": "u", "Content-Encoding": "compress, gzip", "Content-Length": "8042",
@@ -869,9 +871,11 @@
     });
 
     djstest.addTest(function normalizeHeadersWriteTest() {
+
         // Verifies that headers are normalized for writing.
         // See issue at http://datajs.codeplex.com/workitem/148
-        window.MockHttpClient.clear().addRequestVerifier("/foo", function (request) {
+
+        MockHttpClient.clear().addRequestVerifier("/foo", function (request) {
             djstest.assertAreEqual(request.headers.Accept, "application/json", "Accept available");
             djstest.assertAreEqual(request.headers["Content-Type"], "application/json", "json found");
             djstest.assertAreEqual(request.headers["Content-Encoding"], "compress, gzip", "Content-Encoding available");
@@ -895,9 +899,8 @@
                 "odata-maxversion": "4.0", "prefer": "prefer"
             }
         };
-        OData.request(request, function (data) {
-        }, undefined, undefined, MockHttpClient);
+        OData.request(request, function (data) { }, undefined, undefined, MockHttpClient);
+
     });
 
-    // DATAJS INTERNAL END
 })(this);

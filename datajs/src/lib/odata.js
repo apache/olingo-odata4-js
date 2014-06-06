@@ -22,6 +22,7 @@ exports.utils     = odataUtils =     require('./odata/utils.js');
 exports.handler   = odataHandler =   require('./odata/handler.js');
 exports.metadata  = odataMetadata =  require('./odata/metadata.js');
 exports.net       = odataNet      =  require('./odata/net.js');
+//exports.net       = odataNet      =  require('./odata/net-nodejs.js');//testing only
 exports.gml       =                  require('./odata/gml.js');
 exports.jsonLight =                  require('./odata/json-light.js');
 exports.json      = odataJson =      require('./odata/json.js');

@@ -5,7 +5,9 @@ module.exports = function(grunt) {
     banner: grunt.file.read('src/banner.txt'),
     filename : '<%= pkg.name %>-<%= pkg.version %>',
 
+
     browserify: {
+      // start with index.js and follow all required source in order pack them together 
       datajs: {
         files: {
           'build/<%= filename %>.js': ['src/index.js'],
@@ -24,44 +26,13 @@ module.exports = function(grunt) {
         sourceMapName :  'build/<%= filename %>.map',
         sourceMapIncludeSources :true,
       },
+      // uglify and compress the packed sources
       build: {
         src: 'build/<%= filename %>.js',
         dest: 'build/<%= filename %>.min.js'
       }
     },
-    copy: {
-      saveOrig : {
-        files: [
-          // includes files within path
-          {expand: false, flatten: true,src: './build/<%= filename %>.js', dest: 'demo/jscripts/<%= filename %>.bu_js'},
-        ]
-      },
-      toDemo: {
-        files: [
-          // includes files within path
-          {expand: false, flatten: true,src: './build/<%= filename %>.js', dest: 'demo/jscripts/<%= filename %>.js'},
-          {expand: false, flatten: true,src: './build/<%= filename %>.min.js', dest: 'demo/jscripts/<%= filename %>.min.js'},
-          {expand: false, flatten: true,src: './build/<%= filename %>.map', dest: 'demo/jscripts/<%= filename %>.map'},
-          {expand: false, flatten: true,src: './build/<%= filename %>.split_map', dest: 'demo/jscripts/<%= filename %>.split_map'},
-        ]
-      }
-    },
     connect: {
-      proxies: [{
-        context: "/tests/endpoints/",  // When the url contains this...
-        host: "localhost",
-        changeOrigin: true,
-        https: false,
-        port: 46541,
-        rejectUnauthorized: false, 
-      }/*,{
-        context: "/tests/common/",  // When the url contains this...
-        host: "localhost",
-        changeOrigin: true,
-        https: false,
-        port: 46541,
-        rejectUnauthorized: false, 
-      }*/],
       demo: {
         options: {
           port: 4001 ,
@@ -77,7 +48,8 @@ module.exports = function(grunt) {
           },
         },
       },
-      test: {
+      // start a node webserver with proxy to host the qunit-test html files
+      'test-browser': {             
         options: {
           port: 4002 ,
           hostname: "localhost",
@@ -92,30 +64,55 @@ module.exports = function(grunt) {
             ];
           },
         },
+        // proxy all request going to /tests/endpoints/ to the .net data services
+        proxies: [{
+          context: "/tests/endpoints/",  // When the url contains this...
+          host: "localhost",
+          changeOrigin: true,
+          https: false,
+          port: 46541,
+          rejectUnauthorized: false, 
+        }],
       },
     },
-    open: {
-      demo: {
-        path: "http://<%= connect.demo.options.hostname %>:<%= connect.demo.options.port %>/demo.html",
-        options: {
-          delay : 500,
+    'node-qunit': {   
+      //used to run some background qunit test on node         
+      'default-tests': {
+        setup: {
+          log: {
+            summary: true,
+            assertions: true,
+            errors: true,
+            globalSummary: true,
+            coverage: false,
+            globalCoverage: false,
+            testing: true
+          },
+          coverage: false,
+          deps: null,
+          namespace: null
+        },
+        deps: '',
+        code: './tests/node-test-setup.js',
+        tests: ['./tests/odata-json-tests.js'],
+        done: function(err, res){
+            !err && publishResults("node", res, this.async());
         }
-      }
+      },
     },
   });
 
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks("grunt-connect-proxy");
   grunt.loadNpmTasks("grunt-contrib-connect");
-
+  grunt.loadNpmTasks('grunt-node-qunit');
   
 
   // Default task.
-  grunt.registerTask('build', ['browserify:datajs', 'copy:toDemo', "uglify:build"]);
-  grunt.registerTask('run', ['configureProxies', 'connect:demo']);
-  grunt.registerTask('test', ['configureProxies', 'connect:test']);
+  grunt.registerTask('build', ['browserify:datajs', 'uglify:build']);
+  grunt.registerTask('test-browser', ['configureProxies:test-browser', 'connect:test-browser']);
+  grunt.registerTask('test-node', ['node-qunit:default-tests']);
 };
 

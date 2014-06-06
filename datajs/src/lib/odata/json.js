@@ -243,7 +243,7 @@ var jsonParser = function (handler, text, context) {
     /// <returns>An object representation of the OData payload.</returns>
 
     var dataServiceVersion = context.dataServiceVersion;
-    var json = (typeof text === "string") ? window.JSON.parse(text) : text;
+    var json = (typeof text === "string") ? JSON.parse(text) : text;
 
     if ((maxVersion("4.0", dataServiceVersion) === dataServiceVersion)) {
         return json;
@@ -265,7 +265,7 @@ var jsonToString = function (data) {
         Date.prototype.toJSON = function () {
             return formatDateTimeOffset(this);
         };
-        result = window.JSON.stringify(data, jsonReplacer);
+        result = JSON.stringify(data, jsonReplacer);
     } finally {
         // Restore the original toJSON function
         Date.prototype.toJSON = dateToJSON;
@@ -287,7 +287,7 @@ var jsonSerializer = function (handler, data, context) {
         context.dataServiceVersion = maxVersion(dataServiceVersion, "4.0");
         var newdata = formatJsonLightRequestPayload(data);
         if (newdata) {
-            return window.JSON.stringify(newdata);
+            return JSON.stringify(newdata);
         }
     }
 

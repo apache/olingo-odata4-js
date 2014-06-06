@@ -14,22 +14,14 @@
   "contributors": [
     {
       "name": "Bing Li",
-      "email": "????@apache.org"
+      "email": "bingl@apache.org"
     },
     {
       "name": "Sven Kobler-Morris",
       "email": "koblers@apache.org"
     }
   ],
-  "testling": {
-    "harness": "mocha-tdd",
-    "files": "test/sampletest_mocca.js",
-    "browsers": [
-      "ie/8"
-    ]
-  },
   "scripts": {
-    "test": "mocha --ui tdd"
   },
   "devDependencies": {
     "browserify": "^4.1.5",
@@ -37,9 +29,7 @@
     "grunt-browserify": "^2.1.0",
     "grunt-connect-proxy": "^0.1.10",
     "grunt-contrib-connect": "^0.7.1",
-    "grunt-contrib-copy": "^0.5.0",
     "grunt-contrib-uglify": "^0.4.0",
-    "grunt-mocha": "^0.4.10",
-    "grunt-open": "^0.2.3"
+    "grunt-node-qunit": "^2.0.2"
   }
 }

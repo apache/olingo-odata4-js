@@ -17,10 +17,9 @@
  * under the License.
  */
 
-(function (window, undefined) {
+var init = function (window) {
     var djstest = {};
 
-    window.djstest = djstest;
 
     djstest.indexedDB = window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.indexedDB;
 
@@ -397,19 +396,32 @@
 
     // Disable caching to ensure that every test-related AJAX request is actually being sent,
     // and set up a default error handler
-    $.ajaxSetup({
-        cache: false,
-        error: function (jqXHR, textStatus, errorThrown) {
-            // Work around bug in IE-Mobile on Windows Phone 7
-            if (jqXHR.status !== 1223) {
-                var err = {
-                    status: jqXHR.status,
-                    statusText: jqXHR.statusText,
-                    responseText: jqXHR.responseText
-                };
-                djstest.fail("AJAX request failed with: " + djstest.toString(err));
+    if (window !== undefined) {//TODO improve
+        /*$.ajaxSetup({
+            cache: false,
+            error: function (jqXHR, textStatus, errorThrown) {
+                // Work around bug in IE-Mobile on Windows Phone 7
+                if (jqXHR.status !== 1223) {
+                    var err = {
+                        status: jqXHR.status,
+                        statusText: jqXHR.statusText,
+                        responseText: jqXHR.responseText
+                    };
+                    djstest.fail("AJAX request failed with: " + djstest.toString(err));
+                }
+                djstest.done();
             }
-            djstest.done();
-        }
-    });
-})(window);
+        });*/
+    }
+
+    return djstest;
+};
+
+if (typeof window !== 'undefined') {
+    //in browser call init() directly window as context
+    window.djstest = init(window);
+} else {
+    //expose function init to be called with a custom context
+    module.exports.init = init;
+}
+
