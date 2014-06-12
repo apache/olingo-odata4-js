@@ -36,7 +36,7 @@ module.exports = function(grunt) {
       forDemo: {
         files: [
           // includes files within path
-          {expand: true, cwd: 'build/', src: ['**'], dest: 'demo/jscripts/', filter: 'isFile'},
+          {expand: true, cwd: 'build/', src: ['**'], dest: 'demo/scripts/', filter: 'isFile'},
         ]
       }
     },
