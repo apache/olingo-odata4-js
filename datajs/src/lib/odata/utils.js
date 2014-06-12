@@ -185,6 +185,10 @@ var formatMilliseconds = function (ms, ns) {
     return ms;
 };
 
+var formatDateTimeOffsetJSON = function (value) {
+    return "\/Date(" + value.getTime() + ")\/";
+};
+
 var formatDateTimeOffset = function (value) {
     /// <summary>Formats a DateTime or DateTimeOffset value a string.</summary>
     /// <param name="value" type="Date" mayBeNull="false">Value to format.</param>
@@ -329,8 +333,13 @@ var invokeRequest = function (request, success, error, handler, httpClient, cont
             error(err);
             return;
         }
-
-        success(response.data, response);
+        // errors in success handler for sync requests result in error handler calls. So here we fix this. 
+        try {
+            success(response.data, response);
+        } catch (err) {
+            err.bIsSuccessHandlerError = true;
+            throw err;
+        }
     }, error);
 };
 
@@ -555,7 +564,10 @@ var lookupDefaultEntityContainer = function (metadata) {
     /// <returns>An entity container description if the name is found; null otherwise.</returns>
 
     return forEachSchema(metadata, function (schema) {
-        return find(schema.entityContainer, function (container) {
+        if (isObject(schema.entityContainer)) { 
+            return schema.entityContainer;
+        }
+        return find(schema.entityContainer, function (container) { //TODO check if in V4 there is only 1 entitycontainer
             return parseBool(container.isDefaultEntityContainer);
         });
     });
@@ -653,14 +665,12 @@ var getEntitySetInfo = function (entitySetName, metadata) {
     /// <returns type="Object">The info about the entitySet.</returns>
 
     var info = forEachSchema(metadata, function (schema) {
-        var containers = schema.entityContainer;
-        for (var i = 0; i < containers.length; i++) {
-            var entitySets = containers[i].entitySet;
-            if (entitySets) {
-                for (var j = 0; j < entitySets.length; j++) {
-                    if (entitySets[j].name == entitySetName) {
-                        return { entitySet: entitySets[j], containerName: containers[i].name, functionImport: containers[i].functionImport };
-                    }
+        var container = schema.entityContainer;
+        var entitySets = container.entitySet;
+        if (entitySets) {
+            for (var j = 0; j < entitySets.length; j++) {
+                if (entitySets[j].name == entitySetName) {
+                    return { entitySet: entitySets[j], containerName: container.name, functionImport: container.functionImport };
                 }
             }
         }
@@ -1008,6 +1018,11 @@ var prepareRequest = function (request, handler, context) {
     if (!assigned(request.headers["OData-MaxVersion"])) {
         request.headers["OData-MaxVersion"] = handler.maxDataServiceVersion || "4.0";
     }
+
+    if (request.async === undefined) {
+        request.async = true;
+    }
+
 };
 
 var traverseInternal = function (item, owner, callback) {
@@ -1091,6 +1106,7 @@ exports.GEOJSON_MULTIPOLYGON = GEOJSON_MULTIPOLYGON;
 exports.GEOJSON_GEOMETRYCOLLECTION = GEOJSON_GEOMETRYCOLLECTION;
 exports.forEachSchema = forEachSchema;
 exports.formatDateTimeOffset = formatDateTimeOffset;
+exports.formatDateTimeOffsetJSON = formatDateTimeOffsetJSON;
 exports.formatDuration = formatDuration;
 exports.formatNumberWidth = formatNumberWidth;
 exports.getCanonicalTimezone = getCanonicalTimezone;

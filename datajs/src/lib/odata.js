@@ -100,7 +100,7 @@ exports.defaultHandler = {
         accept: "application/json;q=0.9, application/atomsvc+xml;q=0.8, */*;q=0.1"
     };
 
-exports.defaultMetadata = [];
+exports.defaultMetadata = []; //TODO check why is the defaultMetadata an Array? and not an Object.
 
 exports.read = function (urlOrRequest, success, error, handler, httpClient, metadata) {
     /// <summary>Reads data from the specified URL.</summary>
@@ -155,7 +155,13 @@ exports.request = function (request, success, error, handler, httpClient, metada
         odataUtils.prepareRequest(request, handler, context);
         return odataUtils.invokeRequest(request, success, error, handler, httpClient, context);
     } catch (err) {
-        error(err);
+        // errors in success handler for sync requests are catched here and result in error handler calls. 
+        // So here we fix this and throw that error further.
+        if (err.bIsSuccessHandlerError) {
+            throw err;
+        } else {
+            error(err);
+        }
     }
 
 };

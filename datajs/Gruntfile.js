@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
   'use strict';
-  grunt.initConfig({
+  var init = {
     pkg: grunt.file.readJSON('package.json'),
     banner: grunt.file.read('src/banner.txt'),
     filename : '<%= pkg.name %>-<%= pkg.version %>',
@@ -32,6 +32,14 @@ module.exports = function(grunt) {
         dest: 'build/<%= filename %>.min.js'
       }
     },
+    copy: {
+      forDemo: {
+        files: [
+          // includes files within path
+          {expand: true, cwd: 'build/', src: ['**'], dest: 'demo/jscripts/', filter: 'isFile'},
+        ]
+      }
+    },
     connect: {
       demo: {
         options: {
@@ -51,7 +59,7 @@ module.exports = function(grunt) {
       // start a node webserver with proxy to host the qunit-test html files
       'test-browser': {             
         options: {
-          port: 4002 ,
+          port: 4003 ,
           hostname: "localhost",
           base: "",
           keepalive : true,
@@ -100,18 +108,27 @@ module.exports = function(grunt) {
         }
       },
     },
-  });
+  };
+  
+  if (grunt.file.exists('localgrunt.config')) {
+    console.log("merge localgrunt.config");
+    var localGrundConfig = grunt.file.read('localgrunt.config');
+    init.connect['test-browser'].proxies = init.connect['test-browser'].proxies.concat(JSON.parse(localGrundConfig).proxies);
+  }
+
+  grunt.initConfig(init);
 
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks("grunt-connect-proxy");
   grunt.loadNpmTasks("grunt-contrib-connect");
+  grunt.loadNpmTasks("grunt-contrib-copy");
   grunt.loadNpmTasks('grunt-node-qunit');
   
 
   // Default task.
-  grunt.registerTask('build', ['browserify:datajs', 'uglify:build']);
+  grunt.registerTask('build', ['browserify:datajs', 'uglify:build', 'copy:forDemo']);
   grunt.registerTask('test-browser', ['configureProxies:test-browser', 'connect:test-browser']);
   grunt.registerTask('test-node', ['node-qunit:default-tests']);
 };

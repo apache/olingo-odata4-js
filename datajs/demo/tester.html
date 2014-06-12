@@ -1,0 +1,98 @@
+<html>
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+        <title>datajs startup perf test</title>
+        <script type="text/javascript" src="./jscripts/jquery-1.11.1.min.js"></script>
+        <script type="text/javascript" src="./jscripts/underscore-min.js" ></script>
+        <script type="text/javascript" src="./jscripts/backbone-min.js" ></script>
+        <script type="text/javascript" src="./jscripts/datajs-2.0.0.js"></script>
+        <!--https://github.com/warfares/pretty-json/blob/master/index.html-->
+        <script type="text/javascript" src="./jscripts/pretty-json-min.js" ></script>
+        
+    </head>   
+    <body>
+        <button id="startXML">XML</button><br/>
+        <button id="startJSON">JSON</button><br/>
+        <button id="btnMetaData">MetaData</button><br/>
+        <button id="btnJSONwithMetaData">JSON with MetaData</button><br/>
+        <div id='resultsArea'>
+
+        </div>
+        <script type='text/html' id='template'>
+            {{#items}}
+            <p><a href="{{id}}">{{name}}</a></p>
+            {{/items}}
+        </script>
+        <script>
+            function success(data) {
+                $('#resultsArea').empty();
+                //$('#resultsArea').html(Mustache.render($('#template').html(), {items:data})); 
+                //var out = JSON.stringify(data, null, 4)
+                //$('#resultsArea').html(out);
+                var node = new PrettyJSON.view.Node({ 
+                    el:$('#resultsArea'), 
+                    data: data,
+                });
+                node.expandAll();
+            }
+
+            function errorFunc(err) {
+                $('#resultsArea').empty();
+                $("#resultsArea").text(JSON.stringify(err));
+            }
+
+            $('#startXML').on("click", function(){
+                //var requestUri = 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods';
+                var requestUri ='http://localhost:4003/sap/bc/ds/odata/v4/ESMixPrimCollComp?$format=xml';
+                OData.read(requestUri, success, errorFunc);
+            });
+            $('#startJSON').on("click", function(){
+                var requestUri = 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods';
+                //var requestUri ='http://localhost:4003/sap/bc/ds/odata/v4/ESMixPrimCollComp?$format=json';
+                OData.read(requestUri, success, errorFunc);
+            });
+
+            $('#btnMetaData').on("click", function(){
+                var oHeaders = {
+                    'Accept': 'text/html,application/xhtml+xml,application/xml,application/json;odata.metadata=full',
+                    "Odata-Version": "4.0",
+                    "OData-MaxVersion": "4.0",
+                    "Prefer": "odata.allow-entityreferences"
+                };
+                var metadataRequest =
+                {
+                    headers: oHeaders,
+                    //requestUri: "http://services.odata.org/OData/OData.svc/$metadata",
+                    requestUri: "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata", //"http://localhost:6630/PrimitiveKeys.svc/$metadata",
+                    data: null,
+                };
+
+                OData.read(metadataRequest, success, errorFunc,OData.metadataHandler);
+            });
+            $('#btnJSONwithMetaData').on("click", function(){
+                var oHeaders = {
+                    'Accept': 'text/html,application/xhtml+xml,application/xml,application/json;odata.metadata=full',
+                    "Odata-Version": "4.0",
+                    "OData-MaxVersion": "4.0",
+                    "Prefer": "odata.allow-entityreferences"
+                };
+                var metadataRequest =
+                {
+                    headers: oHeaders,
+                    //requestUri: "http://services.odata.org/OData/OData.svc/$metadata",
+                    requestUri: "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata", //"http://localhost:6630/PrimitiveKeys.svc/$metadata",
+                    data: null,
+                };
+
+                var metaDatasuccess = function(metadata){
+                    var requestUri = 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods';
+                    OData.read(requestUri, success, errorFunc, null, null, metadata);
+                }
+
+
+                OData.read(metadataRequest, metaDatasuccess, errorFunc,OData.metadataHandler);
+            });
+
+        </script>
+    </body>
+</html>

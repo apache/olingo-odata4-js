@@ -536,7 +536,7 @@ var jsonLightReadObject = function (data, objectInfo, baseURI, model, recognizeD
     var obj = { __metadata: metadata };
     var propertiesMetadata = {};
     var baseTypeModel;
-    if (isEntry && dataModel && objectInfo.entitySet && objectInfo.contentTypeOdata == "minimalmetadata") {
+    if (isEntry && dataModel && objectInfo.entitySet && objectInfo.contentTypeOdata === "minimalmetadata") {
         var serviceURI = baseURI.substring(0, baseURI.lastIndexOf("$metadata"));
         baseTypeModel = null; // check if the key model is in a parent type.
         if (!dataModel.key) {

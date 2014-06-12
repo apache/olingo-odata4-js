@@ -1,0 +1,55 @@
+<html>
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+        <title>datajs startup perf test</title>
+        <script type="text/javascript" src="./jscripts/jquery-1.11.1.min.js"></script>
+        <script type="text/javascript" src="./jscripts/underscore-min.js" ></script>
+        <script type="text/javascript" src="./jscripts/backbone-min.js" ></script>
+        <script type="text/javascript" src="./jscripts/datajs-1.1.2.js"></script>
+        <!--https://github.com/warfares/pretty-json/blob/master/index.html-->
+        <script type="text/javascript" src="./jscripts/pretty-json-min.js" ></script>
+        
+    </head>   
+    <body>
+        <button id="startXML">startXML</button><br/>
+        <button id="startJSON">startJSON</button><br/>
+        <div id='resultsArea'>
+
+        </div>
+        <script type='text/html' id='template'>
+            {{#items}}
+            <p><a href="{{id}}">{{name}}</a></p>
+            {{/items}}
+        </script>
+        <script>
+            function success(data) {
+                $('#resultsArea').empty();
+                //$('#resultsArea').html(Mustache.render($('#template').html(), {items:data})); 
+                //var out = JSON.stringify(data, null, 4)
+                //$('#resultsArea').html(out);
+                var node = new PrettyJSON.view.Node({ 
+                    el:$('#resultsArea'), 
+                    data: data,
+                });
+                node.expandAll();
+            }
+
+            function errorFunc(err) {
+                $('#resultsArea').empty();
+                $("#resultsArea").text(JSON.stringify(err));
+            }
+
+            $('#startXML').on("click", function(){
+                //var requestUri = 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods';
+                var requestUri ='http://localhost:4003/sap/bc/odata/Employees';
+                OData.read(requestUri, success, errorFunc);
+            });
+            $('#startJSON').on("click", function(){
+                //var requestUri = 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods';
+                var requestUri ='http://localhost:4003/sap/bc/odata/Employees?$format=json';
+                OData.read(requestUri, success, errorFunc);
+            });
+
+        </script>
+    </body>
+</html>

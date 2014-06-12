@@ -36,7 +36,7 @@ var normalizeURI = utils.normalizeURI;
 var parseInt10 = utils.parseInt10;
 
 var contentType = oDataUtils.contentType;
-var jsonLightReadPayload = oDataUtils.jsonLightReadPayload;
+var jsonLightReadPayload = oJsonLight.jsonLightReadPayload;
 var formatDateTimeOffset = oDataUtils.formatDateTimeOffset;
 var formatDuration = oDataUtils.formatDuration;
 var formatJsonLight = oDataUtils.formatJsonLight;
@@ -119,7 +119,9 @@ var jsonApplyMetadata = function (value, metadata, dateParser, recognizeDates) {
                             value[propertyName] = propertyValue;
                         }
                     } else if (property.type === "Edm.Time") {
-                        value[propertyName] = parseDuration(propertyValue);
+                        if (propertyValue) {
+                            value[propertyName] = parseDuration(propertyValue);    
+                        }
                     }
                 }
             }
@@ -242,14 +244,21 @@ var jsonParser = function (handler, text, context) {
     /// <param name="context" type="Object">Object with parsing context.</param>
     /// <returns>An object representation of the OData payload.</returns>
 
+    var recognizeDates = defined(context.recognizeDates, handler.recognizeDates);
+    var inferJsonLightFeedAsObject = defined(context.inferJsonLightFeedAsObject, handler.inferJsonLightFeedAsObject);
+    var model = context.metadata;
     var dataServiceVersion = context.dataServiceVersion;
     var json = (typeof text === "string") ? JSON.parse(text) : text;
 
-    if ((maxVersion("4.0", dataServiceVersion) === dataServiceVersion)) {
+
+    if (utils.isArray(context.metadata)) {
         return json;
+    } else {
+        return jsonLightReadPayload(json, model, recognizeDates, inferJsonLightFeedAsObject, context.contentType.properties['odata.metadata']);
     }
 
-    return undefined;
+
+    
 };
 
 var jsonToString = function (data) {
@@ -263,9 +272,10 @@ var jsonToString = function (data) {
     try {
         // Set our own date.toJSON function
         Date.prototype.toJSON = function () {
-            return formatDateTimeOffset(this);
+            return formatDateTimeOffsetJSON(this);
         };
         result = JSON.stringify(data, jsonReplacer);
+        result = result.replace(/\/Date\(([0-9.+-]+)\)\//g, "\\/Date($1)\\/");
     } finally {
         // Restore the original toJSON function
         Date.prototype.toJSON = dateToJSON;
@@ -324,6 +334,8 @@ var jsonNormalizeData = function (data, baseURI) {
 
 var jsonHandler = oDataHandler.handler(jsonParser, jsonSerializer, jsonMediaType, MAX_DATA_SERVICE_VERSION);
 jsonHandler.recognizeDates = false;
+jsonHandler.useJsonLight = true;
+jsonHandler.inferJsonLightFeedAsObject = false;
 
 exports.jsonHandler = jsonHandler;
 
