@@ -665,7 +665,7 @@ var jsonLightReadFeed = function (data, feedInfo, baseURI, model, recognizeDates
     /// <param name="model" type="Object" optional="true">Object describing an OData conceptual schema.</param>
     /// <param name="recognizeDates" type="Boolean" optional="true">Flag indicating whether datetime literal strings should be converted to JavaScript Date objects.</param>
     /// <returns type="Object">Feed or top level collection object.</param>
-
+    /**/
     var items = isArray(data) ? data : data.value;
     var entries = [];
     var i, len, entry;

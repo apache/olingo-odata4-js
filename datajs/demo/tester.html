@@ -2,38 +2,51 @@
     <head>
         <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
         <title>datajs startup perf test</title>
-        <script type="text/javascript" src="./jscripts/jquery-1.11.1.min.js"></script>
-        <script type="text/javascript" src="./jscripts/underscore-min.js" ></script>
-        <script type="text/javascript" src="./jscripts/backbone-min.js" ></script>
-        <script type="text/javascript" src="./jscripts/datajs-2.0.0.js"></script>
-        <!--https://github.com/warfares/pretty-json/blob/master/index.html-->
-        <script type="text/javascript" src="./jscripts/pretty-json-min.js" ></script>
-        
+        <script type="text/javascript" src="./scripts/jquery-1.11.1.min.js"></script>
+        <script type="text/javascript" src="./scripts/datajs-2.0.0.js"></script>
+        <script type="text/javascript" src="./scripts/tools.js" ></script>
+        <style type="text/css">
+            .code{font-family:"Courier New",monospace;font-size:13px;line-height:18px;}
+            .code ul{list-style:none;margin:0 0 0 1.5em;padding:0;}
+            .code li{position:relative;}
+            .code.json li:after{content:',';}
+            .code.json li:last-child:after{content:'';}
+            .code span{white-space:nowrap;padding:2px 1px;}
+            .code .property{font-weight:bold;color:#000000;}
+            .code .null{color:#9d261d;}
+            .code .boolean{color:#760a85;}
+            .code .numeric{color:#0076cb;}
+            .code .string{color:#247230;}
+            .code .deffered{color:#666666;font-size:0.9em;}
+            .code .toggle{position:absolute;left:-1em;cursor:pointer;}
+            .code .tag{color:#003283;}
+            .code .atn{color:#760a85;}
+            .code .atv{color:#247230;}
+            .code .text{color:#000000;}
+            .code .cdata{color:#008080;}
+            .code .comment,.code .ns{color:#666666;}
+        </style>
     </head>   
     <body>
         <button id="startXML">XML</button><br/>
         <button id="startJSON">JSON</button><br/>
         <button id="btnMetaData">MetaData</button><br/>
         <button id="btnJSONwithMetaData">JSON with MetaData</button><br/>
-        <div id='resultsArea'>
-
-        </div>
+        <code id='resultsArea' data-type="json">
+        </code>
         <script type='text/html' id='template'>
             {{#items}}
             <p><a href="{{id}}">{{name}}</a></p>
             {{/items}}
         </script>
         <script>
-            function success(data) {
+            function show(data) {
                 $('#resultsArea').empty();
-                //$('#resultsArea').html(Mustache.render($('#template').html(), {items:data})); 
-                //var out = JSON.stringify(data, null, 4)
-                //$('#resultsArea').html(out);
-                var node = new PrettyJSON.view.Node({ 
-                    el:$('#resultsArea'), 
-                    data: data,
-                });
-                node.expandAll();
+                $('#resultsArea').text(JSON.stringify(data))
+                $('code[data-type]').prettify();
+            }
+            function success(data) {
+                show(data);
             }
 
             function errorFunc(err) {
