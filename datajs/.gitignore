@@ -1,6 +1,3 @@
-demo/scripts/
-demo/scripts/*
-demo/scripts/datajs-2.0.0.js
 node_modules/
 build
 localgrunt.config
