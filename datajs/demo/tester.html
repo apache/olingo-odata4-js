@@ -29,11 +29,13 @@
     </head>   
     <body>
         <button id="startXML">XML</button><br/>
-        <button id="startJSON">JSON</button><br/>
+        <button id="btnJSON_none">JSON odata.metadata=none</button><br/>
+        <button id="btnJSON_minimal">JSON odata.metadata=minimal</button><br/>
+        <button id="btnJSON_full">JSON odata.metadata=full</button><br/>
         <button id="btnMetaData">MetaData</button><br/>
         <button id="btnJSONwithMetaData">JSON with MetaData</button><br/>
-        <code id='resultsArea' data-type="json">
-        </code>
+        <div id='resultsArea' data-type="json">
+        </div>
         <script type='text/html' id='template'>
             {{#items}}
             <p><a href="{{id}}">{{name}}</a></p>
@@ -42,8 +44,10 @@
         <script>
             function show(data) {
                 $('#resultsArea').empty();
-                $('#resultsArea').text(JSON.stringify(data))
+                var code = $('<code data-type="json"></code>').text(JSON.stringify(data))
+                $('#resultsArea').append(code);
                 $('code[data-type]').prettify();
+                //$('#resultsArea').prettify();
             }
             function success(data) {
                 show(data);
@@ -59,9 +63,25 @@
                 var requestUri ='http://localhost:4003/sap/bc/ds/odata/v4/ESMixPrimCollComp?$format=xml';
                 OData.read(requestUri, success, errorFunc);
             });
-            $('#startJSON').on("click", function(){
-                var requestUri = 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods';
-                //var requestUri ='http://localhost:4003/sap/bc/ds/odata/v4/ESMixPrimCollComp?$format=json';
+            $('#btnJSON_none').on("click", function(){
+                var requestUri = {
+                    requestUri : 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods',
+                    headers : { Accept : 'application/json;odata.metadata=none' }
+                };
+                OData.read(requestUri, success, errorFunc);
+            });
+            $('#btnJSON_minimal').on("click", function(){
+                var requestUri = {
+                    requestUri : 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods',
+                    headers : { Accept : 'application/json;odata.metadata=minimal' }
+                };
+                OData.read(requestUri, success, errorFunc);
+            });
+            $('#btnJSON_full').on("click", function(){
+                var requestUri = {
+                    requestUri : 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods',
+                    headers : { Accept : 'application/json;odata.metadata=full' }
+                };
                 OData.read(requestUri, success, errorFunc);
             });
 

@@ -414,7 +414,7 @@ var jsonLightReadDataItemValue = function (value, typeName, dataItemMetadata, ba
             return jsonLightReadComplexPropertyValue(value, typeName, dataItemMetadata, baseURI, model, recognizeDates);
         }
     }
-    return value;
+    return value + typeName;
 };
 
 var jsonLightReadStringPropertyValue = function (value, propertyType, recognizeDates) {
@@ -665,7 +665,7 @@ var jsonLightReadFeed = function (data, feedInfo, baseURI, model, recognizeDates
     /// <param name="model" type="Object" optional="true">Object describing an OData conceptual schema.</param>
     /// <param name="recognizeDates" type="Boolean" optional="true">Flag indicating whether datetime literal strings should be converted to JavaScript Date objects.</param>
     /// <returns type="Object">Feed or top level collection object.</param>
-    /**/
+
     var items = isArray(data) ? data : data.value;
     var entries = [];
     var i, len, entry;
@@ -1286,6 +1286,11 @@ var formatJsonLightData = function (obj, pMetadata, data, isLinks) {
     }
 };
 
+var MyDateTime = function(value) {
+    this.value = value;
+}
+MyDateTime.prototype.getAsDateObject = function () { return { value : this.value }};
+
 var formatJsonLightProperty = function (name, value, pMetadata, data) {
     /// <summary>Formats an object's value identified by name to its json light representation and saves it to data.</summary>
     /// <param name="name" type="String">Property name.</param>
@@ -1300,7 +1305,15 @@ var formatJsonLightProperty = function (name, value, pMetadata, data) {
     if (isPrimitive(value) || !value) {
         // It is a primitive value then.
         formatJsonLightAnnotation(typeAnnotation, name, typeName, data);
-        data[name] = value;
+        
+        /*TODO*//*check the typename here*/
+        if ( typeName === 'Edm.DateTime') {
+            data[name] = new MyDateTime(value);
+        } else if ( typeName === 'Edm.DateTimeOffset') {
+            data[name] = new MyDateTime(value);
+        } else {
+            data[name] = value;
+        }
         return;
     }
 

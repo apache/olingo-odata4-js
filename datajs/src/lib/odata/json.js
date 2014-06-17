@@ -250,8 +250,9 @@ var jsonParser = function (handler, text, context) {
     var dataServiceVersion = context.dataServiceVersion;
     var json = (typeof text === "string") ? JSON.parse(text) : text;
 
-
+    var format = context.formatQueryString;
     if (utils.isArray(context.metadata)) {
+
         return json;
     } else {
         return jsonLightReadPayload(json, model, recognizeDates, inferJsonLightFeedAsObject, context.contentType.properties['odata.metadata']);

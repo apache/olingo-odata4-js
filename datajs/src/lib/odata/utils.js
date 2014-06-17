@@ -567,9 +567,6 @@ var lookupDefaultEntityContainer = function (metadata) {
         if (isObject(schema.entityContainer)) { 
             return schema.entityContainer;
         }
-        return find(schema.entityContainer, function (container) { //TODO check if in V4 there is only 1 entitycontainer
-            return parseBool(container.isDefaultEntityContainer);
-        });
     });
 };
 
