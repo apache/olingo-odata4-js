@@ -249,18 +249,58 @@ var jsonParser = function (handler, text, context) {
     var model = context.metadata;
     var dataServiceVersion = context.dataServiceVersion;
     var json = (typeof text === "string") ? JSON.parse(text) : text;
+    var metadataMap = { none : 0, minimal : 1, full : 2, all : 3 };
 
-    var format = context.formatQueryString;
-    if (utils.isArray(context.metadata)) {
-
-        return json;
-    } else {
-        return jsonLightReadPayload(json, model, recognizeDates, inferJsonLightFeedAsObject, context.contentType.properties['odata.metadata']);
+    var payloadFormat = 1;//minmal
+    try {
+        payloadFormat = metadataMap[context.contentType.properties["odata.metadata"]]; 
+    } catch(err) {
+        payloadFormat = 1;
     }
 
+    var demandedFormat = 1;//minmal
+    try {
+        demandedFormat = metadataMap[context.extendMetadataToLevel]; 
+    } catch(err) {
+        demandedFormat = 1;
+    }
 
-    
+    if ( payloadFormat >= demandedFormat) {
+        if (recognizeDates) {
+            return convertPrimitivetypesGeneric(json,context); //should be fast
+        } else {
+            return json;
+        }
+    } else {
+        if (payloadFormat === 2) { //full, no metadata in context required
+            //insert the missing type information for strings
+            return extendMetadataFromPayload(json,context,recognizeDates);
+        } else if (payloadFormat === 1) { //minmal
+            if (utils.isArray(context.metadata)) {
+                //use context metadata to extend the payload metadata
+                return extendMetadataFromContext(json,context,recognizeDates);
+            } else {
+                //error metadata in context required
+            }
+        } else {
+            // the payload contains no context url only guessing possible
+            return json;
+        }
+    }
+
+    //return jsonLightReadPayload(json, model, recognizeDates, inferJsonLightFeedAsObject, context.contentType.properties['odata.metadata']);
 };
+
+var convertPrimitivetypesGeneric = function(json,context) {
+    return json;
+}
+var extendMetadataFromPayload = function(json,context,recognizeDates) {
+    return json;
+}
+var extendMetadataFromContext = function(json,context,recognizeDates) {
+    return json;
+}
+
 
 var jsonToString = function (data) {
     /// <summary>Converts the data into a JSON string.</summary>
