@@ -270,19 +270,29 @@ var jsonParser = function (handler, text, context) {
     //return jsonLightReadPayload(json, model, recognizeDates, inferJsonLightFeedAsObject, context.contentType.properties['odata.metadata']);
 
     if ( payloadFormat >= demandedFormat) {
+        //there is no need to add additional metadata
         if (recognizeDates) {
-            return convertPrimitivetypesGeneric(json,context); //should be fast
+            if (payloadFormat === 0) {
+                //error no typeinformation in payload, conversion of dates not possible
+            } else if (payloadFormat === 1) { //minimal
+                //TODO use metadata in context to determine which properties need to be converted
+            } else {
+                return convertPrimitivetypesOnMetadataFull(json); //should be fast    
+            }
         } else {
             return json;
         }
     } else {
-        if (payloadFormat === 2) { //full, no metadata in context required
+        if (payloadFormat === 2) { 
+            //demandedFormat is all
+            //metaData=full, no metadata in context required
             //insert the missing type information for strings, bool, etc.
-            //guess type for nummber as defined in the odata-json-format-v4.0.doc specification
+            //guess types for nummber as defined in the odata-json-format-v4.0.doc specification
             return extendMetadataFromPayload(json,context,recognizeDates);
         } else if (payloadFormat === 1) { //minmal
             if (utils.isArray(context.metadata)) {
-                //use context metadata to extend the payload metadata
+                //TODO use metadata in context to determine which properties need to be converted
+                // and extend the metadata
                 return extendMetadataFromContext(json,context,recognizeDates);
             } else {
                 //error metadata in context required
@@ -296,8 +306,48 @@ var jsonParser = function (handler, text, context) {
     
 };
 
-var convertPrimitivetypesGeneric = function(json,context) {
+var extendMetadataFromContext = function(json,context,recognizeDates) {
+    return jsonLightReadPayload(json, model, recognizeDates, inferJsonLightFeedAsObject, context.contentType.properties['odata.metadata']);
+};
+
+var convertPrimitivetypesGeneric = function(data) {
     
+};
+
+
+var convertPrimitivetypesOnMetadataFull = function(data) {
+    /// <summary>Converts some primitive data types in payload</summary>
+    /// <param name="data">Date which will be extendet</param>
+    /// <returns>An object representation of the OData payload.</returns>
+
+    if ( utils.isObject(data) ) {
+        for (var key in data) {
+            if (data.hasOwnProperty(key)) {
+                if (key.indexOf('@') === -1) {
+                    if (utils.isArray(data[key])) {
+                        for ( var i = 0; i < data[key].length; ++i) {
+                            convertPrimitivetypesOnMetadataFull(data[key][i]);
+                        }
+                    } else if (utils.isObject(data[key])) {
+                        if (data[key] !== null) {
+                            convertPrimitivetypesOnMetadataFull(data[key]);
+                        }
+                    } else {
+                        var type = data[key+'@odata.type'];
+                        if ( type === undefined ) {
+                            var typeFromObject = typeof data[key];
+                            //TODO check the datatype                             
+                        } else if ( type === '#DateTimeOffset' ) {
+                           data[key] = oDataUtils.parseDateTimeOffset(data[key],true);
+                        } else if ( type === '#DateTime' ) {
+                           data[key] = oDataUtils.parseDateTimeOffset(data[key],true);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return data;
 };
 
 
@@ -310,8 +360,17 @@ var addType = function(data, name, value ) {
 };
 
 var extendMetadataFromPayload = function(data,context,recognizeDates) {
-    if ( utils.isObject(data) ) {
+    /// <summary>Adds typeinformation for String, Boolean and numerical EDM-types. 
+    /// The type is determined from the odata-json-format-v4.0.doc specification
+    ///</summary>
+    /// <param name="data">Date which will be extendet</param>
+    /// <param name="context" type="Object">Object with parsing context.</param>
+    /// <param name="recognizeDates" type="Boolean">
+    ///     True if strings formatted as datetime values should be treated as datetime values. False otherwise.
+    /// </param>
+    /// <returns>An object representation of the OData payload.</returns>
 
+    if ( utils.isObject(data) ) {
         for (var key in data) {
             if (data.hasOwnProperty(key)) {
                 if (key.indexOf('@') === -1) {
@@ -324,12 +383,23 @@ var extendMetadataFromPayload = function(data,context,recognizeDates) {
                             extendMetadataFromPayload(data[key],context, recognizeDates);
                         }
                     } else {
-                        var type = typeof data[key];
-                        if ( type === 'string' ) {
+                        if (recognizeDates) {
+                            var type = data[key+'@odata.type'];
+                            if ( type === undefined ) {
+                                var typeFromObject = typeof data[key];
+                                //TODO check the datatype                             
+                            } else if ( type === '#DateTimeOffset' ) {
+                               data[key] = oDataUtils.parseDateTimeOffset(data[key],true);
+                            } else if ( type === '#DateTime' ) {
+                               data[key] = oDataUtils.parseDateTimeOffset(data[key],true);
+                            }
+                        }
+                        var typeFromObject = typeof data[key];
+                        if ( typeFromObject === 'string' ) {
                            addType(data,key,'#String');
-                        } else if (type ==='boolean') {
+                        } else if (typeFromObject ==='boolean') {
                             addType(data,key,'#Bool');
-                        } else if (type ==='number') {
+                        } else if (typeFromObject ==='number') {
                             if ( data[key] % 1 === 0 ) {
                                 addType(data,key,'#Integer');
                             } else {
@@ -344,9 +414,7 @@ var extendMetadataFromPayload = function(data,context,recognizeDates) {
     return data;
 };
 
-var extendMetadataFromContext = function(json,context,recognizeDates) {
-    return json;
-};
+
 
 
 var jsonToString = function (data) {

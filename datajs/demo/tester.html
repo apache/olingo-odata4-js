@@ -29,10 +29,13 @@
     </head>   
     <body>
         <button id="startXML">XML</button><br/>
-        <button id="btnJSON_none">JSON odata.metadata=none</button><br/>
-        <button id="btnJSON_minimal">JSON odata.metadata=minimal</button><br/>
-        <button id="btnJSON_full">JSON odata.metadata=full</button><br/>
-        <button id="btnJSON_all">JSON odata.metadata=full with extend to all</button><br/>
+        <button id="btnJSON_none">pure JSON odata.metadata=none</button><br/>
+        <button id="btnJSON_minimal">pure JSON odata.metadata=minimal</button><br/>
+        <button id="btnJSON_full">pure JSON odata.metadata=full</button><br/>
+        <button id="btnJSON_full_date_conversion">JSON odata.metadata=full with date conversion</button><br/>
+        <button id="btnJSON_all">JSON odata.metadata=full with adding types for string, bool, numbers</button><br/>
+
+        
         <button id="btnMetaData">MetaData</button><br/>
         <button id="btnJSONwithMetaData">JSON with MetaData</button><br/>
         <div id='resultsArea' data-type="json">
@@ -93,9 +96,17 @@
                     extendMetadataToLevel : 'all' ,
                     recognizeDates : true
                 };
-                var context = { };
                 OData.read(requestUri, success, errorFunc);
             });
+            $('#btnJSON_full_date_conversion').on("click", function(){
+                var requestUri = {
+                    requestUri : 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods',
+                    headers : { Accept : 'application/json;odata.metadata=full' },
+                    recognizeDates : true
+                };
+                OData.read(requestUri, success, errorFunc);
+            });
+
             $('#btnMetaData').on("click", function(){
                 var oHeaders = {
                     'Accept': 'text/html,application/xhtml+xml,application/xml,application/json;odata.metadata=full',
