@@ -69,12 +69,28 @@ var parseDuration = oDataUtils.parseDuration;
 
 // CONTENT START
 
-var PAYLOADTYPE_OBJECT = "o";
 var PAYLOADTYPE_FEED = "f";
-var PAYLOADTYPE_PRIMITIVE = "p";
+var PAYLOADTYPE_ENTRY = "e";
+var PAYLOADTYPE_PROPERTY = "p";
+var PAYLOADTYPE_ENTITY_REF_LINK = "erl";
+var PAYLOADTYPE_ENTITY_REF_LINKS = "erls";
+var PAYLOADTYPE_VALUE = "v";
+var PAYLOADTYPE_BINARY_VALUE = "bv";
 var PAYLOADTYPE_COLLECTION = "c";
 var PAYLOADTYPE_SVCDOC = "s";
-var PAYLOADTYPE_LINKS = "l";
+var PAYLOADTYPE_METADOC = "m";
+var PAYLOADTYPE_ERROR = "err";
+var PAYLOADTYPE_BATCH = "b";
+var PAYLOADTYPE_PARAMETER = "para";
+var PAYLOADTYPE_IND_PROPERTY = "ip";
+var PAYLOADTYPE_DELTA = "d";
+var PAYLOADTYPE_ASYNC = "a";
+
+
+var DELTATYPE_FEED = "f";
+var DELTATYPE_DELETED_ENTRY = "de";
+var DELTATYPE_LINK = "l";
+var DELTATYPE_DELETED_LINK = "dl";
 
 var odataNs = "odata";
 var odataAnnotationPrefix = odataNs + ".";
@@ -1036,57 +1052,93 @@ var jsonLightMakePayloadInfo = function (kind, type) {
     return { kind: kind, type: type || null };
 };
 
-var jsonLightPayloadInfo = function (data, model, inferFeedAsComplexType) {
-    /// <summary>Infers the information describing the JSON light payload from its metadata annotation, structure, and data model.</summary>
-    /// <param name="data" type="Object">Json light response payload object.</param>
-    /// <param name="model" type="Object">Object describing an OData conceptual schema.</param>
-    /// <param name="inferFeedAsComplexType" type="Boolean">True if a JSON light payload that looks like a feed should be treated as a complex type property instead.</param>
-    /// <remarks>
-    ///     If the arguments passed to the function don't convey enough information about the payload to determine without doubt that the payload is a feed then it
-    ///     will try to use the payload object structure instead.  If the payload looks like a feed (has value property that is an array or non-primitive values) then
-    ///     the function will report its kind as PAYLOADTYPE_FEED unless the inferFeedAsComplexType flag is set to true. This flag comes from the user request
-    ///     and allows the user to control how the library behaves with an ambigous JSON light payload.
-    /// </remarks>
-    /// <returns type="Object">
-    ///     Object with kind and type fields. Null if there is no metadata annotation or the payload info cannot be obtained..
-    /// </returns>
+/**/
+var parseContextUriFragment = function( fragment ) {
+    var ret = {};
 
-    var metadataUri = data[contextUrlAnnotation];
-    if (!metadataUri || typeof metadataUri !== "string") {
-        return null;
+    ret.deltaKind = undefined;
+    if (utils.endsWith(fragment, '/$entity')) {
+        fragment = fragment.substring(fragment.lenght - 8);
+    } else if (utils.endsWith(fragment, '/$delta')) {
+        ret.deltaKind = DELTATYPE_FEED;
+        fragment = fragment.substring(fragment.lenght - 7);
+    } else if (utils.endsWith(fragment, '/$deletedEntity')) {
+        ret.deltaKind = DELTATYPE_DELETED_ENTRY;
+        fragment = fragment.substring(fragment.lenght - 15);
+    } else if (utils.endsWith(fragment, '/$link')) {
+        ret.deltaKind = DELTATYPE_LINK;
+        fragment = fragment.substring(fragment.lenght - 6);
+    } else if (utils.endsWith(fragment, '/$deletedLink')) {
+        ret.deltaKind = DELTATYPE_DELETED_LINK;
+        fragment = fragment.substring(fragment.lenght - 13);
     }
 
-    var fragmentStart = metadataUri.lastIndexOf("#");
-    if (fragmentStart === -1) {
-        return jsonLightMakePayloadInfo(PAYLOADTYPE_SVCDOC);
-    }
-
-    var elementStart = metadataUri.indexOf("@Element", fragmentStart);
-    var fragmentEnd = elementStart - 1;
-
-    if (fragmentEnd < 0) {
-        fragmentEnd = metadataUri.indexOf("?", fragmentStart);
-        if (fragmentEnd === -1) {
-            fragmentEnd = metadataUri.length;
+    if (utils.endsWith(fragment,")")) {
+        //remove the query function, cut fragment to matching '('
+        var index = fragment.lenght - 2 ;
+        for ( var rCount = 1; rcount > 0 && index > 0; --index) {
+            if ( fragment.charAt(index)=='(') {
+                rCount ++;
+            } else if ( fragment.charAt(index)==')') {
+                rCount --;    
+            }
         }
+
+        if (index == 0) {
+            //TODO throw error
+        }
+
+        var previous = fragment.substring(0, index + 1);
+
+
+        if (previous !== 'Collection') { // Don't treat Collection(Edm.Type) as SelectExpand segment
+            var selectExpandStr = fragment.substring(index+2, fragment.lenght - 1);
+            var keyPattern = /^(?:-{0,1}\d+?|\w*'.+?'|[A-F0-9]{8}(?:-[A-F0-9]{4}){3}-[A-F0-9]{12}|.+?=.+?)$/;
+            var matches = keyPattern.exec(selectExpandStr);
+            if ( matches ) {
+                 //TODO throw error
+            }
+
+            ret.selectQueryOptionString = selectExpandStr;
+            fragment = previous;
+        }
+
     }
 
-    var fragment = metadataUri.substring(fragmentStart + 1, fragmentEnd);
-    if (fragment.indexOf("/$links/") > 0) {
-        return jsonLightMakePayloadInfo(PAYLOADTYPE_LINKS);
-    }
+    ret.detectedPayloadKind = undefined;
+    if (fragment.indexOf('/') === -1 ) {
+        if (fragment.length === 0) {
+            // Capter 10.1
+            ret.detectedPayloadKind = PAYLOADTYPE_SVCDOC;
+        } else if (fragment === 'Edm.Null') {
+            // Capter 10.15
+            ret.detectedPayloadKind = PAYLOADTYPE_PROPERTY;
+            ret.isNullProperty = true;
+        } else if (fragment === 'Collection($ref)') {
+            // Capter 10.11
+            ret.detectedPayloadKind = PAYLOADTYPE_ENTITY_REF_LINKS;
+        } else if (fragment === '$ref') {
+            // Capter 10.12
+            ret.detectedPayloadKind = PAYLOADTYPE_ENTITY_REF_LINK;
+        } else {
+            //TODO check for navigation resource
+        }
+    } 
 
+    // split fragment at '/'
+    //TODO changes
     var fragmentParts = fragment.split("/");
     if (fragmentParts.length >= 0) {
         var qualifiedName = fragmentParts[0];
         var typeCast = fragmentParts[1];
 
         if (jsonLightIsPrimitiveType(qualifiedName)) {
-            return jsonLightMakePayloadInfo(PAYLOADTYPE_PRIMITIVE, qualifiedName);
+            ret.detectedPayloadKind  = PAYLOADTYPE_VALUE;
+            return ret;
         }
 
         if (isCollectionType(qualifiedName)) {
-            return jsonLightMakePayloadInfo(PAYLOADTYPE_COLLECTION, qualifiedName);
+            return ret;
         }
 
         var entityType = typeCast;
@@ -1107,7 +1159,7 @@ var jsonLightPayloadInfo = function (data, model, inferFeedAsComplexType) {
         }
 
         var info;
-        if (elementStart > 0) {
+        if (d > 0) {
             info = jsonLightMakePayloadInfo(PAYLOADTYPE_OBJECT, entityType);
             info.entitySet = entitySet;
             info.functionImport = functionImport;
@@ -1135,7 +1187,52 @@ var jsonLightPayloadInfo = function (data, model, inferFeedAsComplexType) {
         return jsonLightMakePayloadInfo(PAYLOADTYPE_OBJECT, qualifiedName);
     }
 
-    return null;
+};
+
+var jsonLightPayloadInfo = function (data, model) {
+    /// <summary>Infers the information describing the JSON light payload from its metadata annotation, structure, and data model.</summary>
+    /// <param name="data" type="Object">Json light response payload object.</param>
+    /// <param name="model" type="Object">Object describing an OData conceptual schema.</param>
+    /// <remarks>
+    ///     If the arguments passed to the function don't convey enough information about the payload to determine without doubt that the payload is a feed then it
+    ///     will try to use the payload object structure instead.  If the payload looks like a feed (has value property that is an array or non-primitive values) then
+    ///     the function will report its kind as PAYLOADTYPE_FEED unless the inferFeedAsComplexType flag is set to true. This flag comes from the user request
+    ///     and allows the user to control how the library behaves with an ambigous JSON light payload.
+    /// </remarks>
+    /// <returns type="Object">
+    ///     Object with kind and type fields. Null if there is no metadata annotation or the payload info cannot be obtained..
+    /// </returns>
+
+    var metadataUri = data[contextUrlAnnotation];
+    if (!metadataUri || typeof metadataUri !== "string") {
+        return null;
+    }
+
+    var fragmentStart = metadataUri.lastIndexOf("#");
+    if (fragmentStart === -1) {
+        return jsonLightMakePayloadInfo(PAYLOADTYPE_SVCDOC);
+    }
+
+    var d = metadataUri.indexOf("@Element", fragmentStart);
+    var fragmentEnd = elementStart - 1;
+
+    if (fragmentEnd < 0) {
+        fragmentEnd = metadataUri.indexOf("?", fragmentStart);
+        if (fragmentEnd === -1) {
+            fragmentEnd = metadataUri.length;
+        }
+    }
+
+    var fragment = metadataUri.substring(fragmentStart + 1, fragmentEnd);
+    if (fragment.indexOf("/$links/") > 0) {
+        return jsonLightMakePayloadInfo(PAYLOADTYPE_LINKS);
+    }
+
+    var ret = parseContextUriFragment(fragment);
+
+    return;
+
+
 };
 
 var jsonLightReadPayload = function (data, model, recognizeDates, inferFeedAsComplexType, contentTypeOdata) {

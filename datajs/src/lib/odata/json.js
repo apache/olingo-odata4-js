@@ -257,6 +257,7 @@ var jsonParser = function (handler, text, context) {
     } catch(err) {
         payloadFormat = 1;
     }
+    payloadFormat = (payloadFormat === undefined) ? 1 : payloadFormat;
 
     var demandedFormat = 1;//minmal
     try {
@@ -264,6 +265,9 @@ var jsonParser = function (handler, text, context) {
     } catch(err) {
         demandedFormat = 1;
     }
+    demandedFormat = (demandedFormat === undefined) ? 1 : demandedFormat;
+
+    //return jsonLightReadPayload(json, model, recognizeDates, inferJsonLightFeedAsObject, context.contentType.properties['odata.metadata']);
 
     if ( payloadFormat >= demandedFormat) {
         if (recognizeDates) {
@@ -273,7 +277,8 @@ var jsonParser = function (handler, text, context) {
         }
     } else {
         if (payloadFormat === 2) { //full, no metadata in context required
-            //insert the missing type information for strings
+            //insert the missing type information for strings, bool, etc.
+            //guess type for nummber as defined in the odata-json-format-v4.0.doc specification
             return extendMetadataFromPayload(json,context,recognizeDates);
         } else if (payloadFormat === 1) { //minmal
             if (utils.isArray(context.metadata)) {
@@ -288,18 +293,60 @@ var jsonParser = function (handler, text, context) {
         }
     }
 
-    //return jsonLightReadPayload(json, model, recognizeDates, inferJsonLightFeedAsObject, context.contentType.properties['odata.metadata']);
+    
 };
 
 var convertPrimitivetypesGeneric = function(json,context) {
-    return json;
-}
-var extendMetadataFromPayload = function(json,context,recognizeDates) {
-    return json;
-}
+    
+};
+
+
+var addType = function(data, name, value ) {
+    var fullName = name+'@odata.type';
+
+    if ( data[fullName] === undefined) {
+        data[fullName] = value;
+    }
+};
+
+var extendMetadataFromPayload = function(data,context,recognizeDates) {
+    if ( utils.isObject(data) ) {
+
+        for (var key in data) {
+            if (data.hasOwnProperty(key)) {
+                if (key.indexOf('@') === -1) {
+                    if (utils.isArray(data[key])) {
+                        for ( var i = 0; i < data[key].length; ++i) {
+                            extendMetadataFromPayload(data[key][i], context, recognizeDates);
+                        }
+                    } else if (utils.isObject(data[key])) {
+                        if (data[key] !== null) {
+                            extendMetadataFromPayload(data[key],context, recognizeDates);
+                        }
+                    } else {
+                        var type = typeof data[key];
+                        if ( type === 'string' ) {
+                           addType(data,key,'#String');
+                        } else if (type ==='boolean') {
+                            addType(data,key,'#Bool');
+                        } else if (type ==='number') {
+                            if ( data[key] % 1 === 0 ) {
+                                addType(data,key,'#Integer');
+                            } else {
+                                addType(data,key,'#Decimal');
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return data;
+};
+
 var extendMetadataFromContext = function(json,context,recognizeDates) {
     return json;
-}
+};
 
 
 var jsonToString = function (data) {

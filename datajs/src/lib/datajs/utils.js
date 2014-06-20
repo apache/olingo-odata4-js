@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -519,6 +519,10 @@ var concatJsonValueArray = function (data, concatData) {
     return data;
 };
 
+var endsWith = function (input, search) {
+    return input.indexOf(search, input.length - search.length) !== -1;
+};
+
 // DATAJS INTERNAL START
 exports.activeXObject = activeXObject;
 exports.assigned = assigned;
@@ -544,6 +548,7 @@ exports.convertByteArrayToHexString = convertByteArrayToHexString;
 exports.getJsonValueArraryLength = getJsonValueArraryLength;
 exports.sliceJsonValueArray = sliceJsonValueArray;
 exports.concatJsonValueArray = concatJsonValueArray;
+exports.endsWith = endsWith;
 // DATAJS INTERNAL END
 
     
