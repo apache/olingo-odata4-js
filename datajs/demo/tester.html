@@ -31,11 +31,13 @@
         <button id="startXML">XML</button><br/>
         <button id="btnJSON_none">pure JSON odata.metadata=none</button><br/>
         <button id="btnJSON_minimal">pure JSON odata.metadata=minimal</button><br/>
+        <button id="btnJSON_minimal_to_full">pure JSON odata.metadata=minimal; extendMetadataToLevel=full</button><br/>
+        <button id="btnJSON_minimal_to_all">pure JSON odata.metadata=minimal; extendMetadataToLevel=all</button><br/>
         <button id="btnJSON_full">pure JSON odata.metadata=full</button><br/>
-        <button id="btnJSON_full_date_conversion">JSON odata.metadata=full with date conversion</button><br/>
-        <button id="btnJSON_all">JSON odata.metadata=full with adding types for string, bool, numbers</button><br/>
+        <button id="btnJSON_full_date_conversion">JSON odata.metadata=full (with date conversion)</button><br/>
+        <button id="btnJSON_full_to_all">JSON odata.metadata=full; extendMetadataToLevel=all (with adding types for string, bool, numbers)</button><br/>
+        <button id="btnJSON_full_to_all_date_conversion">JSON odata.metadata=full; extendMetadataToLevel=all (with adding types for string, bool, numbers) (with date conversion)</button><br/>
 
-        
         <button id="btnMetaData">MetaData</button><br/>
         <button id="btnJSONwithMetaData">JSON with MetaData</button><br/>
         <div id='resultsArea' data-type="json">
@@ -61,6 +63,23 @@
                 $('#resultsArea').empty();
                 $("#resultsArea").text(JSON.stringify(err));
             }
+
+            function getMetaData(metaDatasuccess) {
+                var oHeaders = {
+                    'Accept': 'text/html,application/xhtml+xml,application/xml,application/json;odata.metadata=full',
+                    "Odata-Version": "4.0",
+                    "OData-MaxVersion": "4.0",
+                    "Prefer": "odata.allow-entityreferences"
+                };
+                var metadataRequest =
+                {
+                    headers: oHeaders,
+                    //requestUri: "http://services.odata.org/OData/OData.svc/$metadata",
+                    requestUri: "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata", //"http://localhost:6630/PrimitiveKeys.svc/$metadata",
+                    data: null,
+                };
+                OData.read(metadataRequest, metaDatasuccess, errorFunc,OData.metadataHandler);
+            };
 
             $('#startXML').on("click", function(){
                 //var requestUri = 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods';
@@ -89,7 +108,16 @@
                 OData.read(requestUri, success, errorFunc);
             });
 
-            $('#btnJSON_all').on("click", function(){
+            $('#btnJSON_full_to_all').on("click", function(){
+                var requestUri = {
+                    requestUri : 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods',
+                    headers : { Accept : 'application/json;odata.metadata=full' },
+                    extendMetadataToLevel : 'all' ,
+                    recognizeDates : false
+                };
+                OData.read(requestUri, success, errorFunc);
+            });
+            $('#btnJSON_full_to_all_date_conversion').on("click", function(){
                 var requestUri = {
                     requestUri : 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods',
                     headers : { Accept : 'application/json;odata.metadata=full' },
@@ -124,6 +152,35 @@
 
                 OData.read(metadataRequest, success, errorFunc,OData.metadataHandler);
             });
+
+
+
+            $('#btnJSON_minimal_to_all').on("click", function(){
+                var metaDatasuccess = function(metadata){
+                    var requestUri = {
+                        requestUri : 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods',
+                        headers : { Accept : 'application/json;odata.metadata=minimal' },
+                        extendMetadataToLevel : 'all' ,
+                        recognizeDates : false
+                    };
+                    OData.read(requestUri, success, errorFunc, null, null, metadata);
+                }
+                getMetaData(metaDatasuccess);
+            });
+
+            $('#btnJSON_minimal_to_full').on("click", function(){
+                var metaDatasuccess = function(metadata){
+                    var requestUri = {
+                        requestUri : 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods',
+                        headers : { Accept : 'application/json;odata.metadata=minimal' },
+                        extendMetadataToLevel : 'full' ,
+                        recognizeDates : false
+                    };
+                    OData.read(requestUri, success, errorFunc, null, null, metadata);
+                }
+                getMetaData(metaDatasuccess);
+            });
+
             $('#btnJSONwithMetaData').on("click", function(){
                 var oHeaders = {
                     'Accept': 'text/html,application/xhtml+xml,application/xml,application/json;odata.metadata=full',

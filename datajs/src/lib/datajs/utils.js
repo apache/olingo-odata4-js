@@ -523,6 +523,12 @@ var endsWith = function (input, search) {
     return input.indexOf(search, input.length - search.length) !== -1;
 };
 
+var startsWith = function (input, search) {
+    return input.indexOf(search) == 0;
+};
+
+
+
 // DATAJS INTERNAL START
 exports.activeXObject = activeXObject;
 exports.assigned = assigned;
@@ -548,7 +554,9 @@ exports.convertByteArrayToHexString = convertByteArrayToHexString;
 exports.getJsonValueArraryLength = getJsonValueArraryLength;
 exports.sliceJsonValueArray = sliceJsonValueArray;
 exports.concatJsonValueArray = concatJsonValueArray;
+exports.startsWith = startsWith;
 exports.endsWith = endsWith;
+
 // DATAJS INTERNAL END
 
     

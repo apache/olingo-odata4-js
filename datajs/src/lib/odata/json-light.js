@@ -1052,14 +1052,19 @@ var jsonLightMakePayloadInfo = function (kind, type) {
     return { kind: kind, type: type || null };
 };
 
-/**/
-var parseContextUriFragment = function( fragment ) {
+/// <summary>Creates an object containing information for the context</summary>
+/// ...
+/// <returns type="Object">Object with type information
+/// attribute detectedPayloadKind: see constants starting with PAYLOADTYPE_
+/// attribute deltaKind: deltainformation, one of the following valus DELTATYPE_FEED | DELTATYPE_DELETED_ENTRY | DELTATYPE_LINK | DELTATYPE_DELETED_LINK
+/// attribute typeName: name of the type
+/// attribute type: object containing type information for entity- and complex-types
+///  </returns>
+var parseContextUriFragment = function( fragment, model ) {
     var ret = {};
 
     ret.deltaKind = undefined;
-    if (utils.endsWith(fragment, '/$entity')) {
-        fragment = fragment.substring(fragment.lenght - 8);
-    } else if (utils.endsWith(fragment, '/$delta')) {
+    if (utils.endsWith(fragment, '/$delta')) {
         ret.deltaKind = DELTATYPE_FEED;
         fragment = fragment.substring(fragment.lenght - 7);
     } else if (utils.endsWith(fragment, '/$deletedEntity')) {
@@ -1084,7 +1089,7 @@ var parseContextUriFragment = function( fragment ) {
             }
         }
 
-        if (index == 0) {
+        if (index === 0) {
             //TODO throw error
         }
 
@@ -1092,7 +1097,7 @@ var parseContextUriFragment = function( fragment ) {
 
 
         if (previous !== 'Collection') { // Don't treat Collection(Edm.Type) as SelectExpand segment
-            var selectExpandStr = fragment.substring(index+2, fragment.lenght - 1);
+            var selectExpandStr = fragment.substring(index+2, fragment.length - 1);
             var keyPattern = /^(?:-{0,1}\d+?|\w*'.+?'|[A-F0-9]{8}(?:-[A-F0-9]{4}){3}-[A-F0-9]{12}|.+?=.+?)$/;
             var matches = keyPattern.exec(selectExpandStr);
             if ( matches ) {
@@ -1110,29 +1115,129 @@ var parseContextUriFragment = function( fragment ) {
         if (fragment.length === 0) {
             // Capter 10.1
             ret.detectedPayloadKind = PAYLOADTYPE_SVCDOC;
+            return ret;
         } else if (fragment === 'Edm.Null') {
             // Capter 10.15
             ret.detectedPayloadKind = PAYLOADTYPE_PROPERTY;
             ret.isNullProperty = true;
+            return ret;
         } else if (fragment === 'Collection($ref)') {
             // Capter 10.11
             ret.detectedPayloadKind = PAYLOADTYPE_ENTITY_REF_LINKS;
+            return ret;
         } else if (fragment === '$ref') {
             // Capter 10.12
             ret.detectedPayloadKind = PAYLOADTYPE_ENTITY_REF_LINK;
+            return ret;
         } else {
             //TODO check for navigation resource
         }
     } 
 
+    ret.lastType = undefined;
+    ret.lastTypeName = undefined;
+    ret.detectedPayloadKind = undefined;
+
     // split fragment at '/'
     //TODO changes
     var fragmentParts = fragment.split("/");
-    if (fragmentParts.length >= 0) {
+    
+
+    for(var i = 0; i < fragmentParts.length; ++i) {
+        var fragment = fragmentParts[i];
+        if (ret.lastTypeName === undefined) {
+            //preparation
+            var startPharen = fragment.indexOf('(')
+            var inPharenthesis = undefined;
+            if ( startPharen !== -1 ) {
+                //remove the projected entity from the fragment; TODO decide if we want to store the projected entity 
+                inPharenthesis = fragment.substring(startPharen+1,fragment.length - 1);
+                // projection: Capter 10.7, 10.8 and 10.9
+                fragment = fragment.substring(0,startPharen);
+
+                if (utils.startsWith(fragment, 'Collection')) {
+                    ret.detectedPayloadKind = PAYLOADTYPE_COLLECTION;
+                    // Capter 10.14
+                    ret.lastTypeName = inPharenthesis;
+
+                    ret.lastType = lookupEntityType( ret.lastTypeName, model);
+                } else {
+                    ret.projection = inPharenthesis;
+                }
+            }
+
+            var container = lookupDefaultEntityContainer(model);
+
+            //check for entity
+            var entitySet = lookupEntitySet(container.entitySet, fragment);
+            if ( entitySet !== undefined) {
+                ret.lastTypeName = entitySet.entityType;
+                ret.lastType = lookupEntityType( ret.lastTypeName, model);
+                ret.detectedPayloadKind = PAYLOADTYPE_FEED;
+                // Capter 10.2
+                continue;
+            }
+
+            //check for singleton
+            var singleton = lookupSingleton(container.singleton, fragment);
+            if ( singleton !== undefined) {
+                ret.lastTypeName = singleton.entityType;
+                ret.lastType = lookupEntityType( ret.lastTypeName, model);
+                ret.detectedPayloadKind =  PAYLOADTYPE_ENTRY;
+                // Capter 10.4
+                continue;
+            }
+
+        } else {
+            //check for $entity
+            if (utils.endsWith(fragment, '$entity') && (ret.detectedPayloadKind === PAYLOADTYPE_FEED)) {
+                ret.detectedPayloadKind = PAYLOADTYPE_ENTRY;
+                // Capter 10.3 and 10.6
+                continue;
+            } 
+
+            //check for derived types
+            if (fragment.indexOf('.') !== -1) {
+                // Capter 10.6
+                ret.lastTypeName = fragment;
+                var type = lookupEntityType(ret.lastTypeName, model);
+                if ( entitySet !== undefined) {
+                    ret.lastType = type;
+                    continue;
+                }
+                type = lookupComplexType(ret.lastTypeName, model);
+                if ( entitySet !== undefined) {
+                    ret.lastType = type;
+                    continue;
+                }
+
+                //ERROR invalid type
+            }
+
+            //check for property value
+            if ( ret.detectedPayloadKind === PAYLOADTYPE_FEED || ret.detectedPayloadKind === PAYLOADTYPE_ENTRY) {
+                var property = lookupProperty(ret.lastType.properties, fragment);
+                if (property !== undefined) {
+                    ret.lastTypeName = property.type;
+                    if (!jsonLightIsPrimitiveType(ret.lastTypeName)) {
+                        ret.lastType = lookupComplexType(ret.lastTypeName, model);
+                    } else {
+                        ret.lastType = undefined;
+                    }
+                    ret.detectedPayloadKind === PAYLOADTYPE_PROPERTY;
+                    // Capter 10.15
+                }
+                continue;
+            }
+        }
+    }
+    return ret;
+
+/*
         var qualifiedName = fragmentParts[0];
         var typeCast = fragmentParts[1];
 
-        if (jsonLightIsPrimitiveType(qualifiedName)) {
+        if () {
             ret.detectedPayloadKind  = PAYLOADTYPE_VALUE;
             return ret;
         }
@@ -1186,7 +1291,7 @@ var parseContextUriFragment = function( fragment ) {
 
         return jsonLightMakePayloadInfo(PAYLOADTYPE_OBJECT, qualifiedName);
     }
-
+*/
 };
 
 var jsonLightPayloadInfo = function (data, model) {
@@ -1213,7 +1318,7 @@ var jsonLightPayloadInfo = function (data, model) {
         return jsonLightMakePayloadInfo(PAYLOADTYPE_SVCDOC);
     }
 
-    var d = metadataUri.indexOf("@Element", fragmentStart);
+    var elementStart = metadataUri.indexOf("@Element", fragmentStart);
     var fragmentEnd = elementStart - 1;
 
     if (fragmentEnd < 0) {
@@ -1228,9 +1333,9 @@ var jsonLightPayloadInfo = function (data, model) {
         return jsonLightMakePayloadInfo(PAYLOADTYPE_LINKS);
     }
 
-    var ret = parseContextUriFragment(fragment);
+    var ret = parseContextUriFragment(fragment,model);
 
-    return;
+    return ret;
 
 
 };
@@ -1546,6 +1651,7 @@ var formatJsonLightAnnotation = function (qName, target, value, data) {
 };
 
 // DATAJS INTERNAL START
+exports.jsonLightPayloadInfo = jsonLightPayloadInfo;
 exports.jsonLightReadPayload = jsonLightReadPayload;
 exports.formatJsonLight = formatJsonLight;
 exports.formatJsonLightRequestPayload = formatJsonLightRequestPayload;

@@ -539,6 +539,17 @@ var lookupEntitySet = function (entitySets, name) {
     });
 };
 
+var lookupSingleton = function (singletons, name) {
+    /// <summary>Looks up a entity set by name.</summary>
+    /// <param name="properties" type="Array" mayBeNull="true">Array of entity set objects as per EDM metadata.</param>
+    /// <param name="name" type="String">Name to look for.</param>
+    /// <returns type="Object">The entity set object; null if not found.</returns>
+
+    return find(singletons, function (singleton) {
+        return singleton.name === name;
+    });
+};
+
 var lookupComplexType = function (name, metadata) {
     /// <summary>Looks up a complex type object by name.</summary>
     /// <param name="name" type="String">Name, possibly null or empty.</param>
@@ -556,6 +567,7 @@ var lookupEntityType = function (name, metadata) {
 
     return lookupInMetadata(name, metadata, "entityType");
 };
+
 
 var lookupDefaultEntityContainer = function (metadata) {
     /// <summary>Looks up an</summary>
@@ -1126,6 +1138,7 @@ exports.lookupComplexType = lookupComplexType;
 exports.lookupDefaultEntityContainer = lookupDefaultEntityContainer;
 exports.lookupEntityContainer = lookupEntityContainer;
 exports.lookupEntitySet = lookupEntitySet;
+exports.lookupSingleton = lookupSingleton;
 exports.lookupEntityType = lookupEntityType;
 exports.lookupFunctionImport = lookupFunctionImport;
 exports.lookupNavigationPropertyType = lookupNavigationPropertyType;

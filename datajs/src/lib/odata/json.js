@@ -46,6 +46,7 @@ var handler = oDataUtils.handler;
 var isComplex = oDataUtils.isComplex;
 var lookupComplexType = oDataUtils.lookupComplexType;
 var lookupEntityType = oDataUtils.lookupEntityType;
+var lookupSingleton = oDataUtils.lookupSingleton;
 var MAX_DATA_SERVICE_VERSION = oDataUtils.MAX_DATA_SERVICE_VERSION;
 var maxVersion = oDataUtils.maxVersion;
 var parseDateTime = oDataUtils.parseDateTime;
@@ -253,7 +254,7 @@ var jsonParser = function (handler, text, context) {
 
     var payloadFormat = 1;//minmal
     try {
-        payloadFormat = metadataMap[context.contentType.properties["odata.metadata"]]; 
+        payloadFormat = metadataMap[context.contentType.properties["odata.metadata"]];//TODO convert to lower before comparism
     } catch(err) {
         payloadFormat = 1;
     }
@@ -261,7 +262,7 @@ var jsonParser = function (handler, text, context) {
 
     var demandedFormat = 1;//minmal
     try {
-        demandedFormat = metadataMap[context.extendMetadataToLevel]; 
+        demandedFormat = metadataMap[context.extendMetadataToLevel]; //TODO convert to lower before comparism
     } catch(err) {
         demandedFormat = 1;
     }
@@ -290,12 +291,12 @@ var jsonParser = function (handler, text, context) {
             //guess types for nummber as defined in the odata-json-format-v4.0.doc specification
             return extendMetadataFromPayload(json,context,recognizeDates);
         } else if (payloadFormat === 1) { //minmal
-            if (utils.isArray(context.metadata)) {
+            if (!utils.isArray(model)) { // array was default for model in datajsV3 3.0 
                 //TODO use metadata in context to determine which properties need to be converted
                 // and extend the metadata
-                return extendMetadataFromContext(json,context,recognizeDates);
+                return extendMetadataFromContext(json,context,model,recognizeDates);
             } else {
-                //error metadata in context required
+                //error metadata in context required, TODO: throw a to be defined exception
             }
         } else {
             // the payload contains no context url only guessing possible
@@ -306,8 +307,8 @@ var jsonParser = function (handler, text, context) {
     
 };
 
-var extendMetadataFromContext = function(json,context,recognizeDates) {
-    return jsonLightReadPayload(json, model, recognizeDates, inferJsonLightFeedAsObject, context.contentType.properties['odata.metadata']);
+var extendMetadataFromContext = function(json,context, model,recognizeDates) {
+    return jsonLightReadPayload(json, model, recognizeDates, false, context.contentType.properties['odata.metadata']);
 };
 
 var convertPrimitivetypesGeneric = function(data) {
@@ -342,6 +343,7 @@ var convertPrimitivetypesOnMetadataFull = function(data) {
                         } else if ( type === '#DateTime' ) {
                            data[key] = oDataUtils.parseDateTimeOffset(data[key],true);
                         }
+                        //TODO handle more types there 
                     }
                 }
             }
@@ -393,6 +395,7 @@ var extendMetadataFromPayload = function(data,context,recognizeDates) {
                             } else if ( type === '#DateTime' ) {
                                data[key] = oDataUtils.parseDateTimeOffset(data[key],true);
                             }
+                            //TODO handle more types there 
                         }
                         var typeFromObject = typeof data[key];
                         if ( typeFromObject === 'string' ) {
@@ -400,10 +403,10 @@ var extendMetadataFromPayload = function(data,context,recognizeDates) {
                         } else if (typeFromObject ==='boolean') {
                             addType(data,key,'#Bool');
                         } else if (typeFromObject ==='number') {
-                            if ( data[key] % 1 === 0 ) {
-                                addType(data,key,'#Integer');
+                            if ( data[key] % 1 === 0 ) { // has fraction 
+                                addType(data,key,'#Integer');// the biggst integer
                             } else {
-                                addType(data,key,'#Decimal');
+                                addType(data,key,'#Decimal');// the biggst float single,doulbe,decimal
                             }
                         }
                     }
