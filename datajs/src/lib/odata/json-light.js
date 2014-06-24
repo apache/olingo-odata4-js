@@ -56,6 +56,7 @@ var lookupComplexType = oDataUtils.lookupComplexType;
 var lookupDefaultEntityContainer = oDataUtils.lookupDefaultEntityContainer;
 var lookupEntityContainer = oDataUtils.lookupEntityContainer;
 var lookupEntitySet = oDataUtils.lookupEntitySet;
+var lookupSingleton = oDataUtils.lookupSingleton;
 var lookupEntityType = oDataUtils.lookupEntityType;
 var lookupFunctionImport = oDataUtils.lookupFunctionImport;
 var lookupNavigationPropertyType = oDataUtils.lookupNavigationPropertyType;
@@ -66,7 +67,6 @@ var parseBool = oDataUtils.parseBool;
 var parseDateTime = oDataUtils.parseDateTime;
 var parseDateTimeOffset = oDataUtils.parseDateTimeOffset;
 var parseDuration = oDataUtils.parseDuration;
-
 // CONTENT START
 
 var PAYLOADTYPE_FEED = "f";
@@ -1055,62 +1055,15 @@ var jsonLightMakePayloadInfo = function (kind, type) {
 /// <summary>Creates an object containing information for the context</summary>
 /// ...
 /// <returns type="Object">Object with type information
-/// attribute detectedPayloadKind: see constants starting with PAYLOADTYPE_
-/// attribute deltaKind: deltainformation, one of the following valus DELTATYPE_FEED | DELTATYPE_DELETED_ENTRY | DELTATYPE_LINK | DELTATYPE_DELETED_LINK
-/// attribute typeName: name of the type
-/// attribute type: object containing type information for entity- and complex-types
+/// attribute detectedPayloadKind(optional): see constants starting with PAYLOADTYPE_
+/// attribute deltaKind(optional): deltainformation, one of the following valus DELTATYPE_FEED | DELTATYPE_DELETED_ENTRY | DELTATYPE_LINK | DELTATYPE_DELETED_LINK
+/// attribute typeName(optional): name of the type
+/// attribute type(optional): object containing type information for entity- and complex-types ( null if a typeName is a primitive)
 ///  </returns>
 var parseContextUriFragment = function( fragment, model ) {
     var ret = {};
 
-    ret.deltaKind = undefined;
-    if (utils.endsWith(fragment, '/$delta')) {
-        ret.deltaKind = DELTATYPE_FEED;
-        fragment = fragment.substring(fragment.lenght - 7);
-    } else if (utils.endsWith(fragment, '/$deletedEntity')) {
-        ret.deltaKind = DELTATYPE_DELETED_ENTRY;
-        fragment = fragment.substring(fragment.lenght - 15);
-    } else if (utils.endsWith(fragment, '/$link')) {
-        ret.deltaKind = DELTATYPE_LINK;
-        fragment = fragment.substring(fragment.lenght - 6);
-    } else if (utils.endsWith(fragment, '/$deletedLink')) {
-        ret.deltaKind = DELTATYPE_DELETED_LINK;
-        fragment = fragment.substring(fragment.lenght - 13);
-    }
-
-    if (utils.endsWith(fragment,")")) {
-        //remove the query function, cut fragment to matching '('
-        var index = fragment.lenght - 2 ;
-        for ( var rCount = 1; rcount > 0 && index > 0; --index) {
-            if ( fragment.charAt(index)=='(') {
-                rCount ++;
-            } else if ( fragment.charAt(index)==')') {
-                rCount --;    
-            }
-        }
-
-        if (index === 0) {
-            //TODO throw error
-        }
-
-        var previous = fragment.substring(0, index + 1);
-
-
-        if (previous !== 'Collection') { // Don't treat Collection(Edm.Type) as SelectExpand segment
-            var selectExpandStr = fragment.substring(index+2, fragment.length - 1);
-            var keyPattern = /^(?:-{0,1}\d+?|\w*'.+?'|[A-F0-9]{8}(?:-[A-F0-9]{4}){3}-[A-F0-9]{12}|.+?=.+?)$/;
-            var matches = keyPattern.exec(selectExpandStr);
-            if ( matches ) {
-                 //TODO throw error
-            }
-
-            ret.selectQueryOptionString = selectExpandStr;
-            fragment = previous;
-        }
-
-    }
-
-    ret.detectedPayloadKind = undefined;
+    
     if (fragment.indexOf('/') === -1 ) {
         if (fragment.length === 0) {
             // Capter 10.1
@@ -1118,7 +1071,7 @@ var parseContextUriFragment = function( fragment, model ) {
             return ret;
         } else if (fragment === 'Edm.Null') {
             // Capter 10.15
-            ret.detectedPayloadKind = PAYLOADTYPE_PROPERTY;
+            ret.detectedPayloadKind = PAYLOADTYPE_VALUE;
             ret.isNullProperty = true;
             return ret;
         } else if (fragment === 'Collection($ref)') {
@@ -1134,34 +1087,54 @@ var parseContextUriFragment = function( fragment, model ) {
         }
     } 
 
-    ret.lastType = undefined;
-    ret.lastTypeName = undefined;
-    ret.detectedPayloadKind = undefined;
+    ret.type = undefined;
+    ret.typeName = undefined;
 
-    // split fragment at '/'
-    //TODO changes
     var fragmentParts = fragment.split("/");
     
-
     for(var i = 0; i < fragmentParts.length; ++i) {
         var fragment = fragmentParts[i];
-        if (ret.lastTypeName === undefined) {
+        if (ret.typeName === undefined) {
             //preparation
-            var startPharen = fragment.indexOf('(')
-            var inPharenthesis = undefined;
-            if ( startPharen !== -1 ) {
+            if ( fragment.indexOf('(') !== -1 ) {
+                //remove the query function, cut fragment to matching '('
+                var index = fragment.length - 2 ;
+                for ( var rCount = 1; rCount > 0 && index > 0; --index) {
+                    if ( fragment.charAt(index)=='(') {
+                        rCount --;
+                    } else if ( fragment.charAt(index)==')') {
+                        rCount ++;    
+                    }
+                }
+
+                if (index === 0) {
+                    //TODO throw error
+                }
+
                 //remove the projected entity from the fragment; TODO decide if we want to store the projected entity 
-                inPharenthesis = fragment.substring(startPharen+1,fragment.length - 1);
-                // projection: Capter 10.7, 10.8 and 10.9
-                fragment = fragment.substring(0,startPharen);
+                var inPharenthesis = fragment.substring(index+2,fragment.length - 1);
+                fragment = fragment.substring(0,index+1);
 
                 if (utils.startsWith(fragment, 'Collection')) {
                     ret.detectedPayloadKind = PAYLOADTYPE_COLLECTION;
                     // Capter 10.14
-                    ret.lastTypeName = inPharenthesis;
+                    ret.typeName = inPharenthesis;
 
-                    ret.lastType = lookupEntityType( ret.lastTypeName, model);
+                    var type = lookupEntityType(ret.typeName, model);
+                    if ( type !== null) {
+                        ret.type = type;
+                        continue;
+                    }
+                    type = lookupComplexType(ret.typeName, model);
+                    if ( type !== null) {
+                        ret.type = type;
+                        continue;
+                    }
+
+                    ret.type = null;//in case of #Collection(Edm.String) only lastTypeName is filled
+                    continue;
                 } else {
+                    // projection: Capter 10.7, 10.8 and 10.9
                     ret.projection = inPharenthesis;
                 }
             }
@@ -1170,9 +1143,9 @@ var parseContextUriFragment = function( fragment, model ) {
 
             //check for entity
             var entitySet = lookupEntitySet(container.entitySet, fragment);
-            if ( entitySet !== undefined) {
-                ret.lastTypeName = entitySet.entityType;
-                ret.lastType = lookupEntityType( ret.lastTypeName, model);
+            if ( entitySet !== null) {
+                ret.typeName = entitySet.entityType;
+                ret.type = lookupEntityType( ret.typeName, model);
                 ret.detectedPayloadKind = PAYLOADTYPE_FEED;
                 // Capter 10.2
                 continue;
@@ -1180,14 +1153,22 @@ var parseContextUriFragment = function( fragment, model ) {
 
             //check for singleton
             var singleton = lookupSingleton(container.singleton, fragment);
-            if ( singleton !== undefined) {
-                ret.lastTypeName = singleton.entityType;
-                ret.lastType = lookupEntityType( ret.lastTypeName, model);
+            if ( singleton !== null) {
+                ret.typeName = singleton.entityType;
+                ret.type = lookupEntityType( ret.typeName, model);
                 ret.detectedPayloadKind =  PAYLOADTYPE_ENTRY;
                 // Capter 10.4
                 continue;
             }
 
+            if (jsonLightIsPrimitiveType(fragment)) {
+                ret.typeName = fragment;
+                ret.type = null;
+                ret.detectedPayloadKind = PAYLOADTYPE_VALUE;
+                continue;
+            }
+
+            //TODO throw ERROR
         } else {
             //check for $entity
             if (utils.endsWith(fragment, '$entity') && (ret.detectedPayloadKind === PAYLOADTYPE_FEED)) {
@@ -1199,99 +1180,50 @@ var parseContextUriFragment = function( fragment, model ) {
             //check for derived types
             if (fragment.indexOf('.') !== -1) {
                 // Capter 10.6
-                ret.lastTypeName = fragment;
-                var type = lookupEntityType(ret.lastTypeName, model);
-                if ( entitySet !== undefined) {
-                    ret.lastType = type;
+                ret.typeName = fragment;
+                var type = lookupEntityType(ret.typeName, model);
+                if ( type !== null) {
+                    ret.type = type;
                     continue;
                 }
-                type = lookupComplexType(ret.lastTypeName, model);
-                if ( entitySet !== undefined) {
-                    ret.lastType = type;
+                type = lookupComplexType(ret.typeName, model);
+                if ( type !== null) {
+                    ret.type = type;
                     continue;
                 }
 
-                //ERROR invalid type
+                //TODO throw ERROR invalid type
             }
 
             //check for property value
             if ( ret.detectedPayloadKind === PAYLOADTYPE_FEED || ret.detectedPayloadKind === PAYLOADTYPE_ENTRY) {
-                var property = lookupProperty(ret.lastType.properties, fragment);
-                if (property !== undefined) {
-                    ret.lastTypeName = property.type;
-                    if (!jsonLightIsPrimitiveType(ret.lastTypeName)) {
-                        ret.lastType = lookupComplexType(ret.lastTypeName, model);
-                    } else {
-                        ret.lastType = undefined;
-                    }
-                    ret.detectedPayloadKind === PAYLOADTYPE_PROPERTY;
+                var property = lookupProperty(ret.type.property, fragment);
+                if (property !== null) {
+                    ret.typeName = property.type;
+                    ret.type = lookupComplexType(ret.typeName, model);
+                    ret.detectedPayloadKind = PAYLOADTYPE_PROPERTY;
                     // Capter 10.15
                 }
                 continue;
             }
+
+            if (fragment === '$delta') {
+                ret.deltaKind = DELTATYPE_FEED;
+                continue;
+            } else if (utils.endsWith(fragment, '/$deletedEntity')) {
+                ret.deltaKind = DELTATYPE_DELETED_ENTRY;
+                continue;
+            } else if (utils.endsWith(fragment, '/$link')) {
+                ret.deltaKind = DELTATYPE_LINK;
+                continue;
+            } else if (utils.endsWith(fragment, '/$deletedLink')) {
+                ret.deltaKind = DELTATYPE_DELETED_LINK;
+                continue;
+            }
+            //TODO throw ERROr
         }
     }
     return ret;
-
-/*
-        var qualifiedName = fragmentParts[0];
-        var typeCast = fragmentParts[1];
-
-        if () {
-            ret.detectedPayloadKind  = PAYLOADTYPE_VALUE;
-            return ret;
-        }
-
-        if (isCollectionType(qualifiedName)) {
-            return ret;
-        }
-
-        var entityType = typeCast;
-        var entitySet, functionImport, containerName;
-        if (!typeCast) {
-            var nsEnd = qualifiedName.lastIndexOf(".");
-            var simpleName = qualifiedName.substring(nsEnd + 1);
-            var container = (simpleName === qualifiedName) ?
-                lookupDefaultEntityContainer(model) :
-                lookupEntityContainer(qualifiedName.substring(0, nsEnd), model);
-
-            if (container) {
-                entitySet = lookupEntitySet(container.entitySet, simpleName);
-                functionImport = container.functionImport;
-                containerName = container.name;
-                entityType = !!entitySet ? entitySet.entityType : null;
-            }
-        }
-
-        var info;
-        if (d > 0) {
-            info = jsonLightMakePayloadInfo(PAYLOADTYPE_OBJECT, entityType);
-            info.entitySet = entitySet;
-            info.functionImport = functionImport;
-            info.containerName = containerName;
-            return info;
-        }
-
-        if (entityType) {
-            info = jsonLightMakePayloadInfo(PAYLOADTYPE_FEED, entityType);
-            info.entitySet = entitySet;
-            info.functionImport = functionImport;
-            info.containerName = containerName;
-            return info;
-        }
-
-        if (isArray(data.value) && !lookupComplexType(qualifiedName, model)) {
-            var item = data.value[0];
-            if (!isPrimitive(item)) {
-                if (jsonLightIsEntry(item) || !inferFeedAsComplexType) {
-                    return jsonLightMakePayloadInfo(PAYLOADTYPE_FEED, null);
-                }
-            }
-        }
-
-        return jsonLightMakePayloadInfo(PAYLOADTYPE_OBJECT, qualifiedName);
-    }
-*/
 };
 
 var jsonLightPayloadInfo = function (data, model) {

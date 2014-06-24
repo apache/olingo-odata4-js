@@ -24,8 +24,6 @@
     }
 
     function runWithMetadata(metaDatasuccess) {
-
-        
         var oHeaders = {
             'Accept': 'text/html,application/xhtml+xml,application/xml,application/json;odata.metadata=full',
             "Odata-Version": "4.0",
@@ -43,57 +41,70 @@
     };
 
     djstest.addTest(function test1() {
-        var checkLastTypeName = function (metadata, input, expected) {
+        var checkAll = function (metadata, input, expected) {
             var info = OData.jsonLight.jsonLightPayloadInfo({ "@odata.context" : input}, metadata)
-            djstest.assertAreEqual(info.lastTypeName,expected, "Test context fragment: "+ input);
+            djstest.assertAreEqual(info,expected, "Test context fragment: "+ input);
+        };
 
+        var checkLastTypeName = function (metadata, input, expectedKind, expectedLastTypeName) {
+            var info = OData.jsonLight.jsonLightPayloadInfo({ "@odata.context" : input}, metadata)
+            djstest.assertAreEqual(info.detectedPayloadKind,expectedKind, "Test context fragment: "+ input);
+            djstest.assertAreEqual(info.typeName,expectedLastTypeName, "Test context fragment: "+ input);
+        };
+
+        var checkProjection = function (metadata, input, expectedKind, expectedLastTypeName, projection) {
+            var info = OData.jsonLight.jsonLightPayloadInfo({ "@odata.context" : input}, metadata)
+            djstest.assertAreEqual(info.detectedPayloadKind,expectedKind, "Test context fragment: "+ input);
+            djstest.assertAreEqual(info.typeName,expectedLastTypeName, "Test context fragment: "+ input);
+            djstest.assertAreEqual(info.projection,projection, "Test context fragment: "+ input);
         };
 
         var checkKind = function (metadata, input, expected) {
             var info = OData.jsonLight.jsonLightPayloadInfo({ "@odata.context" : input}, metadata)
             djstest.assertAreEqual(info.detectedPayloadKind,expected, "Test context fragment: "+ input);
         };
+
         var success = function(metadata){
             //Chapter 10.1
             checkKind(metadata, '#', 's');
             //Chapter 10.2
-            checkKind(metadata, '#Foods', 'f');
+            checkLastTypeName(metadata, '#Foods', 'f', 'DataJS.Tests.V4.Food');
             //Chapter 10.3
-            checkKind(metadata, '#Foods/$entity', 'e');
+            checkLastTypeName(metadata, '#Foods/$entity', 'e', 'DataJS.Tests.V4.Food');
             //Chapter 10.4
             //checkKind(metadata, '#Singleton', '');
             //Chapter 10.5
-            checkKind(metadata, '#Foods/DataJS.Tests.V4.Food', 'f');
+            checkLastTypeName(metadata, '#Foods/DataJS.Tests.V4.Food', 'f', 'DataJS.Tests.V4.Food');
             //Chapter 10.6
-            checkKind(metadata, '#Foods/DataJS.Tests.V4.Food/$entity', 'e');
+            checkLastTypeName(metadata, '#Foods/DataJS.Tests.V4.Food/$entity', 'e', 'DataJS.Tests.V4.Food');
             //Chapter 10.7
-            checkKind(metadata, '#Foods(FoodID,Name)', 'f');
+            checkProjection(metadata, '#Foods(FoodID,Name)', 'f', 'DataJS.Tests.V4.Food','FoodID,Name');
             //Chapter 10.8
-            checkKind(metadata, '#Foods(FoodID,Name)/$entity', 'e');
+            checkProjection(metadata, '#Foods(FoodID,Name)/$entity', 'e', 'DataJS.Tests.V4.Food','FoodID,Name');
             //Chapter 10.9
-            checkKind(metadata, '#Foods(FoodID,Name,Category,Category+(CategoryID,Name))', 'f');
+            checkProjection(metadata, '#Foods(FoodID,Name,Category,Category+(CategoryID,Name))', 'f', 
+                'DataJS.Tests.V4.Food','FoodID,Name,Category,Category+(CategoryID,Name)');
             //Chapter 10.10
-            checkKind(metadata, '#Foods(FoodID,Name,Category,Category+(CategoryID,Name))/$entity', 'e');
+            checkProjection(metadata, '#Foods(FoodID,Name,Category,Category+(CategoryID,Name))/$entity', 'e',
+                'DataJS.Tests.V4.Food','FoodID,Name,Category,Category+(CategoryID,Name)');
             //Chapter 10.11
             checkKind(metadata, '#Collection($ref)', 'erls');
             //Chapter 10.12
             checkKind(metadata, '#$ref', 'erl');
             //Chapter 10.13
-            checkKind(metadata, '#Foods(0)/Packaging', 'p');
+            checkKind(metadata, '#Foods(0)/Packaging', 'p', 'DataJS.Tests.V4.Package');
             //Chapter 10.14
-            checkKind(metadata, '#Collection(Edm.String)', 'c');
+            checkKind(metadata, '#Collection(Edm.String)', 'c',  'Edm.String');
             //Chapter 10.15
             checkKind(metadata, '#Edm.String', 'v');
+
+            checkKind(metadata, '#Edm.Null', 'v');
             //TODO add tests for delta tokens
-
-
-
-            checkLastTypeName(metadata, '#Foods', 'DataJS.Tests.V4.Food');
             djstest.done();
         };
 
         runWithMetadata(success);
-    },'simple');
+    },'test jsonLightPayloadInfo');
 
 
 })(this);
