@@ -42,12 +42,13 @@
         <button id="btnJSONwithMetaData">JSON with MetaData</button><br/>
         <div id='resultsArea' data-type="json">
         </div>
-        <script type='text/html' id='template'>
-            {{#items}}
-            <p><a href="{{id}}">{{name}}</a></p>
-            {{/items}}
-        </script>
         <script>
+            //var x = eval("(function (w, undefined) {alert('A '+JSON.stringify(w.screen));})(this);");
+            //(function () {
+            //    var x = eval("(function (w, undefined) {alert('B '+JSON.stringify(w.screen));})(this);");
+            //})();
+            
+
             function show(data) {
                 $('#resultsArea').empty();
                 var code = $('<code data-type="json"></code>').text(JSON.stringify(data))
@@ -78,34 +79,34 @@
                     requestUri: "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata", //"http://localhost:6630/PrimitiveKeys.svc/$metadata",
                     data: null,
                 };
-                OData.read(metadataRequest, metaDatasuccess, errorFunc,OData.metadataHandler);
+                datajs.V4.oData.read(metadataRequest, metaDatasuccess, errorFunc,datajs.V4.oData.metadataHandler);
             };
 
             $('#startXML').on("click", function(){
                 //var requestUri = 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods';
                 var requestUri ='http://localhost:4003/sap/bc/ds/odata/v4/ESMixPrimCollComp?$format=xml';
-                OData.read(requestUri, success, errorFunc);
+                datajs.V4.oData.read(requestUri, success, errorFunc);
             });
             $('#btnJSON_none').on("click", function(){
                 var requestUri = {
                     requestUri : 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods',
                     headers : { Accept : 'application/json;odata.metadata=none' }
                 };
-                OData.read(requestUri, success, errorFunc);
+                datajs.V4.oData.read(requestUri, success, errorFunc);
             });
             $('#btnJSON_minimal').on("click", function(){
                 var requestUri = {
                     requestUri : 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods',
                     headers : { Accept : 'application/json;odata.metadata=minimal' }
                 };
-                OData.read(requestUri, success, errorFunc);
+                datajs.V4.oData.read(requestUri, success, errorFunc);
             });
             $('#btnJSON_full').on("click", function(){
                 var requestUri = {
                     requestUri : 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods',
                     headers : { Accept : 'application/json;odata.metadata=full' }
                 };
-                OData.read(requestUri, success, errorFunc);
+                datajs.V4.oData.read(requestUri, success, errorFunc);
             });
 
             $('#btnJSON_full_to_all').on("click", function(){
@@ -115,7 +116,7 @@
                     extendMetadataToLevel : 'all' ,
                     recognizeDates : false
                 };
-                OData.read(requestUri, success, errorFunc);
+                datajs.V4.oData.read(requestUri, success, errorFunc);
             });
             $('#btnJSON_full_to_all_date_conversion').on("click", function(){
                 var requestUri = {
@@ -124,7 +125,7 @@
                     extendMetadataToLevel : 'all' ,
                     recognizeDates : true
                 };
-                OData.read(requestUri, success, errorFunc);
+                datajs.V4.oData.read(requestUri, success, errorFunc);
             });
             $('#btnJSON_full_date_conversion').on("click", function(){
                 var requestUri = {
@@ -132,7 +133,7 @@
                     headers : { Accept : 'application/json;odata.metadata=full' },
                     recognizeDates : true
                 };
-                OData.read(requestUri, success, errorFunc);
+                datajs.V4.oData.read(requestUri, success, errorFunc);
             });
 
             $('#btnMetaData').on("click", function(){
@@ -150,7 +151,7 @@
                     data: null,
                 };
 
-                OData.read(metadataRequest, success, errorFunc,OData.metadataHandler);
+                datajs.V4.oData.read(metadataRequest, success, errorFunc,datajs.V4.oData.metadataHandler);
             });
 
 
@@ -163,7 +164,7 @@
                         extendMetadataToLevel : 'all' ,
                         recognizeDates : false
                     };
-                    OData.read(requestUri, success, errorFunc, null, null, metadata);
+                    datajs.V4.oData.read(requestUri, success, errorFunc, null, null, metadata);
                 }
                 getMetaData(metaDatasuccess);
             });
@@ -176,7 +177,7 @@
                         extendMetadataToLevel : 'full' ,
                         recognizeDates : false
                     };
-                    OData.read(requestUri, success, errorFunc, null, null, metadata);
+                    datajs.V4.oData.read(requestUri, success, errorFunc, null, null, metadata);
                 }
                 getMetaData(metaDatasuccess);
             });
@@ -198,11 +199,11 @@
 
                 var metaDatasuccess = function(metadata){
                     var requestUri = 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods';
-                    OData.read(requestUri, success, errorFunc, null, null, metadata);
+                    datajs.V4.oData.read(requestUri, success, errorFunc, null, null, metadata);
                 }
 
 
-                OData.read(metadataRequest, metaDatasuccess, errorFunc,OData.metadataHandler);
+                datajs.V4.oData.read(metadataRequest, metaDatasuccess, errorFunc,datajs.V4.oData.metadataHandler);
             });
 
         </script>

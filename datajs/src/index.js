@@ -17,11 +17,15 @@
  * under the License.
  */
 
-window.datajs = require('./lib/datajs.js');
-window.OData = require('./lib/odata.js');
+if ( window.datajs===undefined) {
+    window.datajs = {};
+}
 
-window.datajs.store = require('./lib/store.js');
-window.datajs.cache = require('./lib/cache.js');
+window.datajs.V4 = require('./lib/datajs.js');
+window.datajs.V4.oData = require('./lib/odata.js');
+
+window.datajs.V4.store = require('./lib/store.js');
+window.datajs.V4.cache = require('./lib/cache.js');
 
 function extend(target) {
     var sources = [].slice.call(arguments, 1);

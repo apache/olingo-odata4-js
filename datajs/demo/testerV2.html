@@ -28,20 +28,17 @@
         </style>
     </head>   
     <body>
-        <button id="startXML">startXML</button><br/>
-        <button id="startJSON">startJSON</button><br/>
+        <button id="btnMetaData">MetaData</button><br/>
+        <button id="btnJSON_minimal">pure JSON</button><br/>
+
         <div id='resultsArea'>
 
         </div>
-        <script type='text/html' id='template'>
-            {{#items}}
-            <p><a href="{{id}}">{{name}}</a></p>
-            {{/items}}
-        </script>
         <script>
             function show(data) {
                 $('#resultsArea').empty();
-                $('#resultsArea').text(JSON.stringify(data))
+                var code = $('<code data-type="json"></code>').text(JSON.stringify(data))
+                $('#resultsArea').append(code);
                 $('code[data-type]').prettify();
             }
             function success(data) {
@@ -53,13 +50,19 @@
                 $("#resultsArea").text(JSON.stringify(err));
             }
 
+
+            $('#btnMetaData').on("click", function(){
+                var metadata;
+                OData.read("http://localhost:4003/sap/bc/ds/odata/v2/$metadata",success, errorFunc, OData.metadataHandler);
+            });
+
             $('#startXML').on("click", function(){
                 //var requestUri = 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods';
                 var requestUri ='http://localhost:4003/sap/bc/odata/Employees';
                 OData.read(requestUri, success, errorFunc);
             });
-            $('#startJSON').on("click", function(){
-                //var requestUri = 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods';
+            
+            $('#btnJSON_minimal').on("click", function(){
                 var requestUri ='http://localhost:4003/sap/bc/odata/Employees?$format=json';
                 OData.read(requestUri, success, errorFunc);
             });
