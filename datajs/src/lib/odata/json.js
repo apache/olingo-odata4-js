@@ -83,117 +83,7 @@ var DELTATYPE_DELETED_LINK = "dl";
 
 var jsonMediaType = "application/json";
 var jsonContentType = oDataHandler.contentType(jsonMediaType);
-/*
-var jsonReadAdvertisedActionsOrFunctions = function (value) {
-    /// <summary>Reads and object containing action or function metadata and maps them into a single array of objects.</summary>
-    /// <param name="value" type="Object">Object containing action or function metadata.</param>
-    /// <returns type="Array">Array of objects containing metadata for the actions or functions specified in value.</returns>
 
-    var result = [];
-    for (var name in value) {
-        var i, len;
-        for (i = 0, len = value[name].length; i < len; i++) {
-            result.push(extend({ metadata: name }, value[name][i]));
-        }
-    }
-    return result;
-};*/
-
-/*
-var jsonApplyMetadata = function (value, metadata, dateParser, recognizeDates) {
-    /// <summary>Applies metadata coming from both the payload and the metadata object to the value.</summary>
-    /// <param name="value" type="Object">Data on which the metada is going to be applied.</param>
-    /// <param name="metadata">Metadata store; one of edmx, schema, or an array of any of them.</param>
-    /// <param name="dateParser" type="function">Function used for parsing datetime values.</param>
-    /// <param name="recognizeDates" type="Boolean">
-    ///     True if strings formatted as datetime values should be treated as datetime values. False otherwise.
-    /// </param>
-    /// <returns type="Object">Transformed data.</returns>
-
-    if (value && typeof value === "object") {
-        var dataTypeName;
-        var valueMetadata = value.__metadata;
-
-        if (valueMetadata) {
-            if (valueMetadata.actions) {
-                valueMetadata.actions = jsonReadAdvertisedActionsOrFunctions(valueMetadata.actions);
-            }
-            if (valueMetadata.functions) {
-                valueMetadata.functions = jsonReadAdvertisedActionsOrFunctions(valueMetadata.functions);
-            }
-            dataTypeName = valueMetadata && valueMetadata.type;
-        }
-
-        var dataType = lookupEntityType(dataTypeName, metadata) || lookupComplexType(dataTypeName, metadata);
-        var propertyValue;
-        if (dataType) {
-            var properties = dataType.property;
-            if (properties) {
-                var i, len;
-                for (i = 0, len = properties.length; i < len; i++) {
-                    var property = properties[i];
-                    var propertyName = property.name;
-                    propertyValue = value[propertyName];
-
-                    if (property.type === "Edm.DateTime" || property.type === "Edm.DateTimeOffset") {
-                        if (propertyValue) {
-                            propertyValue = dateParser(propertyValue);
-                            if (!propertyValue) {
-                                throw { message: "Invalid date/time value" };
-                            }
-                            value[propertyName] = propertyValue;
-                        }
-                    } else if (property.type === "Edm.Time") {
-                        if (propertyValue) {
-                            value[propertyName] = parseDuration(propertyValue);    
-                        }
-                    }
-                }
-            }
-        } else if (recognizeDates) {
-            for (var name in value) {
-                propertyValue = value[name];
-                if (typeof propertyValue === "string") {
-                    value[name] = dateParser(propertyValue) || propertyValue;
-                }
-            }
-        }
-    }
-    return value;
-};*/
-/*
-var isJsonLight = function (contentType) {
-    /// <summary>Tests where the content type indicates a json light payload.</summary>
-    /// <param name="contentType">Object with media type and properties dictionary.</param>
-    /// <returns type="Boolean">True is the content type indicates a json light payload. False otherwise.</returns>
-
-    if (contentType) {
-        var odata = contentType.properties["odata.metadata"];
-        return odata === "none" || odata === "minimal" || odata === "full";
-    }
-    return false;
-};*/
-/*
-var normalizeServiceDocument = function (data, baseURI) {
-    /// <summary>Normalizes a JSON service document to look like an ATOM service document.</summary>
-    /// <param name="data" type="Object">Object representation of service documents as deserialized.</param>
-    /// <param name="baseURI" type="String">Base URI to resolve relative URIs.</param>
-    /// <returns type="Object">An object representation of the service document.</returns>
-    var workspace = { collections: [] };
-
-    var i, len;
-    for (i = 0, len = data.EntitySets.length; i < len; i++) {
-        var title = data.EntitySets[i];
-        var collection = {
-            title: title,
-            href: normalizeURI(title, baseURI)
-        };
-
-        workspace.collections.push(collection);
-    }
-
-    return { workspaces: [workspace] };
-};*/
 
 // The regular expression corresponds to something like this:
 // /Date(123+60)/
@@ -767,7 +657,7 @@ var jsonLightReadPayload = function (data, model, demandedFormat,recognizeDates,
         typeName = payloadInfo.type;
         switch (payloadInfo.detectedPayloadKind) {
             case PAYLOADTYPE_FEED:
-                return jsonLightReadFeedNew(data, payloadInfo, baseURI, model, demandedFormat,recognizeDates);
+                return jsonLightReadFeed(data, payloadInfo, baseURI, model, demandedFormat,recognizeDates);
             case PAYLOADTYPE_COLLECTION:
                 return jsonLightReadTopCollectionProperty(data, typeName, baseURI, model, recognizeDates);
             case PAYLOADTYPE_PRIMITIVE:
@@ -810,57 +700,9 @@ var jsonLightGetEntryKey = function (data, entityModel) {
     return entityInstanceKey;
 };
 
-var jsonLightReadObjectNew = function (data, objectInfo, baseURI, model, demandedFormat, recognizeDates) {
-    //var obj = {};
 
-    data['@odata.type'] = '#'+objectInfo.typeName;
 
-    var keyType = objectInfo.type;
-    while (( keyType.key === undefined) && (keyType.baseType !== undefined)) {
-        keyType = lookupEntityType(keyType.baseType, model);
-    }
-
-    var lastIdSegment = objectInfo.name + jsonLightGetEntryKey(data, keyType);
-    data['@odata.id'] = baseURI.substring(0, baseURI.lastIndexOf("$metadata")) + lastIdSegment;
-    data['@odata.editLink'] = lastIdSegment;
-
-    var serviceURI = baseURI.substring(0, baseURI.lastIndexOf("$metadata"));
-    //jsonLightComputeUrisIfMissing(data, entryInfo, actualType, serviceURI, dataModel, baseTypeModel);
-
-    
-
-    for (var name in data) {
-        if (name.indexOf("@") === -1) {
-            var curType = objectInfo.type;
-            var propertyValue = data[name];
-            var property = lookupProperty(curType.property,name); //TODO SK add check for parent type
-
-            while (( property === null) && (curType.baseType !== undefined)) {
-                curType = lookupEntityType(curType.baseType, model);
-                property = lookupProperty(curType.property,name);
-            }
-            if (demandedFormat === 3)  {
-                if ( isArray(propertyValue)) {
-                    data[name+'@odata.type'] = '#' + property.type;
-                    for ( var i = 0; i < propertyValue.length; i++) {
-                        jsonLightReadComplexObjectNew(propertyValue[0], property,baseURI,model,demandedFormat, recognizeDates);
-                    }
-                } else if (isObject(propertyValue) && (propertyValue!= null)) {
-                    jsonLightReadComplexObjectNew(propertyValue, property,baseURI,model,demandedFormat, recognizeDates);
-                } else {
-                    data[name+'@odata.type'] = '#' + property.type;
-                }
-                
-            } else {
-
-            }
-        }
-    }
-
-    return data;
-};
-
-var jsonLightReadFeedNew = function (data, feedInfo, baseURI, model, demandedFormat,recognizeDates) {
+var jsonLightReadFeed = function (data, feedInfo, baseURI, model, demandedFormat,recognizeDates) {
     var entries = [];
     var items = data.value;
     for (i = 0, len = items.length; i < len; i++) {
@@ -877,9 +719,9 @@ var jsonLightReadFeedNew = function (data, feedInfo, baseURI, model, demandedFor
                 typeName : typeName
             };
 
-            entry = jsonLightReadObjectNew(items[i], entryInfo, baseURI, model, demandedFormat,recognizeDates);
+            entry = jsonLightReadObject(items[i], entryInfo, baseURI, model, demandedFormat,recognizeDates);
         } else {
-            entry = jsonLightReadObjectNew(items[i], feedInfo, baseURI, model, demandedFormat,recognizeDates);
+            entry = jsonLightReadObject(items[i], feedInfo, baseURI, model, demandedFormat,recognizeDates);
         }
         
         entries.push(entry);
@@ -961,7 +803,46 @@ var formatRowLiteral = function (value, type) {
 };
 
 
-var jsonLightReadComplexObjectNew = function (data, property, baseURI, model, demandedFormat, recognizeDates) {
+
+
+
+var checkProperties = function(data,objectInfoType,baseURI,model, demandedFormat, recognizeDates) {
+    for (var name in data) {
+        if (name.indexOf("@") === -1) {
+            var curType = objectInfoType;
+            var propertyValue = data[name];
+            var property = lookupProperty(curType.property,name); //TODO SK add check for parent type
+
+            while (( property === null) && (curType.baseType !== undefined)) {
+                curType = lookupEntityType(curType.baseType, model);
+                property = lookupProperty(curType.property,name);
+            }
+            
+            if ( isArray(propertyValue)) {
+                data[name+'@odata.type'] = '#' + property.type;
+                for ( var i = 0; i < propertyValue.length; i++) {
+                    jsonLightReadComplexObject(propertyValue[0], property,baseURI,model,demandedFormat, recognizeDates);
+                }
+            } else if (isObject(propertyValue) && (propertyValue !== null)) {
+                jsonLightReadComplexObject(propertyValue, property,baseURI,model,demandedFormat, recognizeDates);
+            } else {
+                if (demandedFormat === 3)  {
+                    data[name+'@odata.type'] = '#' + property.type;
+                } else {
+                    if ( property.type != "Edm.String" &&
+                         property.type != "Edm.Boolean" &&
+                         property.type != "Edm.Int32" &&
+                         property.type != "Edm.Single" &&
+                         property.type != "Edm.Double" ) {
+                         data[name+'@odata.type'] = '#' + property.type;
+                    }
+                }
+            }
+        }
+    }
+};
+
+var jsonLightReadComplexObject = function (data, property, baseURI, model, demandedFormat, recognizeDates) {
     var type = property.type;
     if (isCollectionType(property.type)) {
         type =property.type.substring(11,property.type.length-1);
@@ -975,40 +856,12 @@ var jsonLightReadComplexObjectNew = function (data, property, baseURI, model, de
     if (propertyType === null)  {
         return; //TODO check what to do if the type is not known e.g. type #GeometryCollection
     }
+  
 
-    var curType = propertyType;
+    checkProperties(data,propertyType ,baseURI,model, demandedFormat, recognizeDates);
+};
 
-
-    for (var name in data) {
-        if (name.indexOf("@") === -1) {
-            var propertyValue = data[name];
-            var property = lookupProperty(curType.property,name); //TODO SK add check for parent type
-
-            while (( property === null) && (curType.baseType !== undefined)) {
-                curType = lookupEntityType(curType.baseType, model);
-                property = lookupProperty(curType.property,name);
-            }
-            if (demandedFormat === 3)  {
-                if ( isArray(propertyValue)) {
-                    data[name+'@odata.type'] = '#' + property.type;
-                    for ( var i = 0; i < propertyValue.length; i++) {
-                        jsonLightReadComplexObjectNew(propertyValue[0], property,baseURI,model,demandedFormat, recognizeDates);
-                    }
-                } else if (isObject(propertyValue) && (propertyValue!= null)) {
-                    jsonLightReadComplexObjectNew(propertyValue, property,baseURI,model,demandedFormat, recognizeDates);
-                } else {
-                    data[name+'@odata.type'] = '#' + property.type;
-                }
-                
-            } else {
-
-            }
-        }
-    }
-}
-
-
-var jsonLightReadObjectNew = function (data, objectInfo, baseURI, model, demandedFormat, recognizeDates) {
+var jsonLightReadObject = function (data, objectInfo, baseURI, model, demandedFormat, recognizeDates) {
     //var obj = {};
 
     data['@odata.type'] = '#'+objectInfo.typeName;
@@ -1025,36 +878,8 @@ var jsonLightReadObjectNew = function (data, objectInfo, baseURI, model, demande
     var serviceURI = baseURI.substring(0, baseURI.lastIndexOf("$metadata"));
     //jsonLightComputeUrisIfMissing(data, entryInfo, actualType, serviceURI, dataModel, baseTypeModel);
 
+    checkProperties(data,objectInfo.type,baseURI,model, demandedFormat, recognizeDates);
     
-
-    for (var name in data) {
-        if (name.indexOf("@") === -1) {
-            var curType = objectInfo.type;
-            var propertyValue = data[name];
-            var property = lookupProperty(curType.property,name); //TODO SK add check for parent type
-
-            while (( property === null) && (curType.baseType !== undefined)) {
-                curType = lookupEntityType(curType.baseType, model);
-                property = lookupProperty(curType.property,name);
-            }
-            if (demandedFormat === 3)  {
-                if ( isArray(propertyValue)) {
-                    data[name+'@odata.type'] = '#' + property.type;
-                    for ( var i = 0; i < propertyValue.length; i++) {
-                        jsonLightReadComplexObjectNew(propertyValue[0], property,baseURI,model,demandedFormat, recognizeDates);
-                    }
-                } else if (isObject(propertyValue) && (propertyValue!= null)) {
-                    jsonLightReadComplexObjectNew(propertyValue, property,baseURI,model,demandedFormat, recognizeDates);
-                } else {
-                    data[name+'@odata.type'] = '#' + property.type;
-                }
-                
-            } else {
-
-            }
-        }
-    }
-
     return data;
 };
 
@@ -1066,15 +891,125 @@ jsonHandler.inferJsonLightFeedAsObject = false;
 
 exports.jsonHandler = jsonHandler;
 
-
-
 // DATAJS INTERNAL START
 exports.jsonParser = jsonParser;
 exports.jsonSerializer = jsonSerializer;
-//exports.jsonNormalizeData = jsonNormalizeData;
-//exports.normalizeServiceDocument = normalizeServiceDocument;
+
 exports.parseJsonDateString = parseJsonDateString;
 exports.jsonLightPayloadInfo = jsonLightPayloadInfo;
 // DATAJS INTERNAL END
 
+//exports.jsonNormalizeData = jsonNormalizeData;
+//exports.normalizeServiceDocument = normalizeServiceDocument;
 
+/*
+var jsonReadAdvertisedActionsOrFunctions = function (value) {
+    /// <summary>Reads and object containing action or function metadata and maps them into a single array of objects.</summary>
+    /// <param name="value" type="Object">Object containing action or function metadata.</param>
+    /// <returns type="Array">Array of objects containing metadata for the actions or functions specified in value.</returns>
+
+    var result = [];
+    for (var name in value) {
+        var i, len;
+        for (i = 0, len = value[name].length; i < len; i++) {
+            result.push(extend({ metadata: name }, value[name][i]));
+        }
+    }
+    return result;
+};*/
+
+/*
+var jsonApplyMetadata = function (value, metadata, dateParser, recognizeDates) {
+    /// <summary>Applies metadata coming from both the payload and the metadata object to the value.</summary>
+    /// <param name="value" type="Object">Data on which the metada is going to be applied.</param>
+    /// <param name="metadata">Metadata store; one of edmx, schema, or an array of any of them.</param>
+    /// <param name="dateParser" type="function">Function used for parsing datetime values.</param>
+    /// <param name="recognizeDates" type="Boolean">
+    ///     True if strings formatted as datetime values should be treated as datetime values. False otherwise.
+    /// </param>
+    /// <returns type="Object">Transformed data.</returns>
+
+    if (value && typeof value === "object") {
+        var dataTypeName;
+        var valueMetadata = value.__metadata;
+
+        if (valueMetadata) {
+            if (valueMetadata.actions) {
+                valueMetadata.actions = jsonReadAdvertisedActionsOrFunctions(valueMetadata.actions);
+            }
+            if (valueMetadata.functions) {
+                valueMetadata.functions = jsonReadAdvertisedActionsOrFunctions(valueMetadata.functions);
+            }
+            dataTypeName = valueMetadata && valueMetadata.type;
+        }
+
+        var dataType = lookupEntityType(dataTypeName, metadata) || lookupComplexType(dataTypeName, metadata);
+        var propertyValue;
+        if (dataType) {
+            var properties = dataType.property;
+            if (properties) {
+                var i, len;
+                for (i = 0, len = properties.length; i < len; i++) {
+                    var property = properties[i];
+                    var propertyName = property.name;
+                    propertyValue = value[propertyName];
+
+                    if (property.type === "Edm.DateTime" || property.type === "Edm.DateTimeOffset") {
+                        if (propertyValue) {
+                            propertyValue = dateParser(propertyValue);
+                            if (!propertyValue) {
+                                throw { message: "Invalid date/time value" };
+                            }
+                            value[propertyName] = propertyValue;
+                        }
+                    } else if (property.type === "Edm.Time") {
+                        if (propertyValue) {
+                            value[propertyName] = parseDuration(propertyValue);    
+                        }
+                    }
+                }
+            }
+        } else if (recognizeDates) {
+            for (var name in value) {
+                propertyValue = value[name];
+                if (typeof propertyValue === "string") {
+                    value[name] = dateParser(propertyValue) || propertyValue;
+                }
+            }
+        }
+    }
+    return value;
+};*/
+/*
+var isJsonLight = function (contentType) {
+    /// <summary>Tests where the content type indicates a json light payload.</summary>
+    /// <param name="contentType">Object with media type and properties dictionary.</param>
+    /// <returns type="Boolean">True is the content type indicates a json light payload. False otherwise.</returns>
+
+    if (contentType) {
+        var odata = contentType.properties["odata.metadata"];
+        return odata === "none" || odata === "minimal" || odata === "full";
+    }
+    return false;
+};*/
+/*
+var normalizeServiceDocument = function (data, baseURI) {
+    /// <summary>Normalizes a JSON service document to look like an ATOM service document.</summary>
+    /// <param name="data" type="Object">Object representation of service documents as deserialized.</param>
+    /// <param name="baseURI" type="String">Base URI to resolve relative URIs.</param>
+    /// <returns type="Object">An object representation of the service document.</returns>
+    var workspace = { collections: [] };
+
+    var i, len;
+    for (i = 0, len = data.EntitySets.length; i < len; i++) {
+        var title = data.EntitySets[i];
+        var collection = {
+            title: title,
+            href: normalizeURI(title, baseURI)
+        };
+
+        workspace.collections.push(collection);
+    }
+
+    return { workspaces: [workspace] };
+};*/

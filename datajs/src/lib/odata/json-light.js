@@ -1048,7 +1048,7 @@ var jsonLightComputeStreamLinks = function (data, entityModel, baseTypeModel) {
         data[jsonLightAnnotations.mediaRead] = data[jsonLightAnnotations.mediaRead] || data[jsonLightAnnotations.mediaEdit];
     }
 };
-
+/*
 var jsonLightReadTopPrimitiveProperty = function (data, typeName, baseURI, recognizeDates) {
     /// <summary>Converts a JSON light top level primitive property object into its library representation.</summary>
     /// <param name="data" type="Object">JSON light feed object to convert.</param>
@@ -1060,8 +1060,9 @@ var jsonLightReadTopPrimitiveProperty = function (data, typeName, baseURI, recog
     var metadata = { type: typeName };
     var value = jsonLightReadDataItemValue(data.value, typeName, metadata, baseURI, null, null, recognizeDates);
     return jsonLightReadDataAnnotations(data, { __metadata: metadata, value: value }, baseURI);
-};
+};*/
 
+/*
 var jsonLightReadTopCollectionProperty = function (data, typeName, baseURI, model, recognizeDates) {
     /// <summary>Converts a JSON light top level collection property object into its library representation.</summary>
     /// <param name="data" type="Object">JSON light feed object to convert.</param>
@@ -1075,8 +1076,9 @@ var jsonLightReadTopCollectionProperty = function (data, typeName, baseURI, mode
     var value = jsonLightReadCollectionPropertyValue(data.value, typeName, propertyMetadata, baseURI, model, recognizeDates);
     extend(value.__metadata, propertyMetadata);
     return jsonLightReadDataAnnotations(data, value, baseURI);
-};
+};*/
 
+/*
 var jsonLightReadLinksDocument = function (data, baseURI) {
     /// <summary>Converts a JSON light links collection object to its library representation.</summary>
     /// <param name="data" type="Object">JSON light link object to convert.</param>
@@ -1096,8 +1098,9 @@ var jsonLightReadLinksDocument = function (data, baseURI) {
 
     var links = { results: results };
     return jsonLightReadDataAnnotations(data, links, baseURI);
-};
+};*/
 
+/*
 var jsonLightReadLink = function (data, baseURI) {
     /// <summary>Converts a JSON light link object to its library representation.</summary>
     /// <param name="data" type="Object">JSON light link object to convert.</param>
@@ -1114,8 +1117,8 @@ var jsonLightReadLink = function (data, baseURI) {
     renameProperty(metadataProperties, "url", "uri");
 
     return link;
-};
-
+};*/
+/*
 var jsonLightRemoveTypePropertyMetadata = function (propertyMetadata) {
     /// <summary>Removes the type property from a property metadata object.</summary>
     /// <param name="propertyMetadata" type="Object">Property metadata object.</param>
@@ -1123,8 +1126,8 @@ var jsonLightRemoveTypePropertyMetadata = function (propertyMetadata) {
     if (propertyMetadata) {
         delete propertyMetadata.type;
     }
-};
-
+};*/
+/*
 var jsonLightReadSvcDocument = function (data, baseURI) {
     /// <summary>Converts a JSON light service document object to its library representation.</summary>
     /// <param name="data" type="Object">JSON light service document object to convert.</param>
@@ -1160,7 +1163,7 @@ var jsonLightReadSvcDocument = function (data, baseURI) {
     }
 
     return { workspaces: [workspace] };
-};
+};*/
 
 
 
