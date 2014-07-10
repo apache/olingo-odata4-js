@@ -19,7 +19,7 @@
  */
 -->
 
-<%@ ServiceHost Language="C#" Factory="Microsoft.OData.Service.DataServiceHostFactory, Microsoft.OData.Service, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
+<%@ ServiceHost Language="C#" Factory="Microsoft.OData.Service.DataServiceHostFactory, Microsoft.OData.Service, Version=6.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
     Service="DataJS.Tests.V4.FoodStoreDataService" %>
 
 namespace DataJS.Tests.V4
@@ -27,7 +27,6 @@ namespace DataJS.Tests.V4
     using System;
     using System.Collections.Generic;
     using Microsoft.OData.Service;
-    using Microsoft.OData.Service.Common;
     using Microsoft.OData.Service.Providers;
     using System.Linq;
     using System.ServiceModel.Web;
@@ -479,9 +478,6 @@ namespace DataJS.Tests.V4
     /// <summary>
     /// The Category class is a simple class with V1-compatible feed customizations.
     /// </summary>
-    [DataServiceKey("CategoryID")]
-    [EntitySet("Categories")]
-    [NamedStream("Icon")]
     public class Category
     {
         public Category()
@@ -498,9 +494,6 @@ namespace DataJS.Tests.V4
     /// The Food class has a mixture of V1-compatible and incompatible feed
     /// customizations (thus it's V2), and custom mappings.
     /// </summary>
-    [DataServiceKey("FoodID")]
-    [EntitySet("Foods")]
-    [NamedStream("Picture")]
     public class Food
     {
         private List<string> alternativeNames = new List<string>();

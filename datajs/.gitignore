@@ -1,3 +1,7 @@
 node_modules/
 build
 localgrunt.config
+bin/
+obj/
+packages/
+JSLib.suo

@@ -25,7 +25,6 @@ namespace DataJS.Tests
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using Microsoft.OData.Service;
-    using Microsoft.OData.Service.Common;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
@@ -567,11 +566,6 @@ namespace DataJS.Tests
                 foreach (PropertyInfo keyProperty in type.GetProperties().Where(pi => pi.Name.Contains("ID")))
                 {
                     keyPropertyList.Add(keyProperty.Name);
-                }
-
-                foreach (DataServiceKeyAttribute customAttribute in type.GetCustomAttributes(typeof(DataServiceKeyAttribute), true))
-                {
-                    keyPropertyList.AddRange(customAttribute.KeyNames);
                 }
                 
                 return keyPropertyList.ToArray();

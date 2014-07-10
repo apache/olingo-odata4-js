@@ -19,7 +19,7 @@
  */
 -->
 
-<%@ ServiceHost Language="C#" Factory="Microsoft.OData.Service.DataServiceHostFactory, Microsoft.OData.Service, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
+<%@ ServiceHost Language="C#" Factory="Microsoft.OData.Service.DataServiceHostFactory, Microsoft.OData.Service, Version=6.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
     Service="DataJS.Tests.LargeCollectionService" %>
 
 namespace DataJS.Tests
@@ -27,7 +27,6 @@ namespace DataJS.Tests
     using System;
     using System.Collections.Generic;
     using Microsoft.OData.Service;
-    using Microsoft.OData.Service.Common;
     using System.Linq;
     using System.ServiceModel;
     using System.ServiceModel.Web;

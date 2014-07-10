@@ -19,7 +19,7 @@
  */
 -->
 
-<%@ ServiceHost Language="C#" Factory="Microsoft.OData.Service.DataServiceHostFactory, Microsoft.OData.Service, Version=6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
+<%@ ServiceHost Language="C#" Factory="Microsoft.OData.Service.DataServiceHostFactory, Microsoft.OData.Service, Version=6.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
     Service="DataJS.Tests.EpmDataService" %>
 
 
@@ -28,7 +28,6 @@ namespace DataJS.Tests
     using System;
     using System.Collections.Generic;
     using Microsoft.OData.Service;
-    using Microsoft.OData.Service.Common;
     using System.Linq;
     using System.ServiceModel.Web;
 
@@ -43,7 +42,7 @@ namespace DataJS.Tests
         {
             config.SetEntitySetAccessRule("*", EntitySetRights.All);
             config.SetServiceOperationAccessRule("*", ServiceOperationRights.All);
-            config.DataServiceBehavior.MaxProtocolVersion = DataServiceProtocolVersion.V4;
+            config.DataServiceBehavior.MaxProtocolVersion = Microsoft.OData.Client.ODataProtocolVersion.V4;
             config.UseVerboseErrors = true;
 
         }
