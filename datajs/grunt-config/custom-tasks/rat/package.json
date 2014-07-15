@@ -1,0 +1,26 @@
+{
+  "name": "grunt-rat",
+  "version": "0.0.1",
+  "description": "Run Apache Rat(release audit tool)",
+  "license": "Apache",
+  "author": {
+    "name": "Sven Kobler-Morris",
+    "email": "koblers@apache.org"
+  },
+  "files": [
+    "tasks"
+  ],
+  "dependencies": {
+    "chalk": "~0.4.0"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.0",
+    "xml2js": "^0.4.4"
+  },
+  "peerDependencies": {
+    "grunt": "~0.4.0"
+  },
+  "engines": {
+    "node": ">=0.8.0"
+  }
+}

@@ -802,10 +802,6 @@ var formatRowLiteral = function (value, type) {
     }
 };
 
-
-
-
-
 var checkProperties = function(data,objectInfoType,baseURI,model, demandedFormat, recognizeDates) {
     for (var name in data) {
         if (name.indexOf("@") === -1) {
@@ -850,14 +846,11 @@ var jsonLightReadComplexObject = function (data, property, baseURI, model, deman
 
     data['@odata.type'] = '#'+type;
 
-
-
     var propertyType = lookupComplexType(type, model);
     if (propertyType === null)  {
         return; //TODO check what to do if the type is not known e.g. type #GeometryCollection
     }
   
-
     checkProperties(data,propertyType ,baseURI,model, demandedFormat, recognizeDates);
 };
 
@@ -891,125 +884,10 @@ jsonHandler.inferJsonLightFeedAsObject = false;
 
 exports.jsonHandler = jsonHandler;
 
-// DATAJS INTERNAL START
 exports.jsonParser = jsonParser;
 exports.jsonSerializer = jsonSerializer;
 
 exports.parseJsonDateString = parseJsonDateString;
 exports.jsonLightPayloadInfo = jsonLightPayloadInfo;
-// DATAJS INTERNAL END
 
-//exports.jsonNormalizeData = jsonNormalizeData;
-//exports.normalizeServiceDocument = normalizeServiceDocument;
 
-/*
-var jsonReadAdvertisedActionsOrFunctions = function (value) {
-    /// <summary>Reads and object containing action or function metadata and maps them into a single array of objects.</summary>
-    /// <param name="value" type="Object">Object containing action or function metadata.</param>
-    /// <returns type="Array">Array of objects containing metadata for the actions or functions specified in value.</returns>
-
-    var result = [];
-    for (var name in value) {
-        var i, len;
-        for (i = 0, len = value[name].length; i < len; i++) {
-            result.push(extend({ metadata: name }, value[name][i]));
-        }
-    }
-    return result;
-};*/
-
-/*
-var jsonApplyMetadata = function (value, metadata, dateParser, recognizeDates) {
-    /// <summary>Applies metadata coming from both the payload and the metadata object to the value.</summary>
-    /// <param name="value" type="Object">Data on which the metada is going to be applied.</param>
-    /// <param name="metadata">Metadata store; one of edmx, schema, or an array of any of them.</param>
-    /// <param name="dateParser" type="function">Function used for parsing datetime values.</param>
-    /// <param name="recognizeDates" type="Boolean">
-    ///     True if strings formatted as datetime values should be treated as datetime values. False otherwise.
-    /// </param>
-    /// <returns type="Object">Transformed data.</returns>
-
-    if (value && typeof value === "object") {
-        var dataTypeName;
-        var valueMetadata = value.__metadata;
-
-        if (valueMetadata) {
-            if (valueMetadata.actions) {
-                valueMetadata.actions = jsonReadAdvertisedActionsOrFunctions(valueMetadata.actions);
-            }
-            if (valueMetadata.functions) {
-                valueMetadata.functions = jsonReadAdvertisedActionsOrFunctions(valueMetadata.functions);
-            }
-            dataTypeName = valueMetadata && valueMetadata.type;
-        }
-
-        var dataType = lookupEntityType(dataTypeName, metadata) || lookupComplexType(dataTypeName, metadata);
-        var propertyValue;
-        if (dataType) {
-            var properties = dataType.property;
-            if (properties) {
-                var i, len;
-                for (i = 0, len = properties.length; i < len; i++) {
-                    var property = properties[i];
-                    var propertyName = property.name;
-                    propertyValue = value[propertyName];
-
-                    if (property.type === "Edm.DateTime" || property.type === "Edm.DateTimeOffset") {
-                        if (propertyValue) {
-                            propertyValue = dateParser(propertyValue);
-                            if (!propertyValue) {
-                                throw { message: "Invalid date/time value" };
-                            }
-                            value[propertyName] = propertyValue;
-                        }
-                    } else if (property.type === "Edm.Time") {
-                        if (propertyValue) {
-                            value[propertyName] = parseDuration(propertyValue);    
-                        }
-                    }
-                }
-            }
-        } else if (recognizeDates) {
-            for (var name in value) {
-                propertyValue = value[name];
-                if (typeof propertyValue === "string") {
-                    value[name] = dateParser(propertyValue) || propertyValue;
-                }
-            }
-        }
-    }
-    return value;
-};*/
-/*
-var isJsonLight = function (contentType) {
-    /// <summary>Tests where the content type indicates a json light payload.</summary>
-    /// <param name="contentType">Object with media type and properties dictionary.</param>
-    /// <returns type="Boolean">True is the content type indicates a json light payload. False otherwise.</returns>
-
-    if (contentType) {
-        var odata = contentType.properties["odata.metadata"];
-        return odata === "none" || odata === "minimal" || odata === "full";
-    }
-    return false;
-};*/
-/*
-var normalizeServiceDocument = function (data, baseURI) {
-    /// <summary>Normalizes a JSON service document to look like an ATOM service document.</summary>
-    /// <param name="data" type="Object">Object representation of service documents as deserialized.</param>
-    /// <param name="baseURI" type="String">Base URI to resolve relative URIs.</param>
-    /// <returns type="Object">An object representation of the service document.</returns>
-    var workspace = { collections: [] };
-
-    var i, len;
-    for (i = 0, len = data.EntitySets.length; i < len; i++) {
-        var title = data.EntitySets[i];
-        var collection = {
-            title: title,
-            href: normalizeURI(title, baseURI)
-        };
-
-        workspace.collections.push(collection);
-    }
-
-    return { workspaces: [workspace] };
-};*/

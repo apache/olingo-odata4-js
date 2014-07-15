@@ -110,11 +110,13 @@ module.exports = function(grunt) {
     },
   };
   
+  //join local configuration for proxies and local test servers
   if (grunt.file.exists('localgrunt.config')) {
     console.log("merge localgrunt.config");
     var localGrundConfig = grunt.file.read('localgrunt.config');
     init.connect['test-browser'].proxies = init.connect['test-browser'].proxies.concat(JSON.parse(localGrundConfig).proxies);
   }
+
 
   grunt.initConfig(init);
 
@@ -124,12 +126,21 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-connect-proxy");
   grunt.loadNpmTasks("grunt-contrib-connect");
   grunt.loadNpmTasks("grunt-contrib-copy");
-  grunt.loadNpmTasks('grunt-node-qunit');
+  grunt.loadNpmTasks('grunt-node-qunit');/*TODO replace by grunt contrib-qunit*/
+
+  //load the task from the grunt-config directory
+  //these are rat, 
+  grunt.loadTasks('grunt-config');
   
 
-  // Default task.
+
   grunt.registerTask('build', ['browserify:datajs', 'uglify:build', 'copy:forDemo']);
   grunt.registerTask('test-browser', ['configureProxies:test-browser', 'connect:test-browser']);
   grunt.registerTask('test-node', ['node-qunit:default-tests']);
+
+
+  //This task runs the Apache Relase Autit Tool (RAT)
+  //grunt.registerTask('rat', ['shell:rat'/*,'rat-check:rat'*/]);
+  
 };
 

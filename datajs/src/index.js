@@ -27,6 +27,7 @@ window.datajs.V4.oData = require('./lib/odata.js');
 window.datajs.V4.store = require('./lib/store.js');
 window.datajs.V4.cache = require('./lib/cache.js');
 
+/*
 function extend(target) {
     var sources = [].slice.call(arguments, 1);
     sources.forEach(function (source) {
@@ -35,6 +36,6 @@ function extend(target) {
         }
     });
     return target;
-}
+}*/
 
 
