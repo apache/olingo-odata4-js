@@ -630,14 +630,16 @@ var readPayloadMinimal = function (data, model, demandedFormat,recognizeDates) {
     switch (payloadInfo.detectedPayloadKind) {
         case PAYLOADTYPE_FEED:
             return readPayloadMinimalFeed(data, model,payloadInfo, baseURI,  demandedFormat,recognizeDates);
+        case PAYLOADTYPE_ENTRY:
+            return readPayloadMinimalEntry(data, model,payloadInfo, baseURI,  demandedFormat,recognizeDates);
         case PAYLOADTYPE_COLLECTION:
-            return jsonLightReadTopCollectionProperty(data, payloadInfo.type, baseURI, model, recognizeDates);
+            return ;
         case PAYLOADTYPE_PRIMITIVE:
-            return jsonLightReadTopPrimitiveProperty(data, payloadInfo.type, baseURI, recognizeDates);
+            return ;
         case PAYLOADTYPE_SVCDOC:
-            return jsonLightReadSvcDocument(data, baseURI);
+            return ;
         case PAYLOADTYPE_LINKS:
-            return jsonLightReadLinksDocument(data, baseURI);
+            return ;
      }
     return;
 };
@@ -645,7 +647,7 @@ var readPayloadMinimal = function (data, model, demandedFormat,recognizeDates) {
 var jsonLightGetEntryKey = function (data, entityModel) {
     /// <summary>Gets the key of an entry.</summary>
     /// <param name="data" type="Object">JSON light entry.</param>
-    /// <param name="entityModel" type="String">Object describing the entry Model</param>
+    /// <paraFrom   Subject Received    Size    Categories  
     /// <returns type="string">Entry instance key.</returns>
 
     var entityInstanceKey;
@@ -696,6 +698,10 @@ var readPayloadMinimalFeed = function (data, model,feedInfo, baseURI,  demandedF
     }
     data.value = entries;
     return data;
+};
+
+var readPayloadMinimalEntry = function (data, model,entryInfo, baseURI,  demandedFormat, recognizeDates) {
+    return readPayloadMinimalObject(data, entryInfo, baseURI, model, demandedFormat,recognizeDates);
 };
 
 
@@ -785,7 +791,7 @@ var checkProperties = function(data,objectInfoType,baseURI,model, demandedFormat
             if ( isArray(propertyValue)) {
                 data[name+'@odata.type'] = '#' + property.type;
                 for ( var i = 0; i < propertyValue.length; i++) {
-                    readPayloadMinimalComplexObject(propertyValue[0], property,baseURI,model,demandedFormat, recognizeDates);
+                    readPayloadMinimalComplexObject(propertyValue[i], property,baseURI,model,demandedFormat, recognizeDates);
                 }
             } else if (isObject(propertyValue) && (propertyValue !== null)) {
                 readPayloadMinimalComplexObject(propertyValue, property,baseURI,model,demandedFormat, recognizeDates);
