@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,14 +17,9 @@
  * under the License.
  */
 
-/* {
-    oldname:'odata-json.js',
-    updated:'20140514 12:59'
-}*/
-
-var utils    = require('./../datajs.js').utils;
-var oDataUtils    = require('./utils.js');
-var oDataHandler    = require('./handler.js');
+var utils        = require('./../datajs.js').utils;
+var oDataUtils   = require('./utils.js');
+var oDataHandler = require('./handler.js');
 
 var odataNs = "odata";
 var odataAnnotationPrefix = odataNs + ".";
@@ -32,14 +27,12 @@ var contextUrlAnnotation = "@" + odataAnnotationPrefix + "context";
 
 var assigned = utils.assigned;
 var defined = utils.defined;
-var extend = utils.extend;
 var isArray = utils.isArray;
-var isDate = utils.isDate;
+//var isDate = utils.isDate;
 var isObject = utils.isObject;
-var normalizeURI = utils.normalizeURI;
+//var normalizeURI = utils.normalizeURI;
 var parseInt10 = utils.parseInt10;
 
-var contentType = oDataUtils.contentType;
 var formatDateTimeOffset = oDataUtils.formatDateTimeOffset;
 var formatDuration = oDataUtils.formatDuration;
 var formatJsonLight = oDataUtils.formatJsonLight;
@@ -57,12 +50,10 @@ var lookupProperty = oDataUtils.lookupProperty;
 var MAX_DATA_SERVICE_VERSION = oDataUtils.MAX_DATA_SERVICE_VERSION;
 var maxVersion = oDataUtils.maxVersion;
 var parseDateTime = oDataUtils.parseDateTime;
-var parseDuration = oDataUtils.parseDuration;
-var parseTimezone = oDataUtils.parseTimezone;
-var payloadTypeOf = oDataUtils.payloadTypeOf;
-var traverse = oDataUtils.traverse;
-
-// CONTENT START
+//var parseDuration = oDataUtils.parseDuration;
+//var parseTimezone = oDataUtils.parseTimezone;
+//var payloadTypeOf = oDataUtils.payloadTypeOf;
+//var traverse = oDataUtils.traverse;
 
 var PAYLOADTYPE_FEED = "f";
 var PAYLOADTYPE_ENTRY = "e";
@@ -204,9 +195,7 @@ var jsonParser = function (handler, text, context) {
             return extendMetadataFromPayload(json,context,recognizeDates);
         } else if (payloadFormat === 1) { //minmal
             if (!utils.isArray(model)) { // array was default for model in datajsV3 3.0 
-                //TODO use metadata in context to determine which properties need to be converted
-                // and extend the metadata
-                return extendMetadataFromContext(json,context,model,demandedFormat, recognizeDates);
+                return readPayloadMinimal(json, model, demandedFormat,recognizeDates);
             } else {
                 //error metadata in context required, TODO: throw a to be defined exception
             }
@@ -215,10 +204,6 @@ var jsonParser = function (handler, text, context) {
             return json;
         }
     }
-};
-
-var extendMetadataFromContext = function(json,context, model,demandedFormat,recognizeDates) {
-    return jsonLightReadPayload(json, model, demandedFormat,recognizeDates, false, context.contentType.properties['odata.metadata']);
 };
 
 var convertPrimitivetypesOnMetadataFull = function(data) {
@@ -603,7 +588,7 @@ var parseContextUriFragment = function( fragments, model ) {
     return ret;
 };
 
-var jsonLightPayloadInfo = function (data, model) {
+var createPayloadInfo = function (data, model) {
     /// <summary>Infers the information describing the JSON light payload from its metadata annotation, structure, and data model.</summary>
     /// <param name="data" type="Object">Json light response payload object.</param>
     /// <param name="model" type="Object">Object describing an OData conceptual schema.</param>
@@ -631,44 +616,30 @@ var jsonLightPayloadInfo = function (data, model) {
     return parseContextUriFragment(fragment,model);
 };
 
-var jsonLightReadPayload = function (data, model, demandedFormat,recognizeDates, inferFeedAsComplexType, contentTypeOdata) {
-    /// <summary>Converts a JSON light response payload object into its library's internal representation.</summary>
-    /// <param name="data" type="Object">Json light response payload object.</param>
-    /// <param name="model" type="Object">Object describing an OData conceptual schema.</param>
-    /// <param name="recognizeDates" type="Boolean" optional="true">Flag indicating whether datetime literal strings should be converted to JavaScript Date objects.</param>
-    /// <param name="inferFeedAsComplexType" type="Boolean">True if a JSON light payload that looks like a feed should be reported as a complex type property instead.</param>
-    /// <param name="contentTypeOdata" type="string">Includes the type of json ( minimalmetadata, fullmetadata .. etc )</param>
+var readPayloadMinimal = function (data, model, demandedFormat,recognizeDates) {
+    /// <summary>Processe a JSON response payload with metadata-minimal</summary>
+    /// <param name="data" type="Object">Json response payload object</param>
+    /// <param name="model" type="Object">Object describing an OData conceptual schema</param>
+    /// <param name="demandedFormat" type="Number">2=extend to metedata-full, 3=extend to metadata-all</param>
+    /// <param name="recognizeDates" type="Boolean">Flag indicating whether datetime literal strings should be converted to JavaScript Date objects.</param>
     /// <returns type="Object">Object in the library's representation.</returns>
 
-    if (!isComplex(data)) {
-        return data;
-    }
-
-    contentTypeOdata = contentTypeOdata || "minimal";
     var baseURI = data[contextUrlAnnotation];
-    var payloadInfo = jsonLightPayloadInfo(data, model, inferFeedAsComplexType);
-    if (assigned(payloadInfo)) {
-        payloadInfo.contentTypeOdata = contentTypeOdata;
-    }
-    var typeName = null;
-    if (payloadInfo) {
-        delete data[contextUrlAnnotation];
+    var payloadInfo = createPayloadInfo(data, model);
 
-        typeName = payloadInfo.type;
-        switch (payloadInfo.detectedPayloadKind) {
-            case PAYLOADTYPE_FEED:
-                return jsonLightReadFeed(data, payloadInfo, baseURI, model, demandedFormat,recognizeDates);
-            case PAYLOADTYPE_COLLECTION:
-                return jsonLightReadTopCollectionProperty(data, typeName, baseURI, model, recognizeDates);
-            case PAYLOADTYPE_PRIMITIVE:
-                return jsonLightReadTopPrimitiveProperty(data, typeName, baseURI, recognizeDates);
-            case PAYLOADTYPE_SVCDOC:
-                return jsonLightReadSvcDocument(data, baseURI);
-            case PAYLOADTYPE_LINKS:
-                return jsonLightReadLinksDocument(data, baseURI);
-        }
-    }
-    return jsonLightReadObject(data, payloadInfo, baseURI, model, recognizeDates);
+    switch (payloadInfo.detectedPayloadKind) {
+        case PAYLOADTYPE_FEED:
+            return readPayloadMinimalFeed(data, model,payloadInfo, baseURI,  demandedFormat,recognizeDates);
+        case PAYLOADTYPE_COLLECTION:
+            return jsonLightReadTopCollectionProperty(data, payloadInfo.type, baseURI, model, recognizeDates);
+        case PAYLOADTYPE_PRIMITIVE:
+            return jsonLightReadTopPrimitiveProperty(data, payloadInfo.type, baseURI, recognizeDates);
+        case PAYLOADTYPE_SVCDOC:
+            return jsonLightReadSvcDocument(data, baseURI);
+        case PAYLOADTYPE_LINKS:
+            return jsonLightReadLinksDocument(data, baseURI);
+     }
+    return;
 };
 
 var jsonLightGetEntryKey = function (data, entityModel) {
@@ -700,16 +671,13 @@ var jsonLightGetEntryKey = function (data, entityModel) {
     return entityInstanceKey;
 };
 
-
-
-var jsonLightReadFeed = function (data, feedInfo, baseURI, model, demandedFormat,recognizeDates) {
+var readPayloadMinimalFeed = function (data, model,feedInfo, baseURI,  demandedFormat, recognizeDates) {
     var entries = [];
     var items = data.value;
     for (i = 0, len = items.length; i < len; i++) {
-        //TODO SK check if items[i] has @odata.type and use this type instead of  feedinfo
-        
-        if ( items[i]['@odata.type'] !== undefined) {
-            var typeName = items[i]['@odata.type'].substring(1);
+        var item = items[i];
+        if ( defined(item['@odata.type'])) { // in case of mixed feeds
+            var typeName = item['@odata.type'].substring(1);
             var type = lookupEntityType( typeName, model);
             var entryInfo = {
                 contentTypeOdata : feedInfo.contentTypeOdata,
@@ -719,9 +687,9 @@ var jsonLightReadFeed = function (data, feedInfo, baseURI, model, demandedFormat
                 typeName : typeName
             };
 
-            entry = jsonLightReadObject(items[i], entryInfo, baseURI, model, demandedFormat,recognizeDates);
+            entry = readPayloadMinimalObject(item, entryInfo, baseURI, model, demandedFormat,recognizeDates);
         } else {
-            entry = jsonLightReadObject(items[i], feedInfo, baseURI, model, demandedFormat,recognizeDates);
+            entry = readPayloadMinimalObject(item, feedInfo, baseURI, model, demandedFormat,recognizeDates);
         }
         
         entries.push(entry);
@@ -817,10 +785,10 @@ var checkProperties = function(data,objectInfoType,baseURI,model, demandedFormat
             if ( isArray(propertyValue)) {
                 data[name+'@odata.type'] = '#' + property.type;
                 for ( var i = 0; i < propertyValue.length; i++) {
-                    jsonLightReadComplexObject(propertyValue[0], property,baseURI,model,demandedFormat, recognizeDates);
+                    readPayloadMinimalComplexObject(propertyValue[0], property,baseURI,model,demandedFormat, recognizeDates);
                 }
             } else if (isObject(propertyValue) && (propertyValue !== null)) {
-                jsonLightReadComplexObject(propertyValue, property,baseURI,model,demandedFormat, recognizeDates);
+                readPayloadMinimalComplexObject(propertyValue, property,baseURI,model,demandedFormat, recognizeDates);
             } else {
                 if (demandedFormat === 3)  {
                     data[name+'@odata.type'] = '#' + property.type;
@@ -838,7 +806,7 @@ var checkProperties = function(data,objectInfoType,baseURI,model, demandedFormat
     }
 };
 
-var jsonLightReadComplexObject = function (data, property, baseURI, model, demandedFormat, recognizeDates) {
+var readPayloadMinimalComplexObject = function (data, property, baseURI, model, demandedFormat, recognizeDates) {
     var type = property.type;
     if (isCollectionType(property.type)) {
         type =property.type.substring(11,property.type.length-1);
@@ -854,13 +822,11 @@ var jsonLightReadComplexObject = function (data, property, baseURI, model, deman
     checkProperties(data,propertyType ,baseURI,model, demandedFormat, recognizeDates);
 };
 
-var jsonLightReadObject = function (data, objectInfo, baseURI, model, demandedFormat, recognizeDates) {
-    //var obj = {};
-
+var readPayloadMinimalObject = function (data, objectInfo, baseURI, model, demandedFormat, recognizeDates) {
     data['@odata.type'] = '#'+objectInfo.typeName;
 
     var keyType = objectInfo.type;
-    while (( keyType.key === undefined) && (keyType.baseType !== undefined)) {
+    while ((defined(keyType)) && ( keyType.key === undefined) && (keyType.baseType !== undefined)) {
         keyType = lookupEntityType(keyType.baseType, model);
     }
 
@@ -888,6 +854,3 @@ exports.jsonParser = jsonParser;
 exports.jsonSerializer = jsonSerializer;
 
 exports.parseJsonDateString = parseJsonDateString;
-exports.jsonLightPayloadInfo = jsonLightPayloadInfo;
-
-

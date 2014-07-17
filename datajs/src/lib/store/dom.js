@@ -17,18 +17,11 @@
  * under the License.
  */
 
-/* {
-    oldname:'store-dom.js',
-    updated:'20140514 12:59'
-}*/
-
 var utils = require('./../datajs.js').utils;
 
 // Imports.
 var throwErrorCallback = utils.throwErrorCallback;
 var delay = utils.delay;
-
-// CONTENT START
 
 var localStorage = null;
 
@@ -319,6 +312,4 @@ DomStore.prototype.update = function (key, value, success, error) {
     }, error);
 };
 
-// DATAJS INTERNAL START
 module.exports = DomStore;
-// DATAJS INTERNAL END

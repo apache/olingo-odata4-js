@@ -17,11 +17,6 @@
  * under the License.
  */
 
-/* {
-    oldname:'odata-utils.js',
-    updated:'20140514 12:59'
-}*/
-
 var utils    = require('./../datajs.js').utils;
 
 // Imports
@@ -32,8 +27,6 @@ var isArray = utils.isArray;
 var isDate = utils.isDate;
 var isObject = utils.isObject;
 var parseInt10 = utils.parseInt10;
-
-// CONTENT START
 
 var dataItemTypeName = function (value, metadata) {
     /// <summary>Gets the type name of a data item value that belongs to a feed, an entry, a complex type property, or a collection property.</summary>
@@ -1073,7 +1066,6 @@ var traverse = function (item, callback) {
     return callback("", traverseInternal(item, "", callback));
 };
 
-// DATAJS INTERNAL START
 exports.dataItemTypeName = dataItemTypeName;
 exports.EDM_BINARY = EDM_BINARY;
 exports.EDM_BOOLEAN = EDM_BOOLEAN;
@@ -1159,5 +1151,4 @@ exports.parseInt10 = parseInt10;
 exports.prepareRequest = prepareRequest;
 exports.removeNamespace = removeNamespace;
 exports.traverse = traverse;
-// DATAJS INTERNAL END
 

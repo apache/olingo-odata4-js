@@ -17,13 +17,6 @@
  * under the License.
  */
  
-/* {
-    oldname:'deferred.js',
-    updated:'20140514 12:59'
-}*/
-
-// CONTENT START
-
 var forwardCall = function (thisValue, name, returnValue) {
     /// <summary>Creates a new function to forward a call.</summary>
     /// <param name="thisValue" type="Object">Value to use as the 'this' object.</param>
@@ -175,9 +168,6 @@ var createDeferred = function () {
     }
 };
 
-// DATAJS INTERNAL START
-//window.datajs.createDeferred = createDeferred;
-//window.datajs.DjsDeferred = DjsDeferred;
 exports.createDeferred = createDeferred;
 exports.DjsDeferred = DjsDeferred;
-// DATAJS INTERNAL END
+

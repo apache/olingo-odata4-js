@@ -17,11 +17,6 @@
  * under the License.
  */
 
-/* {
-    oldname:'cache.js',
-    updated:'20140514 12:59'
-}*/
-
 var utils = require('./datajs.js').utils;
 
 
@@ -44,8 +39,6 @@ var getJsonValueArraryLength = utils.getJsonValueArraryLength;
 var sliceJsonValueArray = utils.sliceJsonValueArray;
 var concatJsonValueArray = utils.concatJsonValueArray;
 var storeReq = require('./datajs.js').store;
-
-// CONTENT START
 
 var appendPage = function (operation, page) {
     /// <summary>Appends a page's data to the operation data.</summary>
@@ -1363,7 +1356,5 @@ exports.createDataCache = function (options) {
     return new DataCache(options);
 };
 
-// DATAJS INTERNAL START
-//window.datajs.estimateSize = estimateSize;
 exports.estimateSize = estimateSize;
-// DATAJS INTERNAL END
+

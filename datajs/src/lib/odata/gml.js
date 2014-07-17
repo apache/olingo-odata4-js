@@ -17,17 +17,10 @@
  * under the License.
  */
 
-/* {
-    oldname:'odata-gml.js',
-    updated:'20140514 12:59'
-}*/
-
 
 var utils    = require('./../datajs.js').utils;
 var xml    = require('./../datajs.js').xml;
 var odataUtils    = require('./utils.js');
-
-
 
 var contains = utils.contains;
 var djsassert = utils.djsassert;
@@ -832,9 +825,6 @@ var gmlNewODataGeometryCollection = function (dom, value, isGeography) {
     return gmlNewODataMultiItem(dom, "MultiGeometry", "geometryMembers", value.geometries, gmlNewODataGeometryCollectionItem, isGeography);
 };
 
-// DATAJS INTERNAL START
 exports.gmlNewODataSpatialValue = gmlNewODataSpatialValue;
 exports.gmlReadODataSpatialValue = gmlReadODataSpatialValue;
 exports.gmlXmlNs = gmlXmlNs;
-// DATAJS INTERNAL END
-

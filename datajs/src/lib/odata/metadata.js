@@ -17,10 +17,6 @@
  * under the License.
  */
 
-/* {
-    oldname:'odata-metadata.js',
-    updated:'20140514 12:59'
-}*/
 
 var utils    = require('./../datajs.js').utils;
 var oDataXML    = require('./xml.js');
@@ -28,7 +24,6 @@ var oDSxml    = require('./../datajs.js').xml;
 var odataHandler    = require('./handler.js');
 
 // imports 
-
 var contains = utils.contains;
 var normalizeURI = utils.normalizeURI;
 var xmlAttributes = oDSxml.xmlAttributes;
@@ -49,8 +44,6 @@ var odataMetaXmlNs = oDataXML.odataMetaXmlNs;
 
 
 var xmlMediaType = "application/xml";
-
-// CONTENT START
 
 var schemaElement = function (attributes, elements, text, ns) {
     /// <summary>Creates an object that describes an element in an schema.</summary>
@@ -515,10 +508,8 @@ var metadataParser = function (handler, text) {
 
 exports.metadataHandler = odataHandler.handler(metadataParser, null, xmlMediaType, MAX_DATA_SERVICE_VERSION);
 
-// DATAJS INTERNAL START
 exports.schema = schema;
 exports.scriptCase = scriptCase;
 exports.getChildSchema = getChildSchema;
 exports.parseConceptualModelElement = parseConceptualModelElement;
 exports.metadataParser = metadataParser;
-// DATAJS INTERNAL END

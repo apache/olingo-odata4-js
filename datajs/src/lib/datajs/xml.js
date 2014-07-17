@@ -17,22 +17,13 @@
  * under the License.
  */
  
-/* {
-    oldname:'xml.js',
-    updated:'20140514 12:59'
-}*/
-
-
 var utils    = require('./utils.js');
 
 var activeXObject = utils.activeXObject;
 var djsassert = utils.djsassert;
 var extend = utils.extend;
 var isArray = utils.isArray;
-var isObject = utils.isObject;
 var normalizeURI = utils.normalizeURI;
-
-// CONTENT START
 
 // URI prefixes to generate smaller code.
 var http = "http://";
@@ -789,7 +780,6 @@ var xmlSerializeNode = function (domNode) {
     throw { message: "XML serialization unsupported" };
 };
 
-// DATAJS INTERNAL START
 exports.http = http;
 exports.w3org = w3org;
 exports.xmlNS = xmlNS;
@@ -824,4 +814,3 @@ exports.xmlQualifiedName = xmlQualifiedName;
 exports.xmlSerialize = xmlSerialize;
 exports.xmlSerializeDescendants = xmlSerializeDescendants;
 exports.xmlSiblingElement = xmlSiblingElement;
-// DATAJS INTERNAL END

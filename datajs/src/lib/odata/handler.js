@@ -17,12 +17,6 @@
  * under the License.
  */
 
-/* {
-    oldname:'odata-handler.js',
-    updated:'20140514 12:59'
-}*/
-
-
 var utils    = require('./../datajs.js').utils;
 var oDataUtils    = require('./utils.js');
 
@@ -34,7 +28,6 @@ var trimString = utils.trimString;
 
 var maxVersion = oDataUtils.maxVersion;
 
-// CONTENT START
 
 var MAX_DATA_SERVICE_VERSION = "4.0";
 
@@ -269,7 +262,6 @@ var textSerialize = function (handler, data /*, context */) {
 
 exports.textHandler = handler(textParse, textSerialize, "text/plain", MAX_DATA_SERVICE_VERSION);
 
-// DATAJS INTERNAL START
 exports.contentType = contentType;
 exports.contentTypeToString = contentTypeToString;
 exports.handler = handler;
@@ -279,4 +271,3 @@ exports.getRequestOrResponseHeader = getRequestOrResponseHeader;
 exports.getContentType = getContentType;
 exports.getDataServiceVersion = getDataServiceVersion;
 exports.MAX_DATA_SERVICE_VERSION = MAX_DATA_SERVICE_VERSION;
-// DATAJS INTERNAL END

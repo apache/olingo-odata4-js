@@ -17,13 +17,6 @@
  * under the License.
  */
 
-/* {
-    oldname:'odata.js',
-    updated:'20140514 12:59'
-}*/
-
-// odata.js
-
 // Imports
 var odataUtils    = exports.utils     = require('./odata/utils.js');
 var odataHandler  = exports.handler   = require('./odata/handler.js');

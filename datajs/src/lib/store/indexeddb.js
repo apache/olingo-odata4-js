@@ -17,19 +17,12 @@
  * under the License.
  */
 
-/* {
-    oldname:'store-indexeddb.js',
-    updated:'20140514 12:59'
-}*/
-
 var utils = require('./../datajs.js').utils;
 
 
 // Imports.
 var throwErrorCallback = utils.throwErrorCallback;
 var delay = utils.delay;
-
-// CONTENT START
 
 var indexedDB = window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.indexedDB;
 var IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange;
@@ -417,8 +410,4 @@ IndexedDBStore.prototype.update = function (key, value, success, error) {
     }, error);
 };
 
-// DATAJS INTERNAL START
 module.exports = IndexedDBStore;
-// DATAJS INTERNAL END
-
-// CONTENT END

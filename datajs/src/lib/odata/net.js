@@ -17,18 +17,12 @@
  * under the License.
  */
 
-/* {
-    oldname:'odata-net.js',
-    updated:'20140514 12:59'
-}*/
-
 var utils    = require('./../datajs.js').utils;
-    // Imports.
+// Imports.
 
 var defined = utils.defined;
 var delay = utils.delay;
 
-// CONTENT START
 var ticks = 0;
 
 var canUseJSONP = function (request) {
@@ -327,8 +321,7 @@ exports.defaultHttpClient = {
     }
 };
 
-// DATAJS INTERNAL START
 exports.canUseJSONP = canUseJSONP;
 exports.isAbsoluteUrl = isAbsoluteUrl;
 exports.isLocalUrl = isLocalUrl;
-// DATAJS INTERNAL END
+

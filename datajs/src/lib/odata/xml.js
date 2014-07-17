@@ -17,11 +17,6 @@
  * under the License.
  */
 
-/* {
-    oldname:'odata-xml.js',
-    updated:'20140514 12:59'
-}*/
-
 var xml    = require('./../datajs.js').xml;
 var utils    = require('./../datajs.js').utils;
 var odata_utils    = require('./utils.js');
@@ -826,7 +821,6 @@ var xmlSerializer = function (handler, data, context) {
 
 exports.xmlHandler = odataHandler.handler(xmlParser, xmlSerializer, xmlMediaType, MAX_DATA_SERVICE_VERSION);
 
-// DATAJS INTERNAL START
 exports.adoDs = adoDs;
 exports.createAttributeExtension = createAttributeExtension;
 exports.createElementExtension = createElementExtension;
@@ -845,4 +839,3 @@ exports.xmlNewODataMetaElement = xmlNewODataMetaElement;
 exports.xmlNewODataDataElement = xmlNewODataDataElement;
 exports.xmlReadODataEdmPropertyValue = xmlReadODataEdmPropertyValue;
 exports.xmlReadODataProperty = xmlReadODataProperty;
-// DATAJS INTERNAL END

@@ -17,11 +17,6 @@
  * under the License.
  */
  
-/* {
-    oldname:'utils.js',
-    updated:'20140514 12:59'
-}*/
-
 var activeXObject = function (progId) {
     /// <summary>Creates a new ActiveXObject from the given progId.</summary>
     /// <param name="progId" type="String" mayBeNull="false" optional="false">
@@ -527,9 +522,6 @@ var startsWith = function (input, search) {
     return input.indexOf(search) == 0;
 };
 
-
-
-// DATAJS INTERNAL START
 exports.activeXObject = activeXObject;
 exports.assigned = assigned;
 exports.contains = contains;
@@ -556,7 +548,4 @@ exports.sliceJsonValueArray = sliceJsonValueArray;
 exports.concatJsonValueArray = concatJsonValueArray;
 exports.startsWith = startsWith;
 exports.endsWith = endsWith;
-
-// DATAJS INTERNAL END
-
     

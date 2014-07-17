@@ -17,21 +17,12 @@
  * under the License.
  */
 
-/* {
-    oldname:'store-memory.js',
-    updated:'20140514 12:59'
-}*/
-
-
-
 var utils = require('./../datajs.js').utils;
 
 
 // Imports.
 var throwErrorCallback = utils.throwErrorCallback;
 var delay = utils.delay;
-
-// CONTENT START
 
 var MemoryStore = function (name) {
     /// <summary>Constructor for store objects that use a sorted array as the underlying mechanism.</summary>
@@ -233,8 +224,4 @@ MemoryStore.prototype.defaultError = throwErrorCallback;
 /// <summary>Identifies the underlying mechanism used by the store.</summary>
 MemoryStore.prototype.mechanism = "memory";
 
-// DATAJS INTERNAL START
 module.exports = MemoryStore;
-// DATAJS INTERNAL END
-
-    // CONTENT END

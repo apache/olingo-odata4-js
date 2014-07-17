@@ -17,20 +17,11 @@
  * under the License.
  */
  
-/* {
-    oldname:'cache_source.js',
-    updated:'20140514 12:59'
-}*/
-
-// cache-source.js
-
 var utils = require("./../datajs.js").utils;
 var odataRequest = require("./../odata.js");
 
 var parseInt10 = utils.parseInt10;
 var normalizeURICase = utils.normalizeURICase;
-
-// CONTENT START
 
 var appendQueryOption = function (uri, queryOption) {
     /// <summary>Appends the specified escaped query option to the specified URI.</summary>
@@ -197,9 +188,4 @@ var ODataCacheSource = function (options) {
     return that;
 };
 
-// DATAJS INTERNAL START
 exports.ODataCacheSource = ODataCacheSource;
-//window.datajs.ODataCacheSource = ODataCacheSource;
-// DATAJS INTERNAL END
-
-// CONTENT END

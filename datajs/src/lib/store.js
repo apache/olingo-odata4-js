@@ -17,16 +17,9 @@
  * under the License.
  */
 
-/* {
-    oldname:'store.js',
-    updated:'20140514 12:59'
-}*/
-
 exports.DomStore       = DomStore       = require('./store/dom.js');
 exports.IndexedDBStore = IndexedDBStore = require('./store/indexeddb.js');
 exports.MemoryStore    = MemoryStore    = require('./store/memory.js');
-
-// CONTENT START
 
 var mechanisms = {
     indexeddb: IndexedDBStore,
@@ -58,7 +51,6 @@ exports.createStore = function (name, mechanism) {
     throw { message: "Failed to create store", name: name, mechanism: mechanism };
 };
 
-// DATAJS INTERNAL START
 exports.mechanisms = mechanisms;
-// DATAJS INTERNAL END
+
 
