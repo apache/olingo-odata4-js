@@ -40,6 +40,7 @@ var formatNumberWidth = oDataUtils.formatNumberWidth;
 var getCanonicalTimezone = oDataUtils.getCanonicalTimezone;
 var handler = oDataUtils.handler;
 var isComplex = oDataUtils.isComplex;
+var isPrimitive = oDataUtils.isPrimitive;
 var isCollectionType = oDataUtils.isCollectionType;
 var lookupComplexType = oDataUtils.lookupComplexType;
 var lookupEntityType = oDataUtils.lookupEntityType;
@@ -449,6 +450,7 @@ var parseContextUriFragment = function( fragments, model ) {
     ret.typeName = undefined;
 
     var fragmentParts = fragments.split("/");
+    var type;
     
     for(var i = 0; i < fragmentParts.length; ++i) {
         var fragment = fragmentParts[i];
@@ -478,7 +480,7 @@ var parseContextUriFragment = function( fragments, model ) {
                     // Capter 10.14
                     ret.typeName = inPharenthesis;
 
-                    var type = lookupEntityType(ret.typeName, model);
+                    type = lookupEntityType(ret.typeName, model);
                     if ( type !== null) {
                         ret.type = type;
                         continue;
@@ -542,7 +544,7 @@ var parseContextUriFragment = function( fragments, model ) {
             if (fragment.indexOf('.') !== -1) {
                 // Capter 10.6
                 ret.typeName = fragment;
-                var type = lookupEntityType(ret.typeName, model);
+                type = lookupEntityType(ret.typeName, model);
                 if ( type !== null) {
                     ret.type = type;
                     continue;
@@ -647,7 +649,8 @@ var readPayloadMinimal = function (data, model, demandedFormat,recognizeDates) {
 var jsonLightGetEntryKey = function (data, entityModel) {
     /// <summary>Gets the key of an entry.</summary>
     /// <param name="data" type="Object">JSON light entry.</param>
-    /// <paraFrom   Subject Received    Size    Categories  
+    /// <paraFrom   Subject Received    Size    Categories  
+
     /// <returns type="string">Entry instance key.</returns>
 
     var entityInstanceKey;
@@ -846,6 +849,28 @@ var readPayloadMinimalObject = function (data, objectInfo, baseURI, model, deman
     checkProperties(data,objectInfo.type,baseURI,model, demandedFormat, recognizeDates);
     
     return data;
+};
+
+var jsonLightSerializableMetadata = ["@odata.type", "@odata.etag", "@odata.mediaEditLink", "@odata.mediaReadLink", "@odata.mediaContentType", "@odata.mediaEtag"];
+
+var isJsonLightSerializableProperty = function (property) {
+    if (!property) {
+        return false;
+    }
+
+    if (property.indexOf("@odata.") == -1) {
+        return true;
+    }
+
+    var i, len;
+    for (i = 0, len = jsonLightSerializableMetadata.length; i < len; i++) {
+        var name = jsonLightSerializableMetadata[i];
+        if (property.indexOf(name) != -1) {
+            return true;
+        }
+    }
+
+    return false;
 };
 
 
