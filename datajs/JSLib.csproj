@@ -52,7 +52,6 @@
     <Content Include="src\lib\odata\gml.js" />
     <Content Include="src\lib\odata\handler.js" />
     <Content Include="src\lib\odata\json.js" />
-    <Content Include="src\lib\odata\json-light.js" />
     <Content Include="src\lib\odata\metadata.js" />
     <Content Include="src\lib\odata\net.js" />
     <Content Include="src\lib\odata\utils.js" />

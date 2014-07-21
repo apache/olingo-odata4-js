@@ -40,9 +40,9 @@
         return expected + 2;
     };
 
-    var verifyBatchRequest = function(serviceRoot, batchRequests, elementTypes, done) {
-        OData.request({ requestUri: serviceRoot + "/$batch", method: "POST", data: { __batchRequests: batchRequests } },
-            function(data, response) {
+    var verifyBatchRequest = function (serviceRoot, batchRequests, elementTypes, done) {
+        OData.request({ requestUri: serviceRoot + "/$batch", method: "POST", data: { __batchRequests: batchRequests} },
+            function (data, response) {
                 djstest.assertAreEqual(response.statusCode, httpStatusCode.accepted, "Verify response code");
                 djstest.assertAreEqual(data.__batchResponses.length, batchRequests.length, "Verify batch response count");
                 verifyBatchResponses(batchRequests, elementTypes, serviceRoot, data.__batchResponses, done);
@@ -103,6 +103,12 @@
         $.each(array, function (index, element) { callback(index, element, doneOne); });
     };
 
+    var cloneHeadersWithContentId = function (mimeHeaders, count) {
+        var headers = djstest.clone(mimeHeaders);
+        headers["Content-ID"] = count;
+        return headers;
+    };
+
     var service = "./endpoints/FoodStoreDataServiceV4.svc";
     var batchUri = service + "/$batch";
 
@@ -113,7 +119,7 @@
         noContent: 204
     };
 
-    var mimeTypes = [undefined, /*"application/atom+xml",*/ "application/json;odata.metadata=minimal"];
+    var mimeTypes = [undefined, "application/json;odata.metadata=minimal"];
 
     module("Functional", {
         setup: function () {
@@ -143,17 +149,17 @@
             var batchRequests = [
                     {
                         __changeRequests: [
-                            { requestUri: "Categories", method: "POST", headers: djstest.clone(params.mimeHeaders), data:
+                            { requestUri: "Categories", method: "POST", headers: cloneHeadersWithContentId(params.mimeHeaders, 1), data:
                                 { CategoryID: 42, Name: "New Category" }
                             }
                         ]
                     },
                     {
                         __changeRequests: [
-                            { requestUri: "Categories(1)", method: "PUT", headers: djstest.clone(params.mimeHeaders), data:
+                            { requestUri: "Categories(1)", method: "PUT", headers: cloneHeadersWithContentId(params.mimeHeaders, 2), data:
                                 { CategoryID: 1, Name: "Updated Category" }
                             },
-                            { requestUri: "Categories(0)", method: "DELETE", headers: djstest.clone(params.acceptHeaders) }
+                            { requestUri: "Categories(0)", method: "DELETE", headers: cloneHeadersWithContentId(params.mimeHeaders, 3) }
                         ]
                     }
                 ];
@@ -171,7 +177,7 @@
                     { requestUri: "Foods?$filter=FoodID eq 1", method: "GET", headers: djstest.clone(params.acceptHeaders) },
                     {
                         __changeRequests: [
-                            { requestUri: "Categories", method: "POST", headers: djstest.clone(params.mimeHeaders), data:
+                            { requestUri: "Categories", method: "POST", headers: cloneHeadersWithContentId(params.mimeHeaders, 1), data:
                                 { CategoryID: 42, Name: "New Category" }
                             }
                         ]
@@ -179,10 +185,10 @@
                     { requestUri: "Foods?$top=2", method: "GET", headers: djstest.clone(params.acceptHeaders) },
                     {
                         __changeRequests: [
-                            { requestUri: "Categories(1)", method: "PUT", headers: djstest.clone(params.mimeHeaders), data:
+                            { requestUri: "Categories(1)", method: "PUT", headers: cloneHeadersWithContentId(params.mimeHeaders, 2), data:
                                 { CategoryID: 1, Name: "Updated Category" }
                             },
-                            { requestUri: "Categories(0)", method: "DELETE", headers: djstest.clone(params.acceptHeaders) }
+                            { requestUri: "Categories(0)", method: "DELETE", headers: cloneHeadersWithContentId(params.mimeHeaders, 3) }
                         ]
                     }
                 ];
@@ -204,10 +210,10 @@
             var batchRequests = [
                     {
                         __changeRequests: [
-                            { requestUri: "Categories", method: "POST", headers: djstest.clone(params.mimeHeaders), data:
+                            { requestUri: "Categories", method: "POST", headers: cloneHeadersWithContentId(params.mimeHeaders, 1), data:
                                 { CategoryID: 42, Name: "New Category" }
                             },
-                            { requestUri: "Categories(1)", method: "PUT", headers: djstest.clone(params.mimeHeaders), data:
+                            { requestUri: "Categories(1)", method: "PUT", headers: cloneHeadersWithContentId(params.mimeHeaders, 2), data:
                                 { CategoryID: 1, Name: "Updated Category" }
                             }
                         ]
@@ -224,10 +230,10 @@
                     { requestUri: "Foods(0)", method: "GET", headers: djstest.clone(params.acceptHeaders) },
                     {
                         __changeRequests: [
-                            { requestUri: "Categories", method: "POST", headers: djstest.clone(params.mimeHeaders), data:
+                            { requestUri: "Categories", method: "POST", headers: cloneHeadersWithContentId(params.mimeHeaders, 1), data:
                                 { CategoryID: 42, Name: "New Category" }
                             },
-                            { requestUri: "Categories(1)", method: "PUT", headers: djstest.clone(params.mimeHeaders), data:
+                            { requestUri: "Categories(1)", method: "PUT", headers: cloneHeadersWithContentId(params.mimeHeaders, 2), data:
                                 { CategoryID: 1, Name: "Updated Category" }
                             }
                         ]
@@ -238,39 +244,26 @@
             djstest.assertsExpected(determineExpected(batchRequests));
             verifyBatchRequest(service, batchRequests, elementTypes, function () { djstest.done(); });
         }, "Single retrieve and changeset: mimeType = " + mimeType, { acceptHeaders: acceptHeaders, mimeHeaders: mimeHeaders });
-    });
 
-    djstest.addTest(function updateOutsideChangeset() {
-        var batchRequests = [{ requestUri: "Categories", method: "POST", data: { CategoryID: 42, Name: "New Category"}}];
+        djstest.addTest(function retrieveInsideChangeset(params) {
 
-        djstest.assertsExpected(1);
-        OData.request({ requestUri: batchUri, method: "POST", data: { __batchRequests: batchRequests} },
-            function (data, response) {
-                djstest.assert(response.body.indexOf("An error occurred while processing this request.") > -1, "Verify response error message");
-                djstest.done();
-            }, unexpectedErrorHandler, OData.batch.batchHandler
-        );
-    }, "Update outside changeset");
-
-    djstest.addTest(function retrieveInsideChangeset() {
-
-        var batchRequests = [
+            var batchRequests = [
                     { requestUri: "Foods(0)", method: "GET" },
                     { __changeRequests: [
-                            { requestUri: "Categories", method: "POST", data: { CategoryID: 42, Name: "New Category"} },
-                            { requestUri: "Categories(1)", method: "PUT", data: { CategoryID: 1, Name: "Updated Category"} }
+                            { requestUri: "Categories", method: "POST", headers: cloneHeadersWithContentId(params.mimeHeaders, 1), data: { CategoryID: 42, Name: "New Category"} },
+                            { requestUri: "Categories(1)", method: "PUT", headers: cloneHeadersWithContentId(params.mimeHeaders, 2), data: { CategoryID: 1, Name: "Updated Category"} }
                         ]
                     },
                     { requestUri: "Foods(1)", method: "GET" },
                     { __changeRequests: [
-                            { requestUri: "Categories", method: "POST", data: { CategoryID: 42, Name: "New Category"} },
-                            { requestUri: "Categories(1)", method: "PUT", data: { CategoryID: 1, Name: "Updated Category"} },
+                            { requestUri: "Categories", method: "POST", headers: cloneHeadersWithContentId(params.mimeHeaders, 3), data: { CategoryID: 42, Name: "New Category"} },
+                            { requestUri: "Categories(1)", method: "PUT", headers: cloneHeadersWithContentId(params.mimeHeaders, 4), data: { CategoryID: 1, Name: "Updated Category"} },
                             { requestUri: "Foods", method: "GET" }
                         ]
                     }
                 ];
 
-        OData.request({ requestUri: batchUri, method: "POST", data: { __batchRequests: batchRequests} },
+            OData.request({ requestUri: batchUri, method: "POST", data: { __batchRequests: batchRequests} },
             function (data, response) {
                 var batchResponses = data.__batchResponses;
                 var error = batchResponses[3].__changeResponses[0];
@@ -280,5 +273,19 @@
                 batchResponses.splice(3, 1);
                 verifyBatchResponses(batchRequests, ["entry", null], service, batchResponses, function () { djstest.done(); });
             }, unexpectedErrorHandler, OData.batch.batchHandler);
-    }, "Retrieve inside changeset");
+        }, "Retrieve inside changeset： mimeType = " + mimeType, {mimeHeaders: mimeHeaders });
+    });
+
+    /*On Odata V4 spec, the POST/PUT/Delete operations are allowed outside of changesets.*/
+    djstest.addTest(function updateOutsideChangeset() {
+        var batchRequests = [{ requestUri: "Categories", method: "POST", data: { CategoryID: 42, Name: "New Category"}}];
+
+        djstest.assertsExpected(1);
+        OData.request({ requestUri: batchUri, method: "POST", data: { __batchRequests: batchRequests} },
+            function (data, response) {
+                djstest.assert(response.body.indexOf("An error occurred while processing this request.") == -1, "Verify that there is no error occurred.");
+                djstest.done();
+            }, unexpectedErrorHandler, OData.batch.batchHandler
+        );
+    }, "Update outside changeset");
 })(this);

@@ -758,6 +758,8 @@ var normalHeaders = {
     "odata-isolation": "OData-Isolation",
     "odata-maxversion": "OData-MaxVersion",
     "prefer": "Prefer",
+    "content-id": "Content-ID",
+    "content-transfer-encoding": "Content-Transfer-Encoding",
     
     // Headers used by response
     "etag": "ETag",
