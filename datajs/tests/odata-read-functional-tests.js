@@ -18,16 +18,14 @@
  */
 
 (function (window, undefined) {
-    OData.defaultHandler.accept = "application/json;q=0.9, application/atomsvc+xml;q=0.8, */*;q=0.1";
+    OData.defaultHandler.accept = "application/json;q=0.9, */*;q=0.1";
     var unexpectedErrorHandler = function (err) {
         djstest.assert(false, "Unexpected call to error handler with error: " + djstest.toString(err));
         djstest.done();
     };
 
-    // to do: enable the Atom/XML senario
     var validServiceDocumentAcceptHeaders = [
             "*/*",
-    //"application/xml",
             "application/json",
             undefined
           ];
@@ -43,13 +41,11 @@
     ];
 
     var invalidMetadataAcceptHeaders = [
-            "application/atom+xml",
             "application/json"
         ];
 
     var handlerAcceptStrings = [
         "*/*",
-    //      "application/atom+xml",
         "application/json",
          undefined
       ];

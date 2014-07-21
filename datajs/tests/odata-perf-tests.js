@@ -39,7 +39,6 @@
 
     // null "service" indicates the feed is read-only
     var feeds = [
-        // will add atom format test after enabling atom scenario
         { service: largeCollectionService, uri: largeCollectionService + "Customers", mimeType: "application/json;odata.metadata=minimal" },
         { service: largeCollectionService, uri: largeCollectionService + "Customers", mimeType: "application/json;odata.metadata=full" },
         { service: largeCollectionService, uri: largeCollectionService + "Customers", mimeType: "application/json;odata.metadata=none" },

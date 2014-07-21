@@ -24,7 +24,6 @@ var odataMetadata = exports.metadata  = require('./odata/metadata.js');
 var odataNet      = exports.net       = require('./odata/net.js');
                     exports.gml       = require('./odata/gml.js');
 var odataJson     = exports.json      = require('./odata/json.js');
-var odataAtom     = exports.atom      = require('./odata/atom.js');
 var odataXml      = exports.xml       = require('./odata/xml.js');
                     exports.batch     = require('./odata/batch.js');
                     
@@ -48,8 +47,7 @@ var metadataParser = odataMetadata.metadataParser;
 
 // CONTENT START
 
-// to do: disable atom scenario
-var handlers = [odataJson.jsonHandler/*, odata.atomHandler*/, odataXml.xmlHandler, odataHandler.textHandler];
+var handlers = [odataJson.jsonHandler, odataXml.xmlHandler, odataHandler.textHandler];
 
 var dispatchHandler = function (handlerMethod, requestOrResponse, context) {
     /// <summary>Dispatches an operation to handlers.</summary>
@@ -77,7 +75,7 @@ exports.defaultError = throwErrorCallback;
 
 exports.defaultHandler = {
         read: function (response, context) {
-            /// <summary>Reads the body of the specified response by delegating to JSON and ATOM handlers.</summary>
+            /// <summary>Reads the body of the specified response by delegating to JSON handlers.</summary>
             /// <param name="response">Response object.</param>
             /// <param name="context">Operation context.</param>
 
@@ -87,7 +85,7 @@ exports.defaultHandler = {
         },
 
         write: function (request, context) {
-            /// <summary>Write the body of the specified request by delegating to JSON and ATOM handlers.</summary>
+            /// <summary>Write the body of the specified request by delegating to JSON handlers.</summary>
             /// <param name="request">Reques tobject.</param>
             /// <param name="context">Operation context.</param>
 
@@ -95,7 +93,7 @@ exports.defaultHandler = {
         },
 
         maxDataServiceVersion: MAX_DATA_SERVICE_VERSION,
-        accept: "application/json;q=0.9, application/atomsvc+xml;q=0.8, */*;q=0.1"
+        accept: "application/json;q=0.9, */*;q=0.1"
     };
 
 exports.defaultMetadata = []; //TODO check why is the defaultMetadata an Array? and not an Object.
@@ -168,7 +166,7 @@ exports.request = function (request, success, error, handler, httpClient, metada
 
 exports.parseMetadata = function (csdlMetadataDocument) {
     /// <summary>Parses the csdl metadata to DataJS metatdata format. This method can be used when the metadata is retrieved using something other than DataJS</summary>
-    /// <param name="atomMetadata" type="string">A string that represents the entire csdl metadata.</param>
+    /// <param name="csdlMetadata" type="string">A string that represents the entire csdl metadata.</param>
     /// <returns type="Object">An object that has the representation of the metadata in Datajs format.</returns>
 
     return metadataParser(null, csdlMetadataDocument);

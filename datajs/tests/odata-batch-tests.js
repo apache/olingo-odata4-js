@@ -21,7 +21,7 @@
 
 (function (window, undefined) {
     // DATAJS INTERNAL START
-    var defaultAcceptString = "application/json;q=0.9, application/atomsvc+xml;q=0.8, */*;q=0.1";
+    var defaultAcceptString = "application/json;q=0.9, */*;q=0.1";
 
     var testPayload = {
         CategoryID : 42,
@@ -30,8 +30,6 @@
         version: "4.0"
     };
     
-    // to do: test Atom payload
-    // var atomPayload = OData.atomSerializer(OData.atomHandler, testPayload, { "OData-Version": "4.0" });
     var jsonPayload = OData.json.jsonSerializer(OData.json.jsonHandler, testPayload, { "OData-Version": "4.0" });
 
     djstest.addTest(function writeRequestTest() {
@@ -106,8 +104,6 @@
                 { requestUri: "http://feed(2)", headers: { "Accept": "application/json;odata.metadata=minimal" }, method: "GET" },
                 { __changeRequests: [
                         { requestUri: "http://feed(1)", headers: {}, method: "POST", data: testPayload }
-                        // to do: test atom payload                       
-//                        { requestUri: "http://feed(2)", headers: { "Content-Type": "application/atom+xml", "OData-Version": "4.0" }, method: "PUT", data: testPayload }//
                         ]
                 },
                 { requestUri: "http://feed(1)", headers: {} }
@@ -184,14 +180,12 @@
                 __batchRequests: [
                     { __changeRequests: [
                         { requestUri: "http://feed(1)", headers: {}, method: "POST", data: testPayload }
-//                        { requestUri: "http://feed(2)", headers: { "Content-Type": "application/atom+xml", "OData-Version": "4.0" }, method: "PUT", data: testPayload }
                         ]
                     }
             ]
             }
         };
 
-        // To do: test atom payload
         var template = "\r\n--<batchBoundary>\r\n" +
                        "Content-Type: multipart/mixed; boundary=<changesetBoundary>\r\n" +
                        "\r\n--<changesetBoundary>\r\n" +

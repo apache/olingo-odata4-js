@@ -40,7 +40,6 @@
 
     var handlerAcceptStrings = [
         "*/*",
-    /*"application/atom+xml",*/
         "application/json",
         undefined
     ];

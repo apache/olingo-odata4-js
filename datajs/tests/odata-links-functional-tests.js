@@ -126,7 +126,7 @@
         "./endpoints/FoodStoreDataServiceV4.svc"
     ];
 
-    var mimeTypes = [undefined, "application/json;odata.metadata=minimal"/*, "application/xml"*/];
+    var mimeTypes = [undefined, "application/json;odata.metadata=minimal"];
 
     var httpStatusCode = {
         created: 201,

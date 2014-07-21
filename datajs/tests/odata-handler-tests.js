@@ -293,11 +293,11 @@
 
     djstest.addTest(function contentTypeTest() {
         var tests = [
-            { contentType: "application/atom+xml;param1=value1;param2=value2", expected: { mediaType: "application/atom+xml", properties: { param1: "value1", param2: "value2"}} },
-            { contentType: "application/atom+xml; param1=value1; param2=value2", expected: { mediaType: "application/atom+xml", properties: { param1: "value1", param2: "value2"}} },
-            { contentType: "application/atom+xml;param1=value1; param2=value2", expected: { mediaType: "application/atom+xml", properties: { param1: "value1", param2: "value2"}} },
-            { contentType: "application/atom+xml; param1=value1;param2=value2", expected: { mediaType: "application/atom+xml", properties: { param1: "value1", param2: "value2"}} },
-            { contentType: "application/atom+xml", expected: { mediaType: "application/atom+xml", properties: {}} },
+            { contentType: "application/json;param1=value1;param2=value2", expected: { mediaType: "application/json", properties: { param1: "value1", param2: "value2"}} },
+            { contentType: "application/json; param1=value1; param2=value2", expected: { mediaType: "application/json", properties: { param1: "value1", param2: "value2"}} },
+            { contentType: "application/json;param1=value1; param2=value2", expected: { mediaType: "application/json", properties: { param1: "value1", param2: "value2"}} },
+            { contentType: "application/json; param1=value1;param2=value2", expected: { mediaType: "application/json", properties: { param1: "value1", param2: "value2"}} },
+            { contentType: "application/json", expected: { mediaType: "application/json", properties: {}} },
             { contentType: ";param1=value1;param2=value2", expected: { mediaType: "", properties: { param1: "value1", param2: "value2"}} }
         ];
 
@@ -316,8 +316,8 @@
 
     djstest.addTest(function contentTypeToStringTest() {
         var tests = [
-            { contentType: { mediaType: "application/atom+xml", properties: { param1: "value1", param2: "value2"} }, expected: "application/atom+xml;param1=value1;param2=value2" },
-            { contentType: { mediaType: "application/atom+xml", properties: {} }, expected: "application/atom+xml" },
+            { contentType: { mediaType: "application/json", properties: { param1: "value1", param2: "value2"} }, expected: "application/json;param1=value1;param2=value2" },
+            { contentType: { mediaType: "application/json", properties: {} }, expected: "application/json" },
             { contentType: { mediaType: "", properties: { param1: "value1", param2: "value2"} }, expected: ";param1=value1;param2=value2" }
         ];
 

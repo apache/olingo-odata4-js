@@ -23,14 +23,13 @@
 (function (window, undefined) {
     var jsonMime = "application/json";
     var universalMime = "*/*";
-    var atomMime = "application/atom+xml";
 
     var readFeed = function (url, success, mimeType, recognizeDates) {
         /// <summary>Calls the ReadFeed endpoint with the specified URL</summary>
         /// <param name="url" type="String">The URL to read the feed from</param>
         /// <param name="success" type="Function">The success callback function</param>
         /// <param name="mimeType" type="String">The MIME media type in the Accept header</param>
-        var readMethod = getReadMethod(mimeType, "ReadFeed");
+        var readMethod = getReadMethod(mimeType);
         oracleRequest("GET", readMethod, typeof url === "string" ? { url: url} : url, mimeType, recognizeDates, function (data) {
             success(data);
         });
@@ -41,22 +40,8 @@
         /// <param name="url" type="String">The URL to read the entry from</param>
         /// <param name="success" type="Function">The success callback function</param>
         /// <param name="mimeType" type="String">The MIME media type in the Accept header</param>
-        var readMethod = getReadMethod(mimeType, "ReadEntry");
+        var readMethod = getReadMethod(mimeType);
         oracleRequest("GET", readMethod, typeof url === "string" ? { url: url} : url, mimeType, recognizeDates, success);
-    };
-
-    var readFeedLoopback = function (atomFeedXml, success, recognizeDates) {
-        /// <summary>Calls the ReadFeedLoopback endpoint with the specified atom feed xml</summary>
-        /// <param name="atomFeedXml" type="String">The atom feed xml</param>
-        /// <param name="success" type="Function">The success callback function</param>
-        oracleRequest("POST", "ReadFeedLoopback", atomFeedXml, atomMime, recognizeDates, success);
-    };
-
-    var readEntryLoopback = function (atomEntryXml, success, recognizeDates) {
-        /// <summary>Calls the ReadEntryLoopback endpoint with the specified atom entry xml</summary>
-        /// <param name="atomEntryXml" type="String">The atom entry xml</param>
-        /// <param name="success" type="Function">The success callback function</param>
-        oracleRequest("POST", "ReadEntryLoopback", atomEntryXml, atomMime, recognizeDates, success);
     };
 
     var readLinksEntry = function (url, success) {
@@ -93,7 +78,7 @@
         /// <param name="url" type="String">The URL to the service</param>
         /// <param name="success" type="Function">The success callback function</param>
         /// <param name="mimeType" type="String">The MIME type being tested</param>
-        var readMethod = getReadMethod(mimeType, "ReadServiceDocument");
+        var readMethod = getReadMethod(mimeType);
         oracleRequest("GET", readMethod, typeof url === "string" ? { url: url} : url, mimeType, null, success);
     };
 
@@ -147,10 +132,8 @@
         readPage(url);
     };
 
-    var getReadMethod = function (mimeType, defaultEndpoint) {
+    var getReadMethod = function (mimeType) {
         switch (mimeType) {
-            case atomMime:
-                return defaultEndpoint;
             case jsonMime:
             case universalMime:
             default:
@@ -200,8 +183,6 @@
     window.ODataReadOracle = {
         readFeed: readFeed,
         readEntry: readEntry,
-        readFeedLoopback: readFeedLoopback,
-        readEntryLoopback: readEntryLoopback,
         readLinksEntry: readLinksEntry,
         readLinksFeed: readLinksFeed,
         readJson: readJson,

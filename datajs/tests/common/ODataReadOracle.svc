@@ -46,36 +46,6 @@ namespace DataJS.Tests
         const string jsonlightMediaType = "application/json";
 
         /// <summary>
-        /// Reads a URI that will return an OData ATOM feed
-        /// </summary>
-        /// <param name="url">The URL to send the request to</param>
-        /// <param name="user">The username for basic authentication</param>
-        /// <param name="password">The password for basic authentication</param>
-        /// <returns>JSON object expected to be returned by OData.read (plus type metadata markers that will need to be removed)</returns>
-        [OperationContract]
-        [WebGet(ResponseFormat = WebMessageFormat.Json)]
-        public JsonObject ReadFeed(string url, string user, string password)
-        {
-            WebResponse response = ReaderUtils.CreateRequest(ResolveUri(url, UriKind.Absolute), user, password).GetResponse();
-            return AtomReader.ReadFeed(new StreamReader(response.GetResponseStream()));
-        }
-
-        /// <summary>
-        /// Reads a URI that will return an OData ATOM feed entry
-        /// </summary>
-        /// <param name="url">URL of the entry</param>
-        /// <param name="user">The username for basic authentication</param>
-        /// <param name="password">The password for basic authentication</param>
-        /// <returns>JSON object expected to be returned by OData.read</returns>
-        [OperationContract]
-        [WebGet(ResponseFormat = WebMessageFormat.Json)]
-        public JsonObject ReadEntry(string url, string user, string password)
-        {
-            WebResponse response = ReaderUtils.CreateRequest(ResolveUri(url, UriKind.Absolute), user, password).GetResponse();
-            return AtomReader.ReadEntry(new StreamReader(response.GetResponseStream()));
-        }
-
-        /// <summary>
         /// Reads a URI that will return a metadata object
         /// </summary>
         /// <param name="url">The URL to send the request to</param>
@@ -88,33 +58,7 @@ namespace DataJS.Tests
             Dictionary<string, object> jsonObject = CsdlReader.ReadCsdl(new StreamReader(response.GetResponseStream()));
             return ReaderUtils.ConvertDictionarytoJsonlightStream(jsonObject);
         }
-
-        /// <summary>
-        /// Reads a URI that will return a metadata object
-        /// </summary>
-        /// <param name="url">The URL to send the request to</param>
-        /// <param name="mimeType">Mime type being tested to determine base URI</param>
-        /// <returns>JSON object expected to be returned by OData.read (plus type metadata markers that will need to be removed)</returns>
-        [OperationContract]
-        [WebGet(ResponseFormat = WebMessageFormat.Json)]
-        public JsonObject ReadServiceDocument(string url, string mimeType)
-        {
-            WebResponse response = WebRequest.Create(ResolveUri(url, UriKind.Absolute)).GetResponse();
-            string baseUri = string.Empty;
-
-            // With JSON responses only relative path passed to the library is available
-            if (mimeType.Equals(jsonlightMediaType))
-            {
-                baseUri = ResolveUri(url, UriKind.Relative).ToString();
-            }
-            else
-            {
-                baseUri = response.ResponseUri.AbsoluteUri;
-            }
-
-            return AtomReader.ReadServiceDocument(new StreamReader(response.GetResponseStream()), baseUri);
-        }
-
+        
         /// <summary>
         /// Reads a URI that will get the Json response and return the stream
         /// </summary>
@@ -136,31 +80,6 @@ namespace DataJS.Tests
             WebResponse response = request.GetResponse();
 
             return response.GetResponseStream();
-        }
-
-
-        /// <summary>
-        /// Loops back an ATOM feed passed to the webservice in JSON format.
-        /// </summary>
-        /// <param name="content">The ATOM feed xml stream to loopback as JSON</param>
-        /// <returns>JSON object expected to be returned by OData.read (plus type metadata markers that will need to be removed)</returns>
-        [OperationContract]
-        [WebInvoke(Method = "POST", ResponseFormat = WebMessageFormat.Json)]
-        public JsonObject ReadFeedLoopback(Stream content)
-        {
-            return AtomReader.ReadFeed(new StreamReader(content));
-        }
-
-        /// <summary>
-        /// Loops back an ATOM entry passed to the webservice in JSON format.
-        /// </summary>
-        /// <param name="content">The ATOM entry xml stream to loopback as JSON</param>
-        /// <returns>JSON object expected to be returned by OData.read (plus type metadata markers that will need to be removed)</returns>
-        [OperationContract]
-        [WebInvoke(Method = "POST", ResponseFormat = WebMessageFormat.Json)]
-        public JsonObject ReadEntryLoopback(Stream content)
-        {
-            return AtomReader.ReadEntry(new StreamReader(content));
         }
 
         /// <summary>

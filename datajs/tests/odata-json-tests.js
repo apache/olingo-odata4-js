@@ -233,12 +233,7 @@
            },
            { context: { response: { requestUri: "http://base.org" }, dataServiceVersion: "4.0" },
                expected: {
-                   "@odata.etag": "W/MjAxMy0wNS0yN1QxMTo1OFo=",
-                   "@odata.type": "#DataJS.Tests.V4.Food",
-                   "@odata.mediaEditLink": "http://base.org/$metadata#Foods/mediaEditLink",
-                   "@odata.mediaReadLink": "http://base.org/$metadata#Foods/mediaReadLink",
-                   "@odata.mediaContentType": "http://base.org/$metadata#Foods/mediaContentType",
-                   "@odata.mediaEtag": "http://base.org/$metadata#Foods/mediaEtag",
+                   "@odata.id": "Foods(4)",
                    ID: 0,
                    Name: "Bread",
                    Description: "Whole grain bread",
@@ -268,40 +263,21 @@
            },
            { context: { response: { requestUri: "http://base.org" }, dataServiceVersion: "4.0" },
                expected: {
+                   "@odata.id": "Foods(4)",
                    value : [{
-                       "@odata.etag": "W/MjAxMy0wNS0yN1QxMTo1OFo=",
-                       "@odata.type": "#DataJS.Tests.V4.Food",
-                       "@odata.mediaEditLink": "http://base.org/$metadata#Foods/mediaEditLink",
-                       "@odata.mediaReadLink": "http://base.org/$metadata#Foods/mediaReadLink",
-                       "@odata.mediaContentType": "http://base.org/$metadata#Foods/mediaContentType",
-                       "@odata.mediaEtag": "http://base.org/$metadata#Foods/mediaEtag",
+                       "@odata.id": "Foods(4)",
                        ID: 0,
                        ComplexInLayerOne:
                        {
-                           "@odata.etag": "W/MjAxMy0wNS0yN1QxMTo1OFo=",
-                           "@odata.type": "#DataJS.Tests.V4.Food",
-                           "@odata.mediaEditLink": "http://base.org/$metadata#Foods/mediaEditLink/layer1",
-                           "@odata.mediaReadLink": "http://base.org/$metadata#Foods/mediaReadLink/layer1",
-                           "@odata.mediaContentType": "http://base.org/$metadata#Foods/mediaContentType/layer1",
-                           "@odata.mediaEtag": "http://base.org/$metadata#Foods/mediaEtag/layer1",
+                           "@odata.id": "Foods(4)",
                            ID: 1,
                            ComplexInLayerTwo:
                            {
-                               "@odata.etag": "W/MjAxMy0wNS0yN1QxMTo1OFo=",
-                               "@odata.type": "#DataJS.Tests.V4.Food",
-                               "@odata.mediaEditLink": "http://base.org/$metadata#Foods/mediaEditLink/layer2",
-                               "@odata.mediaReadLink": "http://base.org/$metadata#Foods/mediaReadLink/layer2",
-                               "@odata.mediaContentType": "http://base.org/$metadata#Foods/mediaContentType/layer2",
-                               "@odata.mediaEtag": "http://base.org/$metadata#Foods/mediaEtag/layer2",
+                               "@odata.id": "Foods(4)",
                                ID: 2,
                                ComplexInLayerThreeList: [
                                {
-                                   "@odata.etag": "W/MjAxMy0wNS0yN1QxMTo1OFo=",
-                                   "@odata.type": "#DataJS.Tests.V4.Food",
-                                   "@odata.mediaEditLink": "http://base.org/$metadata#Foods/mediaEditLink/layer3",
-                                   "@odata.mediaReadLink": "http://base.org/$metadata#Foods/mediaReadLink/layer3",
-                                   "@odata.mediaContentType": "http://base.org/$metadata#Foods/mediaContentType/layer3",
-                                   "@odata.mediaEtag": "http://base.org/$metadata#Foods/mediaEtag/layer3",
+                                   "@odata.id": "Foods(4)",
                                    ID: 3,
                                    Name: "BreadInLayer3",
                                    Description: "Whole grain bread inLayer3",
@@ -311,12 +287,7 @@
                                    Price: 5.5
                                },
                                {
-                                   "@odata.etag": "W/MjAxMy0wNS0yN1QxMTo1OFo=",
-                                   "@odata.type": "#DataJS.Tests.V4.Food",
-                                   "@odata.mediaEditLink": "http://base.org/$metadata#Foods/mediaEditLink/layer3",
-                                   "@odata.mediaReadLink": "http://base.org/$metadata#Foods/mediaReadLink/layer3",
-                                   "@odata.mediaContentType": "http://base.org/$metadata#Foods/mediaContentType/layer3",
-                                   "@odata.mediaEtag": "http://base.org/$metadata#Foods/mediaEtag/layer3",
+                                   "@odata.id": "Foods(4)",
                                    ID: 3,
                                    Name: "BreadInLayer3",
                                    Description: "Whole grain bread inLayer3",
@@ -347,39 +318,19 @@
                        Price: 2.5
                    },
                    {
-                       "@odata.etag": "W/MjAxMy0wNS0yN1QxMTo1OFo=",
-                       "@odata.type": "#DataJS.Tests.V4.Food",
-                       "@odata.mediaEditLink": "http://base.org/$metadata#Foods/mediaEditLink",
-                       "@odata.mediaReadLink": "http://base.org/$metadata#Foods/mediaReadLink",
-                       "@odata.mediaContentType": "http://base.org/$metadata#Foods/mediaContentType",
-                       "@odata.mediaEtag": "http://base.org/$metadata#Foods/mediaEtag",
+                       "@odata.id": "Foods(4)",
                        ID: 0,
                        ComplexInLayerOne:
                        {
-                           "@odata.etag": "W/MjAxMy0wNS0yN1QxMTo1OFo=",
-                           "@odata.type": "#DataJS.Tests.V4.Food",
-                           "@odata.mediaEditLink": "http://base.org/$metadata#Foods/mediaEditLink/layer1",
-                           "@odata.mediaReadLink": "http://base.org/$metadata#Foods/mediaReadLink/layer1",
-                           "@odata.mediaContentType": "http://base.org/$metadata#Foods/mediaContentType/layer1",
-                           "@odata.mediaEtag": "http://base.org/$metadata#Foods/mediaEtag/layer1",
+                           "@odata.id": "Foods(4)",
                            ID: 1,
                            ComplexInLayerTwo:
                            {
-                               "@odata.etag": "W/MjAxMy0wNS0yN1QxMTo1OFo=",
-                               "@odata.type": "#DataJS.Tests.V4.Food",
-                               "@odata.mediaEditLink": "http://base.org/$metadata#Foods/mediaEditLink/layer2",
-                               "@odata.mediaReadLink": "http://base.org/$metadata#Foods/mediaReadLink/layer2",
-                               "@odata.mediaContentType": "http://base.org/$metadata#Foods/mediaContentType/layer2",
-                               "@odata.mediaEtag": "http://base.org/$metadata#Foods/mediaEtag/layer2",
+                               "@odata.id": "Foods(4)",
                                ID: 2,
                                ComplexInLayerThreeList: [
                                {
-                                   "@odata.etag": "W/MjAxMy0wNS0yN1QxMTo1OFo=",
-                                   "@odata.type": "#DataJS.Tests.V4.Food",
-                                   "@odata.mediaEditLink": "http://base.org/$metadata#Foods/mediaEditLink/layer3",
-                                   "@odata.mediaReadLink": "http://base.org/$metadata#Foods/mediaReadLink/layer3",
-                                   "@odata.mediaContentType": "http://base.org/$metadata#Foods/mediaContentType/layer3",
-                                   "@odata.mediaEtag": "http://base.org/$metadata#Foods/mediaEtag/layer3",
+                                   "@odata.id": "Foods(4)",
                                    ID: 3,
                                    Name: "BreadInLayer3",
                                    Description: "Whole grain bread inLayer3",
@@ -389,12 +340,7 @@
                                    Price: 5.5
                                },
                                {
-                                   "@odata.etag": "W/MjAxMy0wNS0yN1QxMTo1OFo=",
-                                   "@odata.type": "#DataJS.Tests.V4.Food",
-                                   "@odata.mediaEditLink": "http://base.org/$metadata#Foods/mediaEditLink/layer3",
-                                   "@odata.mediaReadLink": "http://base.org/$metadata#Foods/mediaReadLink/layer3",
-                                   "@odata.mediaContentType": "http://base.org/$metadata#Foods/mediaContentType/layer3",
-                                   "@odata.mediaEtag": "http://base.org/$metadata#Foods/mediaEtag/layer3",
+                                   "@odata.id": "Foods(4)",
                                    ID: 3,
                                    Name: "BreadInLayer3",
                                    Description: "Whole grain bread inLayer3",
@@ -619,39 +565,19 @@
            },
            { context: { response: { requestUri: "http://base.org" }, dataServiceVersion: "4.0" },
                expected: {
-                   "@odata.etag": "W/MjAxMy0wNS0yN1QxMTo1OFo=",
-                   "@odata.type": "#DataJS.Tests.V4.Food",
-                   "@odata.mediaEditLink": "http://base.org/$metadata#Foods/mediaEditLink",
-                   "@odata.mediaReadLink": "http://base.org/$metadata#Foods/mediaReadLink",
-                   "@odata.mediaContentType": "http://base.org/$metadata#Foods/mediaContentType",
-                   "@odata.mediaEtag": "http://base.org/$metadata#Foods/mediaEtag",
+                   "@odata.id": "Foods(4)",
                    ID: 0,
                    ComplexInLayerOne:
                    {
-                       "@odata.etag": "W/MjAxMy0wNS0yN1QxMTo1OFo=",
-                       "@odata.type": "#DataJS.Tests.V4.Food",
-                       "@odata.mediaEditLink": "http://base.org/$metadata#Foods/mediaEditLink/layer1",
-                       "@odata.mediaReadLink": "http://base.org/$metadata#Foods/mediaReadLink/layer1",
-                       "@odata.mediaContentType": "http://base.org/$metadata#Foods/mediaContentType/layer1",
-                       "@odata.mediaEtag": "http://base.org/$metadata#Foods/mediaEtag/layer1",
+                       "@odata.id": "Foods(4)",
                        ID: 1,
                        ComplexInLayerTwo:
                        {
-                           "@odata.etag": "W/MjAxMy0wNS0yN1QxMTo1OFo=",
-                           "@odata.type": "#DataJS.Tests.V4.Food",
-                           "@odata.mediaEditLink": "http://base.org/$metadata#Foods/mediaEditLink/layer2",
-                           "@odata.mediaReadLink": "http://base.org/$metadata#Foods/mediaReadLink/layer2",
-                           "@odata.mediaContentType": "http://base.org/$metadata#Foods/mediaContentType/layer2",
-                           "@odata.mediaEtag": "http://base.org/$metadata#Foods/mediaEtag/layer2",
+                           "@odata.id": "Foods(4)",
                            ID: 2,
                            ComplexInLayerThree:
                            {
-                               "@odata.etag": "W/MjAxMy0wNS0yN1QxMTo1OFo=",
-                               "@odata.type": "#DataJS.Tests.V4.Food",
-                               "@odata.mediaEditLink": "http://base.org/$metadata#Foods/mediaEditLink/layer3",
-                               "@odata.mediaReadLink": "http://base.org/$metadata#Foods/mediaReadLink/layer3",
-                               "@odata.mediaContentType": "http://base.org/$metadata#Foods/mediaContentType/layer3",
-                               "@odata.mediaEtag": "http://base.org/$metadata#Foods/mediaEtag/layer3",
+                               "@odata.id": "Foods(4)",
                                ID: 3,
                                Name: "BreadInLayer3",
                                Description: "Whole grain bread inLayer3",
@@ -760,12 +686,7 @@
            { context: { response: { requestUri: "http://base.org" }, dataServiceVersion: "4.0" },
                expected: {
                    value: [{
-                       "@odata.etag": "W/MjAxMy0wNS0yN1QxMTo1OFo=",
-                       "@odata.type": "#DataJS.Tests.V4.Food",
-                       "@odata.mediaEditLink": "http://base.org/$metadata#Foods/mediaEditLink",
-                       "@odata.mediaReadLink": "http://base.org/$metadata#Foods/mediaReadLink",
-                       "@odata.mediaContentType": "http://base.org/$metadata#Foods/mediaContentType",
-                       "@odata.mediaEtag": "http://base.org/$metadata#Foods/mediaEtag",
+                       "@odata.id": "Foods(4)",
                        ID: 0,
                        Name: "Bread",
                        Description: "Whole grain bread",
@@ -775,12 +696,7 @@
                        Price: 2.5
                    },
                    {
-                       "@odata.etag": "W/MjAxMy0wNS0yN1QxMTo1OFo=",
-                       "@odata.type": "#DataJS.Tests.V4.Food",
-                       "@odata.mediaEditLink": "http://base.org/$metadata#Foods/mediaEditLink2",
-                       "@odata.mediaReadLink": "http://base.org/$metadata#Foods/mediaReadLink2",
-                       "@odata.mediaContentType": "http://base.org/$metadata#Foods/mediaContentType2",
-                       "@odata.mediaEtag": "http://base.org/$metadata#Foods/mediaEtag2",
+                       "@odata.id": "Foods(2)",
                        ID: 1,
                        Name: "Bread",
                        Description: "Whole grain bread",

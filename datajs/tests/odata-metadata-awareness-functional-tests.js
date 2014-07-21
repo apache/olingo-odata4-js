@@ -32,8 +32,8 @@
         noContent: 204
     };
 
-    var acceptHeaders = { Accept: "application/atom+xml" };
-    var mimeHeaders = { "Content-Type": "application/atom+xml", Accept: "application/atom+xml" };
+    var acceptHeaders = { Accept: "application/json" };
+    var mimeHeaders = { "Content-Type": "application/json", Accept: "application/json" };
     var keepInContentVariations = [true, false];
     var feedUris = { "true": service + "/ReplicatedEntries", "false": service + "/MappedEntries" };
     var typeNames = { "true": "DataJS.Tests.ReplicatedEntry", "false": "DataJS.Tests.MappedEntry" };

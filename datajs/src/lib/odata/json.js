@@ -851,7 +851,7 @@ var readPayloadMinimalObject = function (data, objectInfo, baseURI, model, deman
     return data;
 };
 
-var jsonLightSerializableMetadata = ["@odata.type", "@odata.etag", "@odata.mediaEditLink", "@odata.mediaReadLink", "@odata.mediaContentType", "@odata.mediaEtag"];
+var jsonLightSerializableMetadata = ["@odata.id"];
 
 var isJsonLightSerializableProperty = function (property) {
     if (!property) {

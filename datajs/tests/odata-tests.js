@@ -47,7 +47,7 @@
         } else {
             var apis = [
                 { targetName: "datajs", names: "createDataCache,createStore,defaultStoreMechanism" },
-                { targetName: "OData", names: "atomHandler,batchHandler,defaultError,defaultHandler,defaultHttpClient,defaultMetadata,defaultSuccess,jsonHandler,metadataHandler,read,request,textHandler,xmlHandler,parseMetadata" }
+                { targetName: "OData", names: "batchHandler,defaultError,defaultHandler,defaultHttpClient,defaultMetadata,defaultSuccess,jsonHandler,metadataHandler,read,request,textHandler,xmlHandler,parseMetadata" }
             ];
 
             for (var i = 0; i < apis.length; i++) {

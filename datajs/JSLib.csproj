@@ -47,7 +47,6 @@
     <Content Include="src\lib\datajs\deferred.js" />
     <Content Include="src\lib\datajs\utils.js" />
     <Content Include="src\lib\datajs\xml.js" />
-    <Content Include="src\lib\odata\atom.js" />
     <Content Include="src\lib\odata\batch.js" />
     <Content Include="src\lib\odata\gml.js" />
     <Content Include="src\lib\odata\handler.js" />
@@ -87,7 +86,6 @@
     <Content Include="tests\datajs-cache-large-collection-functional-tests.html" />
     <Content Include="tests\datajs-cache-large-collection-functional-tests.js" />
     <Content Include="tests\datajs-cache-long-haul-tests.html" />
-    <Content Include="tests\odata-atom-tests.js" />
     <Content Include="tests\odata-batch-functional-tests.html" />
     <Content Include="tests\odata-batch-functional-tests.js" />
     <Content Include="tests\odata-batch-tests.js" />
@@ -130,7 +128,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="tests\code\AtomReader.cs" />
     <Compile Include="tests\code\CsdlReader.cs" />
     <Compile Include="tests\code\JsDate.cs" />
     <Compile Include="tests\code\JsonObject.cs" />

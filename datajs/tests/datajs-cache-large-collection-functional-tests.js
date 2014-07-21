@@ -18,7 +18,7 @@
  */
 
 (function (window, undefined) {
-    OData.defaultHandler.accept = "application/json;q=0.9, application/atomsvc+xml;q=0.8, */*;q=0.1";
+    OData.defaultHandler.accept = "application/json;q=0.9, */*;q=0.1";
     var largeCollectionFeed = "./endpoints/LargeCollectionService.svc/Customers";
     var itemsInCollection = 2 * 1024 * 1024;
 

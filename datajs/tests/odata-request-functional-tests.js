@@ -18,7 +18,7 @@
  */
 
 (function (window, undefined) {
-    OData.defaultHandler.accept = "application/json;q=0.9, application/atomsvc+xml;q=0.8, */*;q=0.1";
+    OData.defaultHandler.accept = "application/json;q=0.9, */*;q=0.1";
     var unexpectedErrorHandler = function (err) {
         djstest.assert(false, "Unexpected call to error handler with error: " + djstest.toString(err));
         djstest.done();
@@ -162,7 +162,7 @@
         })
     };
 
-    var mimeTypes = [undefined, "application/json;odata.metadata=minimal"/*, "application/atom+xml"*/];
+    var mimeTypes = [undefined, "application/json;odata.metadata=minimal"];
 
     var httpStatusCode = {
         created: 201,
@@ -317,19 +317,17 @@
                     }, "Update collection property to " + serviceName + " service using mimeType = " + mimeType + " and DSV = " + dataServiceVersion, headers);
                 }
 
-                if (mimeType !== "application/atom+xml") {
-                    djstest.addTest(function updatePrimitivePropertyTest(headers) {
-                        var request = {
-                            requestUri: categoriesFeed + "(0)/Name",
-                            method: "PUT",
-                            headers: headers,
-                            data: { value: "Updated Category" }
-                        };
+                djstest.addTest(function updatePrimitivePropertyTest(headers) {
+                    var request = {
+                        requestUri: categoriesFeed + "(0)/Name",
+                        method: "PUT",
+                        headers: headers,
+                        data: { value: "Updated Category" }
+                    };
 
-                        djstest.assertsExpected(2);
-                        verifyRequest(request, djstest.done);
-                    }, "Update primitive property to " + serviceName + " service using mimeType = " + mimeType + " and DSV = " + dataServiceVersion, headers);
-                }
+                    djstest.assertsExpected(2);
+                    verifyRequest(request, djstest.done);
+                }, "Update primitive property to " + serviceName + " service using mimeType = " + mimeType + " and DSV = " + dataServiceVersion, headers);
 
                 djstest.addTest(function updateLinkedEntityTest(headers) {
                     var request = {
