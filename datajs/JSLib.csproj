@@ -38,30 +38,31 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="src\index.js" />
-	<Content Include="src\banner.txt" />
-	<Content Include="src\lib\cache.js" />
-	<Content Include="src\lib\datajs.js" />
-	<Content Include="src\lib\odata.js" />
-	<Content Include="src\lib\store.js" />
-	<Content Include="src\lib\cache\source.js" />
-	<Content Include="src\lib\datajs\deferred.js" />
-	<Content Include="src\lib\datajs\utils.js" />
-	<Content Include="src\lib\datajs\xml.js" />
-	<Content Include="src\lib\odata\atom.js" />
-	<Content Include="src\lib\odata\batch.js" />
-	<Content Include="src\lib\odata\gml.js" />
-	<Content Include="src\lib\odata\handler.js" />
-	<Content Include="src\lib\odata\json.js" />
-	<Content Include="src\lib\odata\json-light.js" />
-	<Content Include="src\lib\odata\metadata.js" />
-	<Content Include="src\lib\odata\net.js" />
-	<Content Include="src\lib\odata\utils.js" />
-	<Content Include="src\lib\odata\xml.js" />
-	<Content Include="src\lib\store\dom.js" />
-	<Content Include="src\lib\store\indexeddb.js" />
-	<Content Include="src\lib\store\memory.js" />
+    <Content Include="src\banner.txt" />
+    <Content Include="src\lib\cache.js" />
+    <Content Include="src\lib\datajs.js" />
+    <Content Include="src\lib\odata.js" />
+    <Content Include="src\lib\store.js" />
+    <Content Include="src\lib\cache\source.js" />
+    <Content Include="src\lib\datajs\deferred.js" />
+    <Content Include="src\lib\datajs\utils.js" />
+    <Content Include="src\lib\datajs\xml.js" />
+    <Content Include="src\lib\odata\atom.js" />
+    <Content Include="src\lib\odata\batch.js" />
+    <Content Include="src\lib\odata\gml.js" />
+    <Content Include="src\lib\odata\handler.js" />
+    <Content Include="src\lib\odata\json.js" />
+    <Content Include="src\lib\odata\json-light.js" />
+    <Content Include="src\lib\odata\metadata.js" />
+    <Content Include="src\lib\odata\net.js" />
+    <Content Include="src\lib\odata\utils.js" />
+    <Content Include="src\lib\odata\xml.js" />
+    <Content Include="src\lib\store\dom.js" />
+    <Content Include="src\lib\store\indexeddb.js" />
+    <Content Include="src\lib\store\memory.js" />
     <Content Include="tests\cache-tests.js" />
     <Content Include="tests\common\CacheOracle.js" />
+    <Content Include="tests\common\common.js" />
     <Content Include="tests\common\Instrument.svc" />
     <Content Include="tests\common\Instrument.js" />
     <Content Include="tests\common\mockXMLHttpRequest.js" />
@@ -166,9 +167,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="src\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <ProjectExtensions>
