@@ -43,6 +43,7 @@
         <button id="btnMetaData">MetaData</button><br/>
         <button id="btnJSONwithMetaData">JSON with MetaData</button><br/>
         <button id="btnPOST_entry_food">POST food entry</button><br/>
+        <button id="btnPOST_entry_categorie">POST categorie entry</button><br/>
         <div id='resultsArea' data-type="json">
         </div>
         <script>
@@ -255,6 +256,22 @@
                         "@odata.context": "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Foods/$entity",
                         FoodID: 111,
                         Name: "flour1"
+                    }
+                };
+                datajs.V4.oData.read(requestUri, success, errorFunc);
+            });
+            $('#btnPOST_entry_categorie').on("click", function(){
+
+                var requestUri = {
+                    requestUri : 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Categories',
+                    method: 'POST',
+                    headers : { Accept : 'application/json' },
+                    recognizeDates : true,
+                    data : {
+                        "@odata.type": "#DataJS.Tests.V4.Category",
+                        "@odata.context": "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Categories/$entity",
+                        CategoryID: 111,
+                        Name: "cat111"
                     }
                 };
                 datajs.V4.oData.read(requestUri, success, errorFunc);
