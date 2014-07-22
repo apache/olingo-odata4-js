@@ -40,9 +40,9 @@
         <button id="btnJSON_entry_minimal">Entry pure JSON odata.metadata=minimal</button><br/>
         <button id="btnJSON_entry_minimal_to_full">Entry pure JSON odata.metadata=minimal; extendMetadataToLevel=full</button><br/>
         <button id="btnJSON_entry_minimal_to_all">Entry pure JSON odata.metadata=minimal; extendMetadataToLevel=all</button><br/>
-
         <button id="btnMetaData">MetaData</button><br/>
         <button id="btnJSONwithMetaData">JSON with MetaData</button><br/>
+        <button id="btnPOST_entry_food">POST food entry</button><br/>
         <div id='resultsArea' data-type="json">
         </div>
         <script>
@@ -242,6 +242,22 @@
 
 
                 datajs.V4.oData.read(metadataRequest, metaDatasuccess, errorFunc,datajs.V4.oData.metadataHandler);
+            });
+
+            $('#btnPOST_entry_food').on("click", function(){
+                var requestUri = {
+                    requestUri : 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods',
+                    method: 'POST',
+                    headers : { Accept : 'application/json' },
+                    recognizeDates : true,
+                    data : {
+                        "@odata.type": "#DataJS.Tests.V4.Food",
+                        "@odata.context": "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Foods/$entity",
+                        FoodID: 111,
+                        Name: "flour1"
+                    }
+                };
+                datajs.V4.oData.read(requestUri, success, errorFunc);
             });
 
         </script>
