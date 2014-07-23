@@ -543,7 +543,7 @@ var readPayloadMinimal = function (data, model, recognizeDates) {
     /// <param name="recognizeDates" type="Boolean">Flag indicating whether datetime literal strings should be converted to JavaScript Date objects.</param>
     /// <returns type="Object">Object in the library's representation.</returns>
 
-    if (!assigned(model) || !isArray(model) || model.length == 0) {
+    if (!assigned(model) || isArray(model)) {
         return data;
     }
 
