@@ -1,7 +1,7 @@
 ﻿var run = function() {
     //testJQueryReadMetadata();
-    //runSimpleReadRequest();
-      runSimpleReadRequestWithMetadata();
+    runSimpleReadRequest();
+    runSimpleReadRequestWithMetadata();
     //    readWithJsonP();
     //alert(OData.odataRelatedLinksPrefix);
     //OData.odataRelatedLinksPrefix = "dasfs";
@@ -19,7 +19,7 @@
 
 var runSimpleReadRequest = function() {
     var oHeaders = {
-        'Accept': 'application/atom+xml',
+        'Accept': 'application/json',
         "Odata-Version": "4.0",
         "OData-MaxVersion": "4.0"
     };
@@ -27,7 +27,8 @@ var runSimpleReadRequest = function() {
     var request =
     {
         headers: oHeaders,
-        requestUri: "http://services.odata.org/OData/OData.svc/Categories",
+        // requestUri: "http://services.odata.org/OData/OData.svc/Categories",
+        requestUri: "http://odatasampleservices.azurewebsites.net/V4/OData/OData.svc/Categories",
         data: null,
     };
     var successFunction = function (data) {
@@ -37,12 +38,12 @@ var runSimpleReadRequest = function() {
         alert("err");
         alert(JSON.stringify(err));
     };
-    OData.read(request, successFunction, failFunction);
+    datajs.V4.oData.read(request, successFunction, failFunction);
 };
 
 var runSimpleReadRequestWithMetadata = function () {
     var oHeaders = {
-        'Accept': 'text/html,application/xhtml+xml,application/xml,application/json;odata.metadata=none',
+        'Accept': 'text/html,application/xhtml+xml,application/xml,application/json;odata.metadata=minimal',
         "Odata-Version": "4.0",
         "OData-MaxVersion": "4.0",
         "Prefer": "odata.allow-entityreferences"
@@ -53,7 +54,7 @@ var runSimpleReadRequestWithMetadata = function () {
         var request =
         {
             headers: oHeaders,
-            //requestUri: "http://services.odata.org/OData/OData.svc/Categories",
+            // requestUri: "http://services.odata.org/OData/OData.svc/Categories",
             requestUri: "http://odatasampleservices.azurewebsites.net/V4/OData/OData.svc/Products",
             data: null,
         };
@@ -64,7 +65,7 @@ var runSimpleReadRequestWithMetadata = function () {
             alert("err");
             alert(JSON.stringify(err));
         };
-        OData.read(request, successFunction, failFunction, null, null, metadata);
+        datajs.V4.oData.read(request, successFunction, failFunction, null, null, metadata);
     };
 
     var readMetadataFail = function (err) {
@@ -75,16 +76,17 @@ var runSimpleReadRequestWithMetadata = function () {
     var metadataRequest =
     {
         headers: oHeaders,
-        //requestUri: "http://services.odata.org/OData/OData.svc/$metadata",
-        requestUri: "http://odatasampleservices.azurewebsites.net/V4/OData/OData.svc/$metadata", //"http://localhost:6630/PrimitiveKeys.svc/$metadata",
+        // requestUri: "http://services.odata.org/OData/OData.svc/$metadata",
+        requestUri: "http://odatasampleservices.azurewebsites.net/V4/OData/OData.svc/$metadata", 
+        // "http://localhost:6630/PrimitiveKeys.svc/$metadata",
         data: null,
     };
 
-    OData.read(metadataRequest, readMetadataSuccess, readMetadataFail, OData.metadataHandler);
+    datajs.V4.oData.read(metadataRequest, readMetadataSuccess, readMetadataFail, datajs.V4.oData.metadataHandler);
 };
 
 var readWithJsonP = function() {
-    var sUrl2 = "http://services.odata.org/V3/OData/OData.svc/Products?$expand=Category";
+    var sUrl2 = "http://odatasampleservices.azurewebsites.net/V4/OData/OData.svc?$expand=Category";
 
     var oRequest = {
         requestUri: sUrl2,

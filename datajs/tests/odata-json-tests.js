@@ -234,6 +234,7 @@
            { context: { response: { requestUri: "http://base.org" }, dataServiceVersion: "4.0" },
                expected: {
                    "@odata.id": "Foods(4)",
+                   "@odata.type": "#DataJS.Tests.V4.Food",
                    ID: 0,
                    Name: "Bread",
                    Description: "Whole grain bread",
@@ -266,18 +267,22 @@
                    "@odata.id": "Foods(4)",
                    value : [{
                        "@odata.id": "Foods(4)",
+                       "@odata.type": "#DataJS.Tests.V4.Food",
                        ID: 0,
                        ComplexInLayerOne:
                        {
                            "@odata.id": "Foods(4)",
+                           "@odata.type": "#DataJS.Tests.V4.Food",
                            ID: 1,
                            ComplexInLayerTwo:
                            {
                                "@odata.id": "Foods(4)",
+                               "@odata.type": "#DataJS.Tests.V4.Food",
                                ID: 2,
                                ComplexInLayerThreeList: [
                                {
                                    "@odata.id": "Foods(4)",
+                                   "@odata.type": "#DataJS.Tests.V4.Food",
                                    ID: 3,
                                    Name: "BreadInLayer3",
                                    Description: "Whole grain bread inLayer3",
@@ -288,6 +293,7 @@
                                },
                                {
                                    "@odata.id": "Foods(4)",
+                                   "@odata.type": "#DataJS.Tests.V4.Food",
                                    ID: 3,
                                    Name: "BreadInLayer3",
                                    Description: "Whole grain bread inLayer3",
@@ -319,18 +325,22 @@
                    },
                    {
                        "@odata.id": "Foods(4)",
+                       "@odata.type": "#DataJS.Tests.V4.Food",
                        ID: 0,
                        ComplexInLayerOne:
                        {
                            "@odata.id": "Foods(4)",
+                           "@odata.type": "#DataJS.Tests.V4.Food",
                            ID: 1,
                            ComplexInLayerTwo:
                            {
                                "@odata.id": "Foods(4)",
+                               "@odata.type": "#DataJS.Tests.V4.Food",
                                ID: 2,
                                ComplexInLayerThreeList: [
                                {
                                    "@odata.id": "Foods(4)",
+                                   "@odata.type": "#DataJS.Tests.V4.Food",
                                    ID: 3,
                                    Name: "BreadInLayer3",
                                    Description: "Whole grain bread inLayer3",
@@ -341,6 +351,7 @@
                                },
                                {
                                    "@odata.id": "Foods(4)",
+                                   "@odata.type": "#DataJS.Tests.V4.Food",
                                    ID: 3,
                                    Name: "BreadInLayer3",
                                    Description: "Whole grain bread inLayer3",
@@ -566,18 +577,22 @@
            { context: { response: { requestUri: "http://base.org" }, dataServiceVersion: "4.0" },
                expected: {
                    "@odata.id": "Foods(4)",
+                   "@odata.type": "#DataJS.Tests.V4.Food",
                    ID: 0,
                    ComplexInLayerOne:
                    {
                        "@odata.id": "Foods(4)",
+                       "@odata.type": "#DataJS.Tests.V4.Food",
                        ID: 1,
                        ComplexInLayerTwo:
                        {
                            "@odata.id": "Foods(4)",
+                           "@odata.type": "#DataJS.Tests.V4.Food",
                            ID: 2,
                            ComplexInLayerThree:
                            {
                                "@odata.id": "Foods(4)",
+                               "@odata.type": "#DataJS.Tests.V4.Food",
                                ID: 3,
                                Name: "BreadInLayer3",
                                Description: "Whole grain bread inLayer3",
@@ -687,6 +702,7 @@
                expected: {
                    value: [{
                        "@odata.id": "Foods(4)",
+                       "@odata.type": "#DataJS.Tests.V4.Food",
                        ID: 0,
                        Name: "Bread",
                        Description: "Whole grain bread",
@@ -697,6 +713,7 @@
                    },
                    {
                        "@odata.id": "Foods(2)",
+                       "@odata.type": "#DataJS.Tests.V4.Food",
                        ID: 1,
                        Name: "Bread",
                        Description: "Whole grain bread",

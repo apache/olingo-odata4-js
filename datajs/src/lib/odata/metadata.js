@@ -17,7 +17,6 @@
  * under the License.
  */
 
-
 var utils    = require('./../datajs.js').utils;
 var oDataXML    = require('./xml.js');
 var oDSxml    = require('./../datajs.js').xml;

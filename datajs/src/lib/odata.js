@@ -36,7 +36,6 @@ exports.metadataHandler =  odataMetadata.metadataHandler;
 var utils = require('./datajs/utils.js');
 var assigned = utils.assigned;
 
-var assigned = utils.assigned;
 var defined = utils.defined;
 var throwErrorCallback = utils.throwErrorCallback;
 
@@ -134,7 +133,6 @@ exports.request = function (request, success, error, handler, httpClient, metada
 
     // Augment the request with additional defaults.
     request.recognizeDates = utils.defined(request.recognizeDates, odataJson.jsonHandler.recognizeDates);
-    request.extendMetadataToLevel = utils.defined(request.extendMetadataToLevel, odataJson.jsonHandler.extendMetadataToLevel);
     request.callbackParameterName = utils.defined(request.callbackParameterName, odataNet.defaultHttpClient.callbackParameterName);
     request.formatQueryString = utils.defined(request.formatQueryString, odataNet.defaultHttpClient.formatQueryString);
     request.enableJsonpCallback = utils.defined(request.enableJsonpCallback, odataNet.defaultHttpClient.enableJsonpCallback);
@@ -143,10 +141,9 @@ exports.request = function (request, success, error, handler, httpClient, metada
     var context = {
         metadata: metadata,
         recognizeDates: request.recognizeDates,
-        extendMetadataToLevel : request.extendMetadataToLevel,
         callbackParameterName: request.callbackParameterName,
         formatQueryString: request.formatQueryString,
-        enableJsonpCallback: request.enableJsonpCallback,
+        enableJsonpCallback: request.enableJsonpCallback
     };
 
     try {

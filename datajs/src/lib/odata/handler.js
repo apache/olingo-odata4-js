@@ -20,15 +20,11 @@
 var utils    = require('./../datajs.js').utils;
 var oDataUtils    = require('./utils.js');
 
-
 // Imports.
 var assigned = utils.assigned;
 var extend = utils.extend;
 var trimString = utils.trimString;
-
 var maxVersion = oDataUtils.maxVersion;
-
-
 var MAX_DATA_SERVICE_VERSION = "4.0";
 
 var contentType = function (str) {

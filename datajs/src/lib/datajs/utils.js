@@ -522,6 +522,30 @@ var startsWith = function (input, search) {
     return input.indexOf(search) == 0;
 };
 
+var getFormatKind = function (format, defaultFormatKind) {
+    var formatKind = defaultFormatKind;
+    if (!assigned(format)) {
+        return formatKind;
+    }
+
+    var normalizedFormat = format.toLowerCase();
+    switch (normalizedFormat) {
+        case "none":
+            formatKind = 0;
+            break;
+        case "minimal":
+            formatKind = 1;
+            break;
+        case "full":
+            formatKind = 2;
+            break;
+        default:
+            break;
+    }
+
+    return formatKind;
+};
+
 exports.activeXObject = activeXObject;
 exports.assigned = assigned;
 exports.contains = contains;
@@ -548,4 +572,5 @@ exports.sliceJsonValueArray = sliceJsonValueArray;
 exports.concatJsonValueArray = concatJsonValueArray;
 exports.startsWith = startsWith;
 exports.endsWith = endsWith;
+exports.getFormatKind = getFormatKind;
     
