@@ -1,0 +1,24 @@
+{
+  "name": "grunt-rat",
+  "version": "0.0.1",
+  "description": "Transform vor removing license headers",
+  "license": "Apache",
+  "author": {
+    "name": "Sven Kobler-Morris",
+    "email": "koblers@apache.org"
+  },
+  "files": [
+    "tasks"
+  ],
+  "dependencies": {
+    "through": "^2.3.4"
+  },
+  "devDependencies": {
+  },
+  "peerDependencies": {
+    "grunt": "~0.4.0"
+  },
+  "engines": {
+    "node": ">=0.8.0"
+  }
+}

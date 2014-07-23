@@ -15,5 +15,5 @@ module.exports = function(grunt) {
   
   //grunt.loadNpmTasks('custom-tasks/rat');
   grunt.loadTasks('grunt-config/custom-tasks/rat/tasks');
-  grunt.registerTask('ra',['rat:src']);
+  grunt.registerTask('license',['rat:src']);
 };

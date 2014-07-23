@@ -174,9 +174,11 @@
                     var requestUri = {
                         requestUri : 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods',
                         headers : { Accept : 'application/json;odata.metadata=minimal' },
-                        extendMetadataToLevel : 'all' ,
                         recognizeDates : false
                     };
+                    //extend to full
+                    datajs.V4.oData.read(requestUri, success, errorFunc, null, null, metadata);
+                    //keep minimal
                     datajs.V4.oData.read(requestUri, success, errorFunc, null, null, metadata);
                 }
                 getMetaData(metaDatasuccess);

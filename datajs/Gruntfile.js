@@ -13,6 +13,7 @@ module.exports = function(grunt) {
           'build/<%= filename %>.js': ['src/index.js'],
         },
         options: {
+          transform: ['./grunt-config/browserify_transforms/stripheader/stripheader.js'],
           browserifyOptions: {
           } ,
           bundleOptions: {
@@ -30,6 +31,19 @@ module.exports = function(grunt) {
       build: {
         src: 'build/<%= filename %>.js',
         dest: 'build/<%= filename %>.min.js'
+      }
+    },
+    concat : {
+      options : {
+        banner : '<%= banner %>'
+      },
+      licence_min: {
+        src: 'build/<%= filename %>.min.js',
+        dest: 'build/<%= filename %>.min.js',
+      },
+      licence: {
+        src: 'build/<%= filename %>.js',
+        dest: 'build/<%= filename %>.js',
       }
     },
     copy: {
@@ -126,6 +140,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-connect-proxy");
   grunt.loadNpmTasks("grunt-contrib-connect");
   grunt.loadNpmTasks("grunt-contrib-copy");
+  grunt.loadNpmTasks("grunt-contrib-concat");
   grunt.loadNpmTasks('grunt-node-qunit');/*TODO replace by grunt contrib-qunit*/
 
   //load the task from the grunt-config directory
@@ -134,7 +149,7 @@ module.exports = function(grunt) {
   
 
 
-  grunt.registerTask('build', ['browserify:datajs', 'uglify:build', 'copy:forDemo']);
+  grunt.registerTask('build', ['browserify:datajs', 'uglify:build', 'concat','copy:forDemo']);
   grunt.registerTask('test-browser', ['configureProxies:test-browser', 'connect:test-browser']);
   grunt.registerTask('test-node', ['node-qunit:default-tests']);
 
