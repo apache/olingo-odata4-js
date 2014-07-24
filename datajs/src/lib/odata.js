@@ -22,7 +22,6 @@ var odataUtils    = exports.utils     = require('./odata/utils.js');
 var odataHandler  = exports.handler   = require('./odata/handler.js');
 var odataMetadata = exports.metadata  = require('./odata/metadata.js');
 var odataNet      = exports.net       = require('./odata/net.js');
-                    exports.gml       = require('./odata/gml.js');
 var odataJson     = exports.json      = require('./odata/json.js');
                     exports.batch     = require('./odata/batch.js');
                     

@@ -48,7 +48,6 @@
     <Content Include="src\lib\datajs\utils.js" />
     <Content Include="src\lib\datajs\xml.js" />
     <Content Include="src\lib\odata\batch.js" />
-    <Content Include="src\lib\odata\gml.js" />
     <Content Include="src\lib\odata\handler.js" />
     <Content Include="src\lib\odata\json.js" />
     <Content Include="src\lib\odata\metadata.js" />
