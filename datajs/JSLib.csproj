@@ -54,7 +54,6 @@
     <Content Include="src\lib\odata\metadata.js" />
     <Content Include="src\lib\odata\net.js" />
     <Content Include="src\lib\odata\utils.js" />
-    <Content Include="src\lib\odata\xml.js" />
     <Content Include="src\lib\store\dom.js" />
     <Content Include="src\lib\store\indexeddb.js" />
     <Content Include="src\lib\store\memory.js" />

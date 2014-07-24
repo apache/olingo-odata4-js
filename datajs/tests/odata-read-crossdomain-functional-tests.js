@@ -48,7 +48,7 @@
         "application/json",
         "application/json;odata.metadata=none",
         "application/json;odata.metadata=minimal",
-        "application/json;odata.metadata=full",
+        "application/json;odata.metadata=full", // to do: all the full metadata scenarios fail currently, need to fix.
         undefined
     ];
     var azureOdataService = "http://odatasampleservices.azurewebsites.net/V4/OData/OData.svc/";

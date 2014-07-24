@@ -222,10 +222,10 @@ var readPayloadFull = function (data, model, recognizeDates) {
                             if (typeFromObject === 'string') {
                                 addType(data, key, '#String');
                             } else if (typeFromObject === 'boolean') {
-                                addType(data, key, '#Bool');
+                                addType(data, key, '#Boolean');
                             } else if (typeFromObject === 'number') {
                                 if (data[key] % 1 === 0) { // has fraction 
-                                    addType(data, key, '#Integer'); // the biggst integer
+                                    addType(data, key, '#Int32'); // the biggst integer
                                 } else {
                                     addType(data, key, '#Decimal'); // the biggst float single,doulbe,decimal
                                 }
@@ -556,15 +556,16 @@ var readPayloadMinimal = function (data, model, recognizeDates) {
         case PAYLOADTYPE_ENTRY:
             return readPayloadMinimalEntry(data, model, payloadInfo, baseURI, recognizeDates);
         case PAYLOADTYPE_COLLECTION:
-            return;
+            return data; // Just return "data" before the ReadPayload function for this kind is implmented.
         case PAYLOADTYPE_PRIMITIVE:
-            return;
+            return data;
         case PAYLOADTYPE_SVCDOC:
-            return;
+            return data;
         case PAYLOADTYPE_LINKS:
-            return;
+            return data;
     }
-    return;
+
+    return data;
 };
 
 var jsonLightGetEntryKey = function (data, entityModel) {

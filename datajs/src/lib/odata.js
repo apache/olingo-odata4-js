@@ -24,14 +24,9 @@ var odataMetadata = exports.metadata  = require('./odata/metadata.js');
 var odataNet      = exports.net       = require('./odata/net.js');
                     exports.gml       = require('./odata/gml.js');
 var odataJson     = exports.json      = require('./odata/json.js');
-var odataXml      = exports.xml       = require('./odata/xml.js');
                     exports.batch     = require('./odata/batch.js');
                     
 exports.metadataHandler =  odataMetadata.metadataHandler;
-
-
-
-
 
 var utils = require('./datajs/utils.js');
 var assigned = utils.assigned;
@@ -46,7 +41,7 @@ var metadataParser = odataMetadata.metadataParser;
 
 // CONTENT START
 
-var handlers = [odataJson.jsonHandler, odataXml.xmlHandler, odataHandler.textHandler];
+var handlers = [odataJson.jsonHandler, odataHandler.textHandler];
 
 var dispatchHandler = function (handlerMethod, requestOrResponse, context) {
     /// <summary>Dispatches an operation to handlers.</summary>

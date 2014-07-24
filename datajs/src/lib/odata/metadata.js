@@ -18,7 +18,6 @@
  */
 
 var utils    = require('./../datajs.js').utils;
-var oDataXML    = require('./xml.js');
 var oDSxml    = require('./../datajs.js').xml;
 var odataHandler    = require('./handler.js');
 
@@ -35,12 +34,12 @@ var xmlNS = oDSxml.xmlNS;
 var xmlnsNS = oDSxml.xmlnsNS;
 var xmlParse = oDSxml.xmlParse;
 
-var edmxNs = oDataXML.edmxNs;
-var edmNs1 = oDataXML.edmNs1;
-var handler = oDataXML.handler;
-var MAX_DATA_SERVICE_VERSION = oDataXML.MAX_DATA_SERVICE_VERSION;
-var odataMetaXmlNs = oDataXML.odataMetaXmlNs;
-
+var ado = oDSxml.http + "docs.oasis-open.org/odata/";      // http://docs.oasis-open.org/odata/
+var adoDs = ado + "ns";                             // http://docs.oasis-open.org/odata/ns
+var edmxNs = adoDs + "/edmx";                       // http://docs.oasis-open.org/odata/ns/edmx
+var edmNs1 = adoDs + "/edm";                        // http://docs.oasis-open.org/odata/ns/edm
+var odataMetaXmlNs = adoDs + "/metadata";           // http://docs.oasis-open.org/odata/ns/metadata
+var MAX_DATA_SERVICE_VERSION = odataHandler.MAX_DATA_SERVICE_VERSION;
 
 var xmlMediaType = "application/xml";
 
