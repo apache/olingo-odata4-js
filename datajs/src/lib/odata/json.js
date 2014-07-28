@@ -36,7 +36,6 @@ var getFormatKind = utils.getFormatKind;
 
 var formatDateTimeOffset = oDataUtils.formatDateTimeOffset;
 var formatDuration = oDataUtils.formatDuration;
-var formatJsonLight = oDataUtils.formatJsonLight;
 var formatNumberWidth = oDataUtils.formatNumberWidth;
 var getCanonicalTimezone = oDataUtils.getCanonicalTimezone;
 var handler = oDataUtils.handler;
@@ -52,6 +51,10 @@ var lookupProperty = oDataUtils.lookupProperty;
 var MAX_DATA_SERVICE_VERSION = oDataUtils.MAX_DATA_SERVICE_VERSION;
 var maxVersion = oDataUtils.maxVersion;
 var parseDateTime = oDataUtils.parseDateTime;
+
+var isPrimitiveEdmType = oDataUtils.isPrimitiveEdmType;
+var isGeographyEdmType = oDataUtils.isGeographyEdmType;
+var isGeometryEdmType = oDataUtils.isGeometryEdmType;
 //var parseDuration = oDataUtils.parseDuration;
 //var parseTimezone = oDataUtils.parseTimezone;
 //var payloadTypeOf = oDataUtils.payloadTypeOf;
@@ -155,9 +158,9 @@ var jsonParser = function (handler, text, context) {
     var recognizeDates = defined(context.recognizeDates, handler.recognizeDates);
     var model = context.metadata;
     var json = (typeof text === "string") ? JSON.parse(text) : text;
-
+    var metadataContentType;
     if (assigned(context.contentType) && assigned(context.contentType.properties)) {
-        var metadataContentType = context.contentType.properties["odata.metadata"]; //TODO convert to lower before comparism
+        metadataContentType = context.contentType.properties["odata.metadata"]; //TODO convert to lower before comparism
     }
 
     var payloadFormat = getFormatKind(metadataContentType, 1); // none: 0, minimal: 1, full: 2
@@ -263,7 +266,7 @@ var jsonSerializer = function (handler, data, context) {
 
     if (cType && cType.mediaType === jsonContentType.mediaType) {
         context.dataServiceVersion = maxVersion(dataServiceVersion, "4.0");
-        var newdata = formatJsonLightRequestPayload(data);
+        var newdata = formatJsonRequestPayload(data);
         if (newdata) {
             return JSON.stringify(newdata);
         }
@@ -272,7 +275,7 @@ var jsonSerializer = function (handler, data, context) {
     return undefined;
 };
 
-var formatJsonLightRequestPayload = function (data) {
+var formatJsonRequestPayload = function (data) {
     if (!data) {
         return data;
     }
@@ -285,7 +288,7 @@ var formatJsonLightRequestPayload = function (data) {
         var newArrayData = [];
         var i, len;
         for (i = 0, len = data.length; i < len; i++) {
-            newArrayData[i] = formatJsonLightRequestPayload(data[i]);
+            newArrayData[i] = formatJsonRequestPayload(data[i]);
         }
 
         return newArrayData;
@@ -293,8 +296,8 @@ var formatJsonLightRequestPayload = function (data) {
 
     var newdata = {};
     for (var property in data) {
-        if (isJsonLightSerializableProperty(property)) {
-            newdata[property] = formatJsonLightRequestPayload(data[property]);
+        if (isJsonSerializableProperty(property)) {
+            newdata[property] = formatJsonRequestPayload(data[property]);
         }
     }
 
@@ -317,14 +320,14 @@ var jsonReplacer = function (_, value) {
 };
 
 
-var jsonLightMakePayloadInfo = function (kind, type) {
-    /// <summary>Creates an object containing information for the json light payload.</summary>
-    /// <param name="kind" type="String">JSON light payload kind, one of the PAYLOADTYPE_XXX constant values.</param>
-    /// <param name="typeName" type="String">Type name of the JSON light payload.</param>
+var jsonMakePayloadInfo = function (kind, type) {
+    /// <summary>Creates an object containing information for the json payload.</summary>
+    /// <param name="kind" type="String">JSON payload kind, one of the PAYLOADTYPE_XXX constant values.</param>
+    /// <param name="typeName" type="String">Type name of the JSON payload.</param>
     /// <returns type="Object">Object with kind and type fields.</returns>
 
-    /// <field name="kind" type="String">Kind of the JSON light payload. One of the PAYLOADTYPE_XXX constant values.</field>
-    /// <field name="type" type="String">Data type of the JSON light payload.</field>
+    /// <field name="kind" type="String">Kind of the JSON payload. One of the PAYLOADTYPE_XXX constant values.</field>
+    /// <field name="type" type="String">Data type of the JSON payload.</field>
 
     return { kind: kind, type: type || null };
 };
@@ -440,7 +443,7 @@ var parseContextUriFragment = function( fragments, model ) {
                 continue;
             }
 
-            if (jsonLightIsPrimitiveType(fragment)) {
+            if (jsonIsPrimitiveType(fragment)) {
                 ret.typeName = fragment;
                 ret.type = null;
                 ret.detectedPayloadKind = PAYLOADTYPE_VALUE;
@@ -521,14 +524,14 @@ var parseContextUriFragment = function( fragments, model ) {
 };
 
 var createPayloadInfo = function (data, model) {
-    /// <summary>Infers the information describing the JSON light payload from its metadata annotation, structure, and data model.</summary>
-    /// <param name="data" type="Object">Json light response payload object.</param>
+    /// <summary>Infers the information describing the JSON payload from its metadata annotation, structure, and data model.</summary>
+    /// <param name="data" type="Object">Json response payload object.</param>
     /// <param name="model" type="Object">Object describing an OData conceptual schema.</param>
     /// <remarks>
     ///     If the arguments passed to the function don't convey enough information about the payload to determine without doubt that the payload is a feed then it
     ///     will try to use the payload object structure instead.  If the payload looks like a feed (has value property that is an array or non-primitive values) then
     ///     the function will report its kind as PAYLOADTYPE_FEED unless the inferFeedAsComplexType flag is set to true. This flag comes from the user request
-    ///     and allows the user to control how the library behaves with an ambigous JSON light payload.
+    ///     and allows the user to control how the library behaves with an ambigous JSON payload.
     /// </remarks>
     /// <returns type="Object">
     ///     Object with kind and type fields. Null if there is no metadata annotation or the payload info cannot be obtained..
@@ -541,7 +544,7 @@ var createPayloadInfo = function (data, model) {
 
     var fragmentStart = metadataUri.lastIndexOf("#");
     if (fragmentStart === -1) {
-        return jsonLightMakePayloadInfo(PAYLOADTYPE_SVCDOC);
+        return jsonMakePayloadInfo(PAYLOADTYPE_SVCDOC);
     }
 
     var fragment = metadataUri.substring(fragmentStart + 1);
@@ -580,9 +583,9 @@ var readPayloadMinimal = function (data, model, recognizeDates) {
     return data;
 };
 
-var jsonLightGetEntryKey = function (data, entityModel) {
+var jsonGetEntryKey = function (data, entityModel) {
     /// <summary>Gets the key of an entry.</summary>
-    /// <param name="data" type="Object">JSON light entry.</param>
+    /// <param name="data" type="Object">JSON entry.</param>
     /// <paraFrom   Subject Received    Size    Categories  
     /// <returns type="string">Entry instance key.</returns>
 
@@ -779,33 +782,33 @@ var readPayloadMinimalObject = function (data, objectInfo, baseURI, model, recog
 
     //if ((keyType !== undefined) && (keyType.key !== undefined)) { 
     if (keyType.key !== undefined) { 
-        var lastIdSegment = objectInfo.name + jsonLightGetEntryKey(data, keyType);
+        var lastIdSegment = objectInfo.name + jsonGetEntryKey(data, keyType);
         data['@odata.id'] = baseURI.substring(0, baseURI.lastIndexOf("$metadata")) + lastIdSegment;
         data['@odata.editLink'] = lastIdSegment;
     }
 
     var serviceURI = baseURI.substring(0, baseURI.lastIndexOf("$metadata"));
-    //jsonLightComputeUrisIfMissing(data, entryInfo, actualType, serviceURI, dataModel, baseTypeModel);
+    //json ComputeUrisIfMissing(data, entryInfo, actualType, serviceURI, dataModel, baseTypeModel);
 
     checkProperties(data, objectInfo.type, baseURI, model, recognizeDates);
     
     return data;
 };
 
-var jsonLightSerializableMetadata = ["@odata.id", "@odata.type"];
+var jsonSerializableMetadata = ["@odata.id", "@odata.type"];
 
-var isJsonLightSerializableProperty = function (property) {
+var isJsonSerializableProperty = function (property) {
     if (!property) {
         return false;
     }
 
     if (property.indexOf("@odata.") == -1) {
         return true;
-    }
+    } 
 
     var i, len;
-    for (i = 0, len = jsonLightSerializableMetadata.length; i < len; i++) {
-        var name = jsonLightSerializableMetadata[i];
+    for (i = 0, len = jsonSerializableMetadata.length; i < len; i++) {
+        var name = jsonSerializableMetadata[i];
         if (property.indexOf(name) != -1) {
             return true;
         }
@@ -814,10 +817,17 @@ var isJsonLightSerializableProperty = function (property) {
     return false;
 };
 
+var jsonIsPrimitiveType = function (typeName) {
+    /// <summary>Determines whether a type name is a primitive type in a JSON payload.</summary>
+    /// <param name="typeName" type="String">Type name to test.</param>
+    /// <returns type="Boolean">True if the type name an EDM primitive type or an OData spatial type; false otherwise.</returns>
+
+    return isPrimitiveEdmType(typeName) || isGeographyEdmType(typeName) || isGeometryEdmType(typeName);
+};
+
 
 var jsonHandler = oDataHandler.handler(jsonParser, jsonSerializer, jsonMediaType, MAX_DATA_SERVICE_VERSION);
 jsonHandler.recognizeDates = false;
-jsonHandler.useJsonLight = true;
 
 exports.jsonHandler = jsonHandler;
 exports.jsonParser = jsonParser;

@@ -1,4 +1,5 @@
-<!--
+<%@ ServiceHost Language="C#" Factory="Microsoft.OData.Service.DataServiceHostFactory, Microsoft.OData.Service, Version=6.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
+    Service="DataJS.Tests.BasicAuthDataService" %>
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,11 +18,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
--->
-
-<%@ ServiceHost Language="C#" Factory="Microsoft.OData.Service.DataServiceHostFactory, Microsoft.OData.Service, Version=6.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
-    Service="DataJS.Tests.BasicAuthDataService" %>
-
 namespace DataJS.Tests
 {
     using System;

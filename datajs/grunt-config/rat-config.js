@@ -7,13 +7,9 @@ module.exports = function(grunt) {
     test: {                      
       dir: './tests'
     },
-    all: {
-      all: ['./src','./tests']
-    }
   });
 
-  
-  //grunt.loadNpmTasks('custom-tasks/rat');
+ 
   grunt.loadTasks('grunt-config/custom-tasks/rat/tasks');
-  grunt.registerTask('license',['rat:src']);
+  grunt.registerTask('license',['rat:src','rat:test']);
 };
