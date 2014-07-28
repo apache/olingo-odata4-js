@@ -44,6 +44,8 @@
         <button id="btnJSONwithMetaData">JSON with MetaData</button><br/>
         <button id="btnPOST_entry_food">POST food entry</button><br/>
         <button id="btnPOST_entry_categorie">POST categorie entry</button><br/>
+        <button id="btnGET_collection_full">GET collection odata.metadata=full</button><br/>
+        <button id="btnGET_collection_minimal">GET collection odata.metadata=minimal</button><br/>
         <div id='resultsArea' data-type="json">
         </div>
         <script>
@@ -121,7 +123,13 @@
                 };
                 datajs.V4.oData.read(requestUri, success, errorFunc);
             });
-
+            $('#btnPOST_entry_food').on("click", function(){
+                var requestUri = {
+                    requestUri : 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods(0)/Providers',
+                    headers : { Accept : 'application/json;odata.metadata=full' }
+                };
+                datajs.V4.oData.read(requestUri, success, errorFunc);
+            });
             $('#btnJSON_full_to_all').on("click", function(){
                 var requestUri = {
                     requestUri : 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods',
@@ -131,6 +139,34 @@
                 };
                 datajs.V4.oData.read(requestUri, success, errorFunc);
             });
+            $('#btnGET_collection_full').on("click", function(){
+                var metaDatasuccess = function(metadata){
+                    var requestUri = {
+                        requestUri : 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods(0)/Providers',
+                        headers : { Accept : 'application/json;odata.metadata=full' },
+                        recognizeDates : false
+                    };
+
+                    datajs.V4.oData.read(requestUri, success, errorFunc, null, null, metadata);
+                  
+                }
+                getMetaData(metaDatasuccess);
+            });
+
+            $('#btnGET_collection_minimal').on("click", function(){
+                var metaDatasuccess = function(metadata){
+                    var requestUri = {
+                        requestUri : 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods(0)/Providers',
+                        headers : { Accept : 'application/json;odata.metadata=minimal' },
+                        recognizeDates : false
+                    };
+
+                    datajs.V4.oData.read(requestUri, success, errorFunc, null, null, metadata);
+                  
+                }
+                getMetaData(metaDatasuccess);
+            });
+
             $('#btnJSON_full_to_all_date_conversion').on("click", function(){
                 var requestUri = {
                     requestUri : 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods',

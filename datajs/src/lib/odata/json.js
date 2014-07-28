@@ -479,10 +479,22 @@ var parseContextUriFragment = function( fragments, model ) {
             if ( ret.detectedPayloadKind === PAYLOADTYPE_FEED || ret.detectedPayloadKind === PAYLOADTYPE_ENTRY) {
                 var property = lookupProperty(ret.type.property, fragment);
                 if (property !== null) {
+                    //PAYLOADTYPE_COLLECTION
                     ret.typeName = property.type;
-                    ret.type = lookupComplexType(ret.typeName, model);
+                    
+                    
+                    if (utils.startsWith(property.type, 'Collection')) {
+                        ret.detectedPayloadKind = PAYLOADTYPE_COLLECTION;
+                        var tmp12 =  property.type.substring(10+1,property.type.length - 1);
+                        ret.typeName = tmp12;
+                        ret.type = lookupComplexType(tmp12, model);    
+                        ret.detectedPayloadKind = PAYLOADTYPE_COLLECTION;
+                    } else {
+                        ret.type = lookupComplexType(property.type, model);    
+                        ret.detectedPayloadKind = PAYLOADTYPE_PROPERTY;
+                    }    
+
                     ret.name = fragment;
-                    ret.detectedPayloadKind = PAYLOADTYPE_PROPERTY;
                     // Capter 10.15
                 }
                 continue;
@@ -556,7 +568,7 @@ var readPayloadMinimal = function (data, model, recognizeDates) {
         case PAYLOADTYPE_ENTRY:
             return readPayloadMinimalEntry(data, model, payloadInfo, baseURI, recognizeDates);
         case PAYLOADTYPE_COLLECTION:
-            return data; // Just return "data" before the ReadPayload function for this kind is implmented.
+            return readPayloadMinimalCollection(data, model, payloadInfo, baseURI, recognizeDates);
         case PAYLOADTYPE_PRIMITIVE:
             return data;
         case PAYLOADTYPE_SVCDOC:
@@ -595,6 +607,37 @@ var jsonLightGetEntryKey = function (data, entityModel) {
     }
     entityInstanceKey += ")";
     return entityInstanceKey;
+};
+
+var readPayloadMinimalCollection = function (data, model, collectionInfo, baseURI, recognizeDates) {
+
+    data['@odata.type'] = '#Collection('+collectionInfo.typeName + ')';
+
+    var entries = [];
+
+    var items = data.value;
+    for (i = 0, len = items.length; i < len; i++) {
+        var item = items[i];
+        if ( defined(item['@odata.type'])) { // in case of mixed collections
+            var typeName = item['@odata.type'].substring(1);
+            var type = lookupEntityType( typeName, model);
+            var entryInfo = {
+                contentTypeOdata : collectionInfo.contentTypeOdata,
+                detectedPayloadKind : collectionInfo.detectedPayloadKind,
+                name : collectionInfo.name,
+                type : type,
+                typeName : typeName
+            };
+
+            entry = readPayloadMinimalObject(item, entryInfo, baseURI, model, recognizeDates);
+        } else {
+            entry = readPayloadMinimalObject(item, collectionInfo, baseURI, model, recognizeDates);
+        }
+        
+        entries.push(entry);
+    }
+    data.value = entries;
+    return data;
 };
 
 var readPayloadMinimalFeed = function (data, model, feedInfo, baseURI, recognizeDates) {
@@ -725,9 +768,11 @@ var readPayloadMinimalObject = function (data, objectInfo, baseURI, model, recog
         keyType = lookupEntityType(keyType.baseType, model);
     }
 
-    var lastIdSegment = objectInfo.name + jsonLightGetEntryKey(data, keyType);
-    data['@odata.id'] = baseURI.substring(0, baseURI.lastIndexOf("$metadata")) + lastIdSegment;
-    data['@odata.editLink'] = lastIdSegment;
+    if (keyType.key !== undefined) {
+        var lastIdSegment = objectInfo.name + jsonLightGetEntryKey(data, keyType);
+        data['@odata.id'] = baseURI.substring(0, baseURI.lastIndexOf("$metadata")) + lastIdSegment;
+        data['@odata.editLink'] = lastIdSegment;
+    }
 
     var serviceURI = baseURI.substring(0, baseURI.lastIndexOf("$metadata"));
     //jsonLightComputeUrisIfMissing(data, entryInfo, actualType, serviceURI, dataModel, baseTypeModel);
