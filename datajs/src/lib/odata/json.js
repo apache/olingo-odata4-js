@@ -569,8 +569,8 @@ var readPayloadMinimal = function (data, model, recognizeDates) {
             return readPayloadMinimalEntry(data, model, payloadInfo, baseURI, recognizeDates);
         case PAYLOADTYPE_COLLECTION:
             return readPayloadMinimalCollection(data, model, payloadInfo, baseURI, recognizeDates);
-        case PAYLOADTYPE_PRIMITIVE:
-            return data;
+        case PAYLOADTYPE_PROPERTY:
+            return readPayloadMinimalProperty(data, model, payloadInfo, baseURI, recognizeDates);
         case PAYLOADTYPE_SVCDOC:
             return data;
         case PAYLOADTYPE_LINKS:
@@ -609,37 +609,46 @@ var jsonLightGetEntryKey = function (data, entityModel) {
     return entityInstanceKey;
 };
 
-var readPayloadMinimalCollection = function (data, model, collectionInfo, baseURI, recognizeDates) {
-
-    data['@odata.type'] = '#Collection('+collectionInfo.typeName + ')';
-
-    var entries = [];
-
-    var items = data.value;
-    for (i = 0, len = items.length; i < len; i++) {
-        var item = items[i];
-        if ( defined(item['@odata.type'])) { // in case of mixed collections
-            var typeName = item['@odata.type'].substring(1);
-            var type = lookupEntityType( typeName, model);
-            var entryInfo = {
-                contentTypeOdata : collectionInfo.contentTypeOdata,
-                detectedPayloadKind : collectionInfo.detectedPayloadKind,
-                name : collectionInfo.name,
-                type : type,
-                typeName : typeName
-            };
-
-            entry = readPayloadMinimalObject(item, entryInfo, baseURI, model, recognizeDates);
-        } else {
-            entry = readPayloadMinimalObject(item, collectionInfo, baseURI, model, recognizeDates);
-        }
-        
-        entries.push(entry);
+var readPayloadMinimalProperty = function (data, model, collectionInfo, baseURI, recognizeDates) {
+    if (collectionInfo.type !== null) {
+        readPayloadMinimalObject(data, collectionInfo, baseURI, model, recognizeDates);
+    } else {
+        data['value@odata.type'] = '#'+collectionInfo.typeName;
     }
-    data.value = entries;
     return data;
 };
 
+var readPayloadMinimalCollection = function (data, model, collectionInfo, baseURI, recognizeDates) {
+    data['@odata.type'] = '#Collection('+collectionInfo.typeName + ')';
+
+    if (collectionInfo.type !== null) {
+        var entries = [];
+
+        var items = data.value;
+        for (i = 0, len = items.length; i < len; i++) {
+            var item = items[i];
+            if ( defined(item['@odata.type'])) { // in case of mixed collections
+                var typeName = item['@odata.type'].substring(1);
+                var type = lookupEntityType( typeName, model);
+                var entryInfo = {
+                    contentTypeOdata : collectionInfo.contentTypeOdata,
+                    detectedPayloadKind : collectionInfo.detectedPayloadKind,
+                    name : collectionInfo.name,
+                    type : type,
+                    typeName : typeName
+                };
+
+                entry = readPayloadMinimalObject(item, entryInfo, baseURI, model, recognizeDates);
+            } else {
+                entry = readPayloadMinimalObject(item, collectionInfo, baseURI, model, recognizeDates);
+            }
+            
+            entries.push(entry);
+        }
+        data.value = entries;
+    }
+    return data;
+};
 var readPayloadMinimalFeed = function (data, model, feedInfo, baseURI, recognizeDates) {
     var entries = [];
     var items = data.value;
@@ -768,7 +777,8 @@ var readPayloadMinimalObject = function (data, objectInfo, baseURI, model, recog
         keyType = lookupEntityType(keyType.baseType, model);
     }
 
-    if (keyType.key !== undefined) {
+    //if ((keyType !== undefined) && (keyType.key !== undefined)) { 
+    if (keyType.key !== undefined) { 
         var lastIdSegment = objectInfo.name + jsonLightGetEntryKey(data, keyType);
         data['@odata.id'] = baseURI.substring(0, baseURI.lastIndexOf("$metadata")) + lastIdSegment;
         data['@odata.editLink'] = lastIdSegment;
