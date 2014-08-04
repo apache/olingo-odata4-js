@@ -50,7 +50,7 @@ var lookupDefaultEntityContainer = oDataUtils.lookupDefaultEntityContainer;
 var lookupProperty = oDataUtils.lookupProperty;
 var MAX_DATA_SERVICE_VERSION = oDataUtils.MAX_DATA_SERVICE_VERSION;
 var maxVersion = oDataUtils.maxVersion;
-var parseDateTime = oDataUtils.parseDateTime;
+var XXXparseDateTime = oDataUtils.XXXparseDateTime;
 
 var isPrimitiveEdmType = oDataUtils.isPrimitiveEdmType;
 var isGeographyEdmType = oDataUtils.isGeographyEdmType;
@@ -190,6 +190,32 @@ var addType = function(data, name, value ) {
     }
 };
 
+var addTypeNoEdm = function(data, name, value ) {
+    var fullName = name + '@odata.type';
+
+    if ( data[fullName] === undefined) {
+        if ( value.substring(0,4)==='Edm.') {
+            data[fullName] = value.substring(4);
+        } else {
+            data[fullName] = value;
+        }
+
+    }
+};
+
+var addTypeColNoEdm = function(data, name, value ) {
+    var fullName = name + '@odata.type';
+
+    if ( data[fullName] === undefined) {
+        if ( value.substring(0,4)==='Edm.') {
+            data[fullName] = 'Collection('+value.substring(4)+ ')';
+        } else {
+            data[fullName] = 'Collection('+value+ ')';
+        }
+    }
+};
+
+
 var readPayloadFull = function (data, model, recognizeDates) {
     /// <summary>Adds typeinformation for String, Boolean and numerical EDM-types. 
     /// The type is determined from the odata-json-format-v4.0.doc specification
@@ -236,14 +262,8 @@ var readPayloadFull = function (data, model, recognizeDates) {
                         }
                         else {
                             if (recognizeDates) {
-                                if (type === '#DateTimeOffset') {
-                                    data[key] = oDataUtils.parseDateTimeOffset(data[key], true);
-                                } else if (type === '#DateTime') {
-                                    data[key] = oDataUtils.parseDateTimeOffset(data[key], true);
-                                }
+                                convertDatesNoEdm(data, key, type.substring(1));
                             }
-
-                            // TODO handle more types here 
                         }
                     }
                 }
@@ -616,13 +636,15 @@ var readPayloadMinimalProperty = function (data, model, collectionInfo, baseURI,
     if (collectionInfo.type !== null) {
         readPayloadMinimalObject(data, collectionInfo, baseURI, model, recognizeDates);
     } else {
-        data['value@odata.type'] = '#'+collectionInfo.typeName;
+        addTypeNoEdm(data,'value', collectionInfo.typeName);
+        //data['value@odata.type'] = '#'+collectionInfo.typeName;
     }
     return data;
 };
 
 var readPayloadMinimalCollection = function (data, model, collectionInfo, baseURI, recognizeDates) {
-    data['@odata.type'] = '#Collection('+collectionInfo.typeName + ')';
+    //data['@odata.type'] = '#Collection('+collectionInfo.typeName + ')';
+    addTypeColNoEdm(data,'', collectionInfo.typeName);
 
     if (collectionInfo.type !== null) {
         var entries = [];
@@ -730,6 +752,30 @@ var formatRowLiteral = function (value, type) {
     }
 };
 
+var convertDates = function (data, propertyName,type) {
+    if (type === 'Edm.Date') {
+        data[propertyName] = oDataUtils.parseDate(data[propertyName], true);
+    } else if (type === 'Edm.DateTimeOffset') {
+        data[propertyName] = oDataUtils.parseDateTimeOffset(data[propertyName], true);
+    } else if (type === 'Edm.Duration') {
+        data[propertyName] = oDataUtils.parseDuration(data[propertyName], true);
+    } else if (type === 'Edm.Time') {
+        data[propertyName] = oDataUtils.parseTime(data[propertyName], true);
+    }
+};
+
+var convertDatesNoEdm = function (data, propertyName,type) {
+    if (type === 'Date') {
+        data[propertyName] = oDataUtils.parseDate(data[propertyName], true);
+    } else if (type === 'DateTimeOffset') {
+        data[propertyName] = oDataUtils.parseDateTimeOffset(data[propertyName], true);
+    } else if (type === 'Duration') {
+        data[propertyName] = oDataUtils.parseDuration(data[propertyName], true);
+    } else if (type === 'Time') {
+        data[propertyName] = oDataUtils.parseTime(data[propertyName], true);
+    }
+};
+
 var checkProperties = function (data, objectInfoType, baseURI, model, recognizeDates) {
     for (var name in data) {
         if (name.indexOf("@") === -1) {
@@ -743,14 +789,25 @@ var checkProperties = function (data, objectInfoType, baseURI, model, recognizeD
             }
             
             if ( isArray(propertyValue)) {
-                data[name+'@odata.type'] = '#' + property.type;
+                //data[name+'@odata.type'] = '#' + property.type;
+                if (isCollectionType(property.type)) {
+                    addTypeColNoEdm(data,name,property.type.substring(11,property.type.length-1));
+                } else {
+                    addTypeNoEdm(data,name,property.type);
+                }
+
+
                 for ( var i = 0; i < propertyValue.length; i++) {
                     readPayloadMinimalComplexObject(propertyValue[i], property, baseURI, model, recognizeDates);
                 }
             } else if (isObject(propertyValue) && (propertyValue !== null)) {
                 readPayloadMinimalComplexObject(propertyValue, property, baseURI, model, recognizeDates);
             } else {
-                data[name+'@odata.type'] = '#' + property.type;
+                //data[name+'@odata.type'] = '#' + property.type;
+                addTypeNoEdm(data,name,property.type);
+                if (recognizeDates) {
+                    convertDates(data, name, property.type);
+                }
             }
         }
     }
@@ -762,7 +819,9 @@ var readPayloadMinimalComplexObject = function (data, property, baseURI, model, 
         type =property.type.substring(11,property.type.length-1);
     }
 
-    data['@odata.type'] = '#'+type;
+    //data['@odata.type'] = '#'+type;
+    addType(data,'',property.type);
+
 
     var propertyType = lookupComplexType(type, model);
     if (propertyType === null)  {
@@ -773,7 +832,8 @@ var readPayloadMinimalComplexObject = function (data, property, baseURI, model, 
 };
 
 var readPayloadMinimalObject = function (data, objectInfo, baseURI, model, recognizeDates) {
-    data['@odata.type'] = '#'+objectInfo.typeName;
+    //data['@odata.type'] = '#'+objectInfo.typeName;
+    addType(data,'',objectInfo.typeName);
 
     var keyType = objectInfo.type;
     while ((defined(keyType)) && ( keyType.key === undefined) && (keyType.baseType !== undefined)) {

@@ -889,12 +889,36 @@ var parseDateTimeMaybeOffset = function (value, withOffset, nullOnError) {
     return result;
 };
 
-var parseDateTime = function (propertyValue, nullOnError) {
-    /// <summary>Parses a string into a DateTime value.</summary>
+var parseDate = function (propertyValue, nullOnError) {
+    /// <summary>Parses a string into a Date object.</summary>
     /// <param name="propertyValue" type="String">Value to parse.</param>
-    /// <returns type="Date">The parsed value.</returns>
+    /// <returns type="Date">The parsed with year, month, day set, time values are set to 0</returns>
+    var parts = propertyValue.split('-');
 
-    return parseDateTimeMaybeOffset(propertyValue, false, nullOnError);
+    if (parts.length != 3 && nullOnError) {
+        return null;
+    }
+    return new Date(
+        parseInt10(parts[0]),       // Year.
+        parseInt10(parts[1]) - 1,   // Month (zero-based for Date.UTC and setFullYear).
+        parseInt10(parts[2],
+        0,0,0,0)        // Date.
+        );
+
+};
+
+var parseTimeOfDayRE = /^(\d+):(\d+)(:(\d+)(.(\d+))?)?$/;
+
+var parseTimeOfDay = function (propertyValue, nullOnError) {
+    var parts = parseTimeOfDayRE.exec(propertyValue);
+
+
+    return {
+        'h' :parseInt10(parts[1]),
+        'm' :parseInt10(parts[2]),
+        's' :parseInt10(parts[4]),
+        'ms' :parseInt10(parts[6]),
+     };
 };
 
 var parseDateTimeOffset = function (propertyValue, nullOnError) {
@@ -1145,10 +1169,13 @@ exports.maxVersion = maxVersion;
 exports.navigationPropertyKind = navigationPropertyKind;
 exports.normalizeHeaders = normalizeHeaders;
 exports.parseBool = parseBool;
-exports.parseDateTime = parseDateTime;
+
+
+exports.parseDate = parseDate;
 exports.parseDateTimeOffset = parseDateTimeOffset;
 exports.parseDuration = parseDuration;
-exports.parseTimezone = parseTimezone;
+exports.parseTimeOfDay = parseTimeOfDay;
+
 exports.parseInt10 = parseInt10;
 exports.prepareRequest = prepareRequest;
 exports.removeNamespace = removeNamespace;
