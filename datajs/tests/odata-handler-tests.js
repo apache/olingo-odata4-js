@@ -21,6 +21,19 @@
 
 (function (window, undefined) {
 
+    var dataServiceVersion = "4.0";
+    var endpoint = "./endpoints/FoodStoreDataServiceV4.svc";
+    var mimeType = "application/json;odata.metadata=minimal";
+    var headers = {
+                "Content-Type": mimeType,
+                Accept: mimeType,
+                "OData-Version": "4.0"
+            };
+    var unexpectedErrorHandler = function (err) {
+        djstest.assert(false, "Unexpected call to error handler with error: " + djstest.toString(err));
+        djstest.done();
+    };
+
     djstest.addTest(function createUpdateDeleteTest() {
         // This is a simple create-update-delete cycle as a high-level test.
 
@@ -329,5 +342,23 @@
 
         djstest.done();
     });
+    
+    djstest.addTest(function readServiceDocumentTest(headers) {
+        OData.request({
+            requestUri: endpoint,
+            method: "GET",
+            headers: headers
+        }, function (data, response) {
+            djstest.assertAreEqual(data.value[0].name, "Categories", "Verify .name");
+            djstest.assertAreEqual(data.value[0].kind, "EntitySet", "Verify .kind");
+            djstest.assertAreEqual(data.value[0].url, "Categories", "Verify .url");
+
+            djstest.assertAreEqual(data.value[1].name, "Foods", "Verify .name");
+            djstest.assertAreEqual(data.value[1].kind, "EntitySet", "Verify .kind");
+            djstest.assertAreEqual(data.value[1].url, "Foods", "Verify .url");
+            djstest.done();
+        }, unexpectedErrorHandler);
+     });
+          
     // DATAJS INTERNAL END
 })(this);
