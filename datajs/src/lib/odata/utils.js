@@ -59,7 +59,8 @@ var EDM_SINGLE = EDM + "Single";
 var EDM_STRING = EDM + "String";
 var EDM_TIME = EDM + "Time";
 
-var EDM_GEOGRAPHY = EDM + "Geography";
+var GEOGRAPHY = "Geography";
+var EDM_GEOGRAPHY = EDM + GEOGRAPHY;
 var EDM_GEOGRAPHY_POINT = EDM_GEOGRAPHY + "Point";
 var EDM_GEOGRAPHY_LINESTRING = EDM_GEOGRAPHY + "LineString";
 var EDM_GEOGRAPHY_POLYGON = EDM_GEOGRAPHY + "Polygon";
@@ -68,7 +69,16 @@ var EDM_GEOGRAPHY_MULTIPOLYGON = EDM_GEOGRAPHY + "MultiPolygon";
 var EDM_GEOGRAPHY_MULTILINESTRING = EDM_GEOGRAPHY + "MultiLineString";
 var EDM_GEOGRAPHY_MULTIPOINT = EDM_GEOGRAPHY + "MultiPoint";
 
-var EDM_GEOMETRY = EDM + "Geometry";
+var GEOGRAPHY_POINT = GEOGRAPHY + "Point";
+var GEOGRAPHY_LINESTRING = GEOGRAPHY + "LineString";
+var GEOGRAPHY_POLYGON = GEOGRAPHY + "Polygon";
+var GEOGRAPHY_COLLECTION = GEOGRAPHY + "Collection";
+var GEOGRAPHY_MULTIPOLYGON = GEOGRAPHY + "MultiPolygon";
+var GEOGRAPHY_MULTILINESTRING = GEOGRAPHY + "MultiLineString";
+var GEOGRAPHY_MULTIPOINT = GEOGRAPHY + "MultiPoint";
+
+var GEOMETRY = "Geometry";
+var EDM_GEOMETRY = EDM + GEOMETRY;
 var EDM_GEOMETRY_POINT = EDM_GEOMETRY + "Point";
 var EDM_GEOMETRY_LINESTRING = EDM_GEOMETRY + "LineString";
 var EDM_GEOMETRY_POLYGON = EDM_GEOMETRY + "Polygon";
@@ -76,6 +86,14 @@ var EDM_GEOMETRY_COLLECTION = EDM_GEOMETRY + "Collection";
 var EDM_GEOMETRY_MULTIPOLYGON = EDM_GEOMETRY + "MultiPolygon";
 var EDM_GEOMETRY_MULTILINESTRING = EDM_GEOMETRY + "MultiLineString";
 var EDM_GEOMETRY_MULTIPOINT = EDM_GEOMETRY + "MultiPoint";
+
+var GEOMETRY_POINT = GEOMETRY + "Point";
+var GEOMETRY_LINESTRING = GEOMETRY + "LineString";
+var GEOMETRY_POLYGON = GEOMETRY + "Polygon";
+var GEOMETRY_COLLECTION = GEOMETRY + "Collection";
+var GEOMETRY_MULTIPOLYGON = GEOMETRY + "MultiPolygon";
+var GEOMETRY_MULTILINESTRING = GEOMETRY + "MultiLineString";
+var GEOMETRY_MULTIPOINT = GEOMETRY + "MultiPoint";
 
 var GEOJSON_POINT = "Point";
 var GEOJSON_LINESTRING = "LineString";
@@ -114,6 +132,17 @@ var geometryEdmTypes = [
     EDM_GEOMETRY_MULTIPOINT
 ];
 
+var geometryTypes = [
+    GEOMETRY,
+    GEOMETRY_POINT,
+    GEOMETRY_LINESTRING,
+    GEOMETRY_POLYGON,
+    GEOMETRY_COLLECTION,
+    GEOMETRY_MULTIPOLYGON,
+    GEOMETRY_MULTILINESTRING,
+    GEOMETRY_MULTIPOINT
+];
+
 var geographyEdmTypes = [
     EDM_GEOGRAPHY,
     EDM_GEOGRAPHY_POINT,
@@ -123,6 +152,17 @@ var geographyEdmTypes = [
     EDM_GEOGRAPHY_MULTIPOLYGON,
     EDM_GEOGRAPHY_MULTILINESTRING,
     EDM_GEOGRAPHY_MULTIPOINT
+];
+
+var geographyTypes = [
+    GEOGRAPHY,
+    GEOGRAPHY_POINT,
+    GEOGRAPHY_LINESTRING,
+    GEOGRAPHY_POLYGON,
+    GEOGRAPHY_COLLECTION,
+    GEOGRAPHY_MULTIPOLYGON,
+    GEOGRAPHY_MULTILINESTRING,
+    GEOGRAPHY_MULTIPOINT
 ];
 
 var forEachSchema = function (metadata, callback) {
@@ -423,7 +463,11 @@ var isGeographyEdmType = function (typeName) {
     /// <param name="typeName" type="String">Name of type to check.</param>
     /// <returns type="Boolean">True if the type is a geography EDM type; false otherwise.</returns>
 
-    return contains(geographyEdmTypes, typeName);
+    //check with edm
+    var ret = contains(geographyEdmTypes, typeName) || 
+        (typeName.indexOf('.') === -1 && contains(geographyTypes, typeName));
+    return ret; 
+        
 };
 
 var isGeometryEdmType = function (typeName) {
@@ -431,7 +475,9 @@ var isGeometryEdmType = function (typeName) {
     /// <param name="typeName" type="String">Name of type to check.</param>
     /// <returns type="Boolean">True if the type is a geometry EDM type; false otherwise.</returns>
 
-    return contains(geometryEdmTypes, typeName);
+    var ret = contains(geometryEdmTypes, typeName) ||
+        (typeName.indexOf('.') === -1 && contains(geometryTypes, typeName));
+    return ret; 
 };
 
 var isNamedStream = function (value) {

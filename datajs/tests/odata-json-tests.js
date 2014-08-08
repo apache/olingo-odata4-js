@@ -836,4 +836,150 @@
 
     });
 
+    var verifyReadJsonLightDataMetadataFull = function (input, expected, message, model) {
+        var response = { 
+          headers: { 
+            "Content-Type": "application/json;odata.metadata=full",
+             DataServiceVersion: "4.0"
+          },
+          body: JSON.stringify(input) 
+        };
+
+        OData.json.jsonHandler.read(response, { metadata: model });
+        djstest.assertAreEqualDeep(response.data, expected, message);
+    };
+
+
+    var verifyReadJsonLightDataMetadataMinimal= function (input, expected, message, model) {
+        var response = { 
+          headers: { 
+            "Content-Type": "application/json;odata.metadata=minimal",
+             DataServiceVersion: "4.0"
+          },
+          body: JSON.stringify(input) 
+        };
+
+        OData.json.jsonHandler.read(response, { metadata: model });
+        djstest.assertAreEqualDeep(response.data, expected, message);
+    };
+
+    var getPointValue =  { edmType : 'GeographyPoint', value : {
+                type: "Point",
+                coordinates: [1.0, 2.0],
+                crs: {
+                    type: name,
+                    properties: {
+                        name: "EPSG:4326"
+                    }
+                }
+              }};
+
+    var getLineStringValue =  { edmType : 'GeographyLineString', value : {
+                "type": "LineString",
+                "coordinates": [ [100.0, 0.0], [101.0, 1.0] ],
+                crs: {
+                    type: name,
+                    properties: {
+                        name: "EPSG:4326"
+                    }
+                }
+              }};
+
+    var getPolygonValue =  { edmType : 'GeographyPolygon', value : {
+                "type": "Polygon",
+                "coordinates": [
+                  [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],
+                  [ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]
+                  ],
+                crs: {
+                    type: name,
+                    properties: {
+                        name: "EPSG:4326"
+                    }
+                }
+              }};
+
+    var getMultiPointValue =  { edmType : 'GeographyMultiPoint', value : {
+                "type": "MultiPoint",
+                "coordinates": [ [100.0, 0.0], [101.0, 1.0] ],
+                crs: {
+                    type: name,
+                    properties: {
+                        name: "EPSG:4326"
+                    }
+                }
+              }};
+
+    var getMultiLineStringValue =  { edmType : 'GeographyMultiLineString', value : {
+                  "type": "MultiLineString",
+                  "coordinates": [
+                      [ [100.0, 0.0], [101.0, 1.0] ],
+                      [ [102.0, 2.0], [103.0, 3.0] ]
+                    ],
+                crs: {
+                    type: name,
+                    properties: {
+                        name: "EPSG:4326"
+                    }
+                }
+              }};
+      var getMultiPolygonStringValue =  { edmType : 'GeographyMultiPolygon', value : {
+                  "type": "MultiPolygon",
+                  "coordinates": [
+                    [[[102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0]]],
+                    [[[100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0]],
+                     [[100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2]]]
+                    ],
+                crs: {
+                    type: name,
+                    properties: {
+                        name: "EPSG:4326"
+                    }
+                }
+              }};
+
+      var getWorkload = [getPointValue, getLineStringValue, getPolygonValue, getMultiPointValue, getMultiLineStringValue, getMultiPolygonStringValue ];
+
+
+      djstest.addTest(function jsonReadGeometryPointFull() {
+
+        for ( var i = 0; i < getWorkload.length; i++) {
+          var item = getWorkload[i]; 
+          var input = {
+            "@odata.context": "http://someUri#Edm."+item.edmType,
+            "value@odata.type" : item.edmType,
+            value: item.value
+          }; 
+
+          var expected = {
+            "@odata.context": "http://someUri#Edm."+item.edmType,
+            "value@odata.type" : item.edmType,
+            value: item.value
+          };
+          verifyReadJsonLightDataMetadataFull(input, expected, "Json light top level primitive property was read properly.");
+        }
+        
+        djstest.done();
+    });
+
+
+    djstest.addTest(function jsonReadGeometryPointMinimal() {
+      for ( var i = 0; i < getWorkload.length; i++) {
+        var item = getWorkload[i]; 
+        var input = {
+            "@odata.context": "http://someUri#Edm."+item.edmType,
+            value: item.value
+        };
+
+        var expected = {
+            "@odata.context": "http://someUri#Edm."+item.edmType,
+            value: item.value,
+            "value@odata.type" : item.edmType,
+        };
+
+        verifyReadJsonLightDataMetadataMinimal(input, expected, "Json light top level primitive property was read properly.", {});
+      }
+      djstest.done();
+    });
+
 })(this);

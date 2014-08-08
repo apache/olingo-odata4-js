@@ -236,7 +236,14 @@ var readPayloadFull = function (data, model, recognizeDates) {
                         }
                     } else if (utils.isObject(data[key])) {
                         if (data[key] !== null) {
-                            readPayloadFull(data[key], model, recognizeDates);
+                            //don't step into geo.. objects
+                            var isGeo = false;
+                            var type = data[key+'@odata.type'];
+                            if (type && (isGeographyEdmType(type) || isGeometryEdmType(type))) {
+                                // is gemometry type
+                            } else {
+                                readPayloadFull(data[key], model, recognizeDates);
+                            }
                         }
                     } else {
                         var type = data[key + '@odata.type'];
@@ -439,6 +446,14 @@ var parseContextUriFragment = function( fragments, model ) {
                 }
             }
 
+
+            if (jsonIsPrimitiveType(fragment)) {
+                ret.typeName = fragment;
+                ret.type = null;
+                ret.detectedPayloadKind = PAYLOADTYPE_VALUE;
+                continue;
+            }
+
             var container = lookupDefaultEntityContainer(model);
 
             //check for entity
@@ -463,12 +478,7 @@ var parseContextUriFragment = function( fragments, model ) {
                 continue;
             }
 
-            if (jsonIsPrimitiveType(fragment)) {
-                ret.typeName = fragment;
-                ret.type = null;
-                ret.detectedPayloadKind = PAYLOADTYPE_VALUE;
-                continue;
-            }
+            
 
             //TODO throw ERROR
         } else {
@@ -586,6 +596,8 @@ var readPayloadMinimal = function (data, model, recognizeDates) {
     var payloadInfo = createPayloadInfo(data, model);
 
     switch (payloadInfo.detectedPayloadKind) {
+        case PAYLOADTYPE_VALUE:
+            return readPayloadMinimalProperty(data, model, payloadInfo, baseURI, recognizeDates);
         case PAYLOADTYPE_FEED:
             return readPayloadMinimalFeed(data, model, payloadInfo, baseURI, recognizeDates);
         case PAYLOADTYPE_ENTRY:
