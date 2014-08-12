@@ -17,6 +17,8 @@
  * under the License.
  */
 
+ /** @module cache */
+
 var utils = require('./datajs.js').utils;
 
 
@@ -40,6 +42,8 @@ var sliceJsonValueArray = utils.sliceJsonValueArray;
 var concatJsonValueArray = utils.concatJsonValueArray;
 var storeReq = require('./datajs.js').store;
 
+
+/** Appending a page appendPage */
 var appendPage = function (operation, page) {
     /// <summary>Appends a page's data to the operation data.</summary>
     /// <param name="operation" type="Object">Operation with (i)ndex, (c)ount and (d)ata.</param>

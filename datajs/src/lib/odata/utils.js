@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+ /** @module odata/utils */
 
 var utils    = require('./../datajs.js').utils;
 
@@ -28,16 +29,15 @@ var isDate = utils.isDate;
 var isObject = utils.isObject;
 var parseInt10 = utils.parseInt10;
 
-var dataItemTypeName = function (value, metadata) {
-    /// <summary>Gets the type name of a data item value that belongs to a feed, an entry, a complex type property, or a collection property.</summary>
-    /// <param name="value">Value of the data item from which the type name is going to be retrieved.</param>
-    /// <param name="metadata" type="object" optional="true">Object containing metadata about the data tiem.</param>
-    /// <remarks>
-    ///    This function will first try to get the type name from the data item's value itself if it is an object with a __metadata property; otherwise
-    ///    it will try to recover it from the metadata.  If both attempts fail, it will return null.
-    /// </remarks>
-    /// <returns type="String">Data item type name; null if the type name cannot be found within the value or the metadata</returns>
 
+/** Gets the type name of a data item value that belongs to a feed, an entry, a complex type property, or a collection property
+ * @param {string} value - Value of the data item from which the type name is going to be retrieved.
+ * @param {object} [metadata] - Object containing metadata about the data tiem.
+ * @returns {string} Data item type name; null if the type name cannot be found within the value or the metadata
+ * This function will first try to get the type name from the data item's value itself if it is an object with a __metadata property; otherwise
+ * it will try to recover it from the metadata.  If both attempts fail, it will return null.
+ */
+var dataItemTypeName = function (value, metadata) {
     var valueTypeName = ((value && value.__metadata) || {}).type;
     return valueTypeName || (metadata ? metadata.type : null);
 };

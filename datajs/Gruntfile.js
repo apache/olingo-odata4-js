@@ -122,6 +122,14 @@ module.exports = function(grunt) {
         }
       },
     },
+    jsdoc : {
+        dist : {
+            src: ['src/**/*.js'], 
+            options: {
+                destination: 'build/doc'
+            }
+        }
+    }
   };
   
   //join local configuration for proxies and local test servers
@@ -141,6 +149,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-contrib-connect");
   grunt.loadNpmTasks("grunt-contrib-copy");
   grunt.loadNpmTasks("grunt-contrib-concat");
+  grunt.loadNpmTasks("grunt-jsdoc");
   grunt.loadNpmTasks('grunt-node-qunit');/*TODO replace by grunt contrib-qunit*/
 
   //load the task from the grunt-config directory
@@ -148,7 +157,7 @@ module.exports = function(grunt) {
   grunt.loadTasks('grunt-config');
   
 
-
+  grunt.registerTask('doc', ['jsdoc']);
   grunt.registerTask('build', ['browserify:datajs', 'uglify:build', 'concat','copy:forDemo']);
   grunt.registerTask('test-browser', ['configureProxies:test-browser', 'connect:test-browser']);
   grunt.registerTask('test-node', ['node-qunit:default-tests']);
