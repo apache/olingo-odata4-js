@@ -195,7 +195,7 @@
                 );
             }, "Testing valid read of " + readLinksEntry + " with " + mimeType, { linksEntry: readLinksEntry, mimeType: mimeType });
 
-            djstest.addTest(function addLinksEntityTest(mimeType) {
+            djstest.addTest(function updateLinksEntityTest(mimeType) {
 
                 var request = {
                     requestUri: foodsFeed + "(1)/Category/$ref",
@@ -218,9 +218,9 @@
                     });
                 }, unexpectedErrorHandler);
 
-            }, "Add new links entity (mimeType = " + mimeType + " service = " + service + ")", mimeType);
+            }, "Update links entity (mimeType = " + mimeType + " service = " + service + ")", mimeType);
 
-            djstest.addTest(function addLinksFeedTest(mimeType) {
+            djstest.addTest(function addDeleteLinksFeedTest(mimeType) {
 
                 var request = {
                     requestUri: categoriesFeed + "(2)/Foods/$ref",
@@ -229,6 +229,29 @@
                     data: newFoodLinks
                 };
 
+                var deleteAndVerify = function (){
+                
+                    // delete by id
+                    var deletionRequest = {
+                        requestUri: categoriesFeed + "(2)/Foods/$ref?$id=" + newFoodLinks["@odata.id"],
+                        method: "DELETE",
+                        headers: djstest.clone(headers),
+                        data: null
+                    };
+
+                    OData.request(deletionRequest, function (data, response) {
+                        var httpOperation = deletionRequest.method + " " + deletionRequest.requestUri;
+                        djstest.assertAreEqual(response.statusCode, httpStatusCode.noContent, "Verify response code: " + httpOperation);
+
+                        OData.read(request.requestUri, function (data, response) {
+                           var httpOperation = "Read " + request.requestUri;
+                           djstest.assertAreEqual(0, response.data.value.length, "Verify links against the request: " + httpOperation);
+                           djstest.done();
+                        },unexpectedErrorHandler);
+                    }, unexpectedErrorHandler);
+                };
+
+                // add
                 OData.request(request, function (data, response) {
 
                     var httpOperation = request.method + " " + request.requestUri;
@@ -237,11 +260,13 @@
                     OData.read(request.requestUri, function (data, response) {
                         ODataReadOracle.readLinksFeed(request.requestUri, function (actualData) {
                             djstest.assertAreEqualDeep(actualData, response.data, "Verify updated links entry against the request: " + httpOperation);
-                            djstest.done();
+                            deleteAndVerify();
                         });
                     });
                 }, unexpectedErrorHandler);
-            }, "Update entity (mimeType = " + mimeType + " service = " + service + ")", mimeType);
+                
+            }, "Add & Delete entity (mimeType = " + mimeType + " service = " + service + ")", mimeType);
+            
         });
     });
 })(this);
