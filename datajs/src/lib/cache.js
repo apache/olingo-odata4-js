@@ -43,17 +43,21 @@ var getJsonValueArraryLength = utils.getJsonValueArraryLength;
 var sliceJsonValueArray = utils.sliceJsonValueArray;
 var concatJsonValueArray = utils.concatJsonValueArray;
 
+// EXPORTS 
+
+/** estimateSize (see {@link estimateSize}) */
+exports.estimateSize = estimateSize;
+
+/** createDataCache */  
+exports.createDataCache = createDataCache;
+
 
 
 /** Appends a page's data to the operation data.
  * @param {Object} operation - Operation with  (i)ndex, (c)ount and (d)ata.
- * @param {Object.i} operation - Operation <br>with 
- * (i)ndex, (c)ount and (d)ata1.
- * @param {Object.c} operation - Operation with (i)ndex, (c)ount and (d)ata.
- * @param {Object.d} operation - Operation with (i)ndex, (c)ount and (d)ata.
  * @param {Object} page - Page with (i)ndex, (c)ount and (d)ata.
  */
-var appendPage = function (operation, page) {
+function appendPage(operation, page) {
 
     var intersection = intersectRanges(operation, page);
     var start = 0;
@@ -64,14 +68,14 @@ var appendPage = function (operation, page) {
     }
 
     operation.d = concatJsonValueArray(operation.d, sliceJsonValueArray(page.d, start, end));
-};
+}
 
 /** Returns the {(i)ndex, (c)ount} range for the intersection of x and y.
  * @param {Object} x - Range with (i)ndex and (c)ount members.
  * @param {Object} y - Range with (i)ndex and (c)ount members.
  * @returns {Object} The intersection (i)ndex and (c)ount; undefined if there is no intersection.
  */
-var intersectRanges = function (x, y) {
+function intersectRanges(x, y) {
 
     var xLast = x.i + x.c;
     var yLast = y.i + y.c;
@@ -83,13 +87,14 @@ var intersectRanges = function (x, y) {
     }
 
     return result;
-};
+}
 
 /** Checks whether val is a defined number with value zero or greater.
  * @param {Number} val - Value to check.
  * @param {String} name - Parameter name to use in exception.
+ * @throws Throws an exception if the check fails
  */
-var checkZeroGreater = function (val, name) {
+function checkZeroGreater(val, name) {
 
     if (val === undefined || typeof val !== "number") {
         throw { message: "'" + name + "' must be a number." };
@@ -98,13 +103,14 @@ var checkZeroGreater = function (val, name) {
     if (isNaN(val) || val < 0 || !isFinite(val)) {
         throw { message: "'" + name + "' must be greater than or equal to zero." };
     }
-};
+}
 
 /** Checks whether val is undefined or a number with value greater than zero.
  * @param {Number} val - Value to check.
  * @param {String} name - Parameter name to use in exception.
+ * @throws Throws an exception if the check fails
  */
-var checkUndefinedGreaterThanZero = function (val, name) {
+function checkUndefinedGreaterThanZero(val, name) {
 
     if (val !== undefined) {
         if (typeof val !== "number") {
@@ -115,24 +121,25 @@ var checkUndefinedGreaterThanZero = function (val, name) {
             throw { message: "'" + name + "' must be greater than zero." };
         }
     }
-};
+}
 
 /** Checks whether val is undefined or a number
  * @param {Number} val - Value to check.
  * @param {String} name - Parameter name to use in exception.
+ * @throws Throws an exception if the check fails
  */
-var checkUndefinedOrNumber = function (val, name) {
+function checkUndefinedOrNumber(val, name) {
     if (val !== undefined && (typeof val !== "number" || isNaN(val) || !isFinite(val))) {
         throw { message: "'" + name + "' must be a number." };
     }
-};
+}
 
 /** Performs a linear search on the specified array and removes the first instance of 'item'.
  * @param {Array} arr - Array to search.
- * @param item - Item being sought.
- * @returns {Boolean} Whether the item was removed.
+ * @param {*} item - Item being sought.
+ * @returns {Boolean} true if the item was removed otherwise false
  */
-var removeFromArray = function (arr, item) {
+function removeFromArray(arr, item) {
 
     var i, len;
     for (i = 0, len = arr.length; i < len; i++) {
@@ -143,27 +150,28 @@ var removeFromArray = function (arr, item) {
     }
 
     return false;
-};
+}
 
 /** Estimates the size of an object in bytes.
- * @param {Object} obj - Object to determine the size of.
+ * Object trees are traversed recursively
+ * @param {Object} object - Object to determine the size of.
  * @returns {Integer} Estimated size of the object in bytes.
  */
-var estimateSize = function (obj) {
+function estimateSize(object) {
     var size = 0;
-    var type = typeof obj;
+    var type = typeof object;
 
-    if (type === "object" && obj) {
-        for (var name in obj) {
-            size += name.length * 2 + estimateSize(obj[name]);
+    if (type === "object" && object) {
+        for (var name in object) {
+            size += name.length * 2 + estimateSize(object[name]);
         }
     } else if (type === "string") {
-        size = obj.length * 2;
+        size = object.length * 2;
     } else {
         size = 8;
     }
     return size;
-};
+}
 
 /** Snaps low and high indices into page sizes and returns a range.
  * @param {Number} lowIndex - Low index to snap to a lower value.
@@ -171,48 +179,42 @@ var estimateSize = function (obj) {
  * @param {Number} pageSize - Page size to snap to.
  * @returns {Object} A range with (i)ndex and (c)ount of elements.
  */
-var snapToPageBoundaries = function (lowIndex, highIndex, pageSize) {
-
+function snapToPageBoundaries(lowIndex, highIndex, pageSize) {
     lowIndex = Math.floor(lowIndex / pageSize) * pageSize;
     highIndex = Math.ceil((highIndex + 1) / pageSize) * pageSize;
     return { i: lowIndex, c: highIndex - lowIndex };
-};
+}
 
 // The DataCache is implemented using state machines.  The following constants are used to properly
 // identify and label the states that these machines transition to.
-
-// DataCache state constants
-
-var CACHE_STATE_DESTROY = "destroy";
-var CACHE_STATE_IDLE = "idle";
-var CACHE_STATE_INIT = "init";
-var CACHE_STATE_READ = "read";
+var CACHE_STATE_DESTROY  = "destroy";
+var CACHE_STATE_IDLE     = "idle";
+var CACHE_STATE_INIT     = "init";
+var CACHE_STATE_READ     = "read";
 var CACHE_STATE_PREFETCH = "prefetch";
-var CACHE_STATE_WRITE = "write";
+var CACHE_STATE_WRITE    = "write";
 
 // DataCacheOperation state machine states.
 // Transitions on operations also depend on the cache current of the cache.
-
 var OPERATION_STATE_CANCEL = "cancel";
-var OPERATION_STATE_END = "end";
-var OPERATION_STATE_ERROR = "error";
-var OPERATION_STATE_START = "start";
-var OPERATION_STATE_WAIT = "wait";
+var OPERATION_STATE_END    = "end";
+var OPERATION_STATE_ERROR  = "error";
+var OPERATION_STATE_START  = "start";
+var OPERATION_STATE_WAIT   = "wait";
 
 // Destroy state machine states
-
 var DESTROY_STATE_CLEAR = "clear";
 
 // Read / Prefetch state machine states
-
-var READ_STATE_DONE = "done";
-var READ_STATE_LOCAL = "local";
-var READ_STATE_SAVE = "save";
+var READ_STATE_DONE   = "done";
+var READ_STATE_LOCAL  = "local";
+var READ_STATE_SAVE   = "save";
 var READ_STATE_SOURCE = "source";
 
 /** Creates a new operation object.
+ * @class DataCacheOperation
  * @param {Function} stateMachine - State machine that describes the specific behavior of the operation.
- * @param {DjsDeferred} promise" - Promise for requested values.
+ * @param {DjsDeferred} promise - Promise for requested values.
  * @param {Boolean} isCancelable - Whether this operation can be canceled or not.
  * @param {Number} index - Index of first item requested.
  * @param {Number} count - Count of items requested.
@@ -220,7 +222,7 @@ var READ_STATE_SOURCE = "source";
  * @param {Number} pending - Total number of pending prefetch records.
  * @returns {DataCacheOperation} A new data cache operation instance.
  */
-var DataCacheOperation = function (stateMachine, promise, isCancelable, index, count, data, pending) {
+function DataCacheOperation(stateMachine, promise, isCancelable, index, count, data, pending) {
 
     /// <field name="p" type="DjsDeferred">Promise for requested values.</field>
     /// <field name="i" type="Number">Index of first item requested.</field>
@@ -247,8 +249,9 @@ var DataCacheOperation = function (stateMachine, promise, isCancelable, index, c
 
     /** Transitions this operation to the cancel state and sets the canceled flag to true.
      * The function is a no-op if the operation is non-cancelable.</summary>
+     * @method DataCacheOperation#cancel
      */
-    that.cancel = function () {
+    that.cancel = function cancel() {
 
         if (!isCancelable) {
             return;
@@ -262,15 +265,17 @@ var DataCacheOperation = function (stateMachine, promise, isCancelable, index, c
     };
 
     /** Transitions this operation to the end state.
-    */
+     * @method DataCacheOperation#complete
+     */
     that.complete = function () {
 
         djsassert(that.s !== OPERATION_STATE_END, "DataCacheOperation.complete() - operation is in the end state", that);
         transition(OPERATION_STATE_END, stateData);
     };
 
-        /** Transitions this operation to the error state.
-        */
+    /** Transitions this operation to the error state.
+     * @method DataCacheOperation#error
+     */
     that.error = function (err) {
         if (!that.canceled) {
             djsassert(that.s !== OPERATION_STATE_END, "DataCacheOperation.error() - operation is in the end state", that);
@@ -280,6 +285,7 @@ var DataCacheOperation = function (stateMachine, promise, isCancelable, index, c
     };
 
     /** Executes the operation's current state in the context of a new cache state.
+     * @method DataCacheOperation#run
      * @param {Object} state - New cache state.
      */
     that.run = function (state) {
@@ -289,7 +295,8 @@ var DataCacheOperation = function (stateMachine, promise, isCancelable, index, c
     };
 
     /** Transitions this operation to the wait state.
-    */
+     * @method DataCacheOperation#wait
+     */
     that.wait = function (data) {
 
         djsassert(that.s !== OPERATION_STATE_END, "DataCacheOperation.wait() - operation is in the end state", that);
@@ -297,6 +304,7 @@ var DataCacheOperation = function (stateMachine, promise, isCancelable, index, c
     };
 
     /** State machine that describes all operations common behavior.
+     * @method DataCacheOperation#operationStateMachine
      * @param {Object} opTargetState - Operation state to transition to.
      * @param {Object} cacheState - Current cache state.
      * @param {Object} [data] - Additional data passed to the state.
@@ -360,23 +368,22 @@ var DataCacheOperation = function (stateMachine, promise, isCancelable, index, c
     };
 
     /** Transitions this operation to a new state.
+     * @method DataCacheOperation#transition
      * @param {Object} state - State to transition the operation to.
      * @param {Object} [data] - 
      */
-    var transition = function (state, data) {
-
+    that.transition = function (state, data) {
         that.s = state;
         stateData = data;
         operationStateMachine(state, cacheState, data);
     };
 
-    that.transition = transition;
-
     return that;
-};
+}
 
 /** Fires a resolved notification as necessary.
-*/
+ * @method DataCacheOperation.fireResolved
+ */
 DataCacheOperation.prototype.fireResolved = function () {
 
     // Fire the resolve just once.
@@ -388,7 +395,8 @@ DataCacheOperation.prototype.fireResolved = function () {
 };
 
 /** Fires a rejected notification as necessary.
-*/
+ * @method DataCacheOperation.fireRejected
+ */
 DataCacheOperation.prototype.fireRejected = function (reason) {
 
     // Fire the rejection just once.
@@ -400,7 +408,8 @@ DataCacheOperation.prototype.fireRejected = function (reason) {
 };
 
 /** Fires a canceled notification as necessary.
-*/
+ * @method DataCacheOperation.fireCanceled
+ */
 DataCacheOperation.prototype.fireCanceled = function () {
 
     this.fireRejected({ canceled: true, message: "Operation canceled" });
@@ -408,11 +417,12 @@ DataCacheOperation.prototype.fireCanceled = function () {
 
 
 /** Creates a data cache for a collection that is efficiently loaded on-demand.
+ * @class DataCache
  * @param options - Options for the data cache, including name, source, pageSize,
  * prefetchSize, cacheSize, storage mechanism, and initial prefetch and local-data handler.
  * @returns {DataCache} A new data cache instance.
  */
-var DataCache = function (options) {
+function DataCache(options) {
 
     var state = CACHE_STATE_INIT;
     var stats = { counts: 0, netReads: 0, prefetches: 0, cacheReads: 0 };
@@ -451,6 +461,7 @@ var DataCache = function (options) {
     that.stats = stats;
 
     /** Counts the number of items in the collection.
+     * @method DataCache#count
      * @returns {Object} A promise with the number of items.
      */
     that.count = function () {
@@ -481,9 +492,12 @@ var DataCache = function (options) {
         });
 
         return extend(deferred.promise(), {
+
+             /** Aborts the count operation (used within promise callback)
+              * @method DataCache#cancelCount
+              */
             cancel: function () {
-                /** Aborts the count operation.
-                */
+               
                 if (request) {
                     canceled = true;
                     request.abort();
@@ -494,10 +508,9 @@ var DataCache = function (options) {
     };
 
     /** Cancels all running operations and clears all local data associated with this cache.
-    
      * New read requests made while a clear operation is in progress will not be canceled.
      * Instead they will be queued for execution once the operation is completed.
-    
+     * @method DataCache#clear
      * @returns {Object} A promise that has no value and can't be canceled.
      */
     that.clear = function () {
@@ -516,12 +529,11 @@ var DataCache = function (options) {
     };
 
     /** Filters the cache data based a predicate.
+     * Specifying a negative count value will yield all the items in the cache that satisfy the predicate.
+     * @method DataCache#filterForward
      * @param {Number} index - The index of the item to start filtering forward from.
      * @param {Number} count - Maximum number of items to include in the result.
      * @param {Function} predicate - Callback function returning a boolean that determines whether an item should be included in the result or not.
-    
-     * Specifying a negative count value will yield all the items in the cache that satisfy the predicate.
-    
      * @returns {DjsDeferred} A promise for an array of results.
      */
     that.filterForward = function (index, count, predicate) {
@@ -529,12 +541,11 @@ var DataCache = function (options) {
     };
 
     /** Filters the cache data based a predicate.
+     * Specifying a negative count value will yield all the items in the cache that satisfy the predicate.
+     * @method DataCache#filterBack
      * @param {Number} index - The index of the item to start filtering backward from.
      * @param {Number} count - Maximum number of items to include in the result.
      * @param {Function} predicate - Callback function returning a boolean that determines whether an item should be included in the result or not.
-    
-     * Specifying a negative count value will yield all the items in the cache that satisfy the predicate.
-    
      * @returns {DjsDeferred} A promise for an array of results.
      */
     that.filterBack = function (index, count, predicate) {
@@ -542,12 +553,11 @@ var DataCache = function (options) {
     };
 
     /** Reads a range of adjacent records.
-     * @param {Number} index - Zero-based index of record range to read.
-     * @param {Number} count - Number of records in the range.
-    
      * New read requests made while a clear operation is in progress will not be canceled.
      * Instead they will be queued for execution once the operation is completed.
-    
+     * @method DataCache#readRange
+     * @param {Number} index - Zero-based index of record range to read.
+     * @param {Number} count - Number of records in the range.
      * @returns {DjsDeferred} A promise for an array of records; less records may be returned if the
      * end of the collection is found.
      */
@@ -568,14 +578,16 @@ var DataCache = function (options) {
 
         return extend(deferred.promise(), {
             cancel: function () {
-                /** Aborts the readRange operation.
-                */
+                /** Aborts the readRange operation  (used within promise callback)
+                 * @method DataCache#cancelReadRange
+                 */
                 op.cancel();
             }
         });
     };
 
     /** Creates an Observable object that enumerates all the cache contents.
+     * @method DataCache#toObservable
      * @returns A new Observable object that enumerates all the cache contents.
      */
     that.ToObservable = that.toObservable = function () {
@@ -622,9 +634,9 @@ var DataCache = function (options) {
     };
 
     /** Creates a function that handles a callback by setting the cache into failure mode.
+     * @method DataCache~cacheFailureCallback
      * @param {String} message - Message text.
      * @returns {Function} Function to use as error callback.
-    
      * This function will specifically handle problems with critical store resources
      * during cache initialization.
      */
@@ -653,6 +665,7 @@ var DataCache = function (options) {
     };
 
     /** Updates the cache's state and signals all pending operations of the change.
+     * @method DataCache~changeState
      * @param {Object} newState - New cache state.
      * This method is a no-op if the cache's current state and the new state are the same.</remarks>
      */
@@ -669,6 +682,7 @@ var DataCache = function (options) {
     };
 
     /** Removes all the data stored in the cache.
+     * @method DataCache~clearStore
      * @returns {DjsDeferred} A promise with no value.
      */
     var clearStore = function () {
@@ -700,6 +714,7 @@ var DataCache = function (options) {
     };
 
     /** Removes an operation from the caches queues and changes the cache state to idle.
+     * @method DataCache~dequeueOperation
      * @param {DataCacheOperation} operation - Operation to dequeue.
      * This method is used as a handler for the operation's oncomplete event.</remarks>
     */
@@ -718,6 +733,7 @@ var DataCache = function (options) {
     };
 
     /** Requests data from the cache source.
+     * @method DataCache~fetchPage
      * @param {Number} start - Zero-based index of items to request.
      * @returns {DjsDeferred} A promise for a page object with (i)ndex, (c)ount, (d)ata.
      */
@@ -749,6 +765,7 @@ var DataCache = function (options) {
     };
 
     /** Filters the cache data based a predicate.
+     * @method DataCache~filter
      * @param {Number} index - The index of the item to start filtering from.
      * @param {Number} count - Maximum number of items to include in the result.
      * @param {Function} predicate - Callback function returning a boolean that determines whether an item should be included in the result or not.
@@ -824,7 +841,8 @@ var DataCache = function (options) {
         readMore(initialIndex, initialCount);
 
         return extend(deferred.promise(), {
-            /** Aborts the filter operation
+            /** Aborts the filter operation (used within promise callback)
+            * @method DataCache#cancelFilter
              */
             cancel: function () {
 
@@ -837,6 +855,7 @@ var DataCache = function (options) {
     };
 
     /** Fires an onidle event if any functions are assigned.
+     * @method DataCache~fireOnIdle
     */
     var fireOnIdle = function () {
 
@@ -846,6 +865,7 @@ var DataCache = function (options) {
     };
 
     /** Creates and starts a new prefetch operation.
+     * @method DataCache~prefetch
      * @param {Number} start - Zero-based index of the items to prefetch.
      * This method is a no-op if any of the following conditions is true:
      *     1.- prefetchSize is 0
@@ -882,6 +902,7 @@ var DataCache = function (options) {
     };
 
     /** Requests a page from the cache local store.
+     * @method DataCache~readPage    
      * @param {Number} key - Zero-based index of the reuqested page.
      * @returns {DjsDeferred} A promise for a found flag and page object with (i)ndex, (c)ount, (d)ata, and (t)icks.
      */
@@ -891,8 +912,10 @@ var DataCache = function (options) {
 
         var canceled = false;
         var deferred = extend(new DjsDeferred(), {
+            /** Aborts the readPage operation. (used within promise callback)
+             * @method DataCache#cancelReadPage
+             */
             cancel: function () {
-                /** Aborts the readPage operation.*/
                 canceled = true;
             }
         });
@@ -917,6 +940,7 @@ var DataCache = function (options) {
     };
 
     /** Saves a page to the cache local store.
+     * @method DataCache~savePage    
      * @param {Number} key - Zero-based index of the requested page.
      * @param {Object} page - Object with (i)ndex, (c)ount, (d)ata, and (t)icks.
      * @returns {DjsDeferred} A promise with no value.
@@ -929,8 +953,9 @@ var DataCache = function (options) {
         var canceled = false;
 
         var deferred = extend(new DjsDeferred(), {
-            /** Aborts the readPage operation.
-            */
+            /** Aborts the savePage operation. (used within promise callback)
+             * @method DataCache#cancelReadPage
+             */
             cancel: function () {
                 canceled = true;
             }
@@ -962,6 +987,7 @@ var DataCache = function (options) {
     };
 
     /** Saves the cache's current settings to the local store.
+     * @method DataCache~saveSettings    
      * @param {Function} success - Success callback.
      * @param {Function} error - Errror callback.
      */
@@ -983,6 +1009,7 @@ var DataCache = function (options) {
     };
 
     /** Creates a function that handles a store error.
+     * @method DataCache~storeFailureCallback    
      * @param {DjsDeferred} deferred - Deferred object to resolve.
      * @param {String} message - Message text.
      * @returns {Function} Function to use as error callback.
@@ -1003,6 +1030,7 @@ var DataCache = function (options) {
     };
 
     /** Updates the cache's settings based on a page object.
+     * @method DataCache~updateSettings    
      * @param {Object} page - Object with (i)ndex, (c)ount, (d)ata.
      * @param {Number} pageBytes - Size of the page in bytes.
      */
@@ -1034,11 +1062,11 @@ var DataCache = function (options) {
     };
 
     /** State machine describing the behavior for cancelling a read or prefetch operation.
+     * @method DataCache~cancelStateMachine    
      * @param {DataCacheOperation} operation - Operation being run.
      * @param {Object} opTargetState - Operation state to transition to.
      * @param {Object} cacheState - Current cache state.
      * @param {Object} [data] - 
-    
      * This state machine contains behavior common to read and prefetch operations.
      */
     var cancelStateMachine = function (operation, opTargetState, cacheState, data) {
@@ -1058,6 +1086,7 @@ var DataCache = function (options) {
     };
 
     /** State machine describing the behavior of a clear operation.
+     * @method DataCache~destroyStateMachine    
      * @param {DataCacheOperation} operation - Operation being run.
      * @param {Object} opTargetState - Operation state to transition to.
      * @param {Object} cacheState - Current cache state.
@@ -1104,6 +1133,7 @@ var DataCache = function (options) {
     };
 
     /** State machine describing the behavior of a prefetch operation.
+     * @method DataCache~prefetchStateMachine    
      * @param {DataCacheOperation} operation - Operation being run.
      * @param {Object} opTargetState - Operation state to transition to.
      * @param {Object} cacheState - Current cache state.
@@ -1173,6 +1203,7 @@ var DataCache = function (options) {
     };
 
     /** State machine describing the behavior of a read operation.
+     * @method DataCache~readStateMachine    
      * @param {DataCacheOperation} operation - Operation being run.
      * @param {Object} opTargetState - Operation state to transition to.
      * @param {Object} cacheState - Current cache state.
@@ -1254,6 +1285,7 @@ var DataCache = function (options) {
     };
 
     /** State machine describing the behavior for reading and saving data into the cache.
+     * @method DataCache~readSaveStateMachine    
      * @param {DataCacheOperation} operation - Operation being run.
      * @param {Object} opTargetState - Operation state to transition to.
      * @param {Object} cacheState - Current cache state.
@@ -1383,7 +1415,7 @@ var DataCache = function (options) {
     }, cacheFailureCallback("Unable to read settings from store."));
 
     return that;
-};
+}
 
 /** Creates a data cache for a collection that is efficiently loaded on-demand.
  * @param options 
@@ -1391,7 +1423,7 @@ var DataCache = function (options) {
  * prefetchSize, cacheSize, storage mechanism, and initial prefetch and local-data handler.
  * @returns {DataCache} A new data cache instance.
  */
-exports.createDataCache = function (options) {
+function createDataCache (options) {
     checkUndefinedGreaterThanZero(options.pageSize, "pageSize");
     checkUndefinedOrNumber(options.cacheSize, "cacheSize");
     checkUndefinedOrNumber(options.prefetchSize, "prefetchSize");
@@ -1407,5 +1439,26 @@ exports.createDataCache = function (options) {
     return new DataCache(options);
 };
 
-exports.estimateSize = estimateSize;
 
+
+
+
+/** @class */
+function Data() {
+    /**
+     * @type {object}
+     * @property {number} y This will show up as a property of `Data#point`,
+     * but you cannot link to the property as {@link Data#point.y}.
+     */
+    this.point = {
+        /**
+         * The @alias and @memberof! tags force JSDoc to document the
+         * property as `point.x` (rather than `x`) and to be a member of
+         * `Data#`. You can link to the property as {@link Data#point.x}.
+         * @alias point.x
+         * @memberof! Data#
+         */
+        x: 0,
+        y: 1
+    };
+}
