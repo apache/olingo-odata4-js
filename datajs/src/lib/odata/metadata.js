@@ -43,16 +43,15 @@ var MAX_DATA_SERVICE_VERSION = odataHandler.MAX_DATA_SERVICE_VERSION;
 
 var xmlMediaType = "application/xml";
 
+/** Creates an object that describes an element in an schema.
+ * @param {Array} attributes - List containing the names of the attributes allowed for this element.
+ * @param {Array} elements - List containing the names of the child elements allowed for this element.
+ * @param {Boolean} text - Flag indicating if the element's text value is of interest or not.
+ * @param {String} ns - Namespace to which the element belongs to.
+ * If a child element name ends with * then it is understood by the schema that that child element can appear 0 or more times.
+ * @returns {Object} Object with attributes, elements, text, and ns fields.
+ */
 var schemaElement = function (attributes, elements, text, ns) {
-    /// <summary>Creates an object that describes an element in an schema.</summary>
-    /// <param name="attributes" type="Array">List containing the names of the attributes allowed for this element.</param>
-    /// <param name="elements" type="Array">List containing the names of the child elements allowed for this element.</param>
-    /// <param name="text" type="Boolean">Flag indicating if the element's text value is of interest or not.</param>
-    /// <param name="ns" type="String">Namespace to which the element belongs to.</param>
-    /// <remarks>
-    ///    If a child element name ends with * then it is understood by the schema that that child element can appear 0 or more times.
-    /// </remarks>
-    /// <returns type="Object">Object with attributes, elements, text, and ns fields.</returns>
 
     return {
         attributes: attributes,
@@ -357,11 +356,12 @@ var schema = {
 };
 
 
+/** Converts a Pascal-case identifier into a camel-case identifier.
+ * @param {String} text - Text to convert.
+ * @returns {String} Converted text.
+ * If the text starts with multiple uppercase characters, it is left as-is.</remarks>
+ */
 var scriptCase = function (text) {
-    /// <summary>Converts a Pascal-case identifier into a camel-case identifier.</summary>
-    /// <param name="text" type="String">Text to convert.</param>
-    /// <returns type="String">Converted text.</returns>
-    /// <remarks>If the text starts with multiple uppercase characters, it is left as-is.</remarks>
 
     if (!text) {
         return text;
@@ -379,11 +379,12 @@ var scriptCase = function (text) {
     return text.charAt(0).toLowerCase();
 };
 
+/** Gets the schema node for the specified element.
+ * @param {Object} parentSchema - Schema of the parent XML node of 'element'.
+ * @param candidateName - XML element name to consider.
+ * @returns {Object} The schema that describes the specified element; null if not found.
+ */
 var getChildSchema = function (parentSchema, candidateName) {
-    /// <summary>Gets the schema node for the specified element.</summary>
-    /// <param name="parentSchema" type="Object">Schema of the parent XML node of 'element'.</param>
-    /// <param name="candidateName">XML element name to consider.</param>
-    /// <returns type="Object">The schema that describes the specified element; null if not found.</returns>
 
     var elements = parentSchema.elements;
     if (!elements) {
@@ -408,18 +409,20 @@ var getChildSchema = function (parentSchema, candidateName) {
     return null;
 };
 
+/** Checks whether the specifies namespace URI is one of the known CSDL namespace URIs.
+ * @param {String} nsURI - Namespace URI to check.
+ * @returns {Boolean} true if nsURI is a known CSDL namespace; false otherwise.
+ */
 var isEdmNamespace = function (nsURI) {
-    /// <summary>Checks whether the specifies namespace URI is one of the known CSDL namespace URIs.</summary>
-    /// <param name="nsURI" type="String">Namespace URI to check.</param>
-    /// <returns type="Boolean">true if nsURI is a known CSDL namespace; false otherwise.</returns>
 
     return nsURI === edmNs1;
 };
 
+/** Parses a CSDL document.
+ * @param element - DOM element to parse.
+ * @returns {Object} An object describing the parsed element.
+ */
 var parseConceptualModelElement = function (element) {
-    /// <summary>Parses a CSDL document.</summary>
-    /// <param name="element">DOM element to parse.</param>
-    /// <returns type="Object">An object describing the parsed element.</returns>
 
     var localName = xmlLocalName(element);
     var nsURI = xmlNamespaceURI(element);
@@ -493,11 +496,12 @@ var parseConceptualModelElement = function (element) {
     return item;
 };
 
+/** Parses a metadata document.
+ * @param handler - This handler.
+ * @param {String} text - Metadata text.
+ * @returns An object representation of the conceptual model.</returns>
+ */
 var metadataParser = function (handler, text) {
-    /// <summary>Parses a metadata document.</summary>
-    /// <param name="handler">This handler.</param>
-    /// <param name="text" type="String">Metadata text.</param>
-    /// <returns>An object representation of the conceptual model.</returns>
 
     var doc = xmlParse(text);
     var root = xmlFirstChildElement(doc);

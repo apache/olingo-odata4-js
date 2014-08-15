@@ -25,18 +25,18 @@ var delay = utils.delay;
 
 var ticks = 0;
 
-var canUseJSONP = function (request) {
-    /// <summary>
-    /// Checks whether the specified request can be satisfied with a JSONP request.
-    /// </summary>
-    /// <param name="request">Request object to check.</param>
-    /// <returns type="Boolean">true if the request can be satisfied; false otherwise.</returns>
+/* Checks whether the specified request can be satisfied with a JSONP request.
+ * @param request - Request object to check.
+ * @returns {Boolean} true if the request can be satisfied; false otherwise.
 
-    // Requests that 'degrade' without changing their meaning by going through JSONP
-    // are considered usable.
-    //
-    // We allow data to come in a different format, as the servers SHOULD honor the Accept
-    // request but may in practice return content with a different MIME type.
+ * Requests that 'degrade' without changing their meaning by going through JSONP
+ * are considered usable.
+ *
+ * We allow data to come in a different format, as the servers SHOULD honor the Accept
+ * request but may in practice return content with a different MIME type.
+ */
+var canUseJSONP = function (request) {
+    
     if (request.method && request.method !== "GET") {
         return false;
     }
@@ -44,10 +44,11 @@ var canUseJSONP = function (request) {
     return true;
 };
 
+/** Creates an IFRAME tag for loading the JSONP script
+ * @param {String} url - The source URL of the script
+ * @returns {HTMLElement} The IFRAME tag
+ */
 var createIFrame = function (url) {
-    /// <summary>Creates an IFRAME tag for loading the JSONP script</summary>
-    /// <param name="url" type="String">The source URL of the script</param>
-    /// <returns type="HTMLElement">The IFRAME tag</returns>
     var iframe = window.document.createElement("IFRAME");
     iframe.style.display = "none";
 
@@ -61,9 +62,10 @@ var createIFrame = function (url) {
     return iframe;
 };
 
+/** Creates a XmlHttpRequest object.
+ * @returns {XmlHttpRequest} XmlHttpRequest object.
+ */
 var createXmlHttpRequest = function () {
-    /// <summary>Creates a XmlHttpRequest object.</summary>
-    /// <returns type="XmlHttpRequest">XmlHttpRequest object.</returns>
     if (window.XMLHttpRequest) {
         return new window.XMLHttpRequest();
     }
@@ -84,20 +86,21 @@ var createXmlHttpRequest = function () {
     throw exception;
 };
 
+/** Checks whether the specified URL is an absolute URL.
+ * @param {String} url - URL to check.
+ * @returns {Boolean} true if the url is an absolute URL; false otherwise.
+*/
 var isAbsoluteUrl = function (url) {
-    /// <summary>Checks whether the specified URL is an absolute URL.</summary>
-    /// <param name="url" type="String">URL to check.</param>
-    /// <returns type="Boolean">true if the url is an absolute URL; false otherwise.</returns>
-
     return url.indexOf("http://") === 0 ||
         url.indexOf("https://") === 0 ||
         url.indexOf("file://") === 0;
 };
 
+/** Checks whether the specified URL is local to the current context.
+ * @param {String} url - URL to check.
+ * @returns {Boolean} true if the url is a local URL; false otherwise.
+ */
 var isLocalUrl = function (url) {
-    /// <summary>Checks whether the specified URL is local to the current context.</summary>
-    /// <param name="url" type="String">URL to check.</param>
-    /// <returns type="Boolean">true if the url is a local URL; false otherwise.</returns>
 
     if (!isAbsoluteUrl(url)) {
         return true;
@@ -109,10 +112,11 @@ var isLocalUrl = function (url) {
     return (url.indexOf(locationDomain) === 0);
 };
 
+/** Removes a callback used for a JSONP request.
+ * @param {String} name - Function name to remove.
+ * @param {Number} tick - Tick count used on the callback.
+ */
 var removeCallback = function (name, tick) {
-    /// <summary>Removes a callback used for a JSONP request.</summary>
-    /// <param name="name" type="String">Function name to remove.</param>
-    /// <param name="tick" type="Number">Tick count used on the callback.</param>
     try {
         delete window[name];
     } catch (err) {
@@ -123,10 +127,11 @@ var removeCallback = function (name, tick) {
     }
 };
 
+/** Removes an iframe.
+ * @param {Object} iframe - The iframe to remove.
+ * @returns {Object} Null value to be assigned to iframe reference.
+ */
 var removeIFrame = function (iframe) {
-    /// <summary>Removes an iframe.</summary>
-    /// <param name="iframe" type="Object">The iframe to remove.</param>
-    /// <returns type="Object">Null value to be assigned to iframe reference.</returns>
     if (iframe) {
         writeHtmlToIFrame(iframe, "");
         iframe.parentNode.removeChild(iframe);
@@ -135,10 +140,11 @@ var removeIFrame = function (iframe) {
     return null;
 };
 
+/** Reads response headers into array.
+ * @param {XMLHttpRequest} xhr - HTTP request with response available.
+ * @param {Array} headers - Target array to fill with name/value pairs.
+ */
 var readResponseHeaders = function (xhr, headers) {
-    /// <summary>Reads response headers into array.</summary>
-    /// <param name="xhr" type="XMLHttpRequest">HTTP request with response available.</param>
-    /// <param name="headers" type="Array">Target array to fill with name/value pairs.</param>
 
     var responseHeaders = xhr.getAllResponseHeaders().split(/\r?\n/);
     var i, len;
@@ -150,10 +156,11 @@ var readResponseHeaders = function (xhr, headers) {
     }
 };
 
+/** Writes HTML to an IFRAME document.
+ * @param {HTMLElement} iframe - The IFRAME element to write to.
+ * @param {String} html - The HTML to write.
+ */
 var writeHtmlToIFrame = function (iframe, html) {
-    /// <summary>Writes HTML to an IFRAME document.</summary>
-    /// <param name="iframe" type="HTMLElement">The IFRAME element to write to.</param>
-    /// <param name="html" type="String">The HTML to write.</param>
     var frameDocument = (iframe.contentWindow) ? iframe.contentWindow.document : iframe.contentDocument.document;
     frameDocument.open();
     frameDocument.write(html);
@@ -167,12 +174,13 @@ exports.defaultHttpClient = {
 
     enableJsonpCallback: false,
 
+    /** Performs a network request.
+     * @param {Object} request - Request description
+     * @param {Function} success - Success callback with the response object.
+     * @param {Function} error - Error callback with an error object.
+     * @returns {Object} Object with an 'abort' method for the operation.
+     */
     request: function (request, success, error) {
-        /// <summary>Performs a network request.</summary>
-        /// <param name="request" type="Object">Request description.</request>
-        /// <param name="success" type="Function">Success callback with the response object.</param>
-        /// <param name="error" type="Function">Error callback with an error object.</param>
-        /// <returns type="Object">Object with an 'abort' method for the operation.</returns>
 
         var result = {};
         var xhr = null;

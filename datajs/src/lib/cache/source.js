@@ -16,6 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+ /** @module cache_source */
  
 var utils = require("./../datajs.js").utils;
 var odataRequest = require("./../odata.js");
@@ -23,19 +25,23 @@ var odataRequest = require("./../odata.js");
 var parseInt10 = utils.parseInt10;
 var normalizeURICase = utils.normalizeURICase;
 
+
+/** Appends the specified escaped query option to the specified URI.
+ * @param {String} uri - URI to append option to.
+ * @param {String} queryOption - Escaped query option to append.
+ */
 var appendQueryOption = function (uri, queryOption) {
-    /// <summary>Appends the specified escaped query option to the specified URI.</summary>
-    /// <param name="uri" type="String">URI to append option to.</param>
-    /// <param name="queryOption" type="String">Escaped query option to append.</param>
     var separator = (uri.indexOf("?") >= 0) ? "&" : "?";
     return uri + separator + queryOption;
 };
 
+/** Appends the specified segment to the given URI.
+ * @param {String} uri - URI to append a segment to.
+ * @param {String} segment - Segment to append.
+ * @returns {String} The original URI with a new segment appended.
+ */
 var appendSegment = function (uri, segment) {
-    /// <summary>Appends the specified segment to the given URI.</summary>
-    /// <param name="uri" type="String">URI to append a segment to.</param>
-    /// <param name="segment" type="String">Segment to append.</param>
-    /// <returns type="String">The original URI with a new segment appended.</returns>
+
 
     var index = uri.indexOf("?");
     var queryPortion = "";
@@ -50,11 +56,12 @@ var appendSegment = function (uri, segment) {
     return uri + segment + queryPortion;
 };
 
+/** Builds a request object to GET the specified URI.
+ * @param {String} uri - URI for request.
+ * @param {Object} options - Additional options.
+ */
 var buildODataRequest = function (uri, options) {
-    /// <summary>Builds a request object to GET the specified URI.</summary>
-    /// <param name="uri" type="String">URI for request.</param>
-    /// <param name="options" type="Object">Additional options.</param>
-
+    
     return {
         method: "GET",
         requestUri: uri,
@@ -66,12 +73,12 @@ var buildODataRequest = function (uri, options) {
     };
 };
 
+/** Finds the index where the value of a query option starts.
+ * @param {String} uri - URI to search in.
+ * @param {String} name - Name to look for.
+ * @returns {Number} The index where the query option starts.
+ */
 var findQueryOptionStart = function (uri, name) {
-    /// <summary>Finds the index where the value of a query option starts.</summary>
-    /// <param name="uri" type="String">URI to search in.</param>
-    /// <param name="name" type="String">Name to look for.</param>
-    /// <returns type="Number">The index where the query option starts.</returns>
-
     var result = -1;
     var queryIndex = uri.indexOf("?");
     if (queryIndex !== -1) {
@@ -86,80 +93,81 @@ var findQueryOptionStart = function (uri, name) {
     return result;
 };
 
+/** Gets data from an OData service.
+ * @param {String} uri - URI to the OData service.
+ * @param {Object} options - Object with additional well-known request options.
+ * @param {Function} success - Success callback.
+ * @param {Function} error - Error callback.
+ * @returns {Object} Object with an abort method.
+ */
 var queryForData = function (uri, options, success, error) {
-    /// <summary>Gets data from an OData service.</summary>
-    /// <param name="uri" type="String">URI to the OData service.</param>
-    /// <param name="options" type="Object">Object with additional well-known request options.</param>
-    /// <param name="success" type="Function">Success callback.</param>
-    /// <param name="error" type="Function">Error callback.</param>
-    /// <returns type="Object">Object with an abort method.</returns>
-
     var request = queryForDataInternal(uri, options, {}, success, error);
     return request;
 };
 
-    var queryForDataInternal = function (uri, options, data, success, error) {
-        /// <summary>Gets data from an OData service taking into consideration server side paging.</summary>
-        /// <param name="uri" type="String">URI to the OData service.</param>
-        /// <param name="options" type="Object">Object with additional well-known request options.</param>
-        /// <param name="data" type="Array">Array that stores the data provided by the OData service.</param>
-        /// <param name="success" type="Function">Success callback.</param>
-        /// <param name="error" type="Function">Error callback.</param>
-        /// <returns type="Object">Object with an abort method.</returns>
+/** Gets data from an OData service taking into consideration server side paging.
+ * @param {String} uri - URI to the OData service.
+ * @param {Object} options - Object with additional well-known request options.
+ * @param {Array} data - Array that stores the data provided by the OData service.
+ * @param {Function} success - Success callback.
+ * @param {Function} error - Error callback.
+ * @returns {Object} Object with an abort method.
+ */
+var queryForDataInternal = function (uri, options, data, success, error) {
 
-        var request = buildODataRequest(uri, options);
-        var currentRequest = odataRequest.request(request, function (newData) {
-            var nextLink = newData["@odata.nextLink"];
-            if (nextLink) {
-                var index = uri.indexOf(".svc/", 0);
-                if (index != -1) {
-                    nextLink = uri.substring(0, index + 5) + nextLink;
+    var request = buildODataRequest(uri, options);
+    var currentRequest = odataRequest.request(request, function (newData) {
+        var nextLink = newData["@odata.nextLink"];
+        if (nextLink) {
+            var index = uri.indexOf(".svc/", 0);
+            if (index != -1) {
+                nextLink = uri.substring(0, index + 5) + nextLink;
+            }
+        }
+
+        if (data.value && newData.value) {
+            data.value = data.value.concat(newData.value);
+        }
+        else {
+            for (var property in newData) {
+                if (property != "@odata.nextLink") {
+                    data[property] = newData[property];
                 }
             }
+        }
 
-            if (data.value && newData.value) {
-                data.value = data.value.concat(newData.value);
-            }
-            else {
-                for (var property in newData) {
-                    if (property != "@odata.nextLink") {
-                        data[property] = newData[property];
-                    }
-                }
-            }
+        if (nextLink) {
+            currentRequest = queryForDataInternal(nextLink, options, data, success, error);
+        }
+        else {
+            success(data);
+        }
+    }, error, undefined, options.httpClient, options.metadata);
 
-            if (nextLink) {
-                currentRequest = queryForDataInternal(nextLink, options, data, success, error);
-            }
-            else {
-                success(data);
-            }
-        }, error, undefined, options.httpClient, options.metadata);
-
-        return {
-            abort: function () {
-                currentRequest.abort();
-            }
-        };
+    return {
+        abort: function () {
+            currentRequest.abort();
+        }
     };
+};
 
+/** Creates a data cache source object for requesting data from an OData service.
+ * @param options - Options for the cache data source.
+ * @returns {ODataCacheSource} A new data cache source instance.
+ */
 var ODataCacheSource = function (options) {
-    /// <summary>Creates a data cache source object for requesting data from an OData service.</summary>
-    /// <param name="options">Options for the cache data source.</param>
-    /// <returns type="ODataCacheSource">A new data cache source instance.</returns>
-
     var that = this;
     var uri = options.source;
     
     that.identifier = normalizeURICase(encodeURI(decodeURI(uri)));
     that.options = options;
 
+    /** Gets the number of items in the collection.
+     * @param {Function} success - Success callback with the item count.
+     * @param {Function} error - Error callback.
+     * @returns {Object} Request object with an abort method.
+     */
     that.count = function (success, error) {
-        /// <summary>Gets the number of items in the collection.</summary>
-        /// <param name="success" type="Function">Success callback with the item count.</param>
-        /// <param name="error" type="Function">Error callback.</param>
-        /// <returns type="Object">Request object with an abort method./<param>
-
         var options = that.options;
         return odataRequest.request(
             buildODataRequest(appendSegment(uri, "$count"), options),
@@ -170,16 +178,18 @@ var ODataCacheSource = function (options) {
                 } else {
                     success(count);
                 }
-            }, error, undefined, options.httpClient, options.metadata);
+            }, error, undefined, options.httpClient, options.metadata
+        );
     };
-
+    
+    /** Gets a number of consecutive items from the collection.
+     * @param {Number} index - Zero-based index of the items to retrieve.
+     * @param {Number} count - Number of items to retrieve.
+     * @param {Function} success - Success callback with the requested items.
+     * @param {Function} error - Error callback.
+     * @returns {Object} Request object with an abort method./<param>
+    */
     that.read = function (index, count, success, error) {
-        /// <summary>Gets a number of consecutive items from the collection.</summary>
-        /// <param name="index" type="Number">Zero-based index of the items to retrieve.</param>
-        /// <param name="count" type="Number">Number of items to retrieve.</param>
-        /// <param name="success" type="Function">Success callback with the requested items.</param>
-        /// <param name="error" type="Function">Error callback.</param>
-        /// <returns type="Object">Request object with an abort method./<param>
 
         var queryOptions = "$skip=" + index + "&$top=" + count;
         return queryForData(appendQueryOption(uri, queryOptions), that.options, success, error);

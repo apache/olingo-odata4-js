@@ -16,60 +16,59 @@
  * specific language governing permissions and limitations
  * under the License.
  */
- 
+
+/** Creates a new ActiveXObject from the given progId.
+ * @param {String} progId - ProgId string of the desired ActiveXObject.
+ * @returns {Object} The ActiveXObject instance. Null if ActiveX is not supported by the browser.
+ * This function throws whatever exception might occur during the creation
+ * of the ActiveXObject.
+*/
 var activeXObject = function (progId) {
-    /// <summary>Creates a new ActiveXObject from the given progId.</summary>
-    /// <param name="progId" type="String" mayBeNull="false" optional="false">
-    ///    ProgId string of the desired ActiveXObject.
-    /// </param>
-    /// <remarks>
-    ///    This function throws whatever exception might occur during the creation
-    ///    of the ActiveXObject.
-    /// </remarks>
-    /// <returns type="Object">
-    ///     The ActiveXObject instance. Null if ActiveX is not supported by the
-    ///     browser.
-    /// </returns>
+    
     if (window.ActiveXObject) {
         return new window.ActiveXObject(progId);
     }
     return null;
 };
 
+/** Checks whether the specified value is different from null and undefined.
+ * @param [value] Value to check ( may be null)
+ * @returns {Boolean} true if the value is assigned; false otherwise.
+*/     
 var assigned = function (value) {
-    /// <summary>Checks whether the specified value is different from null and undefined.</summary>
-    /// <param name="value" mayBeNull="true" optional="true">Value to check.</param>
-    /// <returns type="Boolean">true if the value is assigned; false otherwise.</returns>
     return value !== null && value !== undefined;
 };
 
+/** Checks whether the specified item is in the array.
+ * @param {Array} [arr] Array to check in.
+ * @param item - Item to look for.
+ * @returns {Boolean} true if the item is contained, false otherwise.
+*/
 var contains = function (arr, item) {
-    /// <summary>Checks whether the specified item is in the array.</summary>
-    /// <param name="arr" type="Array" optional="false" mayBeNull="false">Array to check in.</param>
-    /// <param name="item">Item to look for.</param>
-    /// <returns type="Boolean">true if the item is contained, false otherwise.</returns>
-
     var i, len;
     for (i = 0, len = arr.length; i < len; i++) {
         if (arr[i] === item) {
             return true;
         }
     }
-
     return false;
 };
 
+/** Given two values, picks the first one that is not undefined.
+ * @param a - First value.
+ * @param b - Second value.
+ * @returns a if it's a defined value; else b.</returns>
+ */
 var defined = function (a, b) {
-    /// <summary>Given two values, picks the first one that is not undefined.</summary>
-    /// <param name="a">First value.</param>
-    /// <param name="b">Second value.</param>
-    /// <returns>a if it's a defined value; else b.</returns>
+
     return (a !== undefined) ? a : b;
 };
 
+/** Delays the invocation of the specified function until execution unwinds.
+ * @param {Function} callback - Callback function.
+ */
 var delay = function (callback) {
-    /// <summary>Delays the invocation of the specified function until execution unwinds.</summary>
-    /// <param name="callback" type="Function">Callback function.</param>
+
     if (arguments.length === 1) {
         window.setTimeout(callback, 0);
         return;
@@ -81,12 +80,14 @@ var delay = function (callback) {
     }, 0);
 };
 
+/** Throws an exception in case that a condition evaluates to false.
+ * @param {Boolean} condition - Condition to evaluate.
+ * @param {String} message - Message explaining the assertion.
+ * @param {Object} data - Additional data to be included in the exception.
+ */
 // DATAJS INTERNAL START
 var djsassert = function (condition, message, data) {
-    /// <summary>Throws an exception in case that a condition evaluates to false.</summary>
-    /// <param name="condition" type="Boolean">Condition to evaluate.</param>
-    /// <param name="message" type="String">Message explaining the assertion.</param>
-    /// <param name="data" type="Object">Additional data to be included in the exception.</param>
+
 
     if (!condition) {
         throw { message: "Assert fired: " + message, data: data };
@@ -94,12 +95,12 @@ var djsassert = function (condition, message, data) {
 };
 // DATAJS INTERNAL END
 
+/** Extends the target with the specified values.
+ * @param {Object} target - Object to add properties to.
+ * @param {Object} values - Object with properties to add into target.
+ * @returns {Object} The target object.
+*/
 var extend = function (target, values) {
-    /// <summary>Extends the target with the specified values.</summary>
-    /// <param name="target" type="Object">Object to add properties to.</param>
-    /// <param name="values" type="Object">Object with properties to add into target.</param>
-    /// <returns type="Object">The target object.</returns>
-
     for (var name in values) {
         target[name] = values[name];
     }
@@ -108,10 +109,11 @@ var extend = function (target, values) {
 };
 
 var find = function (arr, callback) {
-    /// <summary>Returns the first item in the array that makes the callback function true.</summary>
-    /// <param name="arr" type="Array" optional="false" mayBeNull="true">Array to check in.</param>
-    /// <param name="callback" type="Function">Callback function to invoke once per item in the array.</param>
-    /// <returns>The first item that makes the callback return true; null otherwise or if the array is null.</returns>
+    /** Returns the first item in the array that makes the callback function true.
+     * @param {Array} [arr] Array to check in. ( may be null)
+     * @param {Function} callback - Callback function to invoke once per item in the array.
+     * @returns The first item that makes the callback return true; null otherwise or if the array is null.
+    */
 
     if (arr) {
         var i, len;
@@ -125,66 +127,65 @@ var find = function (arr, callback) {
 };
 
 var isArray = function (value) {
-    /// <summary>Checks whether the specified value is an array object.</summary>
-    /// <param name="value">Value to check.</param>
-    /// <returns type="Boolean">true if the value is an array object; false otherwise.</returns>
+    /** Checks whether the specified value is an array object.
+     * @param value - Value to check.
+     * @returns {Boolean} true if the value is an array object; false otherwise.
+     */
 
     return Object.prototype.toString.call(value) === "[object Array]";
 };
 
+/** Checks whether the specified value is a Date object.
+ * @param value - Value to check.
+ * @returns {Boolean} true if the value is a Date object; false otherwise.
+ */
 var isDate = function (value) {
-    /// <summary>Checks whether the specified value is a Date object.</summary>
-    /// <param name="value">Value to check.</param>
-    /// <returns type="Boolean">true if the value is a Date object; false otherwise.</returns>
-
     return Object.prototype.toString.call(value) === "[object Date]";
 };
 
+/** Tests whether a value is an object.
+ * @param value - Value to test.
+ * @returns {Boolean} True is the value is an object; false otherwise.
+ * Per javascript rules, null and array values are objects and will cause this function to return true.
+ */
 var isObject = function (value) {
-    /// <summary>Tests whether a value is an object.</summary>
-    /// <param name="value">Value to test.</param>
-    /// <remarks>
-    ///     Per javascript rules, null and array values are objects and will cause this function to return true.
-    /// </remarks>
-    /// <returns type="Boolean">True is the value is an object; false otherwise.</returns>
 
     return typeof value === "object";
 };
 
+/** Parses a value in base 10.
+ * @param {String} value - String value to parse.
+ * @returns {Number} The parsed value, NaN if not a valid value.
+*/   
 var parseInt10 = function (value) {
-    /// <summary>Parses a value in base 10.</summary>
-    /// <param name="value" type="String">String value to parse.</param>
-    /// <returns type="Number">The parsed value, NaN if not a valid value.</returns>
-
     return parseInt(value, 10);
 };
 
+/** Renames a property in an object.
+ * @param {Object} obj - Object in which the property will be renamed.
+ * @param {String} oldName - Name of the property that will be renamed.
+ * @param {String} newName - New name of the property.
+ * This function will not do anything if the object doesn't own a property with the specified old name.
+ */
 var renameProperty = function (obj, oldName, newName) {
-    /// <summary>Renames a property in an object.</summary>
-    /// <param name="obj" type="Object">Object in which the property will be renamed.</param>
-    /// <param name="oldName" type="String">Name of the property that will be renamed.</param>
-    /// <param name="newName" type="String">New name of the property.</param>
-    /// <remarks>
-    ///    This function will not do anything if the object doesn't own a property with the specified old name.
-    /// </remarks>
-
     if (obj.hasOwnProperty(oldName)) {
         obj[newName] = obj[oldName];
         delete obj[oldName];
     }
 };
 
+/** Default error handler.
+ * @param {Object} error - Error to handle.
+ */
 var throwErrorCallback = function (error) {
-    /// <summary>Default error handler.</summary>
-    /// <param name="error" type="Object">Error to handle.</param>
     throw error;
 };
 
+/** Removes leading and trailing whitespaces from a string.
+ * @param {String str String to trim
+ * @returns {String} The string with no leading or trailing whitespace.
+ */
 var trimString = function (str) {
-    /// <summary>Removes leading and trailing whitespaces from a string.</summary>
-    /// <param name="str" type="String" optional="false" mayBeNull="false">String to trim</param>
-    /// <returns type="String">The string with no leading or trailing whitespace.</returns>
-
     if (str.trim) {
         return str.trim();
     }
@@ -192,15 +193,14 @@ var trimString = function (str) {
     return str.replace(/^\s+|\s+$/g, '');
 };
 
+/** Returns a default value in place of undefined.
+ * @param [value] Value to check (may be null)
+ * @param defaultValue - Value to return if value is undefined.
+ * @returns value if it's defined; defaultValue otherwise.
+ * This should only be used for cases where falsy values are valid;
+ * otherwise the pattern should be 'x = (value) ? value : defaultValue;'.
+ */
 var undefinedDefault = function (value, defaultValue) {
-    /// <summary>Returns a default value in place of undefined.</summary>
-    /// <param name="value" mayBeNull="true" optional="true">Value to check.</param>
-    /// <param name="defaultValue">Value to return if value is undefined.</param>
-    /// <returns>value if it's defined; defaultValue otherwise.</returns>
-    /// <remarks>
-    /// This should only be used for cases where falsy values are valid;
-    /// otherwise the pattern should be 'x = (value) ? value : defaultValue;'.
-    /// </remarks>
     return (value !== undefined) ? value : defaultValue;
 };
 
@@ -214,13 +214,11 @@ var undefinedDefault = function (value, defaultValue) {
 var uriRegEx = /^([^:\/?#]+:)?(\/\/[^\/?#]*)?([^?#:]+)?(\?[^#]*)?(#.*)?/;
 var uriPartNames = ["scheme", "authority", "path", "query", "fragment"];
 
+/** Gets information about the components of the specified URI.
+ * @param {String} uri - URI to get information from.
+ * @return  {Object} An object with an isAbsolute flag and part names (scheme, authority, etc.) if available.
+ */
 var getURIInfo = function (uri) {
-    /// <summary>Gets information about the components of the specified URI.</summary>
-    /// <param name="uri" type="String">URI to get information from.</param>
-    /// <returns type="Object">
-    /// An object with an isAbsolute flag and part names (scheme, authority, etc.) if available.
-    /// </returns>
-
     var result = { isAbsolute: false };
 
     if (uri) {
@@ -241,11 +239,11 @@ var getURIInfo = function (uri) {
     return result;
 };
 
+/** Builds a URI string from its components.
+ * @param {Object} uriInfo -  An object with uri parts (scheme, authority, etc.).
+ * @returns {String} URI string.
+ */
 var getURIFromInfo = function (uriInfo) {
-    /// <summary>Builds a URI string from its components.</summary>
-    /// <param name="uriInfo" type="Object"> An object with uri parts (scheme, authority, etc.).</param>
-    /// <returns type="String">URI string.</returns>
-
     return "".concat(
         uriInfo.scheme || "",
         uriInfo.authority || "",
@@ -264,11 +262,11 @@ var uriAuthorityRegEx = /^\/{0,2}(?:([^@]*)@)?([^:]+)(?::{1}(\d+))?/;
 // Regular expression that matches percentage enconded octects (i.e %20 or %3A);
 var pctEncodingRegEx = /%[0-9A-F]{2}/ig;
 
+/** Normalizes the casing of a URI.
+ * @param {String} uri - URI to normalize, absolute or relative.
+ * @returns {String} The URI normalized to lower case.
+*/
 var normalizeURICase = function (uri) {
-    /// <summary>Normalizes the casing of a URI.</summary>
-    /// <param name="uri" type="String">URI to normalize, absolute or relative.</param>
-    /// <returns type="String">The URI normalized to lower case.</returns>
-
     var uriInfo = getURIInfo(uri);
     var scheme = uriInfo.scheme;
     var authority = uriInfo.authority;
@@ -293,12 +291,12 @@ var normalizeURICase = function (uri) {
     });
 };
 
+/** Normalizes a possibly relative URI with a base URI.
+ * @param {String} uri - URI to normalize, absolute or relative
+ * @param {String} base - Base URI to compose with (may be null)
+ * @returns {String} The composed URI if relative; the original one if absolute.
+ */
 var normalizeURI = function (uri, base) {
-    /// <summary>Normalizes a possibly relative URI with a base URI.</summary>
-    /// <param name="uri" type="String">URI to normalize, absolute or relative.</param>
-    /// <param name="base" type="String" mayBeNull="true">Base URI to compose with.</param>
-    /// <returns type="String">The composed URI if relative; the original one if absolute.</returns>
-
     if (!base) {
         return uri;
     }
@@ -339,12 +337,12 @@ var normalizeURI = function (uri, base) {
     return getURIFromInfo(normInfo);
 };
 
+/** Merges the path of a relative URI and a base URI.
+ * @param {String} uriPath - Relative URI path.</param>
+ * @param {String} basePath - Base URI path.
+ * @returns {String} A string with the merged path.
+ */
 var mergeUriPathWithBase = function (uriPath, basePath) {
-    /// <summary>Merges the path of a relative URI and a base URI.</summary>
-    /// <param name="uriPath" type="String>Relative URI path.</param>
-    /// <param name="basePath" type="String">Base URI path.</param>
-    /// <returns type="String">A string with the merged path.</returns>
-
     var path = "/";
     var end;
 
@@ -360,11 +358,11 @@ var mergeUriPathWithBase = function (uriPath, basePath) {
     return path + uriPath;
 };
 
+/** Removes the special folders . and .. from a URI's path.
+ * @param {string} path - URI path component.
+ * @returns {String} Path without any . and .. folders.
+ */
 var removeDotsFromPath = function (path) {
-    /// <summary>Removes the special folders . and .. from a URI's path.</summary>
-    /// <param name="path" type="string">URI path component.</param>
-    /// <returns type="String">Path without any . and .. folders.</returns>
-
     var result = "";
     var segment = "";
     var end;

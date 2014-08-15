@@ -24,9 +24,10 @@ var utils = require('./../datajs.js').utils;
 var throwErrorCallback = utils.throwErrorCallback;
 var delay = utils.delay;
 
+/** Constructor for store objects that use a sorted array as the underlying mechanism.
+ * @param {String} name - Store name.
+ */
 var MemoryStore = function (name) {
-    /// <summary>Constructor for store objects that use a sorted array as the underlying mechanism.</summary>
-    /// <param name="name" type="String">Store name.</param>
 
     var holes = [];
     var items = [];
@@ -38,11 +39,12 @@ var MemoryStore = function (name) {
         return error || this.defaultError;
     };
 
+    /** Validates that the specified key is not undefined, not null, and not an array
+     * @param key - Key value.
+     * @param {Function} error - Error callback.
+     * @returns {Boolean} True if the key is valid. False if the key is invalid and the error callback has been queued for execution.
+     */
     var validateKeyInput = function (key, error) {
-        /// <summary>Validates that the specified key is not undefined, not null, and not an array</summary>
-        /// <param name="key">Key value.</param>
-        /// <param name="error" type="Function">Error callback.</param>
-        /// <returns type="Boolean">True if the key is valid. False if the key is invalid and the error callback has been queued for execution.</returns>
 
         var messageString;
 
@@ -61,16 +63,15 @@ var MemoryStore = function (name) {
         return true;
     };
 
+    /** Adds a new value identified by a key to the store.
+     * @param {String} key - Key string.
+     * @param value - Value that is going to be added to the store.
+     * @param {Function} success - Callback for a successful add operation.</param>
+     * @param {Function} error - Callback for handling errors. If not specified then store.defaultError is invoked.</param>
+    
+     * This method errors out if the store already contains the specified key.
+     */
     this.add = function (key, value, success, error) {
-        /// <summary>Adds a new value identified by a key to the store.</summary>
-        /// <param name="key" type="String">Key string.</param>
-        /// <param name="value">Value that is going to be added to the store.</param>
-        /// <param name="success" type="Function" optional="no">Callback for a successful add operation.</param>
-        /// <param name="error" type="Function" optional="yes">Callback for handling errors. If not specified then store.defaultError is invoked.</param>
-        /// <remarks>
-        ///    This method errors out if the store already contains the specified key.
-        /// </remarks>
-
         error = getErrorCallback(error);
 
         if (validateKeyInput(key, error)) {
@@ -83,14 +84,16 @@ var MemoryStore = function (name) {
     };
 
     this.addOrUpdate = function (key, value, success, error) {
-        /// <summary>Adds or updates a value identified by a key to the store.</summary>
-        /// <param name="key" type="String">Key string.</param>
-        /// <param name="value">Value that is going to be added or updated to the store.</param>
-        /// <param name="success" type="Function" optional="no">Callback for a successful add or update operation.</param>
-        /// <param name="error" type="Function" optional="yes">Callback for handling errors. If not specified then store.defaultError is invoked.</param>
-        /// <remarks>
-        ///   This method will overwrite the key's current value if it already exists in the store; otherwise it simply adds the new key and value.
-        /// </remarks>
+        /** Adds or updates a value identified by a key to the store.
+         * @param {String} key - Key string.
+        * @param value - Value that is going to be added or updated to the store.
+         *@param {Function} success - Callback for a successful add or update operation.</param>
+         *@param {Function} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.</param>
+        
+       This method will overwrite the key's current value if it already exists in the store; otherwise it simply adds the new key and value.
+
+       */
+        
 
         error = getErrorCallback(error);
 
@@ -110,8 +113,9 @@ var MemoryStore = function (name) {
     };
 
     this.clear = function (success) {
-        /// <summary>Removes all the data associated with this store object.</summary>
-        /// <param name="success" type="Function" optional="no">Callback for a successful clear operation.</param>
+        /** Removes all the data associated with this store object.
+         * @param {Function} success>Callback for a successful clear operation.
+         */
 
         items = [];
         keys = {};
@@ -120,18 +124,20 @@ var MemoryStore = function (name) {
         delay(success);
     };
 
+    /** Checks whether a key exists in the store.
+     * @param {String} key - Key string.
+     * @param {Funktion} success - Callback indicating whether the store contains the key or not.</param>
+     */
     this.contains = function (key, success) {
-        /// <summary>Checks whether a key exists in the store.</summary>
-        /// <param name="key" type="String">Key string.</param>
-        /// <param name="success" type="Function" optional="no">Callback indicating whether the store contains the key or not.</param>
 
         var contained = keys.hasOwnProperty(key);
         delay(success, contained);
     };
 
+    /** Gets all the keys that exist in the store.
+     * @param {Function} success - Callback for a successful get operation.</param>
+     */
     this.getAllKeys = function (success) {
-        /// <summary>Gets all the keys that exist in the store.</summary>
-        /// <param name="success" type="Function" optional="no">Callback for a successful get operation.</param>
 
         var results = [];
         for (var name in keys) {
@@ -140,11 +146,12 @@ var MemoryStore = function (name) {
         delay(success, results);
     };
 
+    /** Reads the value associated to a key in the store.
+     * @param {String} key - Key string.
+     * @param {Function} Function - Callback for a successful reads operation.</param>
+     * @param {Function{}Function - Callback for handling errors. If not specified then store.defaultError is invoked.</param>
+     */
     this.read = function (key, success, error) {
-        /// <summary>Reads the value associated to a key in the store.</summary>
-        /// <param name="key" type="String">Key string.</param>
-        /// <param name="success" type="Function" optional="no">Callback for a successful reads operation.</param>
-        /// <param name="error" type="Function" optional="yes">Callback for handling errors. If not specified then store.defaultError is invoked.</param>
         error = getErrorCallback(error);
 
         if (validateKeyInput(key, error)) {
@@ -153,11 +160,12 @@ var MemoryStore = function (name) {
         }
     };
 
+/** Removes a key and its value from the store.
+ * @param {String} key - Key string.
+ * @param {Function} success - Callback for a successful remove operation.</param>
+ * @param {Function} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.</param>
+*/
     this.remove = function (key, success, error) {
-        /// <summary>Removes a key and its value from the store.</summary>
-        /// <param name="key" type="String">Key string.</param>
-        /// <param name="success" type="Function" optional="no">Callback for a successful remove operation.</param>
-        /// <param name="error" type="Function" optional="yes">Callback for handling errors. If not specified then store.defaultError is invoked.</param>
         error = getErrorCallback(error);
 
         if (validateKeyInput(key, error)) {
@@ -181,15 +189,16 @@ var MemoryStore = function (name) {
         }
     };
 
+    /** Updates the value associated to a key in the store.
+     * @param {String} key - Key string.
+     * @param value - New value.
+     * @param {Function} success - Callback for a successful update operation.</param>
+     * @param {Function} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.</param>
+    
+     * This method errors out if the specified key is not found in the store.
+     */
     this.update = function (key, value, success, error) {
-        /// <summary>Updates the value associated to a key in the store.</summary>
-        /// <param name="key" type="String">Key string.</param>
-        /// <param name="value">New value.</param>
-        /// <param name="success" type="Function" optional="no">Callback for a successful update operation.</param>
-        /// <param name="error" type="Function" optional="yes">Callback for handling errors. If not specified then store.defaultError is invoked.</param>
-        /// <remarks>
-        ///    This method errors out if the specified key is not found in the store.
-        /// </remarks>
+        
 
         error = getErrorCallback(error);
         if (validateKeyInput(key, error)) {
@@ -202,26 +211,30 @@ var MemoryStore = function (name) {
     };
 };
 
+/** Creates a store object that uses memory storage as its underlying mechanism.
+ * @param {String} name - Store name.
+ * @returns {Object} Store object.
+ */
 MemoryStore.create = function (name) {
-    /// <summary>Creates a store object that uses memory storage as its underlying mechanism.</summary>
-    /// <param name="name" type="String">Store name.</param>
-    /// <returns type="Object">Store object.</returns>
     return new MemoryStore(name);
 };
 
+/** Checks whether the underlying mechanism for this kind of store objects is supported by the browser.
+ * @returns {Boolean} True if the mechanism is supported by the browser; otherwise false.
+ */
 MemoryStore.isSupported = function () {
-    /// <summary>Checks whether the underlying mechanism for this kind of store objects is supported by the browser.</summary>
-    /// <returns type="Boolean">True if the mechanism is supported by the browser; otherwise false.</returns>
     return true;
 };
 
+/** This function does nothing in MemoryStore as it does not have a connection model.
+*/
 MemoryStore.prototype.close = function () {
-    /// <summary>This function does nothing in MemoryStore as it does not have a connection model.</summary>
 };
 
 MemoryStore.prototype.defaultError = throwErrorCallback;
 
-/// <summary>Identifies the underlying mechanism used by the store.</summary>
+/** Identifies the underlying mechanism used by the store.
+*/
 MemoryStore.prototype.mechanism = "memory";
 
 module.exports = MemoryStore;

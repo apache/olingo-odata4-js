@@ -45,63 +45,60 @@ var batchMediaType = "multipart/mixed";
 var responseStatusRegex = /^HTTP\/1\.\d (\d{3}) (.*)$/i;
 var responseHeaderRegex = /^([^()<>@,;:\\"\/[\]?={} \t]+)\s?:\s?(.*)/;
 
+/* Calculates a random 16 bit number and returns it in hexadecimal format.
+ * @returns {String} A 16-bit number in hex format.
+ */
 var hex16 = function () {
-    /// <summary>
-    /// Calculates a random 16 bit number and returns it in hexadecimal format.
-    /// </summary>
-    /// <returns type="String">A 16-bit number in hex format.</returns>
 
     return Math.floor((1 + Math.random()) * 0x10000).toString(16).substr(1);
 };
 
+/* Creates a string that can be used as a multipart request boundary.
+ * @param {String} [prefix] - 
+ * @returns {String} Boundary string of the format: <prefix><hex16>-<hex16>-<hex16>
+ */
 var createBoundary = function (prefix) {
-    /// <summary>
-    /// Creates a string that can be used as a multipart request boundary.
-    /// </summary>
-    /// <param name="prefix" type="String" optional="true">String to use as the start of the boundary string</param>
-    /// <returns type="String">Boundary string of the format: <prefix><hex16>-<hex16>-<hex16></returns>
 
     return prefix + hex16() + "-" + hex16() + "-" + hex16();
 };
 
+/* Gets the handler for data serialization of individual requests / responses in a batch.
+ * @param context - Context used for data serialization.
+ * @returns Handler object
+ */
 var partHandler = function (context) {
-    /// <summary>
-    /// Gets the handler for data serialization of individual requests / responses in a batch.
-    /// </summary>
-    /// <param name="context">Context used for data serialization.</param>
-    /// <returns>Handler object.</returns>
 
     return context.handler.partHandler;
 };
 
+/* Gets the current boundary used for parsing the body of a multipart response.
+ * @param context - Context used for parsing a multipart response.
+ * @returns {String} Boundary string.
+ */
 var currentBoundary = function (context) {
-    /// <summary>
-    /// Gets the current boundary used for parsing the body of a multipart response.
-    /// </summary>
-    /// <param name="context">Context used for parsing a multipart response.</param>
-    /// <returns type="String">Boundary string.</returns>
-
     var boundaries = context.boundaries;
     return boundaries[boundaries.length - 1];
 };
 
+/** Parses a batch response.
+ * @param handler - This handler.
+ * @param {String} text - Batch text.
+ * @param {Object} context - Object with parsing context.
+ * @return An object representation of the batch.
+ */
 var batchParser = function (handler, text, context) {
-    /// <summary>Parses a batch response.</summary>
-    /// <param name="handler">This handler.</param>
-    /// <param name="text" type="String">Batch text.</param>
-    /// <param name="context" type="Object">Object with parsing context.</param>
-    /// <returns>An object representation of the batch.</returns>
 
     var boundary = context.contentType.properties["boundary"];
     return { __batchResponses: readBatch(text, { boundaries: [boundary], handlerContext: context }) };
 };
 
+/** Serializes a batch object representation into text.
+ * @param handler - This handler.
+ * @param {Object} data - Representation of a batch.
+ * @param {Object} context - Object with parsing context.
+ * @return An text representation of the batch object; undefined if not applicable.#
+ */
 var batchSerializer = function (handler, data, context) {
-    /// <summary>Serializes a batch object representation into text.</summary>
-    /// <param name="handler">This handler.</param>
-    /// <param name="data" type="Object">Representation of a batch.</param>
-    /// <param name="context" type="Object">Object with parsing context.</param>
-    /// <returns>An text representation of the batch object; undefined if not applicable.</returns>
 
     var cType = context.contentType = context.contentType || contentType(batchMediaType);
     if (cType.mediaType === batchMediaType) {
@@ -109,14 +106,12 @@ var batchSerializer = function (handler, data, context) {
     }
 };
 
+/* Parses a multipart/mixed response body from from the position defined by the context.
+ * @param {String}  text - Body of the multipart/mixed response.
+ * @param context - Context used for parsing.
+ * @return Array of objects representing the individual responses.
+ */
 var readBatch = function (text, context) {
-    /// <summary>
-    /// Parses a multipart/mixed response body from from the position defined by the context.
-    /// </summary>
-    /// <param name="text" type="String" optional="false">Body of the multipart/mixed response.</param>
-    /// <param name="context">Context used for parsing.</param>
-    /// <returns>Array of objects representing the individual responses.</returns>
-
     var delimiter = "--" + currentBoundary(context);
 
     // Move beyond the delimiter and read the complete batch
@@ -175,17 +170,13 @@ var readBatch = function (text, context) {
     return responses;
 };
 
+/* Parses the http headers in the text from the position defined by the context.
+* @param {String} text - Text containing an http response's headers</param>
+* @param context - Context used for parsing.
+* @returns Object containing the headers as key value pairs.
+* This function doesn't support split headers and it will stop reading when it hits two consecutive line breaks.
+*/
 var readHeaders = function (text, context) {
-    /// <summary>
-    /// Parses the http headers in the text from the position defined by the context.
-    /// </summary>
-    /// <param name="text" type="String" optional="false">Text containing an http response's headers</param>
-    /// <param name="context">Context used for parsing.</param>
-    /// <returns>Object containing the headers as key value pairs.</returns>
-    /// <remarks>
-    /// This function doesn't support split headers and it will stop reading when it hits two consecutive line breaks.
-    /// </remarks>
-
     var headers = {};
     var parts;
     var line;
@@ -208,15 +199,13 @@ var readHeaders = function (text, context) {
     return headers;
 };
 
+/* Parses an HTTP response.
+ * @param {String} text -Text representing the http response.
+ * @param context optional - Context used for parsing.
+ * @param {String} delimiter -String used as delimiter of the multipart response parts.
+ * @return Object representing the http response.
+ */
 var readResponse = function (text, context, delimiter) {
-    /// <summary>
-    /// Parses an HTTP response.
-    /// </summary>
-    /// <param name="text" type="String" optional="false">Text representing the http response.</param>
-    /// <param name="context" optional="false">Context used for parsing.</param>
-    /// <param name="delimiter" type="String" optional="false">String used as delimiter of the multipart response parts.</param>
-    /// <returns>Object representing the http response.</returns>
-
     // Read the status line.
     var pos = context.position;
     var match = responseStatusRegex.exec(readLine(text, context));
@@ -242,26 +231,23 @@ var readResponse = function (text, context, delimiter) {
     };
 };
 
+/** Returns a substring from the position defined by the context up to the next line break (CRLF).
+ * @param {String} text - Input string.
+ * @param context - Context used for reading the input string.
+ * @returns {String} Substring to the first ocurrence of a line break or null if none can be found. 
+ */
 var readLine = function (text, context) {
-    /// <summary>
-    /// Returns a substring from the position defined by the context up to the next line break (CRLF).
-    /// </summary>
-    /// <param name="text" type="String" optional="false">Input string.</param>
-    /// <param name="context" optional="false">Context used for reading the input string.</param>
-    /// <returns type="String">Substring to the first ocurrence of a line break or null if none can be found. </returns>
 
     return readTo(text, context, "\r\n");
 };
 
+/** Returns a substring from the position given by the context up to value defined by the str parameter and increments the position in the context.
+ * @param {String} text - Input string.</param>
+ * @param context - Context used for reading the input string.</param>
+ * @param {String} [str] - Substring to read up to.
+ * @returns {String} Substring to the first ocurrence of str or the end of the input string if str is not specified. Null if the marker is not found.
+ */
 var readTo = function (text, context, str) {
-    /// <summary>
-    /// Returns a substring from the position given by the context up to value defined by the str parameter and increments the position in the context.
-    /// </summary>
-    /// <param name="text" type="String" optional="false">Input string.</param>
-    /// <param name="context" type="Object" optional="false">Context used for reading the input string.</param>
-    /// <param name="str" type="String" optional="true">Substring to read up to.</param>
-    /// <returns type="String">Substring to the first ocurrence of str or the end of the input string if str is not specified. Null if the marker is not found.</returns>
-
     var start = context.position || 0;
     var end = text.length;
     if (str) {
@@ -277,14 +263,12 @@ var readTo = function (text, context, str) {
     return text.substring(start, end);
 };
 
+/** Serializes a batch request object to a string.
+ * @param data - Batch request object in payload representation format
+ * @param context - Context used for the serialization
+ * @returns {String} String representing the batch request
+ */
 var writeBatch = function (data, context) {
-    /// <summary>
-    /// Serializes a batch request object to a string.
-    /// </summary>
-    /// <param name="data" optional="false">Batch request object in payload representation format</param>
-    /// <param name="context" optional="false">Context used for the serialization</param>
-    /// <returns type="String">String representing the batch request</returns>
-
     if (!isBatch(data)) {
         throw { message: "Data is not a batch object." };
     }
@@ -306,14 +290,12 @@ var writeBatch = function (data, context) {
     return batch;
 };
 
+/** Creates the delimiter that indicates that start or end of an individual request.
+ * @param {String} boundary Boundary string used to indicate the start of the request</param>
+ * @param {Boolean} close - Flag indicating that a close delimiter string should be generated
+ * @returns {String} Delimiter string
+ */
 var writeBatchPartDelimiter = function (boundary, close) {
-    /// <summary>
-    /// Creates the delimiter that indicates that start or end of an individual request.
-    /// </summary>
-    /// <param name="boundary" type="String" optional="false">Boundary string used to indicate the start of the request</param>
-    /// <param name="close" type="Boolean">Flag indicating that a close delimiter string should be generated</param>
-    /// <returns type="String">Delimiter string</returns>
-
     var result = "\r\n--" + boundary;
     if (close) {
         result += "--";
@@ -322,18 +304,16 @@ var writeBatchPartDelimiter = function (boundary, close) {
     return result + "\r\n";
 };
 
+/** Serializes a part of a batch request to a string. A part can be either a GET request or
+ * a change set grouping several CUD (create, update, delete) requests.
+ * @param part - Request or change set object in payload representation format</param>
+ * @param context - Object containing context information used for the serialization</param>
+ * @param {boolean} [nested] - 
+ * @returns {String} String representing the serialized part
+ * A change set is an array of request objects and they cannot be nested inside other change sets.
+ */
 var writeBatchPart = function (part, context, nested) {
-    /// <summary>
-    /// Serializes a part of a batch request to a string. A part can be either a GET request or
-    /// a change set grouping several CUD (create, update, delete) requests.
-    /// </summary>
-    /// <param name="part" optional="false">Request or change set object in payload representation format</param>
-    /// <param name="context" optional="false">Object containing context information used for the serialization</param>
-    /// <param name="nested" type="boolean" optional="true">Flag indicating that the part is nested inside a change set</param>
-    /// <returns type="String">String representing the serialized part</returns>
-    /// <remarks>
-    /// A change set is an array of request objects and they cannot be nested inside other change sets.
-    /// </remarks>
+    
 
     var changeSet = part.__changeRequests;
     var result;
@@ -365,13 +345,11 @@ var writeBatchPart = function (part, context, nested) {
     return result;
 };
 
+/* Serializes a request object to a string.
+ * @param request - Request object to serialize</param>
+ * @returns {String} String representing the serialized request
+ */
 var writeRequest = function (request) {
-    /// <summary>
-    /// Serializes a request object to a string.
-    /// </summary>
-    /// <param name="request" optional="false">Request object to serialize</param>
-    /// <returns type="String">String representing the serialized request</returns>
-
     var result = (request.method ? request.method : "GET") + " " + request.requestUri + " HTTP/1.1\r\n";
     for (var name in request.headers) {
         if (request.headers[name]) {

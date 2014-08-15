@@ -16,45 +16,43 @@
  * specific language governing permissions and limitations
  * under the License.
  */
- 
-var forwardCall = function (thisValue, name, returnValue) {
-    /// <summary>Creates a new function to forward a call.</summary>
-    /// <param name="thisValue" type="Object">Value to use as the 'this' object.</param>
-    /// <param name="name" type="String">Name of function to forward to.</param>
-    /// <param name="returnValue" type="Object">Return value for the forward call (helps keep identity when chaining calls).</param>
-    /// <returns type="Function">A new function that will forward a call.</returns>
 
+/** Creates a new function to forward a call.
+ * @param {Object} thisValue - Value to use as the 'this' object.
+ * @param {String} name - Name of function to forward to.
+ * @param {Object} returnValue - Return value for the forward call (helps keep identity when chaining calls).
+ * @returns {Function} A new function that will forward a call.
+ */
+var forwardCall = function (thisValue, name, returnValue) {
     return function () {
         thisValue[name].apply(thisValue, arguments);
         return returnValue;
     };
 };
 
+/** Initializes a new DjsDeferred object.
+ * Compability Note A - Ordering of callbacks through chained 'then' invocations
+ *
+ * The Wiki entry at http://wiki.commonjs.org/wiki/Promises/A
+ * implies that .then() returns a distinct object.
+ *
+ * For compatibility with http://api.jquery.com/category/deferred-object/
+ * we return this same object. This affects ordering, as
+ * the jQuery version will fire callbacks in registration
+ * order regardless of whether they occur on the result
+ * or the original object.
+ *
+ * Compability Note B - Fulfillment value
+ *
+ * The Wiki entry at http://wiki.commonjs.org/wiki/Promises/A
+ * implies that the result of a success callback is the
+ * fulfillment value of the object and is received by
+ * other success callbacks that are chained.
+ *
+ * For compatibility with http://api.jquery.com/category/deferred-object/
+ * we disregard this value instead.
+ */
 var DjsDeferred = function () {
-    /// <summary>Initializes a new DjsDeferred object.</summary>
-    /// <remarks>
-    /// Compability Note A - Ordering of callbacks through chained 'then' invocations
-    ///
-    /// The Wiki entry at http://wiki.commonjs.org/wiki/Promises/A
-    /// implies that .then() returns a distinct object.
-    ////
-    /// For compatibility with http://api.jquery.com/category/deferred-object/
-    /// we return this same object. This affects ordering, as
-    /// the jQuery version will fire callbacks in registration
-    /// order regardless of whether they occur on the result
-    /// or the original object.
-    ///
-    /// Compability Note B - Fulfillment value
-    ///
-    /// The Wiki entry at http://wiki.commonjs.org/wiki/Promises/A
-    /// implies that the result of a success callback is the
-    /// fulfillment value of the object and is received by
-    /// other success callbacks that are chained.
-    ///
-    /// For compatibility with http://api.jquery.com/category/deferred-object/
-    /// we disregard this value instead.
-    /// </remarks>
-
     this._arguments = undefined;
     this._done = undefined;
     this._fail = undefined;
@@ -62,12 +60,15 @@ var DjsDeferred = function () {
     this._rejected = false;
 };
 
+
 DjsDeferred.prototype = {
-    then: function (fulfilledHandler, errorHandler /*, progressHandler */) {
-        /// <summary>Adds success and error callbacks for this deferred object.</summary>
-        /// <param name="fulfilledHandler" type="Function" mayBeNull="true" optional="true">Success callback.</param>
-        /// <param name="errorHandler" type="Function" mayBeNull="true" optional="true">Error callback.</param>
-        /// <remarks>See Compatibility Note A.</remarks>
+
+    /** Adds success and error callbacks for this deferred object.
+     * @param {function} [fulfilledHandler] - Success callback ( may be null)
+     * @param {function} [errorHandler] - Error callback ( may be null)
+     * See Compatibility Note A.
+     */
+    then: function (fulfilledHandler, errorHandler) {
 
         if (fulfilledHandler) {
             if (!this._done) {
@@ -100,11 +101,10 @@ DjsDeferred.prototype = {
         return this;
     },
 
+   /** Invokes success callbacks for this deferred object.
+     *All arguments are forwarded to success callbacks.
+     */
     resolve: function (/* args */) {
-        /// <summary>Invokes success callbacks for this deferred object.</summary>
-        /// <remarks>All arguments are forwarded to success callbacks.</remarks>
-
-
         if (this._done) {
             var i, len;
             for (i = 0, len = this._done.length; i < len; i++) {
@@ -126,9 +126,11 @@ DjsDeferred.prototype = {
         }
     },
 
+    /** Invokes error callbacks for this deferred object.
+     * All arguments are forwarded to error callbacks.
+     */
     reject: function (/* args */) {
-        /// <summary>Invokes error callbacks for this deferred object.</summary>
-        /// <remarks>All arguments are forwarded to error callbacks.</remarks>
+        
         if (this._fail) {
             var i, len;
             for (i = 0, len = this._fail.length; i < len; i++) {
@@ -144,22 +146,21 @@ DjsDeferred.prototype = {
         }
     },
 
+    /** Returns a version of this object that has only the read-only methods available.
+     * @returns An object with only the promise object.
+     */
     promise: function () {
-        /// <summary>Returns a version of this object that has only the read-only methods available.</summary>
-        /// <returns>An object with only the promise object.</returns>
-
         var result = {};
         result.then = forwardCall(this, "then", result);
         return result;
     }
 };
 
+/** Creates a deferred object.
+ * @returns {DjsDeferred} A new deferred object. If jQuery is installed, then a jQueryDeferred object is returned, which provides a superset of features.
+*/
 var createDeferred = function () {
-    /// <summary>Creates a deferred object.</summary>
-    /// <returns type="DjsDeferred">
-    /// A new deferred object. If jQuery is installed, then a jQuery
-    /// Deferred object is returned, which provides a superset of features.
-    /// </returns>
+
 
     if (window.jQuery && window.jQuery.Deferred) {
         return new window.jQuery.Deferred();

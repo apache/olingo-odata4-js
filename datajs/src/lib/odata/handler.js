@@ -27,10 +27,11 @@ var trimString = utils.trimString;
 var maxVersion = oDataUtils.maxVersion;
 var MAX_DATA_SERVICE_VERSION = "4.0";
 
+/** Parses a string into an object with media type and properties.
+ * @param {String} str - String with media type to parse.
+ * @return null if the string is empty; an object with 'mediaType' and a 'properties' dictionary otherwise.
+ */
 var contentType = function (str) {
-    /// <summary>Parses a string into an object with media type and properties.</summary>
-    /// <param name="str" type="String">String with media type to parse.</param>
-    /// <returns>null if the string is empty; an object with 'mediaType' and a 'properties' dictionary otherwise.</returns>
 
     if (!str) {
         return null;
@@ -48,11 +49,11 @@ var contentType = function (str) {
     return { mediaType: trimString(contentTypeParts[0]), properties: properties };
 };
 
+/** Serializes an object with media type and properties dictionary into a string.
+ * @param contentType - Object with media type and properties dictionary to serialize.
+ * @return String representation of the media type object; undefined if contentType is null or undefined.</returns>
+ */
 var contentTypeToString = function (contentType) {
-    /// <summary>Serializes an object with media type and properties dictionary into a string.</summary>
-    /// <param name="contentType">Object with media type and properties dictionary to serialize.</param>
-    /// <returns>String representation of the media type object; undefined if contentType is null or undefined.</returns>
-
     if (!contentType) {
         return undefined;
     }
@@ -65,13 +66,14 @@ var contentTypeToString = function (contentType) {
     return result;
 };
 
+/** Creates an object that is going to be used as the context for the handler's parser and serializer.
+ * @param contentType - Object with media type and properties dictionary.
+ * @param {String} dataServiceVersion - String indicating the version of the protocol to use.
+ * @param context - Operation context.
+ * @param handler - Handler object that is processing a resquest or response.
+ * @return Context object.</returns>
+ */
 var createReadWriteContext = function (contentType, dataServiceVersion, context, handler) {
-    /// <summary>Creates an object that is going to be used as the context for the handler's parser and serializer.</summary>
-    /// <param name="contentType">Object with media type and properties dictionary.</param>
-    /// <param name="dataServiceVersion" type="String">String indicating the version of the protocol to use.</param>
-    /// <param name="context">Operation context.</param>
-    /// <param name="handler">Handler object that is processing a resquest or response.</param>
-    /// <returns>Context object.</returns>
 
     var rwContext = {};
     extend(rwContext, context);
@@ -84,11 +86,12 @@ var createReadWriteContext = function (contentType, dataServiceVersion, context,
     return rwContext;
 };
 
+/** Sets a request header's value. If the header has already a value other than undefined, null or empty string, then this method does nothing.
+ * @param request - Request object on which the header will be set.
+ * @param {String} name - Header name.
+ * @param {String} value - Header value.
+ */
 var fixRequestHeader = function (request, name, value) {
-    /// <summary>Sets a request header's value. If the header has already a value other than undefined, null or empty string, then this method does nothing.</summary>
-    /// <param name="request">Request object on which the header will be set.</param>
-    /// <param name="name" type="String">Header name.</param>
-    /// <param name="value" type="String">Header value.</param>
     if (!request) {
         return;
     }
@@ -99,13 +102,12 @@ var fixRequestHeader = function (request, name, value) {
     }
 };
 
-var fixDataServiceVersionHeader = function (request, version) {
-    /// <summary>Sets the DataServiceVersion header of the request if its value is not yet defined or of a lower version.</summary>
-    /// <param name="request">Request object on which the header will be set.</param>
-    /// <param name="version" type="String">Version value.</param>
-    /// <remarks>
-    /// If the request has already a version value higher than the one supplied the this function does nothing.
-    /// </remarks>
+/** Sets the DataServiceVersion header of the request if its value is not yet defined or of a lower version.
+ * @param request - Request object on which the header will be set.
+ * @param {String} version - Version value.
+ *  If the request has already a version value higher than the one supplied the this function does nothing.
+ */
+var fixDataServiceVersionHeader = function (request, version) {   
 
     if (request) {
         var headers = request.headers;
@@ -114,29 +116,32 @@ var fixDataServiceVersionHeader = function (request, version) {
     }
 };
 
+/** Gets the value of a request or response header.
+ * @param requestOrResponse - Object representing a request or a response.
+ * @param {String} name - Name of the header to retrieve.
+ * @returns {String} String value of the header; undefined if the header cannot be found.
+ */
 var getRequestOrResponseHeader = function (requestOrResponse, name) {
-    /// <summary>Gets the value of a request or response header.</summary>
-    /// <param name="requestOrResponse">Object representing a request or a response.</param>
-    /// <param name="name" type="String">Name of the header to retrieve.</param>
-    /// <returns type="String">String value of the header; undefined if the header cannot be found.</returns>
 
     var headers = requestOrResponse.headers;
     return (headers && headers[name]) || undefined;
 };
 
+/** Gets the value of the Content-Type header from a request or response.
+ * @param requestOrResponse - Object representing a request or a response.
+ * @returns {Object} Object with 'mediaType' and a 'properties' dictionary; null in case that the header is not found or doesn't have a value.
+ */
 var getContentType = function (requestOrResponse) {
-    /// <summary>Gets the value of the Content-Type header from a request or response.</summary>
-    /// <param name="requestOrResponse">Object representing a request or a response.</param>
-    /// <returns type="Object">Object with 'mediaType' and a 'properties' dictionary; null in case that the header is not found or doesn't have a value.</returns>
 
     return contentType(getRequestOrResponseHeader(requestOrResponse, "Content-Type"));
 };
 
 var versionRE = /^\s?(\d+\.\d+);?.*$/;
+/** Gets the value of the DataServiceVersion header from a request or response.
+ * @param requestOrResponse - Object representing a request or a response.
+ * @returns {String} Data service version; undefined if the header cannot be found.
+ */
 var getDataServiceVersion = function (requestOrResponse) {
-    /// <summary>Gets the value of the DataServiceVersion header from a request or response.</summary>
-    /// <param name="requestOrResponse">Object representing a request or a response.</param>
-    /// <returns type="String">Data service version; undefined if the header cannot be found.</returns>
 
     var value = getRequestOrResponseHeader(requestOrResponse, "OData-Version");
     if (value) {
@@ -149,24 +154,26 @@ var getDataServiceVersion = function (requestOrResponse) {
     // Fall through and return undefined.
 };
 
+/** Checks that a handler can process a particular mime type.
+ * @param handler - Handler object that is processing a resquest or response.
+ * @param cType - Object with 'mediaType' and a 'properties' dictionary.
+ * @returns {Boolean} True if the handler can process the mime type; false otherwise.
+ *
+ * The following check isn't as strict because if cType.mediaType = application/; it will match an accept value of "application/xml";
+ * however in practice we don't not expect to see such "suffixed" mimeTypes for the handlers.
+ */
 var handlerAccepts = function (handler, cType) {
-    /// <summary>Checks that a handler can process a particular mime type.</summary>
-    /// <param name="handler">Handler object that is processing a resquest or response.</param>
-    /// <param name="cType">Object with 'mediaType' and a 'properties' dictionary.</param>
-    /// <returns type="Boolean">True if the handler can process the mime type; false otherwise.</returns>
-
-    // The following check isn't as strict because if cType.mediaType = application/; it will match an accept value of "application/xml";
-    // however in practice we don't not expect to see such "suffixed" mimeTypes for the handlers.
     return handler.accept.indexOf(cType.mediaType) >= 0;
 };
 
+/** Invokes the parser associated with a handler for reading the payload of a HTTP response.
+ * @param handler - Handler object that is processing the response.
+ * @param {Function} parseCallback - Parser function that will process the response payload.
+ * @param response - HTTP response whose payload is going to be processed.
+ * @param context - Object used as the context for processing the response.
+ * @returns {Boolean} True if the handler processed the response payload and the response.data property was set; false otherwise.
+ */
 var handlerRead = function (handler, parseCallback, response, context) {
-    /// <summary>Invokes the parser associated with a handler for reading the payload of a HTTP response.</summary>
-    /// <param name="handler">Handler object that is processing the response.</param>
-    /// <param name="parseCallback" type="Function">Parser function that will process the response payload.</param>
-    /// <param name="response">HTTP response whose payload is going to be processed.</param>
-    /// <param name="context">Object used as the context for processing the response.</param>
-    /// <returns type="Boolean">True if the handler processed the response payload and the response.data property was set; false otherwise.</returns>
 
     if (!response || !response.headers) {
         return false;
@@ -190,13 +197,14 @@ var handlerRead = function (handler, parseCallback, response, context) {
     return false;
 };
 
+/** Invokes the serializer associated with a handler for generating the payload of a HTTP request.
+ * @param handler - Handler object that is processing the request.
+ * @param {Function} serializeCallback - Serializer function that will generate the request payload.
+ * @param response - HTTP request whose payload is going to be generated.
+ * @param context - Object used as the context for serializing the request.
+ * @returns {Boolean} True if the handler serialized the request payload and the request.body property was set; false otherwise.
+ */
 var handlerWrite = function (handler, serializeCallback, request, context) {
-    /// <summary>Invokes the serializer associated with a handler for generating the payload of a HTTP request.</summary>
-    /// <param name="handler">Handler object that is processing the request.</param>
-    /// <param name="serializeCallback" type="Function">Serializer function that will generate the request payload.</param>
-    /// <param name="response">HTTP request whose payload is going to be generated.</param>
-    /// <param name="context">Object used as the context for serializing the request.</param>
-    /// <returns type="Boolean">True if the handler serialized the request payload and the request.body property was set; false otherwise.</returns>
     if (!request || !request.headers) {
         return false;
     }
@@ -222,13 +230,14 @@ var handlerWrite = function (handler, serializeCallback, request, context) {
     return false;
 };
 
+/** Creates a handler object for processing HTTP requests and responses.
+ * @param {Function} parseCallback - Parser function that will process the response payload.
+ * @param {Function} serializeCallback - Serializer function that will generate the request payload.
+ * @param {String} accept - String containing a comma separated list of the mime types that this handler can work with.
+ * @param {String} maxDataServiceVersion - String indicating the highest version of the protocol that this handler can work with.
+ * @returns {Object} Handler object.
+ */
 var handler = function (parseCallback, serializeCallback, accept, maxDataServiceVersion) {
-    /// <summary>Creates a handler object for processing HTTP requests and responses.</summary>
-    /// <param name="parseCallback" type="Function">Parser function that will process the response payload.</param>
-    /// <param name="serializeCallback" type="Function">Serializer function that will generate the request payload.</param>
-    /// <param name="accept" type="String">String containing a comma separated list of the mime types that this handler can work with.</param>
-    /// <param name="maxDataServiceVersion" type="String">String indicating the highest version of the protocol that this handler can work with.</param>
-    /// <returns type="Object">Handler object.</returns>
 
     return {
         accept: accept,

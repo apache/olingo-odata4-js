@@ -55,10 +55,6 @@ var XXXparseDateTime = oDataUtils.XXXparseDateTime;
 var isPrimitiveEdmType = oDataUtils.isPrimitiveEdmType;
 var isGeographyEdmType = oDataUtils.isGeographyEdmType;
 var isGeometryEdmType = oDataUtils.isGeometryEdmType;
-//var parseDuration = oDataUtils.parseDuration;
-//var parseTimezone = oDataUtils.parseTimezone;
-//var payloadTypeOf = oDataUtils.payloadTypeOf;
-//var traverse = oDataUtils.traverse;
 
 var PAYLOADTYPE_FEED = "f";
 var PAYLOADTYPE_ENTRY = "e";
@@ -93,10 +89,11 @@ var jsonContentType = oDataHandler.contentType(jsonMediaType);
 // look like regular forward slashes.
 var jsonDateRE = /^\/Date\((-?\d+)(\+|-)?(\d+)?\)\/$/;
 
+/** Formats the given minutes into (+/-)hh:mm format.
+ * @param {Number} minutes - Number of minutes to format.
+ * @returns {String} The minutes in (+/-)hh:mm format.
+ */
 var minutesToOffset = function (minutes) {
-    /// <summary>Formats the given minutes into (+/-)hh:mm format.</summary>
-    /// <param name="minutes" type="Number">Number of minutes to format.</param>
-    /// <returns type="String">The minutes in (+/-)hh:mm format.</returns>
 
     var sign;
     if (minutes < 0) {
@@ -112,10 +109,11 @@ var minutesToOffset = function (minutes) {
     return sign + formatNumberWidth(hours, 2) + ":" + formatNumberWidth(minutes, 2);
 };
 
+/** Parses the JSON Date representation into a Date object.
+ * @param {String} value - String value.
+ * @returns {Date} A Date object if the value matches one; falsy otherwise.
+ */
 var parseJsonDateString = function (value) {
-    /// <summary>Parses the JSON Date representation into a Date object.</summary>
-    /// <param name="value" type="String">String value.</param>
-    /// <returns type="Date">A Date object if the value matches one; falsy otherwise.</returns>
 
     var arr = value && jsonDateRE.exec(value);
     if (arr) {
@@ -148,12 +146,13 @@ var parseJsonDateString = function (value) {
 // See the history of this file for a candidate implementation of
 // a 'formatJsonDateString' function.
 
+/** Parses a JSON OData payload.
+ * @param handler - This handler.
+ * @param text - Payload text (this parser also handles pre-parsed objects).
+ * @param {Object} context - Object with parsing context.
+ * @return An object representation of the OData payload.</returns>
+ */
 var jsonParser = function (handler, text, context) {
-    /// <summary>Parses a JSON OData payload.</summary>
-    /// <param name="handler">This handler.</param>
-    /// <param name="text">Payload text (this parser also handles pre-parsed objects).</param>
-    /// <param name="context" type="Object">Object with parsing context.</param>
-    /// <returns>An object representation of the OData payload.</returns>
 
     var recognizeDates = defined(context.recognizeDates, handler.recognizeDates);
     var model = context.metadata;
@@ -216,15 +215,13 @@ var addTypeColNoEdm = function(data, name, value ) {
 };
 
 
+/* Adds typeinformation for String, Boolean and numerical EDM-types. 
+ * The type is determined from the odata-json-format-v4.0.doc specification
+ * @param data - Date which will be extendet
+ * @param {Boolean} recognizeDates - True if strings formatted as datetime values should be treated as datetime values. False otherwise.
+ * @returns An object representation of the OData payload.
+ */
 var readPayloadFull = function (data, model, recognizeDates) {
-    /// <summary>Adds typeinformation for String, Boolean and numerical EDM-types. 
-    /// The type is determined from the odata-json-format-v4.0.doc specification
-    ///</summary>
-    /// <param name="data">Date which will be extendet</param>
-    /// <param name="recognizeDates" type="Boolean">
-    ///     True if strings formatted as datetime values should be treated as datetime values. False otherwise.
-    /// </param>
-    /// <returns>An object representation of the OData payload.</returns>
 
     if (utils.isObject(data)) {
         for (var key in data) {
@@ -281,12 +278,13 @@ var readPayloadFull = function (data, model, recognizeDates) {
     return data;
 };
 
+/** Serializes the data by returning its string representation.
+ * @param handler - This handler.
+ * @param data - Data to serialize.
+ * @param {Object} context - Object with serialization context.
+ * @returns {String} The string representation of data.
+ */
 var jsonSerializer = function (handler, data, context) {
-    /// <summary>Serializes the data by returning its string representation.</summary>
-    /// <param name="handler">This handler.</param>
-    /// <param name="data">Data to serialize.</param>
-    /// <param name="context" type="Object">Object with serialization context.</param>
-    /// <returns type="String">The string representation of data.</returns>
 
     var dataServiceVersion = context.dataServiceVersion || "4.0";
     var cType = context.contentType = context.contentType || jsonContentType;
@@ -330,14 +328,15 @@ var formatJsonRequestPayload = function (data) {
 
     return newdata;
 };
+
+/** JSON replacer function for converting a value to its JSON representation.
+ * @param {Object} value - Value to convert.</param>
+ * @returns {String} JSON representation of the input value.
+ * This method is used during JSON serialization and invoked only by the JSON.stringify function.
+ * It should never be called directly.
+ */
 var jsonReplacer = function (_, value) {
-    /// <summary>JSON replacer function for converting a value to its JSON representation.</summary>
-    /// <param value type="Object">Value to convert.</param>
-    /// <returns type="String">JSON representation of the input value.</returns>
-    /// <remarks>
-    ///   This method is used during JSON serialization and invoked only by the JSON.stringify function.
-    ///   It should never be called directly.
-    /// </remarks>
+    
 
     if (value && value.__edmType === "Edm.Time") {
         return formatDuration(value);
@@ -347,26 +346,28 @@ var jsonReplacer = function (_, value) {
 };
 
 
+/** Creates an object containing information for the json payload.
+ * @param {String} kind - JSON payload kind, one of the PAYLOADTYPE_XXX constant values.
+ * @param {String} typeName - Type name of the JSON payload.
+ * @returns {Object} Object with kind and type fields.
+ */
 var jsonMakePayloadInfo = function (kind, type) {
-    /// <summary>Creates an object containing information for the json payload.</summary>
-    /// <param name="kind" type="String">JSON payload kind, one of the PAYLOADTYPE_XXX constant values.</param>
-    /// <param name="typeName" type="String">Type name of the JSON payload.</param>
-    /// <returns type="Object">Object with kind and type fields.</returns>
 
+    /// TODO docu
     /// <field name="kind" type="String">Kind of the JSON payload. One of the PAYLOADTYPE_XXX constant values.</field>
     /// <field name="type" type="String">Data type of the JSON payload.</field>
 
     return { kind: kind, type: type || null };
 };
 
-/// <summary>Creates an object containing information for the context</summary>
-/// ...
-/// <returns type="Object">Object with type information
-/// attribute detectedPayloadKind(optional): see constants starting with PAYLOADTYPE_
-/// attribute deltaKind(optional): deltainformation, one of the following valus DELTATYPE_FEED | DELTATYPE_DELETED_ENTRY | DELTATYPE_LINK | DELTATYPE_DELETED_LINK
-/// attribute typeName(optional): name of the type
-/// attribute type(optional): object containing type information for entity- and complex-types ( null if a typeName is a primitive)
-///  </returns>
+/** Creates an object containing information for the context
+ * TODO check dou layout
+ * @returns {Object} Object with type information
+ * @returns {Object.detectedPayloadKind(optional)}  see constants starting with PAYLOADTYPE_
+ * @returns {Object.deltaKind(optional)}  deltainformation, one of the following valus DELTATYPE_FEED | DELTATYPE_DELETED_ENTRY | DELTATYPE_LINK | DELTATYPE_DELETED_LINK
+ * @returns {Object.typeName(optional)}  name of the type
+ * @returns {Object.type(optional)}  object containing type information for entity- and complex-types ( null if a typeName is a primitive)
+*/
 var parseContextUriFragment = function( fragments, model ) {
     var ret = {};
 
@@ -553,19 +554,17 @@ var parseContextUriFragment = function( fragments, model ) {
     return ret;
 };
 
+/** Infers the information describing the JSON payload from its metadata annotation, structure, and data model.
+ * @param {Object} data - Json response payload object.
+ * @param {Object} model - Object describing an OData conceptual schema.
+ * If the arguments passed to the function don't convey enough information about the payload to determine without doubt that the payload is a feed then it
+ * will try to use the payload object structure instead.  If the payload looks like a feed (has value property that is an array or non-primitive values) then
+ * the function will report its kind as PAYLOADTYPE_FEED unless the inferFeedAsComplexType flag is set to true. This flag comes from the user request
+ * and allows the user to control how the library behaves with an ambigous JSON payload.
+ * @return Object with kind and type fields. Null if there is no metadata annotation or the payload info cannot be obtained..
+*/
 var createPayloadInfo = function (data, model) {
-    /// <summary>Infers the information describing the JSON payload from its metadata annotation, structure, and data model.</summary>
-    /// <param name="data" type="Object">Json response payload object.</param>
-    /// <param name="model" type="Object">Object describing an OData conceptual schema.</param>
-    /// <remarks>
-    ///     If the arguments passed to the function don't convey enough information about the payload to determine without doubt that the payload is a feed then it
-    ///     will try to use the payload object structure instead.  If the payload looks like a feed (has value property that is an array or non-primitive values) then
-    ///     the function will report its kind as PAYLOADTYPE_FEED unless the inferFeedAsComplexType flag is set to true. This flag comes from the user request
-    ///     and allows the user to control how the library behaves with an ambigous JSON payload.
-    /// </remarks>
-    /// <returns type="Object">
-    ///     Object with kind and type fields. Null if there is no metadata annotation or the payload info cannot be obtained..
-    /// </returns>
+    
 
     var metadataUri = data[contextUrlAnnotation];
     if (!metadataUri || typeof metadataUri !== "string") {
@@ -581,12 +580,13 @@ var createPayloadInfo = function (data, model) {
     return parseContextUriFragment(fragment,model);
 };
 
+/** Processe a JSON response payload with metadata-minimal
+ * @param {Object} data - Json response payload object
+ * @param {Object} model - Object describing an OData conceptual schema
+ * @param {Boolean} recognizeDates - Flag indicating whether datetime literal strings should be converted to JavaScript Date objects.
+ * @returns {Object} Object in the library's representation.
+ */
 var readPayloadMinimal = function (data, model, recognizeDates) {
-    /// <summary>Processe a JSON response payload with metadata-minimal</summary>
-    /// <param name="data" type="Object">Json response payload object</param>
-    /// <param name="model" type="Object">Object describing an OData conceptual schema</param>
-    /// <param name="recognizeDates" type="Boolean">Flag indicating whether datetime literal strings should be converted to JavaScript Date objects.</param>
-    /// <returns type="Object">Object in the library's representation.</returns>
 
     if (!assigned(model) || isArray(model)) {
         return data;
@@ -615,11 +615,12 @@ var readPayloadMinimal = function (data, model, recognizeDates) {
     return data;
 };
 
+/** Gets the key of an entry.
+ * @param {Object} data - JSON entry.
+ *
+ * @returns {string} Entry instance key.
+ */
 var jsonGetEntryKey = function (data, entityModel) {
-    /// <summary>Gets the key of an entry.</summary>
-    /// <param name="data" type="Object">JSON entry.</param>
-    /// <paraFrom   Subject Received    Size    Categories  
-    /// <returns type="string">Entry instance key.</returns>
 
     var entityInstanceKey;
     var entityKeys = entityModel.key[0].propertyRef;
@@ -717,11 +718,12 @@ var readPayloadMinimalEntry = function (data, model, entryInfo, baseURI, recogni
     return readPayloadMinimalObject(data, entryInfo, baseURI, model, recognizeDates);
 };
 
+/** Formats a value according to Uri literal format
+ * @param value - Value to be formatted.
+ * @param type - Edm type of the value
+ * @returns {string} Value after formatting
+ */
 var formatLiteral = function (value, type) {
-    /// <summary>Formats a value according to Uri literal format</summary>
-    /// <param name="value">Value to be formatted.</param>
-    /// <param name="type">Edm type of the value</param>
-    /// <returns type="string">Value after formatting</returns>
 
     value = "" + formatRowLiteral(value, type);
     value = encodeURIComponent(value.replace("'", "''"));
@@ -889,10 +891,11 @@ var isJsonSerializableProperty = function (property) {
     return false;
 };
 
+/** Determines whether a type name is a primitive type in a JSON payload.
+ * @param {String} typeName - Type name to test.
+ * @returns {Boolean} True if the type name an EDM primitive type or an OData spatial type; false otherwise.
+ */
 var jsonIsPrimitiveType = function (typeName) {
-    /// <summary>Determines whether a type name is a primitive type in a JSON payload.</summary>
-    /// <param name="typeName" type="String">Type name to test.</param>
-    /// <returns type="Boolean">True if the type name an EDM primitive type or an OData spatial type; false otherwise.</returns>
 
     return isPrimitiveEdmType(typeName) || isGeographyEdmType(typeName) || isGeometryEdmType(typeName);
 };

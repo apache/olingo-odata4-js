@@ -165,13 +165,13 @@ var geographyTypes = [
     GEOGRAPHY_MULTIPOINT
 ];
 
+/** Invokes a function once per schema in metadata.
+ * @param metadata - Metadata store; one of edmx, schema, or an array of any of them.
+ * @param {Function} callback - Callback function to invoke once per schema.
+ * @returns The first truthy value to be returned from the callback; null or the last falsy value otherwise.
+ */
 var forEachSchema = function (metadata, callback) {
-    /// <summary>Invokes a function once per schema in metadata.</summary>
-    /// <param name="metadata">Metadata store; one of edmx, schema, or an array of any of them.</param>
-    /// <param name="callback" type="Function">Callback function to invoke once per schema.</param>
-    /// <returns>
-    /// The first truthy value to be returned from the callback; null or the last falsy value otherwise.
-    /// </returns>
+    
 
     if (!metadata) {
         return null;
@@ -196,12 +196,13 @@ var forEachSchema = function (metadata, callback) {
     }
 };
 
+/** Formats a millisecond and a nanosecond value into a single string.
+ * @param {Numaber} ms - Number of milliseconds to format.</param>
+ * @param {Numaber} ns - Number of nanoseconds to format.</param>
+ * @returns {String} Formatted text.
+ * If the value is already as string it's returned as-is.</remarks>
+ */
 var formatMilliseconds = function (ms, ns) {
-    /// <summary>Formats a millisecond and a nanosecond value into a single string.</summary>
-    /// <param name="ms" type="Number" mayBeNull="false">Number of milliseconds to format.</param>
-    /// <param name="ns" type="Number" mayBeNull="false">Number of nanoseconds to format.</param>
-    /// <returns type="String">Formatted text.</returns>
-    /// <remarks>If the value is already as string it's returned as-is.</remarks>
 
     // Avoid generating milliseconds if not necessary.
     if (ms === 0) {
@@ -222,11 +223,12 @@ var formatDateTimeOffsetJSON = function (value) {
     return "\/Date(" + value.getTime() + ")\/";
 };
 
+/** Formats a DateTime or DateTimeOffset value a string.
+ * @param {Date} value - Value to format
+ * @returns {String} Formatted text.
+ * If the value is already as string it's returned as-is
+´*/
 var formatDateTimeOffset = function (value) {
-    /// <summary>Formats a DateTime or DateTimeOffset value a string.</summary>
-    /// <param name="value" type="Date" mayBeNull="false">Value to format.</param>
-    /// <returns type="String">Formatted text.</returns>
-    /// <remarks>If the value is already as string it's returned as-is.</remarks>
 
     if (typeof value === "string") {
         return value;
@@ -268,10 +270,11 @@ var formatDateTimeOffset = function (value) {
         ms + offset;
 };
 
+/** Converts a duration to a string in xsd:duration format.
+ * @param {Object} value - Object with ms and __edmType properties.
+ * @returns {String} String representation of the time object in xsd:duration format.
+ */
 var formatDuration = function (value) {
-    /// <summary>Converts a duration to a string in xsd:duration format.</summary>
-    /// <param name="value" type="Object">Object with ms and __edmType properties.</param>
-    /// <returns type="String">String representation of the time object in xsd:duration format.</returns>
 
     var ms = value.ms;
 
@@ -298,12 +301,13 @@ var formatDuration = function (value) {
            formatMilliseconds(ms, value.ns) + "S";
 };
 
+/** Formats the specified value to the given width.
+ * @param {Number} value - Number to format (non-negative).
+ * @param {Number} width - Minimum width for number.
+ * @param {Boolean} append - Flag indicating if the value is padded at the beginning (false) or at the end (true).
+ * @returns {String} Text representation.
+ */
 var formatNumberWidth = function (value, width, append) {
-    /// <summary>Formats the specified value to the given width.</summary>
-    /// <param name="value" type="Number">Number to format (non-negative).</param>
-    /// <param name="width" type="Number">Minimum width for number.</param>
-    /// <param name="append" type="Boolean">Flag indicating if the value is padded at the beginning (false) or at the end (true).</param>
-    /// <returns type="String">Text representation.</returns>
     var result = value.toString(10);
     while (result.length < width) {
         if (append) {
@@ -316,18 +320,20 @@ var formatNumberWidth = function (value, width, append) {
     return result;
 };
 
+/** Gets the canonical timezone representation.
+ * @param {String} timezone - Timezone representation.
+ * @returns {String} An 'Z' string if the timezone is absent or 0; the timezone otherwise.
+ */
 var getCanonicalTimezone = function (timezone) {
-    /// <summary>Gets the canonical timezone representation.</summary>
-    /// <param name="timezone" type="String">Timezone representation.</param>
-    /// <returns type="String">An 'Z' string if the timezone is absent or 0; the timezone otherwise.</returns>
 
     return (!timezone || timezone === "Z" || timezone === "+00:00" || timezone === "-00:00") ? "Z" : timezone;
 };
 
+/** Gets the type of a collection type name.
+ * @param {String} typeName - Type name of the collection.
+ * @returns {String} Type of the collection; null if the type name is not a collection type.
+ */
 var getCollectionType = function (typeName) {
-    /// <summary>Gets the type of a collection type name.</summary>
-    /// <param name="typeName" type="String">Type name of the collection.</param>
-    /// <returns type="String">Type of the collection; null if the type name is not a collection type.</returns>
 
     if (typeof typeName === "string") {
         var end = typeName.indexOf(")", 10);
@@ -338,14 +344,15 @@ var getCollectionType = function (typeName) {
     return null;
 };
 
+/** Sends a request containing OData payload to a server.
+* @param request - Object that represents the request to be sent..
+* @param success - Callback for a successful read operation.
+* @param error - Callback for handling errors.
+* @param handler - Handler for data serialization.
+* @param httpClient - HTTP client layer.
+* @param context - Context used for processing the request
+*/
 var invokeRequest = function (request, success, error, handler, httpClient, context) {
-    /// <summary>Sends a request containing OData payload to a server.</summary>
-    /// <param name="request">Object that represents the request to be sent..</param>
-    /// <param name="success">Callback for a successful read operation.</param>
-    /// <param name="error">Callback for handling errors.</param>
-    /// <param name="handler">Handler for data serialization.</param>
-    /// <param name="httpClient">HTTP client layer.</param>
-    /// <param name="context">Context used for processing the request</param>
 
     return httpClient.request(request, function (response) {
         try {
@@ -376,10 +383,11 @@ var invokeRequest = function (request, success, error, handler, httpClient, cont
     }, error);
 };
 
+/** Tests whether a value is a batch object in the library's internal representation.
+ * @param value - Value to test.
+ * @returns {Boolean} True is the value is a batch object; false otherwise.
+ */
 var isBatch = function (value) {
-    /// <summary>Tests whether a value is a batch object in the library's internal representation.</summary>
-    /// <param name="value">Value to test.</param>
-    /// <returns type="Boolean">True is the value is a batch object; false otherwise.</returns>
 
     return isComplex(value) && isArray(value.__batchRequests);
 };
@@ -387,11 +395,12 @@ var isBatch = function (value) {
 // Regular expression used for testing and parsing for a collection type.
 var collectionTypeRE = /Collection\((.*)\)/;
 
+/** Tests whether a value is a collection value in the library's internal representation.
+ * @param value - Value to test.
+ * @param {Sting} typeName - Type name of the value. This is used to disambiguate from a collection property value.
+ * @returns {Boolean} True is the value is a feed value; false otherwise.
+ */
 var isCollection = function (value, typeName) {
-    /// <summary>Tests whether a value is a collection value in the library's internal representation.</summary>
-    /// <param name="value">Value to test.</param>
-    /// <param name="typeName" type="Sting">Type name of the value. This is used to disambiguate from a collection property value.</param>
-    /// <returns type="Boolean">True is the value is a feed value; false otherwise.</returns>
 
     var colData = value && value.results || value;
     return !!colData &&
@@ -399,17 +408,19 @@ var isCollection = function (value, typeName) {
         (!typeName && isArray(colData) && !isComplex(colData[0]));
 };
 
+/** Checks whether the specified type name is a collection type.
+ * @param {String} typeName - Name of type to check.
+ * @returns {Boolean} True if the type is the name of a collection type; false otherwise.
+ */
 var isCollectionType = function (typeName) {
-    /// <summary>Checks whether the specified type name is a collection type.</summary>
-    /// <param name="typeName" type="String">Name of type to check.</param>
-    /// <returns type="Boolean">True if the type is the name of a collection type; false otherwise.</returns>
     return collectionTypeRE.test(typeName);
 };
 
+/** Tests whether a value is a complex type value in the library's internal representation.
+ * @param value - Value to test.
+ * @returns {Boolean} True is the value is a complex type value; false otherwise.
+ */
 var isComplex = function (value) {
-    /// <summary>Tests whether a value is a complex type value in the library's internal representation.</summary>
-    /// <param name="value">Value to test.</param>
-    /// <returns type="Boolean">True is the value is a complex type value; false otherwise.</returns>
 
     return !!value &&
         isObject(value) &&
@@ -417,17 +428,19 @@ var isComplex = function (value) {
         !isDate(value);
 };
 
+/** Checks whether a Date object is DateTimeOffset value
+ * @param {Date} value - Value to check
+ * @returns {Boolean} true if the value is a DateTimeOffset, false otherwise.
+ */
 var isDateTimeOffset = function (value) {
-    /// <summary>Checks whether a Date object is DateTimeOffset value</summary>
-    /// <param name="value" type="Date" mayBeNull="false">Value to check.</param>
-    /// <returns type="Boolean">true if the value is a DateTimeOffset, false otherwise.</returns>
     return (value.__edmType === "Edm.DateTimeOffset" || (!value.__edmType && value.__offset));
 };
 
+/** Tests whether a value is a deferred navigation property in the library's internal representation.
+ * @param value - Value to test.
+ * @returns {Boolean} True is the value is a deferred navigation property; false otherwise.
+ */
 var isDeferred = function (value) {
-    /// <summary>Tests whether a value is a deferred navigation property in the library's internal representation.</summary>
-    /// <param name="value">Value to test.</param>
-    /// <returns type="Boolean">True is the value is a deferred navigation property; false otherwise.</returns>
 
     if (!value && !isComplex(value)) {
         return false;
@@ -437,19 +450,21 @@ var isDeferred = function (value) {
     return !metadata.type && !!deferred.uri;
 };
 
+/** Tests whether a value is an entry object in the library's internal representation.
+ * @param value - Value to test.
+ * @returns {Boolean} True is the value is an entry object; false otherwise.
+ */
 var isEntry = function (value) {
-    /// <summary>Tests whether a value is an entry object in the library's internal representation.</summary>
-    /// <param name="value">Value to test.</param>
-    /// <returns type="Boolean">True is the value is an entry object; false otherwise.</returns>
 
     return isComplex(value) && value.__metadata && "uri" in value.__metadata;
 };
 
+/** Tests whether a value is a feed value in the library's internal representation.
+ * @param value - Value to test.
+ * @param {Sting} typeName - Type name of the value. This is used to disambiguate from a collection property value.
+ * @returns {Boolean} True is the value is a feed value; false otherwise.
+ */
 var isFeed = function (value, typeName) {
-    /// <summary>Tests whether a value is a feed value in the library's internal representation.</summary>
-    /// <param name="value">Value to test.</param>
-    /// <param name="typeName" type="Sting">Type name of the value. This is used to disambiguate from a collection property value.</param>
-    /// <returns type="Boolean">True is the value is a feed value; false otherwise.</returns>
 
     var feedData = value && value.results || value;
     return isArray(feedData) && (
@@ -458,10 +473,11 @@ var isFeed = function (value, typeName) {
     );
 };
 
+/** Checks whether the specified type name is a geography EDM type.
+ * @param {String} typeName - Name of type to check.
+ * @returns {Boolean} True if the type is a geography EDM type; false otherwise.
+ */
 var isGeographyEdmType = function (typeName) {
-    /// <summary>Checks whether the specified type name is a geography EDM type.</summary>
-    /// <param name="typeName" type="String">Name of type to check.</param>
-    /// <returns type="Boolean">True if the type is a geography EDM type; false otherwise.</returns>
 
     //check with edm
     var ret = contains(geographyEdmTypes, typeName) || 
@@ -470,20 +486,22 @@ var isGeographyEdmType = function (typeName) {
         
 };
 
+/** Checks whether the specified type name is a geometry EDM type.
+ * @param {String} typeName - Name of type to check.
+ * @returns {Boolean} True if the type is a geometry EDM type; false otherwise.
+ */
 var isGeometryEdmType = function (typeName) {
-    /// <summary>Checks whether the specified type name is a geometry EDM type.</summary>
-    /// <param name="typeName" type="String">Name of type to check.</param>
-    /// <returns type="Boolean">True if the type is a geometry EDM type; false otherwise.</returns>
 
     var ret = contains(geometryEdmTypes, typeName) ||
         (typeName.indexOf('.') === -1 && contains(geometryTypes, typeName));
     return ret; 
 };
 
+/** Tests whether a value is a named stream value in the library's internal representation.
+ * @param value - Value to test.
+ * @returns {Boolean} True is the value is a named stream; false otherwise.
+ */
 var isNamedStream = function (value) {
-    /// <summary>Tests whether a value is a named stream value in the library's internal representation.</summary>
-    /// <param name="value">Value to test.</param>
-    /// <returns type="Boolean">True is the value is a named stream; false otherwise.</returns>
 
     if (!value && !isComplex(value)) {
         return false;
@@ -493,13 +511,12 @@ var isNamedStream = function (value) {
     return !metadata && !!mediaResource && !!mediaResource.media_src;
 };
 
+/** Tests whether a value is a primitive type value in the library's internal representation.
+ * @param value - Value to test.
+ * @returns {Boolean} True is the value is a primitive type value.
+ * Date objects are considered primitive types by the library.
+ */
 var isPrimitive = function (value) {
-    /// <summary>Tests whether a value is a primitive type value in the library's internal representation.</summary>
-    /// <param name="value">Value to test.</param>
-    /// <remarks>
-    ///    Date objects are considered primitive types by the library.
-    /// </remarks>
-    /// <returns type="Boolean">True is the value is a primitive type value.</returns>
 
     return isDate(value) ||
         typeof value === "string" ||
@@ -507,24 +524,21 @@ var isPrimitive = function (value) {
         typeof value === "boolean";
 };
 
+/** Checks whether the specified type name is a primitive EDM type.
+ * @param {String} typeName - Name of type to check.
+ * @returns {Boolean} True if the type is a primitive EDM type; false otherwise.
+ */
 var isPrimitiveEdmType = function (typeName) {
-    /// <summary>Checks whether the specified type name is a primitive EDM type.</summary>
-    /// <param name="typeName" type="String">Name of type to check.</param>
-    /// <returns type="Boolean">True if the type is a primitive EDM type; false otherwise.</returns>
 
     return contains(primitiveEdmTypes, typeName);
 };
 
+/** Gets the kind of a navigation property value.
+ * @param value - Value of the navigation property.
+ * @param {Object} [propertyModel] - Object that describes the navigation property in an OData conceptual schema.
+ * @returns {String} String value describing the kind of the navigation property; null if the kind cannot be determined.
+ */
 var navigationPropertyKind = function (value, propertyModel) {
-    /// <summary>Gets the kind of a navigation property value.</summary>
-    /// <param name="value">Value of the navigation property.</param>
-    /// <param name="propertyModel" type="Object" optional="true">
-    ///     Object that describes the navigation property in an OData conceptual schema.
-    /// </param>
-    /// <remarks>
-    ///     The returned string is as follows
-    /// </remarks>
-    /// <returns type="String">String value describing the kind of the navigation property; null if the kind cannot be determined.</returns>
 
     if (isDeferred(value)) {
         return "deferred";
@@ -544,75 +558,82 @@ var navigationPropertyKind = function (value, propertyModel) {
     return null;
 };
 
+/** Looks up a property by name.
+ * @param {Array} properties - Array of property objects as per EDM metadata (may be null)
+ * @param {String} name - Name to look for.
+ * @returns {Object} The property object; null if not found.
+ */
 var lookupProperty = function (properties, name) {
-    /// <summary>Looks up a property by name.</summary>
-    /// <param name="properties" type="Array" mayBeNull="true">Array of property objects as per EDM metadata.</param>
-    /// <param name="name" type="String">Name to look for.</param>
-    /// <returns type="Object">The property object; null if not found.</returns>
 
     return find(properties, function (property) {
         return property.name === name;
     });
 };
 
+/** Looks up a type object by name.
+ * @param {String} name - Name, possibly null or empty.
+ * @param metadata - Metadata store; one of edmx, schema, or an array of any of them.
+ * @param {String} kind - Kind of object to look for as per EDM metadata.
+ * @returns An type description if the name is found; null otherwise
+ */
 var lookupInMetadata = function (name, metadata, kind) {
-    /// <summary>Looks up a type object by name.</summary>
-    /// <param name="name" type="String">Name, possibly null or empty.</param>
-    /// <param name="metadata">Metadata store; one of edmx, schema, or an array of any of them.</param>
-    /// <param name="kind" type="String">Kind of object to look for as per EDM metadata.</param>
-    /// <returns>An type description if the name is found; null otherwise.</returns>
 
     return (name) ? forEachSchema(metadata, function (schema) {
         return lookupInSchema(name, schema, kind);
     }) : null;
 };
 
+/** Looks up a entity set by name.
+ * @param {Array} properties - Array of entity set objects as per EDM metadata( may be null)
+ * @param {String} name - Name to look for.
+ * @returns {Object} The entity set object; null if not found.
+ */
 var lookupEntitySet = function (entitySets, name) {
-    /// <summary>Looks up a entity set by name.</summary>
-    /// <param name="properties" type="Array" mayBeNull="true">Array of entity set objects as per EDM metadata.</param>
-    /// <param name="name" type="String">Name to look for.</param>
-    /// <returns type="Object">The entity set object; null if not found.</returns>
 
     return find(entitySets, function (entitySet) {
         return entitySet.name === name;
     });
 };
 
+/** Looks up a entity set by name.
+ * @param {Array} properties - Array of entity set objects as per EDM metadata (may be null)
+ * @param {String} name - Name to look for.
+ * @returns {Object} The entity set object; null if not found.
+ */
 var lookupSingleton = function (singletons, name) {
-    /// <summary>Looks up a entity set by name.</summary>
-    /// <param name="properties" type="Array" mayBeNull="true">Array of entity set objects as per EDM metadata.</param>
-    /// <param name="name" type="String">Name to look for.</param>
-    /// <returns type="Object">The entity set object; null if not found.</returns>
 
     return find(singletons, function (singleton) {
         return singleton.name === name;
     });
 };
 
+/** Looks up a complex type object by name.
+ * @param {String} name - Name, possibly null or empty.
+ * @param metadata - Metadata store; one of edmx, schema, or an array of any of them.
+ * @returns A complex type description if the name is found; null otherwise.</returns>
+ */
 var lookupComplexType = function (name, metadata) {
-    /// <summary>Looks up a complex type object by name.</summary>
-    /// <param name="name" type="String">Name, possibly null or empty.</param>
-    /// <param name="metadata">Metadata store; one of edmx, schema, or an array of any of them.</param>
-    /// <returns>A complex type description if the name is found; null otherwise.</returns>
 
     return lookupInMetadata(name, metadata, "complexType");
 };
 
+/** Looks up an entity type object by name.
+ * @param {String} name - Name, possibly null or empty.
+ * @param metadata - Metadata store; one of edmx, schema, or an array of any of them.
+ * @returns An entity type description if the name is found; null otherwise.</returns>
+ */
 var lookupEntityType = function (name, metadata) {
-    /// <summary>Looks up an entity type object by name.</summary>
-    /// <param name="name" type="String">Name, possibly null or empty.</param>
-    /// <param name="metadata">Metadata store; one of edmx, schema, or an array of any of them.</param>
-    /// <returns>An entity type description if the name is found; null otherwise.</returns>
 
     return lookupInMetadata(name, metadata, "entityType");
 };
 
 
+/** Looks up an
+ * @param {String} name - Name, possibly null or empty.
+ * @param metadata - Metadata store; one of edmx, schema, or an array of any of them.
+ * @returns An entity container description if the name is found; null otherwise.</returns>
+ */
 var lookupDefaultEntityContainer = function (metadata) {
-    /// <summary>Looks up an</summary>
-    /// <param name="name" type="String">Name, possibly null or empty.</param>
-    /// <param name="metadata">Metadata store; one of edmx, schema, or an array of any of them.</param>
-    /// <returns>An entity container description if the name is found; null otherwise.</returns>
 
     return forEachSchema(metadata, function (schema) {
         if (isObject(schema.entityContainer)) { 
@@ -621,31 +642,33 @@ var lookupDefaultEntityContainer = function (metadata) {
     });
 };
 
+/** Looks up an entity container object by name.
+ * @param {String} name - Name, possibly null or empty.
+ * @param metadata - Metadata store; one of edmx, schema, or an array of any of them.
+ * @returns An entity container description if the name is found; null otherwise.</returns>
+ */
 var lookupEntityContainer = function (name, metadata) {
-    /// <summary>Looks up an entity container object by name.</summary>
-    /// <param name="name" type="String">Name, possibly null or empty.</param>
-    /// <param name="metadata">Metadata store; one of edmx, schema, or an array of any of them.</param>
-    /// <returns>An entity container description if the name is found; null otherwise.</returns>
 
     return lookupInMetadata(name, metadata, "entityContainer");
 };
 
+/** Looks up a function import by name.
+ * @param {Array} properties - Array of function import objects as per EDM metadata (May be null)
+ * @param {String} name - Name to look for.
+ * @returns {Object} The entity set object; null if not found.
+ */
 var lookupFunctionImport = function (functionImports, name) {
-    /// <summary>Looks up a function import by name.</summary>
-    /// <param name="properties" type="Array" mayBeNull="true">Array of function import objects as per EDM metadata.</param>
-    /// <param name="name" type="String">Name to look for.</param>
-    /// <returns type="Object">The entity set object; null if not found.</returns>
-
     return find(functionImports, function (functionImport) {
         return functionImport.name === name;
     });
 };
 
+/** Looks up the target entity type for a navigation property.
+ * @param {Object} navigationProperty - 
+ * @param {Object} metadata - 
+ * @returns {String} The entity type name for the specified property, null if not found.
+ */
 var lookupNavigationPropertyType = function (navigationProperty, metadata) {
-    /// <summary>Looks up the target entity type for a navigation property.</summary>
-    /// <param name="navigationProperty" type="Object"></param>
-    /// <param name="metadata" type="Object"></param>
-    /// <returns type="String">The entity type name for the specified property, null if not found.</returns>
 
     var result = null;
     if (navigationProperty) {
@@ -677,11 +700,12 @@ var lookupNavigationPropertyType = function (navigationProperty, metadata) {
     return result;
 };
 
+/** Looks up the target entityset name for a navigation property.
+ * @param {Object} navigationProperty - 
+ * @param {Object} metadata - 
+ * @returns {String} The entityset name for the specified property, null if not found.
+ */
 var lookupNavigationPropertyEntitySet = function (navigationProperty, sourceEntitySetName, metadata) {
-    /// <summary>Looks up the target entityset name for a navigation property.</summary>
-    /// <param name="navigationProperty" type="Object"></param>
-    /// <param name="metadata" type="Object"></param>
-    /// <returns type="String">The entityset name for the specified property, null if not found.</returns>
 
     if (navigationProperty) {
         var rel = navigationProperty.relationship;
@@ -706,11 +730,12 @@ var lookupNavigationPropertyEntitySet = function (navigationProperty, sourceEnti
     return null;
 };
 
+/** Gets the entitySet info, container name and functionImports for an entitySet
+ * @param {Object} navigationProperty - 
+ * @param {Object} metadata - 
+ * @returns {Object} The info about the entitySet.
+ */
 var getEntitySetInfo = function (entitySetName, metadata) {
-    /// <summary>Gets the entitySet info, container name and functionImports for an entitySet</summary>
-    /// <param name="navigationProperty" type="Object"></param>
-    /// <param name="metadata" type="Object"></param>
-    /// <returns type="Object">The info about the entitySet.</returns>
 
     var info = forEachSchema(metadata, function (schema) {
         var container = schema.entityContainer;
@@ -728,11 +753,12 @@ var getEntitySetInfo = function (entitySetName, metadata) {
     return info;
 };
 
+/** Given an expected namespace prefix, removes it from a full name.
+ * @param {String} ns - Expected namespace.
+ * @param {String} fullName - Full name in 'ns'.'name' form.
+ * @returns {String} The local name, null if it isn't found in the expected namespace.
+ */
 var removeNamespace = function (ns, fullName) {
-    /// <summary>Given an expected namespace prefix, removes it from a full name.</summary>
-    /// <param name="ns" type="String">Expected namespace.</param>
-    /// <param name="fullName" type="String">Full name in 'ns'.'name' form.</param>
-    /// <returns type="String">The local name, null if it isn't found in the expected namespace.</returns>
 
     if (fullName.indexOf(ns) === 0 && fullName.charAt(ns.length) === ".") {
         return fullName.substr(ns.length + 1);
@@ -741,12 +767,13 @@ var removeNamespace = function (ns, fullName) {
     return null;
 };
 
+/** Looks up a schema object by name.
+ * @param {String} name - Name (assigned).
+ * @param schema - Schema object as per EDM metadata.
+ * @param {String} kind - Kind of object to look for as per EDM metadata.
+ * @returns An entity type description if the name is found; null otherwise.</returns>
+ */
 var lookupInSchema = function (name, schema, kind) {
-    /// <summary>Looks up a schema object by name.</summary>
-    /// <param name="name" type="String">Name (assigned).</param>
-    /// <param name="schema">Schema object as per EDM metadata.</param>
-    /// <param name="kind" type="String">Kind of object to look for as per EDM metadata.</param>
-    /// <returns>An entity type description if the name is found; null otherwise.</returns>
 
     if (name && schema) {
         // The name should be the namespace qualified name in 'ns'.'type' format.
@@ -760,11 +787,12 @@ var lookupInSchema = function (name, schema, kind) {
     return null;
 };
 
+/** Compares to version strings and returns the higher one.
+ * @param {String} left - Version string in the form "major.minor.rev"
+ * @param {String} right - Version string in the form "major.minor.rev"
+ * @returns {String} The higher version string.
+ */
 var maxVersion = function (left, right) {
-    /// <summary>Compares to version strings and returns the higher one.</summary>
-    /// <param name="left" type="String">Version string in the form "major.minor.rev"</param>
-    /// <param name="right" type="String">Version string in the form "major.minor.rev"</param>
-    /// <returns type="String">The higher version string.</returns>
 
     if (left === right) {
         return left;
@@ -815,9 +843,10 @@ var normalHeaders = {
     "retry-after": "Retry-After"
 };
 
+/** Normalizes headers so they can be found with consistent casing.
+ * @param {Object} headers - Dictionary of name/value pairs.
+ */
 var normalizeHeaders = function (headers) {
-    /// <summary>Normalizes headers so they can be found with consistent casing.</summary>
-    /// <param name="headers" type="Object">Dictionary of name/value pairs.</param>
 
     for (var name in headers) {
         var lowerName = name.toLowerCase();
@@ -830,10 +859,11 @@ var normalizeHeaders = function (headers) {
     }
 };
 
+/** Parses a string into a boolean value.
+ * @param propertyValue - Value to parse.
+ * @returns {Boolean} true if the property value is 'true'; false otherwise.
+ */
 var parseBool = function (propertyValue) {
-    /// <summary>Parses a string into a boolean value.</summary>
-    /// <param name="propertyValue">Value to parse.</param>
-    /// <returns type="Boolean">true if the property value is 'true'; false otherwise.</returns>
 
     if (typeof propertyValue === "boolean") {
         return propertyValue;
@@ -851,11 +881,12 @@ var parseBool = function (propertyValue) {
 // 8     - everything else (presumably offset information)
 var parseDateTimeRE = /^(-?\d{4,})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?(?:\.(\d+))?(.*)$/;
 
+/** Parses a string into a DateTime value.
+ * @param {String} value - Value to parse.
+ * @param {Boolean} withOffset - Whether offset is expected.
+ * @returns {Date} The parsed value.
+ */
 var parseDateTimeMaybeOffset = function (value, withOffset, nullOnError) {
-    /// <summary>Parses a string into a DateTime value.</summary>
-    /// <param name="value" type="String">Value to parse.</param>
-    /// <param name="withOffset" type="Boolean">Whether offset is expected.</param>
-    /// <returns type="Date">The parsed value.</returns>
 
     // We cannot parse this in cases of failure to match or if offset information is specified.
     var parts = parseDateTimeRE.exec(value);
@@ -935,10 +966,11 @@ var parseDateTimeMaybeOffset = function (value, withOffset, nullOnError) {
     return result;
 };
 
+/** Parses a string into a Date object.
+ * @param {String} propertyValue - Value to parse.
+ * @returns {Date} The parsed with year, month, day set, time values are set to 0
+ */
 var parseDate = function (propertyValue, nullOnError) {
-    /// <summary>Parses a string into a Date object.</summary>
-    /// <param name="propertyValue" type="String">Value to parse.</param>
-    /// <returns type="Date">The parsed with year, month, day set, time values are set to 0</returns>
     var parts = propertyValue.split('-');
 
     if (parts.length != 3 && nullOnError) {
@@ -967,16 +999,18 @@ var parseTimeOfDay = function (propertyValue, nullOnError) {
      };
 };
 
+/** Parses a string into a DateTimeOffset value.
+ * @param {String} propertyValue - Value to parse.
+ * @returns {Date} The parsed value.
+
+
+ * The resulting object is annotated with an __edmType property and
+ * an __offset property reflecting the original intended offset of
+ * the value. The time is adjusted for UTC time, as the current
+ * timezone-aware Date APIs will only work with the local timezone.
+ */
 var parseDateTimeOffset = function (propertyValue, nullOnError) {
-    /// <summary>Parses a string into a DateTimeOffset value.</summary>
-    /// <param name="propertyValue" type="String">Value to parse.</param>
-    /// <returns type="Date">The parsed value.</returns>
-    /// <remarks>
-    /// The resulting object is annotated with an __edmType property and
-    /// an __offset property reflecting the original intended offset of
-    /// the value. The time is adjusted for UTC time, as the current
-    /// timezone-aware Date APIs will only work with the local timezone.
-    /// </remarks>
+    
 
     return parseDateTimeMaybeOffset(propertyValue, true, nullOnError);
 };
@@ -993,13 +1027,14 @@ var isEdmDurationValue = function(value) {
     parseTimeRE.test(value);
 };
 
+/** Parses a string in xsd:duration format.
+ * @param {String} duration - Duration value.
+
+ * This method will throw an exception if the input string has a year or a month component.
+
+ * @returns {Object} Object representing the time
+ */
 var parseDuration = function (duration) {
-    /// <summary>Parses a string in xsd:duration format.</summary>
-    /// <param name="duration" type="String">Duration value.</param>
-    /// <remarks>
-    /// This method will throw an exception if the input string has a year or a month component.
-    /// </remarks>
-    /// <returns type="Object">Object representing the time</returns>
 
     var parts = parseTimeRE.exec(duration);
 
@@ -1048,13 +1083,11 @@ var parseDuration = function (duration) {
     return result;
 };
 
+/** Parses a timezone description in (+|-)nn:nn format.
+ * @param {String} timezone - Timezone offset.
+ * @returns {Object} An object with a (d)irection property of 1 for + and -1 for -, offset (h)ours and offset (m)inutes.
+ */
 var parseTimezone = function (timezone) {
-    /// <summary>Parses a timezone description in (+|-)nn:nn format.</summary>
-    /// <param name="timezone" type="String">Timezone offset.</param>
-    /// <returns type="Object">
-    /// An object with a (d)irection property of 1 for + and -1 for -,
-    /// offset (h)ours and offset (m)inutes.
-    /// </returns>
 
     var direction = timezone.substring(0, 1);
     direction = (direction === "+") ? 1 : -1;
@@ -1064,11 +1097,12 @@ var parseTimezone = function (timezone) {
     return { d: direction, h: offsetHours, m: offsetMinutes };
 };
 
+/** Prepares a request object so that it can be sent through the network.
+* @param request - Object that represents the request to be sent.
+* @param handler - Handler for data serialization
+* @param context - Context used for preparing the request
+*/
 var prepareRequest = function (request, handler, context) {
-    /// <summary>Prepares a request object so that it can be sent through the network.</summary>
-    /// <param name="request">Object that represents the request to be sent.</param>
-    /// <param name="handler">Handler for data serialization</param>
-    /// <param name="context">Context used for preparing the request</param>
 
     // Default to GET if no method has been specified.
     if (!request.method) {
@@ -1099,14 +1133,13 @@ var prepareRequest = function (request, handler, context) {
 
 };
 
+/** Traverses a tree of objects invoking callback for every value.
+ * @param {Object} item - Object or array to traverse.
+ * @param {Function} callback - Callback function with key and value, similar to JSON.parse reviver.
+ * @returns {Object} The object with traversed properties.
+ Unlike the JSON reviver, this won't delete null members.</remarks>
+*/
 var traverseInternal = function (item, owner, callback) {
-    /// <summary>Traverses a tree of objects invoking callback for every value.</summary>
-    /// <param name="item" type="Object">Object or array to traverse.</param>
-    /// <param name="callback" type="Function">
-    /// Callback function with key and value, similar to JSON.parse reviver.
-    /// </param>
-    /// <returns type="Object">The object with traversed properties.</returns>
-    /// <remarks>Unlike the JSON reviver, this won't delete null members.</remarks>
 
     if (item && typeof item === "object") {
         for (var name in item) {
@@ -1126,14 +1159,13 @@ var traverseInternal = function (item, owner, callback) {
     return item;
 };
 
+/** Traverses a tree of objects invoking callback for every value.
+ * @param {Object} item - Object or array to traverse.
+ * @param {Function} callback - Callback function with key and value, similar to JSON.parse reviver.
+ * @returns {Object} The traversed object.
+ * Unlike the JSON reviver, this won't delete null members.</remarks>
+*/
 var traverse = function (item, callback) {
-    /// <summary>Traverses a tree of objects invoking callback for every value.</summary>
-    /// <param name="item" type="Object">Object or array to traverse.</param>
-    /// <param name="callback" type="Function">
-    /// Callback function with key and value, similar to JSON.parse reviver.
-    /// </param>
-    /// <returns type="Object">The traversed object.</returns>
-    /// <remarks>Unlike the JSON reviver, this won't delete null members.</remarks>
 
     return callback("", traverseInternal(item, "", callback));
 };

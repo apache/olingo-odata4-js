@@ -29,11 +29,13 @@ var mechanisms = {
 
 exports.defaultStoreMechanism = "best";
 
+/** Creates a new store object.
+ * @param {String} name - Store name.
+ * @param {String} [mechanism] - 
+ * @returns {Object} Store object.
+*/
 exports.createStore = function (name, mechanism) {
-    /// <summary>Creates a new store object.</summary>
-    /// <param name="name" type="String">Store name.</param>
-    /// <param name="mechanism" type="String" optional="true">A specific mechanism to use (defaults to best, can be "best", "dom", "indexeddb", "webdb").</param>
-    /// <returns type="Object">Store object.</returns>
+
 
     if (!mechanism) {
         mechanism = exports.defaultStoreMechanism;

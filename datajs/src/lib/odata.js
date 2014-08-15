@@ -42,11 +42,12 @@ var metadataParser = odataMetadata.metadataParser;
 
 var handlers = [odataJson.jsonHandler, odataHandler.textHandler];
 
+/** Dispatches an operation to handlers.
+ * @param {String} handlerMethod - Name of handler method to invoke.
+ * @param {Object} requestOrResponse - request/response argument for delegated call.
+ * @param {Object} context - context argument for delegated call.
+ */
 var dispatchHandler = function (handlerMethod, requestOrResponse, context) {
-    /// <summary>Dispatches an operation to handlers.</summary>
-    /// <param name="handlerMethod" type="String">Name of handler method to invoke.</param>
-    /// <param name="requestOrResponse" type="Object">request/response argument for delegated call.</param>
-    /// <param name="context" type="Object">context argument for delegated call.</param>
 
     var i, len;
     for (i = 0, len = handlers.length; i < len && !handlers[i][handlerMethod](requestOrResponse, context); i++) {
@@ -57,9 +58,10 @@ var dispatchHandler = function (handlerMethod, requestOrResponse, context) {
     }
 };
 
+/** Default success handler for OData.
+ * @param data - Data to process.
+ */
 exports.defaultSuccess = function (data) {
-    /// <summary>Default success handler for OData.</summary>
-    /// <param name="data">Data to process.</param>
 
     window.alert(window.JSON.stringify(data));
 };
@@ -67,20 +69,23 @@ exports.defaultSuccess = function (data) {
 exports.defaultError = throwErrorCallback;
 
 exports.defaultHandler = {
+
+        /** Reads the body of the specified response by delegating to JSON handlers.
+        * @param response - Response object.
+        * @param context - Operation context.
+        */
         read: function (response, context) {
-            /// <summary>Reads the body of the specified response by delegating to JSON handlers.</summary>
-            /// <param name="response">Response object.</param>
-            /// <param name="context">Operation context.</param>
 
             if (response && assigned(response.body) && response.headers["Content-Type"]) {
                 dispatchHandler("read", response, context);
             }
         },
 
+        /** Write the body of the specified request by delegating to JSON handlers.
+        * @param request - Reques tobject.
+        * @param context - Operation context.
+        */
         write: function (request, context) {
-            /// <summary>Write the body of the specified request by delegating to JSON handlers.</summary>
-            /// <param name="request">Reques tobject.</param>
-            /// <param name="context">Operation context.</param>
 
             dispatchHandler("write", request, context);
         },
@@ -91,14 +96,15 @@ exports.defaultHandler = {
 
 exports.defaultMetadata = []; //TODO check why is the defaultMetadata an Array? and not an Object.
 
+/** Reads data from the specified URL.
+ * @param urlOrRequest - URL to read data from.
+ * @param {Function} [success] - 
+ * @param {Function} [error] - 
+ * @param {Object} [handler] - 
+ * @param {Object} [httpClient] - 
+ * @param {Object} [metadata] - 
+ */
 exports.read = function (urlOrRequest, success, error, handler, httpClient, metadata) {
-    /// <summary>Reads data from the specified URL.</summary>
-    /// <param name="urlOrRequest">URL to read data from.</param>
-    /// <param name="success" type="Function" optional="true">Callback for a successful read operation.</param>
-    /// <param name="error" type="Function" optional="true">Callback for handling errors.</param>
-    /// <param name="handler" type="Object" optional="true">Handler for data serialization.</param>
-    /// <param name="httpClient" type="Object" optional="true">HTTP client layer.</param>
-    /// <param name="metadata" type="Object" optional="true">Conceptual metadata for this request.</param>
 
     var request;
     if (urlOrRequest instanceof String || typeof urlOrRequest === "string") {
@@ -110,14 +116,15 @@ exports.read = function (urlOrRequest, success, error, handler, httpClient, meta
     return exports.request(request, success, error, handler, httpClient, metadata);
 };
 
+/** Sends a request containing OData payload to a server.
+ * @param {Object} request - Object that represents the request to be sent.
+ * @param {Function} [success] - 
+ * @param {Function} [error] - 
+ * @param {Object} [handler] - 
+ * @param {Object} [httpClient] - 
+ * @param {Object} [metadata] - 
+ */
 exports.request = function (request, success, error, handler, httpClient, metadata) {
-    /// <summary>Sends a request containing OData payload to a server.</summary>
-    /// <param name="request" type="Object">Object that represents the request to be sent.</param>
-    /// <param name="success" type="Function" optional="true">Callback for a successful read operation.</param>
-    /// <param name="error" type="Function" optional="true">Callback for handling errors.</param>
-    /// <param name="handler" type="Object" optional="true">Handler for data serialization.</param>
-    /// <param name="httpClient" type="Object" optional="true">HTTP client layer.</param>
-    /// <param name="metadata" type="Object" optional="true">Conceptual metadata for this request.</param>
 
     success = success || exports.defaultSuccess;
     error = error || exports.defaultError;
@@ -155,10 +162,11 @@ exports.request = function (request, success, error, handler, httpClient, metada
 
 };
 
+/** Parses the csdl metadata to DataJS metatdata format. This method can be used when the metadata is retrieved using something other than DataJS
+ * @param {string} csdlMetadata - A string that represents the entire csdl metadata.
+ * @returns {Object} An object that has the representation of the metadata in Datajs format.
+ */
 exports.parseMetadata = function (csdlMetadataDocument) {
-    /// <summary>Parses the csdl metadata to DataJS metatdata format. This method can be used when the metadata is retrieved using something other than DataJS</summary>
-    /// <param name="csdlMetadata" type="string">A string that represents the entire csdl metadata.</param>
-    /// <returns type="Object">An object that has the representation of the metadata in Datajs format.</returns>
 
     return metadataParser(null, csdlMetadataDocument);
 };

@@ -31,11 +31,12 @@ var IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || {};
 var IDBT_READ_ONLY = IDBTransaction.READ_ONLY || "readonly";
 var IDBT_READ_WRITE = IDBTransaction.READ_WRITE || "readwrite";
 
+/** Returns either a specific error handler or the default error handler
+ * @param {Function} error - The specific error handler
+ * @param {Function} defaultError - The default error handler
+ * @returns {Function} The error callback
+ */
 var getError = function (error, defaultError) {
-    /// <summary>Returns either a specific error handler or the default error handler</summary>
-    /// <param name="error" type="Function">The specific error handler</param>
-    /// <param name="defaultError" type="Function">The default error handler</param>
-    /// <returns type="Function">The error callback</returns>
 
     return function (e) {
         var errorFunc = error || defaultError;
@@ -64,11 +65,12 @@ var getError = function (error, defaultError) {
     };
 };
 
+/** Opens the store object's indexed db database.
+ * @param {IndexedDBStore} store - The store object
+ * @param {Function} success - The success callback
+ * @param {Function} error - The error callback
+ */
 var openStoreDb = function (store, success, error) {
-    /// <summary>Opens the store object's indexed db database.</summary>
-    /// <param name="store" type="IndexedDBStore">The store object</param>
-    /// <param name="success" type="Function">The success callback</param>
-    /// <param name="error" type="Function">The error callback</param>
 
     var storeName = store.name;
     var dbName = "_datajs_" + storeName;
@@ -117,12 +119,13 @@ var openStoreDb = function (store, success, error) {
     };
 };
 
+/** Opens a new transaction to the store
+ * @param {IndexedDBStore} store - The store object
+ * @param {Short} mode - The read/write mode of the transaction (constants from IDBTransaction)
+ * @param {Function} success - The success callback
+ * @param {Function} error - The error callback
+ */
 var openTransaction = function (store, mode, success, error) {
-    /// <summary>Opens a new transaction to the store</summary>
-    /// <param name="store" type="IndexedDBStore">The store object</param>
-    /// <param name="mode" type="Short">The read/write mode of the transaction (constants from IDBTransaction)</param>
-    /// <param name="success" type="Function">The success callback</param>
-    /// <param name="error" type="Function">The error callback</param>
 
     var storeName = store.name;
     var storeDb = store.db;
@@ -139,17 +142,19 @@ var openTransaction = function (store, mode, success, error) {
     }, errorCallback);
 };
 
+/** Creates a new IndexedDBStore.
+ * @param {String} name - The name of the store.
+ * @returns {Object} The new IndexedDBStore.
+ */
 var IndexedDBStore = function (name) {
-    /// <summary>Creates a new IndexedDBStore.</summary>
-    /// <param name="name" type="String">The name of the store.</param>
-    /// <returns type="Object">The new IndexedDBStore.</returns>
     this.name = name;
 };
 
+/** Creates a new IndexedDBStore.
+ * @param {String} name - The name of the store.
+ * @returns {Object} The new IndexedDBStore.
+ */
 IndexedDBStore.create = function (name) {
-    /// <summary>Creates a new IndexedDBStore.</summary>
-    /// <param name="name" type="String">The name of the store.</param>
-    /// <returns type="Object">The new IndexedDBStore.</returns>
     if (IndexedDBStore.isSupported()) {
         return new IndexedDBStore(name);
     }
@@ -157,18 +162,20 @@ IndexedDBStore.create = function (name) {
     throw { message: "IndexedDB is not supported on this browser" };
 };
 
+/** Returns whether IndexedDB is supported.
+ * @returns {Boolean} True if IndexedDB is supported, false otherwise.
+ */
 IndexedDBStore.isSupported = function () {
-    /// <summary>Returns whether IndexedDB is supported.</summary>
-    /// <returns type="Boolean">True if IndexedDB is supported, false otherwise.</returns>
     return !!indexedDB;
 };
 
+/** Adds a key/value pair to the store
+ * @param {String} key - The key
+ * @param {Object} value - The value
+ * @param {Function} success - The success callback
+ * @param {Function} error - The error callback
+*/
 IndexedDBStore.prototype.add = function (key, value, success, error) {
-    /// <summary>Adds a key/value pair to the store</summary>
-    /// <param name="key" type="String">The key</param>
-    /// <param name="value" type="Object">The value</param>
-    /// <param name="success" type="Function">The success callback</param>
-    /// <param name="error" type="Function">The error callback</param>
     var name = this.name;
     var defaultError = this.defaultError;
     var keys = [];
@@ -198,12 +205,13 @@ IndexedDBStore.prototype.add = function (key, value, success, error) {
     }, error);
 };
 
+/** Adds or updates a key/value pair in the store
+ * @param {String} key - The key
+ * @param {Object} value - The value
+ * @param {Function} success - The success callback
+ * @param {Function} error - The error callback
+ */
 IndexedDBStore.prototype.addOrUpdate = function (key, value, success, error) {
-    /// <summary>Adds or updates a key/value pair in the store</summary>
-    /// <param name="key" type="String">The key</param>
-    /// <param name="value" type="Object">The value</param>
-    /// <param name="success" type="Function">The success callback</param>
-    /// <param name="error" type="Function">The error callback</param>
     var name = this.name;
     var defaultError = this.defaultError;
     var keys = [];
@@ -234,10 +242,11 @@ IndexedDBStore.prototype.addOrUpdate = function (key, value, success, error) {
     }, error);
 };
 
+/** Clears the store
+ * @param {Function} success - The success callback
+ * @param {Function} error - The error callback
+ */
 IndexedDBStore.prototype.clear = function (success, error) {
-    /// <summary>Clears the store</summary>
-    /// <param name="success" type="Function">The success callback</param>
-    /// <param name="error" type="Function">The error callback</param>
     var name = this.name;
     var defaultError = this.defaultError;
     openTransaction(this, IDBT_READ_WRITE, function (transaction) {
@@ -251,18 +260,20 @@ IndexedDBStore.prototype.clear = function (success, error) {
 };
 
 IndexedDBStore.prototype.close = function () {
-    /// <summary>Closes the connection to the database</summary>
+    /** Closes the connection to the database
+    */
     if (this.db) {
         this.db.close();
         this.db = null;
     }
 };
 
+/** Returns whether the store contains a key
+ * @param {String} key - The key
+ * @param {Function} success - The success callback
+ * @param {Function} error - The error callback
+ */
 IndexedDBStore.prototype.contains = function (key, success, error) {
-    /// <summary>Returns whether the store contains a key</summary>
-    /// <param name="key" type="String">The key</param>
-    /// <param name="success" type="Function">The success callback</param>
-    /// <param name="error" type="Function">The error callback</param>
     var name = this.name;
     var defaultError = this.defaultError;
     openTransaction(this, IDBT_READ_ONLY, function (transaction) {
@@ -278,10 +289,11 @@ IndexedDBStore.prototype.contains = function (key, success, error) {
 
 IndexedDBStore.prototype.defaultError = throwErrorCallback;
 
+/** Gets all the keys from the store
+ * @param {Function} success - The success callback
+ * @param {Function} error - The error callback
+ */
 IndexedDBStore.prototype.getAllKeys = function (success, error) {
-    /// <summary>Gets all the keys from the store</summary>
-    /// <param name="success" type="Function">The success callback</param>
-    /// <param name="error" type="Function">The error callback</param>
     var name = this.name;
     var defaultError = this.defaultError;
     openTransaction(this, IDBT_READ_WRITE, function (transaction) {
@@ -305,15 +317,17 @@ IndexedDBStore.prototype.getAllKeys = function (success, error) {
     }, error);
 };
 
-/// <summary>Identifies the underlying mechanism used by the store.</summary>
+/** Identifies the underlying mechanism used by the store.
+*/
 IndexedDBStore.prototype.mechanism = "indexeddb";
 
+/** Reads the value for the specified key
+ * @param {String} key - The key
+ * @param {Function} success - The success callback
+ * @param {Function} error - The error callback
+ * If the key does not exist, the success handler will be called with value = undefined
+ */
 IndexedDBStore.prototype.read = function (key, success, error) {
-    /// <summary>Reads the value for the specified key</summary>
-    /// <param name="key" type="String">The key</param>
-    /// <param name="success" type="Function">The success callback</param>
-    /// <param name="error" type="Function">The error callback</param>
-    /// <remarks>If the key does not exist, the success handler will be called with value = undefined</remarks>
     var name = this.name;
     var defaultError = this.defaultError;
     var keys = (key instanceof Array) ? key : [key];
@@ -342,11 +356,13 @@ IndexedDBStore.prototype.read = function (key, success, error) {
     }, error);
 };
 
+/** Removes the specified key from the store
+ * @param {String} key - The key
+ * @param {Function} success - The success callback
+ * @param {Function} error - The error callback
+ */
 IndexedDBStore.prototype.remove = function (key, success, error) {
-    /// <summary>Removes the specified key from the store</summary>
-    /// <param name="key" type="String">The key</param>
-    /// <param name="success" type="Function">The success callback</param>
-    /// <param name="error" type="Function">The error callback</param>
+
     var name = this.name;
     var defaultError = this.defaultError;
     var keys = (key instanceof Array) ? key : [key];
@@ -365,12 +381,13 @@ IndexedDBStore.prototype.remove = function (key, success, error) {
     }, error);
 };
 
+/** Updates a key/value pair in the store
+ * @param {String} key - The key
+ * @param {Object} value - The value
+ * @param {Function} success - The success callback
+ * @param {Function} error - The error callback
+ */
 IndexedDBStore.prototype.update = function (key, value, success, error) {
-    /// <summary>Updates a key/value pair in the store</summary>
-    /// <param name="key" type="String">The key</param>
-    /// <param name="value" type="Object">The value</param>
-    /// <param name="success" type="Function">The success callback</param>
-    /// <param name="error" type="Function">The error callback</param>
     var name = this.name;
     var defaultError = this.defaultError;
     var keys = [];
