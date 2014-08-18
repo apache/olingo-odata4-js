@@ -17,21 +17,29 @@
  * under the License.
  */
 
+/** @module datajs/deferred */
+
+/** createDeferred (see {@link createDeferred}) */
+exports.createDeferred = createDeferred;
+/** DjsDeferred (see {@link DjsDeferred}) */
+exports.DjsDeferred = DjsDeferred;
+
 /** Creates a new function to forward a call.
  * @param {Object} thisValue - Value to use as the 'this' object.
  * @param {String} name - Name of function to forward to.
  * @param {Object} returnValue - Return value for the forward call (helps keep identity when chaining calls).
  * @returns {Function} A new function that will forward a call.
  */
-var forwardCall = function (thisValue, name, returnValue) {
+function forwardCall(thisValue, name, returnValue) {
     return function () {
         thisValue[name].apply(thisValue, arguments);
         return returnValue;
     };
-};
+}
 
 /** Initializes a new DjsDeferred object.
- * Compability Note A - Ordering of callbacks through chained 'then' invocations
+ * <ul>
+ * <li> Compability Note A - Ordering of callbacks through chained 'then' invocations <br>
  *
  * The Wiki entry at http://wiki.commonjs.org/wiki/Promises/A
  * implies that .then() returns a distinct object.
@@ -41,8 +49,8 @@ var forwardCall = function (thisValue, name, returnValue) {
  * the jQuery version will fire callbacks in registration
  * order regardless of whether they occur on the result
  * or the original object.
- *
- * Compability Note B - Fulfillment value
+ * </li>
+ * <li>Compability Note B - Fulfillment value <br>
  *
  * The Wiki entry at http://wiki.commonjs.org/wiki/Promises/A
  * implies that the result of a success callback is the
@@ -51,6 +59,8 @@ var forwardCall = function (thisValue, name, returnValue) {
  *
  * For compatibility with http://api.jquery.com/category/deferred-object/
  * we disregard this value instead.
+ * </li></ul>
+ * @class DjsDeferred 
  */
 var DjsDeferred = function () {
     this._arguments = undefined;
@@ -64,9 +74,10 @@ var DjsDeferred = function () {
 DjsDeferred.prototype = {
 
     /** Adds success and error callbacks for this deferred object.
+     * See Compatibility Note A.
+     * @method DjsDeferred#then
      * @param {function} [fulfilledHandler] - Success callback ( may be null)
      * @param {function} [errorHandler] - Error callback ( may be null)
-     * See Compatibility Note A.
      */
     then: function (fulfilledHandler, errorHandler) {
 
@@ -101,8 +112,9 @@ DjsDeferred.prototype = {
         return this;
     },
 
-   /** Invokes success callbacks for this deferred object.
-     *All arguments are forwarded to success callbacks.
+    /** Invokes success callbacks for this deferred object.
+     * All arguments are forwarded to success callbacks.
+     * @method DjsDeferred#resolve
      */
     resolve: function (/* args */) {
         if (this._done) {
@@ -128,6 +140,7 @@ DjsDeferred.prototype = {
 
     /** Invokes error callbacks for this deferred object.
      * All arguments are forwarded to error callbacks.
+     * @method DjsDeferred#reject
      */
     reject: function (/* args */) {
         
@@ -147,8 +160,10 @@ DjsDeferred.prototype = {
     },
 
     /** Returns a version of this object that has only the read-only methods available.
+     * @method DjsDeferred#promise
      * @returns An object with only the promise object.
      */
+
     promise: function () {
         var result = {};
         result.then = forwardCall(this, "then", result);
@@ -159,9 +174,7 @@ DjsDeferred.prototype = {
 /** Creates a deferred object.
  * @returns {DjsDeferred} A new deferred object. If jQuery is installed, then a jQueryDeferred object is returned, which provides a superset of features.
 */
-var createDeferred = function () {
-
-
+function createDeferred() {
     if (window.jQuery && window.jQuery.Deferred) {
         return new window.jQuery.Deferred();
     } else {
@@ -169,6 +182,5 @@ var createDeferred = function () {
     }
 };
 
-exports.createDeferred = createDeferred;
-exports.DjsDeferred = DjsDeferred;
+
 

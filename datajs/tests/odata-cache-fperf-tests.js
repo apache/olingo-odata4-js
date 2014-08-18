@@ -43,19 +43,18 @@
     });
 
     var cacheReadRangeWallClockTest = function (totalReads, interval, mechanism, source, pageSize, prefetchSize, generateRange, threshold) {
-        /// <summary>Cache readRange wall-clock test</summary>
-        /// <remarks>
-        /// The average time computed by the wall-clock test does *not* include the initial readRange
-        /// </remarks>
-        /// <param name="totalReads">Number of reads to collect data from</param>
-        /// <param name="interval">Interval (milliseconds) between reads</param>
-        /// <param name="mechanism">The cache store mechanism</param>
-        /// <param name="source">The feed source</param>
-        /// <param name="pageSize">The page size</param>
-        /// <param name="prefetchSize">The prefetch size</param>
-        /// <param name="generateRange">The range generator function: given the read index, returns the readRange index and count</param>
-        /// <param name="threshold">The average read time threshold for test to pass; if not specified, defaults to the slowHttpClient latency</param>
-        /// <returns>The test function</param>
+        /** Cache readRange wall-clock test
+         * The average time computed by the wall-clock test does *not* include the initial readRange
+         * @param totalReads - Number of reads to collect data from
+         * @param interval - Interval (milliseconds) between reads
+         * @param mechanism - The cache store mechanism
+         * @param source - The feed source
+         * @param pageSize - The page size
+         * @param prefetchSize - The prefetch size
+         * @param generateRange - The range generator function: given the read index, returns the readRange index and count
+         * @param threshold - The average read time threshold for test to pass; if not specified, defaults to the slowHttpClient latency
+         * @returns The test function
+         */
         return function () {
             var cache = datajs.cache.createDataCache({ name: "cache" + new Date().valueOf(), source: source, pageSize: pageSize, prefetchSize: prefetchSize });
             var totalTime = 0;

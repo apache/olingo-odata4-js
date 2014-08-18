@@ -64,8 +64,9 @@ var init = function (window, undefined) {
     httpClient.async = false;
 
     httpClient.clear = function () {
-        /// <summary>Clears all registered responses and verifiers.</summary>
-        /// <returns>this client.</returns>
+        /** Clears all registered responses and verifiers.
+         * @returns this client
+         */
         responses = {};
         requestVerifiers = {};
         this.async = false;

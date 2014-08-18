@@ -24,9 +24,10 @@ var init = function (window) {
     djstest.indexedDB = window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.indexedDB;
 
     djstest.cleanStoreOnIndexedDb = function (storeObjects, done) {
-        /// <summary>Cleans all the test data saved in the IndexedDb database.</summary>
-        /// <param name="storeNames" type="Array">Array of store objects with a property that is the name of the store</param>
-        /// <param name="done" type="Function">Callback function</param>
+        /** Cleans all the test data saved in the IndexedDb database.
+         * @param {Array} storeNames - Array of store objects with a property that is the name of the store
+         * @param {Function} done - Callback function
+         */
 
         var IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || {};
 
@@ -99,22 +100,25 @@ var init = function (window) {
     };
 
     djstest.Job = function () {
-        /// <summary>Constructs a Job object that allows for enqueuing and synchronizing the execution of functions.</summary>
-        /// <returns type="Object">Job object</returns>
+        /** Constructs a Job object that allows for enqueuing and synchronizing the execution of functions.
+         * @returns {Object} Job object
+         */
         var currentTask = -1;
         var tasks = [];
 
         var failedTasks = 0;
 
         this.queue = function (fn) {
-            /// <summary>Adds a function to the job queue regardless if the queue is already executing or not.</summary>
-            /// <param name="fn" type="Function">Function to execute.</param>
+            /** Adds a function to the job queue regardless if the queue is already executing or not.
+             * @param {Function} fn - Function to execute.
+             */
             tasks.push(fn);
         };
 
         this.queueNext = function (fn) {
-            /// <summary>Adds a function to the front of the job queue regardless if the queue is already executing or not.</summary>
-            /// <param name="fn" type="Function">Function to execute.</param>
+            /** Adds a function to the front of the job queue regardless if the queue is already executing or not.
+             * @param {Function} fn - Function to execute.
+             */
             if (currentTask < 0) {
                 tasks.unshift(fn);
             } else {
@@ -123,11 +127,11 @@ var init = function (window) {
         };
 
         this.run = function (done) {
-            /// <summary>Starts the execution of this job.</summary>
-            /// <param name="done" type="Function">Callback invoked when the job has finished executing all of its enqueued tasks.</param>
-            /// <remarks>
+            /** Starts the execution of this job.
+             * @param {Function} done - Callback invoked when the job has finished executing all of its enqueued tasks.
+            */
             /// This method does nothing if called on a unit of work that is already executing.
-            /// </remarks>
+            
 
             if (currentTask >= 0) {
                 return;
@@ -154,7 +158,8 @@ var init = function (window) {
             };
 
             var runNextTask = function () {
-                /// <summary>Executes the next function in the queue.</summary>
+                /** Executes the next function in the queue.
+                */
                 defer(function () {
                     try {
                         tasks[currentTask](makeTaskDoneCallBack(false), makeTaskDoneCallBack(true));
@@ -170,14 +175,16 @@ var init = function (window) {
     };
 
     var defer = function (fn) {
-        /// <summary>Defers the execution of an arbitrary function that takes no parameters.</summary>
-        /// <param name="fn" type="Function">Function to schedule for later execution.</param>
+        /** Defers the execution of an arbitrary function that takes no parameters.
+         * @param {Function} fn - Function to schedule for later execution.
+         */
         setTimeout(fn, 0);
     }
 
     var exposeDateValues = function (data) {
-        /// <summary>Exposes date values for Date objects to facilitate debugging</summary>
-        /// <param name="data" type="Object">The object to operate on</param>
+        /** Exposes date values for Date objects to facilitate debugging
+         * @param {Object} data - The object to operate on
+         */
         if (typeof data === "object") {
             if (data instanceof Date) {
                 data["__date__"] = data.toUTCString();
@@ -193,10 +200,10 @@ var init = function (window) {
     }
 
     var extractFunctionName = function (text) {
-        /// <summary>Determines the name of a function.</summary>
-        /// <param name="text" type="String">Function text.</param>
-        /// <returns type="String">The name of the function from text if found; the original text otherwise.</returns>
-
+        /** Determines the name of a function.
+         * @param {String} text - Function text.
+         * @returns {String} The name of the function from text if found; the original text otherwise.
+         */
         var index = text.indexOf("function ");
         if (index < 0) {
             return text;
@@ -217,9 +224,9 @@ var init = function (window) {
     };
 
     var removeMetadata = function (data) {
-        /// <summary>Removes metadata annotations from the specified object.</summary>
-        /// <param name="data">Object to remove metadata from; possibly null.</param>
-
+        /** Removes metadata annotations from the specified object.
+         * @param data - Object to remove metadata from; possibly null.
+         */
         if (typeof data === "object" && data !== null) {
             delete data["__metadata"];
             for (prop in data) {
@@ -229,8 +236,9 @@ var init = function (window) {
     };
 
     djstest.addFullTest = function (disable, fn, name, arg, timeout) {
-        /// <summary>Add the unit test cases</summary>
-        /// <param name="disable">Indicate whether this test case should be disabled</param>
+        /** Add the unit test cases
+         * @param disable - Indicate whether this test case should be disabled
+        */
         if (disable != true) {
             djstest.addTest(fn, name, arg, timeout);
         }
@@ -254,19 +262,22 @@ var init = function (window) {
     };
 
     djstest.assert = function (test, message) {
-        /// <summary>Asserts that a condition is true.</summary>
-        /// <param name="test" type="Boolean">Condition to test.</param>
-        /// <param name="message" type="String">Text message for condition being tested.</param>
+        /** Asserts that a condition is true.
+         * @param {Boolean} test - Condition to test.
+         * @param {String} message - Text message for condition being tested.
+         */
         QUnit.ok(test, message);
     };
 
     djstest.assertAreEqual = function (actual, expected, message) {
-        /// <summary>Asserts that the values of the expected and actualobjects are equal.</summary>
+        /** Asserts that the values of the expected and actualobjects are equal.
+        */
         QUnit.equal(actual, expected, message);
     };
 
     djstest.assertAreEqualDeep = function (actual, expected, message) {
-        /// <summary>Asserts that the actual and expected objects are the same.</summary>
+        /** Asserts that the actual and expected objects are the same.
+        */
         QUnit.deepEqual(exposeDateValues(actual), exposeDateValues(expected), message);
     };
 
@@ -277,11 +288,12 @@ var init = function (window) {
     };
 
     djstest.asyncDo = function (asyncActions, done) {
-        /// <summary>Calls each async action in asyncActions, passing each action a function which keeps a count and
-        /// calls the passed done function when all async actions complete.</summary>
-        /// <param name="asyncActions" type="Array">Array of asynchronous actions to be executed, 
-        /// each taking a single parameter - the callback function to call when the action is done.</param>
-        /// <param name="done" type="Function">Function to be executed in the last async action to complete.</param>
+        /** Calls each async action in asyncActions, passing each action a function which keeps a count and
+         * calls the passed done function when all async actions complete
+         * @param {Array} asyncActions -Array of asynchronous actions to be executed, 
+         * each taking a single parameter - the callback function to call when the action is done.</param>
+         * @param {Function} done - Function to be executed in the last async action to complete.
+         */
         var count = 0;
         var doneOne = function () {
             count++;
@@ -300,13 +312,15 @@ var init = function (window) {
     }
 
     djstest.clone = function (object) {
-        /// <summary>Makes a deep copy of an object.</summary>
+        /** Makes a deep copy of an object.
+        */
         return $.extend(true, {}, object);
     };
 
     djstest.destroyCacheAndDone = function (cache) {
-        /// <summary>Destroys the cache and then completes the test</summary>
-        /// <param name="cache">The cache to destroy</param>
+        /** Destroys the cache and then completes the test
+        * @param cache - The cache to destroy
+        */
         cache.clear().then(function () {
             djstest.done();
         }, function (err) {
@@ -316,12 +330,14 @@ var init = function (window) {
     };
 
     djstest.done = function () {
-        /// <summary>Indicates that the currently running test has finished.</summary>
+        /** Indicates that the currently running test has finished.
+        */
         QUnit.start();
     };
 
     djstest.expectException = function (testFunction, message) {
-        /// <summary>Test passes if and only if an exception is thrown.</summary>
+        /** Test passes if and only if an exception is thrown.
+        */
         try {
             testFunction();
             djstest.fail("Expected exception but function succeeded: " + " " + message);
@@ -333,23 +349,25 @@ var init = function (window) {
     };
 
     djstest.assertsExpected = function (asserts) {
-        /// <summary>Indicates the expected number of asserts, fails test if number is not met.</summary>
-        /// <param name="asserts" type="Number">Number of asserts expected in test.</param>
+        /** Indicates the expected number of asserts, fails test if number is not met.
+         * @param {Number} asserts - Number of asserts expected in test.
+         */
         expect(asserts);
     }
 
     djstest.fail = function (message) {
-        /// <summary>Marks the current test as failed.</summary>
-        /// <param name="message" type="String">Failure message.</param>
+        /** Marks the current test as failed.
+         * @param {String} message - Failure message.
+         */
         QUnit.ok(false, message);
     };
 
     djstest.failAndDoneCallback = function (message, cleanupCallback) {
-        /// <summary>Returns a function that when invoked will fail this test and be done with it.</summary>
-        /// <param name="message" type="String">Failure message.</param>
-        /// <param name="cleanupCallback" type="Function" optional="true">Optional cleanup function in case of failure.</param>
-        /// <returns type="Function">A new function.</returns>
-
+        /** Returns a function that when invoked will fail this test and be done with it.
+         * @param {String} message - Failure message.
+         * @param {Function} [cleanupCallback] - 
+         * @returns {Function} A new function.
+        */
         return function (err) {
             message = "" + message + (err) ? window.JSON.stringify(err) : "";
             djstest.fail(message);
@@ -366,28 +384,32 @@ var init = function (window) {
     };
 
     djstest.log = function (message) {
-        /// <summary>Logs a test message.</summary>
-        /// <param name="message" type="String">Test message.</param>
+        /** Logs a test message.
+         * @param {String} message - Test message.
+         */
         var context = { result: true, actual: true, expected: true, message: message };
         QUnit.log(context);
     };
 
     djstest.pass = function (message) {
-        /// <summary>Marks the current test as failed.</summary>
-        /// <param name="message" type="String">Failure message.</param>
+        /** Marks the current test as failed.
+         * @param {String} message - Failure message.
+         */
         QUnit.ok(true, message);
     };
 
     djstest.toString = function (obj) {
-        /// <summary>Dumps the object as a string</summary>
-        /// <param name="obj" type="Object">Object to dump</param>
+        /** Dumps the object as a string
+         * @param {Object} obj - Object to dump
+         */
         return QUnit.jsDump.parse(obj);
     };
 
     djstest.wait = function (fn) {
-        /// <summary>Executes the function, pausing test execution until the callback is called</summary>
-        /// <param name="fn" type="Function">Function to execute; takes one parameter which is the callback</param>
-        /// <remarks>This function is typically used in asynchronous setup/teardown methods</remarks>
+        /** Executes the function, pausing test execution until the callback is called
+         * @param {Function} fn - Function to execute; takes one parameter which is the callback
+         * This function is typically used in asynchronous setup/teardown methods</remarks>
+         */
         QUnit.stop();
         fn(function () {
             QUnit.start();

@@ -41,9 +41,10 @@
     var verifiers = {};
 
     mockXMLHttpRequest.addResponse = function (uri, response) {
-        /// <summary>Adds a new response to be returned for the specified uri (* for 'anything').</summary>
-        /// <param name="uri" type="String">URI to match (* to match anything not otherwise specified).</param>
-        /// <param name="response" type="Object">Response object.</param>
+        /** Adds a new response to be returned for the specified uri (* for 'anything').
+         * @param {String} uri - URI to match (* to match anything not otherwise specified).
+         * @param {Object} response - Response object.
+         */
         responses = responses || {};
         responses[uri] = response;
 
@@ -51,10 +52,10 @@
     };
 
     mockXMLHttpRequest.addRequestVerifier = function (uri, verifier) {
-        /// <summary>Adds a new request verifier to be invoked for the specified uri (* for 'anything').</summary>
-        /// <param name="uri" type="String">URI to match (* to match anything not otherwise specified).</param>
-        /// <param name="response" type="Function">Verifier callback that takes the request.</param>
-
+        /** Adds a new request verifier to be invoked for the specified uri (* for 'anything').
+         * @param {String} uri - URI to match (* to match anything not otherwise specified).
+         * @param {Function} response - Verifier callback that takes the request.
+        */
         verifiers = verifiers || {};
         verifiers[uri] = verifier;
 
@@ -62,7 +63,8 @@
     };
 
     mockXMLHttpRequest.reset = function () {
-        /// <summary>Resets all configuration from the mock XHR object.</summary>
+        /** Resets all configuration from the mock XHR object.
+        */
 
         responses = {};
         verifiers = {};

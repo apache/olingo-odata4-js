@@ -21,14 +21,16 @@
 (function (window, undefined) {
 
     var cleanDomStorage = function () {
-        /// <summary>Cleans all the data saved in the browser's DOM Storage.</summary>
+        /** Cleans all the data saved in the browser's DOM Storage.
+        */
         if (window.localStorage) {
             window.localStorage.clear();
         }
     };
 
     var cleanMemoryStorage = function () {
-        /// <summary>Clean memory storage is a no op.</summary>
+        /** Clean memory storage is a no op.
+        */
     };
 
     var cleanIndexedDbStorage = function () {
@@ -43,27 +45,31 @@
     };
 
     var canCreateMemoryStore = function () {
-        /// <summary>Checks whether memory storage is supported by the browser.</summary>
-        /// <returns type="Boolean">True.</summary>
+        /** Checks whether memory storage is supported by the browser.
+         * @returns {boolean} True
+         */
         return true;
     };
 
     var canCreateDomStore = function () {
-        /// <summary>Checks whether Web Storage (DOM Storage) is supported by the browser.</summary>
-        /// <returns type="Boolean">True if DOM Storage is supported by the browser; false otherwise.</summary>
+        /** Checks whether Web Storage (DOM Storage) is supported by the browser.
+         * @returns {boolean} True if DOM Storage is supported by the browser; false otherwise.
+         */
         return !!window.localStorage;
     };
 
     var canCreateIndexedDb = function () {
-        /// <summary>Checks whether Web Storage (DOM Storage) is supported by the browser.</summary>
-        /// <returns type="Boolean">True if IndexedDB is supported by the browser, false otherwise.</returns>
+        /** Checks whether Web Storage (DOM Storage) is supported by the browser.
+         * @returns {Boolean} True if IndexedDB is supported by the browser, false otherwise.
+         */
         return !!djstest.indexedDB;
     };
 
     var canCreateStore = function (mechanism) {
-        /// <summary>Determines whether a particular mechanism is supported by the browser.</summary>
-        /// <param name="mechanism" type="String">Mechanism name.</param>
-        /// <returns type="Boolean">True if the mechanism is supported by the browser; otherwise false.</summary>
+        /** Determines whether a particular mechanism is supported by the browser.
+         * @param {String} mechanism - Mechanism name.
+         * @returns {Boolean} True if the mechanism is supported by the browser; otherwise false.
+         */
         var implementation = mechanismImplementations[mechanism];
         return implementation && implementation.canCreate();
     }

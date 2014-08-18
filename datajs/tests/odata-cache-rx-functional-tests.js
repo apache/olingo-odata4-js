@@ -44,10 +44,11 @@
     ];
 
     var assertObservables = function (actual, expected, done) {
-        /// <summary>Asserts two finite observables generate the same sequence</summary>
-        /// <param name="actual" type="IObservable">The actual observable</param>
-        /// <param name="expected" type="IObservable">The expected observable</param>
-        /// <param name="done" type="Function">The callback function when asserts are done</param>
+        /** Asserts two finite observables generate the same sequence
+         * @param {IObservable} actual - The actual observable
+         * @param {IObservable} expected - The expected observable
+         * @param {Function} done - The callback function when asserts are done
+         */
         var toArray = function (observable, callback) {
             var arr = [];
             observable.Subscribe(

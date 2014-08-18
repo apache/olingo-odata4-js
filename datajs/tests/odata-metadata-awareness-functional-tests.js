@@ -103,7 +103,8 @@
 
     var serviceMetadata;
     var getMetadata = function (callback) {
-        /// <summary>Common function for tests to get and cache metadata, to reduce network calls made by tests</summary>
+        /** Common function for tests to get and cache metadata, to reduce network calls made by tests
+        */
         if (!serviceMetadata) {
             OData.read(metadataUri, function (metadata) {
                 serviceMetadata = metadata;

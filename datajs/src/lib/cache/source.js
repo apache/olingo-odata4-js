@@ -17,7 +17,7 @@
  * under the License.
  */
 
- /** @module cache_source */
+ /** @module cache/source */
  
 var utils = require("./../datajs.js").utils;
 var odataRequest = require("./../odata.js");
@@ -25,24 +25,25 @@ var odataRequest = require("./../odata.js");
 var parseInt10 = utils.parseInt10;
 var normalizeURICase = utils.normalizeURICase;
 
+/** ODataCacheSource (see {@link ODataCacheSource}) */
+exports.ODataCacheSource = ODataCacheSource;
+
 
 /** Appends the specified escaped query option to the specified URI.
  * @param {String} uri - URI to append option to.
  * @param {String} queryOption - Escaped query option to append.
  */
-var appendQueryOption = function (uri, queryOption) {
+function appendQueryOption(uri, queryOption) {
     var separator = (uri.indexOf("?") >= 0) ? "&" : "?";
     return uri + separator + queryOption;
-};
+}
 
 /** Appends the specified segment to the given URI.
  * @param {String} uri - URI to append a segment to.
  * @param {String} segment - Segment to append.
  * @returns {String} The original URI with a new segment appended.
  */
-var appendSegment = function (uri, segment) {
-
-
+function appendSegment(uri, segment) {
     var index = uri.indexOf("?");
     var queryPortion = "";
     if (index >= 0) {
@@ -54,14 +55,13 @@ var appendSegment = function (uri, segment) {
         uri += "/";
     }
     return uri + segment + queryPortion;
-};
+}
 
 /** Builds a request object to GET the specified URI.
  * @param {String} uri - URI for request.
  * @param {Object} options - Additional options.
  */
-var buildODataRequest = function (uri, options) {
-    
+function buildODataRequest(uri, options) {
     return {
         method: "GET",
         requestUri: uri,
@@ -71,14 +71,14 @@ var buildODataRequest = function (uri, options) {
         callbackParameterName: options.callbackParameterName,
         formatQueryString: options.formatQueryString
     };
-};
+}
 
 /** Finds the index where the value of a query option starts.
  * @param {String} uri - URI to search in.
  * @param {String} name - Name to look for.
  * @returns {Number} The index where the query option starts.
  */
-var findQueryOptionStart = function (uri, name) {
+function findQueryOptionStart(uri, name) {
     var result = -1;
     var queryIndex = uri.indexOf("?");
     if (queryIndex !== -1) {
@@ -91,7 +91,7 @@ var findQueryOptionStart = function (uri, name) {
         }
     }
     return result;
-};
+}
 
 /** Gets data from an OData service.
  * @param {String} uri - URI to the OData service.
@@ -100,10 +100,10 @@ var findQueryOptionStart = function (uri, name) {
  * @param {Function} error - Error callback.
  * @returns {Object} Object with an abort method.
  */
-var queryForData = function (uri, options, success, error) {
+function queryForData (uri, options, success, error) {
     var request = queryForDataInternal(uri, options, {}, success, error);
     return request;
-};
+}
 
 /** Gets data from an OData service taking into consideration server side paging.
  * @param {String} uri - URI to the OData service.
@@ -113,7 +113,7 @@ var queryForData = function (uri, options, success, error) {
  * @param {Function} error - Error callback.
  * @returns {Object} Object with an abort method.
  */
-var queryForDataInternal = function (uri, options, data, success, error) {
+function queryForDataInternal(uri, options, data, success, error) {
 
     var request = buildODataRequest(uri, options);
     var currentRequest = odataRequest.request(request, function (newData) {
@@ -149,13 +149,14 @@ var queryForDataInternal = function (uri, options, data, success, error) {
             currentRequest.abort();
         }
     };
-};
+}
 
 /** Creates a data cache source object for requesting data from an OData service.
+ * @class ODataCacheSource
  * @param options - Options for the cache data source.
  * @returns {ODataCacheSource} A new data cache source instance.
  */
-var ODataCacheSource = function (options) {
+function ODataCacheSource (options) {
     var that = this;
     var uri = options.source;
     
@@ -163,6 +164,7 @@ var ODataCacheSource = function (options) {
     that.options = options;
 
     /** Gets the number of items in the collection.
+     * @method ODataCacheSource#count
      * @param {Function} success - Success callback with the item count.
      * @param {Function} error - Error callback.
      * @returns {Object} Request object with an abort method.
@@ -183,11 +185,12 @@ var ODataCacheSource = function (options) {
     };
     
     /** Gets a number of consecutive items from the collection.
+     * @method ODataCacheSource#read
      * @param {Number} index - Zero-based index of the items to retrieve.
      * @param {Number} count - Number of items to retrieve.
      * @param {Function} success - Success callback with the requested items.
      * @param {Function} error - Error callback.
-     * @returns {Object} Request object with an abort method./<param>
+     * @returns {Object} Request object with an abort method.
     */
     that.read = function (index, count, success, error) {
 
@@ -196,6 +199,6 @@ var ODataCacheSource = function (options) {
     };
 
     return that;
-};
+}
 
-exports.ODataCacheSource = ODataCacheSource;
+

@@ -24,8 +24,9 @@
     var northwindFeed = northwindService + "Suppliers";
 
     var countIFrames = function () {
-        /// <summary>Count the number of IFRAMES in the page</summary>
-        /// <returns type="Integer">The number of IFRAMES</returns>
+        /** Count the number of IFRAMES in the page
+         * @returns {Integer} The number of IFRAMES
+         */
         return document.getElementsByTagName("IFRAME").length;
     }
 
@@ -34,7 +35,8 @@
     var originalEnableJsonpCallback = OData.defaultHttpClient.enableJsonpCallback;
 
     var restoreJsonpCallback = function () {
-        /// <summary>Restores OData.defaultHttpClient.enableJsonpCallback to the library default.</summary>
+        /** Restores OData.defaultHttpClient.enableJsonpCallback to the library default.
+        */
         OData.defaultHttpClient.enableJsonpCallback = originalEnableJsonpCallback;
     };
 

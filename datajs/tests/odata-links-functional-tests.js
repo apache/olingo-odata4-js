@@ -27,11 +27,11 @@
     var uriPartNames = ["scheme", "authority", "path", "query", "fragment"];
 
     var getURIInfo = function (uri) {
-        /// <summary>Gets information about the components of the specified URI.</summary>
-        /// <param name="uri" type="String">URI to get information from.</param>
-        /// <returns type="Object">
-        /// An object with an isAbsolute flag and part names (scheme, authority, etc.) if available.
-        /// </returns>
+        /** Gets information about the components of the specified URI.
+         * @param {String} uri - URI to get information from.
+         * @returns {Object}
+         * An object with an isAbsolute flag and part names (scheme, authority, etc.) if available.
+         */
 
         var result = { isAbsolute: false };
 
@@ -54,10 +54,11 @@
     };
 
     var normalizeURI = function (uri, base) {
-        /// <summary>Normalizes a possibly relative URI with a base URI.</summary>
-        /// <param name="uri" type="String">URI to normalize, absolute or relative.</param>
-        /// <param name="base" type="String" mayBeNull="true">Base URI to compose with.</param>
-        /// <returns type="String">The composed URI if relative; the original one if absolute.</returns>
+        /** Normalizes a possibly relative URI with a base URI.
+         * @param {String} uri - URI to normalize, absolute or relative.
+         * @param {String} base - Base URI to compose with (may be null)
+         * @returns {String} The composed URI if relative; the original one if absolute.
+         */
 
         if (!base) {
             return uri;
@@ -104,10 +105,11 @@
     };
 
     var mergeUriPathWithBase = function (uriInfo, baseInfo) {
-        /// <summary>Merges the path of a relative URI and a base URI.</summary>
-        /// <param name="uriInfo">URI component information for the relative URI.</param>
-        /// <param name="baseInfo">URI component information for the base URI.</param>
-        /// <returns type="String">A string with the merged path.</returns>
+        /** Merges the path of a relative URI and a base URI.
+         * @param uriInfo - URI component information for the relative URI.
+         * @param baseInfo - URI component information for the base URI.
+         * @returns {String} A string with the merged path.
+         */
 
         var basePath = "/";
         if (baseInfo.path) {

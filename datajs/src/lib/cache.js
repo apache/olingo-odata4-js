@@ -43,15 +43,11 @@ var getJsonValueArraryLength = utils.getJsonValueArraryLength;
 var sliceJsonValueArray = utils.sliceJsonValueArray;
 var concatJsonValueArray = utils.concatJsonValueArray;
 
-// EXPORTS 
-
 /** estimateSize (see {@link estimateSize}) */
 exports.estimateSize = estimateSize;
 
 /** createDataCache */  
 exports.createDataCache = createDataCache;
-
-
 
 /** Appends a page's data to the operation data.
  * @param {Object} operation - Operation with  (i)ndex, (c)ount and (d)ata.
@@ -382,7 +378,7 @@ function DataCacheOperation(stateMachine, promise, isCancelable, index, count, d
 }
 
 /** Fires a resolved notification as necessary.
- * @method DataCacheOperation.fireResolved
+ * @method DataCacheOperation#fireResolved
  */
 DataCacheOperation.prototype.fireResolved = function () {
 
@@ -395,7 +391,7 @@ DataCacheOperation.prototype.fireResolved = function () {
 };
 
 /** Fires a rejected notification as necessary.
- * @method DataCacheOperation.fireRejected
+ * @method DataCacheOperation#fireRejected
  */
 DataCacheOperation.prototype.fireRejected = function (reason) {
 
@@ -408,7 +404,7 @@ DataCacheOperation.prototype.fireRejected = function (reason) {
 };
 
 /** Fires a canceled notification as necessary.
- * @method DataCacheOperation.fireCanceled
+ * @method DataCacheOperation#fireCanceled
  */
 DataCacheOperation.prototype.fireCanceled = function () {
 
@@ -1440,25 +1436,3 @@ function createDataCache (options) {
 };
 
 
-
-
-
-/** @class */
-function Data() {
-    /**
-     * @type {object}
-     * @property {number} y This will show up as a property of `Data#point`,
-     * but you cannot link to the property as {@link Data#point.y}.
-     */
-    this.point = {
-        /**
-         * The @alias and @memberof! tags force JSDoc to document the
-         * property as `point.x` (rather than `x`) and to be a member of
-         * `Data#`. You can link to the property as {@link Data#point.x}.
-         * @alias point.x
-         * @memberof! Data#
-         */
-        x: 0,
-        y: 1
-    };
-}

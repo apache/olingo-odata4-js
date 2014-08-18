@@ -89,10 +89,10 @@
         };
 
         var callReadRangeRepeatedly = function (index, count, done) {
-            /// <summary>Calls readRange over the whole collection and done when all items have been read.</summary>
-            /// <param name="index" type="Integer">Index to start the read.</param>
-            /// <param name="count" type="String">The count of each readRange.</param>
-            /// <param name="done" type="Function">Function to be called when all items in collection have been read.</param>
+            /** Calls readRange over the whole collection and done when all items have been read.
+             * @param {Integer} index - Index to start the read.
+             * @param {String} count - The count of each readRange.
+             * @param {Function} done - Function to be called when all items in collection have been read.
             var cacheRead = function () {
                 cache.readRange(index, count).then(function () {
                     if (index < itemsInCollection) {

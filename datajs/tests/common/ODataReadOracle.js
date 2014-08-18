@@ -25,10 +25,11 @@
     var universalMime = "*/*";
 
     var readFeed = function (url, success, mimeType, recognizeDates) {
-        /// <summary>Calls the ReadFeed endpoint with the specified URL</summary>
-        /// <param name="url" type="String">The URL to read the feed from</param>
-        /// <param name="success" type="Function">The success callback function</param>
-        /// <param name="mimeType" type="String">The MIME media type in the Accept header</param>
+        /** Calls the ReadFeed endpoint with the specified URL
+         * @param {String} url - The URL to read the feed from
+         * @param {Function} success - The success callback function
+         * @param {String} mimeType - The MIME media type in the Accept header
+         */
         var readMethod = getReadMethod(mimeType);
         oracleRequest("GET", readMethod, typeof url === "string" ? { url: url} : url, mimeType, recognizeDates, function (data) {
             success(data);
@@ -36,18 +37,20 @@
     };
 
     var readEntry = function (url, success, mimeType, recognizeDates) {
-        /// <summary>Calls the ReadEntry endpoint with the specified URL</summary>
-        /// <param name="url" type="String">The URL to read the entry from</param>
-        /// <param name="success" type="Function">The success callback function</param>
-        /// <param name="mimeType" type="String">The MIME media type in the Accept header</param>
+        /** Calls the ReadEntry endpoint with the specified URL
+         * @param {String} url - The URL to read the entry from
+         * @param {Function} success - The success callback function
+         * @param {String} mimeType - The MIME media type in the Accept header
+         */
         var readMethod = getReadMethod(mimeType);
         oracleRequest("GET", readMethod, typeof url === "string" ? { url: url} : url, mimeType, recognizeDates, success);
     };
 
     var readLinksEntry = function (url, success) {
-        /// <summary>Calls the ReadMetadata endpoint with the specified URL</summary>
-        /// <param name="url" type="String">The URL to read the metadata from</param>
-        /// <param name="success" type="Function">The success callback function</param>
+        /** Calls the ReadMetadata endpoint with the specified URL
+         * @param {String} url - The URL to read the metadata from
+         * @param {Function} success - The success callback function
+         */
         readJson(
             url,
             success
@@ -55,9 +58,10 @@
     };
 
     var readLinksFeed = function (url, success) {
-        /// <summary>Calls the ReadMetadata endpoint with the specified URL</summary>
-        /// <param name="url" type="String">The URL to read the metadata from</param>
-        /// <param name="success" type="Function">The success callback function</param>
+        /** Calls the ReadMetadata endpoint with the specified URL
+         * @param {String} url - The URL to read the metadata from
+         * @param {Function} success - The success callback function
+         */
         readJson(
             url,
             function (data) {
@@ -67,17 +71,19 @@
     };
 
     var readMetadata = function (url, success) {
-        /// <summary>Calls the ReadMetadata endpoint with the specified URL</summary>
-        /// <param name="url" type="String">The URL to read the metadata from</param>
-        /// <param name="success" type="Function">The success callback function</param>
+        /** Calls the ReadMetadata endpoint with the specified URL
+         * @param {String} url - The URL to read the metadata from
+         * @param {Function} success - The success callback function
+         */
         oracleRequest("GET", "ReadMetadata", typeof url === "string" ? { url: url} : url, null, null, success);
     };
 
     var readServiceDocument = function (url, success, mimeType) {
-        /// <summary>Calls the ReadServiceDocument endpoint with the specified URL</summary>
-        /// <param name="url" type="String">The URL to the service</param>
-        /// <param name="success" type="Function">The success callback function</param>
-        /// <param name="mimeType" type="String">The MIME type being tested</param>
+        /** Calls the ReadServiceDocument endpoint with the specified URL
+         * @param {String} url - The URL to the service
+         * @param {Function} success - The success callback function
+         * @param {String} mimeType - The MIME type being tested
+         */
         var readMethod = getReadMethod(mimeType);
         oracleRequest("GET", readMethod, typeof url === "string" ? { url: url} : url, mimeType, null, success);
     };
@@ -142,12 +148,13 @@
     };
 
     var oracleRequest = function (method, endpoint, data, mimeType, recognizeDates, success) {
-        /// <summary>Requests a JSON object from the oracle service, removing WCF-specific artifacts</summary>
-        /// <param name="method" type="String">The HTTP method (GET or POST)</param>
-        /// <param name="endpoint" type="String">The oracle endpoint</param>
-        /// <param name="data" type="Object">The data to send with the request</param>
-        /// <param name="reviver" type="Function">The reviver function to run on each deserialized object</param>
-        /// <param name="success" type="Function">Success callback</param>
+        /** Requests a JSON object from the oracle service, removing WCF-specific artifacts
+         * @param {String} method - The HTTP method (GET or POST)
+         * @param {String} endpoint - The oracle endpoint
+         * @param {Object} data - The data to send with the request
+         * @param {Function} reviver - The reviver function to run on each deserialized object
+         * @param {Function} success - Success callback
+         */
         var url = "./common/ODataReadOracle.svc/" + endpoint;
         if (mimeType) {
             data.mimeType = mimeType;
@@ -166,9 +173,10 @@
     };
 
     var removeProperty = function (data, property) {
-        /// <summary>Removes the specified property recursively from the given object</summary>
-        /// <param name="data" type="Object">The object to operate on</param>
-        /// <param name="property" type="String">The name of the property to remove</param>
+        /** Removes the specified property recursively from the given object
+         * @param {Object} data - The object to operate on
+         * @param {String} property - The name of the property to remove
+         */
         if (typeof data === "object" && data !== null) {
             if (data[property]) {
                 delete data[property];

@@ -619,9 +619,10 @@
         };
 
         var removeSafariExceptionProperties = function (err) {
-            /// <summary>Removes Safari-specific properties from an exception object</summary>
-            /// <params name="err" type="Exception">The exception object to operate on</param>
-            /// <returns type="Exception">The original exception object with the Safari-specific properties removed</returns>
+            /** Removes Safari-specific properties from an exception object
+             * @param {Exception} err -The exception object to operate on
+             * @returns {Exception} The original exception object with the Safari-specific properties removed
+             */
             var safariProperties = ["line", "expressionBeginOffset", "expressionEndOffset", "sourceId", "sourceURL"];
 
             var result = {};

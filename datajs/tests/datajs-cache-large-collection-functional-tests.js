@@ -23,9 +23,10 @@
     var itemsInCollection = 2 * 1024 * 1024;
 
     var cleanDomStorage = function (done) {
-        /// <summary>Cleans all the data saved in the browser's DOM Storage. Needs to be called asynchronously in the 
-        /// setup and teardown methods to be consistent with indexedDb's cleanup method.</summary>
-        /// <param name="done" type="Function">Function to be called after DOM storage is cleared.</param>
+        /* Cleans all the data saved in the browser's DOM Storage. Needs to be called asynchronously in the 
+         *  setup and teardown methods to be consistent with indexedDb's cleanup method.
+         * @param {Function} done - Function to be called after DOM storage is cleared.
+         */
         if (window.localStorage) {
             window.localStorage.clear();
         }
@@ -33,8 +34,9 @@
     };
 
     var cleanIndexedDb = function (done) {
-        /// <summary>Cleans all the data saved in the browser's IndexedDb Storage.</summary>
-        /// <param name="done" type="Function">Function to be called after DOM storage is cleared.</param>
+        /** Cleans all the data saved in the browser's IndexedDb Storage.
+         * @param {Function} done - Function to be called after DOM storage is cleared.
+         */
         var caches = this.caches;
 
         djstest.cleanStoreOnIndexedDb(caches, done);
@@ -52,8 +54,9 @@
     };
 
     var cleanupAllStorage = function(done) {
-        /// <summary>Cleans up all available storage mechanisms in the browser.</summary>
-        /// <param name="done" type="Function">Function to be called by each cleanup function after storage is cleared.</param>
+        /** Cleans up all available storage mechanisms in the browser.
+         * @param {Function} done - Function to be called by each cleanup function after storage is cleared.
+         */
         var that = this;
         var storeCleanup = [];
 

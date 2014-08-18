@@ -25,12 +25,13 @@
     };
 
     var fixConstructors = function (obj) {
-        /// <summary>Fix the constructors of the supplied object graph.</summary>
-        /// <remarks>
+        /** Fix the constructors of the supplied object graph.
+        */
+        
         /// When using IE9 or a non-IE browser, the JSONP support in the library creates objects in a separate IFRAME,
         /// causing the constructor property to be different to that of objects created by the oracle. This function
         /// stringifies and then re-parses the object, which fixes the constructors.
-        /// </remarks>
+        
         if (!window.ActiveXObject || window.DOMParser) {
             return window.JSON.parse(window.JSON.stringify(obj));
         } else {

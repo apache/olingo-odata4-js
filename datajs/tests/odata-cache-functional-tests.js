@@ -139,13 +139,14 @@
     };
 
     var validateExpectedRange = function (cache, data, source, skipValue, takeValue, finished) {
-        /// <summary>Validates the data returned by readRange</summary>
-        /// <param name="cache" type="Object">The cache object</param>
-        /// <param name="data" type="Object">The data returned by the cache</param>
-        /// <param name="source" type="Object">The base URI of the feed, or the custom data source</param>
-        /// <param name="skipValue type="Integer">The skip value</param>
-        /// <param name="takeValue" type="Integer">The take value</param>
-        /// <param name="finished" type="Function">Callback function called after data is verified</param>
+        /** Validates the data returned by readRange
+         * @param {Object} cache - The cache object
+         * @param {Object} data - The data returned by the cache
+         * @param {Object} source - The base URI of the feed, or the custom data source
+         * @param {Integer} skipValue - The skip value
+         * @param {Integer} takeValue - The take value
+         * @param {Function} finished - Callback function called after data is verified
+         */
         var assertData = function (expectedData) {
             djstest.assertAreEqualDeep(data, expectedData, "Verify response data");
             finished();
@@ -280,26 +281,29 @@
     };
 
     var cleanDomStorage = function (done) {
-        /// <summary>Cleans all the data saved in the browser's DOM Storage. Needs to be called asynchronously in the 
-        /// setup and teardown methods to be consistent with indexedDb's cleanup method.</summary>
-        /// <param name="done" type="Function">Function to be called after DOM storage is cleared.</param>
-        if (window.localStorage) {
+        /** Cleans all the data saved in the browser's DOM Storage. Needs to be called asynchronously in the 
+         * setup and teardown methods to be consistent with indexedDb's cleanup method.
+         * @param {Function} done - Function to be called after DOM storage is cleared.
+         */
+                 if (window.localStorage) {
             window.localStorage.clear();
         }
         done();
     };
 
     var cleanIndexedDb = function (done) {
-        /// <summary>Cleans all the data saved in the browser's IndexedDb Storage.</summary>
-        /// <param name="done" type="Function">Function to be called after indexedDb is cleared.</param>
+        /** Cleans all the data saved in the browser's IndexedDb Storage.
+         * @param {Function} done - Function to be called after indexedDb is cleared.
+         */
         var caches = this.caches;
 
         djstest.cleanStoreOnIndexedDb(caches, done);
     };
 
     var cleanupAllStorage = function (done) {
-        /// <summary>Cleans up all available storage mechanisms in the browser.</summary>
-        /// <param name="done" type="Function">Function to be called by each cleanup function after storage is cleared.</param>
+        /** Cleans up all available storage mechanisms in the browser.
+         * @param {Function} done - Function to be called by each cleanup function after storage is cleared.
+         */
         var that = this;
         var storeCleanup = [];
 
@@ -328,8 +332,9 @@
     module("Functional", {
         setup: function () {
             this.createAndAddCache = function (options) {
-                /// <summary>Returns a cache created from the options object and </summary>
-                /// <param name="options" type="Object">Object to create a cache from.</param> 
+                /** Returns a cache created from the options object and 
+                 * @param {Object} options - Object to create a cache from. 
+                 */
                 var cache = datajs.cache.createDataCache(options);
                 this.caches.push({ name: options.name, cache: cache });
                 return cache;
@@ -430,10 +435,11 @@
         });
 
         var getInvalidValueErrorMessage = function (invalidValue, parameterName) {
-            /// <summary>Returns the expected error message for the specified invalid value.</summary>
-            /// <param name="invalidValue type="Object">invalid value (anything other than zero or positive integer) to determine the error message from.</param>
-            /// <param name="parameterName" type="String">The name of the parameter being verified.</param>
-            /// <returns type="String">Error message expected.</returns>
+            /** Returns the expected error message for the specified invalid value.
+             * @param {Object} invalidValue - invalid value (anything other than zero or positive integer) to determine the error message from.
+             * @param {String} parameterName - The name of the parameter being verified.
+             * @returns {String} Error message expected.
+             */
             return (invalidValue === undefined || typeof invalidValue !== "number") ?
                         "'" + parameterName + "' must be a number." :
                         "'" + parameterName + "' must be greater than or equal to zero.";

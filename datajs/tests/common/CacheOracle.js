@@ -24,11 +24,12 @@
 (function (window, undefined) {
 
     var CacheOracle = function (baseUri, pageSize, total, cacheSize) {
-        /// <summary>Creates a new CacheOracle</summary>
-        /// <param name="baseUri" type="String">The base URI of the collection</param>
-        /// <param name="pageSize" type="Integer">The page size used in the cache</param>
-        /// <param name="total" type="Integer">The total number of items in the collection</param>
-        /// <param name="cacheSize" type="Integer">Cache size in bytes</param>
+        /** Creates a new CacheOracle
+         * @param {String} baseUri - The base URI of the collection
+         * @param {Integer} pageSize - The page size used in the cache
+         * @param {Integer} total - The total number of items in the collection
+         * @param {Integer} cacheSize - Cache size in bytes
+         */
         this.baseUri = baseUri;
         this.pageSize = pageSize;
         this.total = total;
@@ -49,9 +50,10 @@
     };
 
     CacheOracle.isMechanismAvailable = function (mechanism) {
-        /// <summary>Determines if the specified local storage mechanism is available</summary>
-        /// <param name="mechanism">The name of the mechanism</param>
-        /// <returns>Whether the mechanism is available</returns>
+        /** Determines if the specified local storage mechanism is available
+         * @param mechanism - The name of the mechanism
+         * @returns Whether the mechanism is available
+         */
         switch (mechanism) {
             case CacheOracle.mechanisms.indexeddb:
                 if (window.msIndexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.indexedDB) {
@@ -79,7 +81,8 @@
     }
 
     CacheOracle.prototype.clear = function () {
-        /// <summary>Clears the cache in the oracle</summary>
+        /** Clears the cache in the oracle
+        */
         this.cachedPages = [];
         this.actualSize = 0;
         this.actualCount = 0;
@@ -87,28 +90,31 @@
     }
 
     CacheOracle.prototype.verifyRequests = function (requests, responses, index, count, description, backwards, isPrefetch) {
-        /// <summary>Verifies the HTTP requests for a single data request, and updates the oracle with cached pages</summary>
-        /// <param name="requests" type="Array">The sequence of request objects (from OData.defaultHttpClient)</param>
-        /// <param name="responses" type="Array">The sequence of response objects (from OData.defaultHttpClient)</param>
-        /// <param name="index" type="Integer">The starting index of the read</param>
-        /// <param name="count" type="Integer">The count of items in the read</param>
-        /// <param name="description" type="String">The description of the requests being verified</param>
-        /// <param name="backwards" type="Boolean">Whether or not filterBack is being verified</param>
-        /// <param name="isPrefetch" type="Boolean">Whether the requests being verified come from the prefetcher</param>
+        /** Verifies the HTTP requests for a single data request, and updates the oracle with cached pages
+         * @param {Array} requests - The sequence of request objects (from OData.defaultHttpClient)
+         * @param {Array} responses - The sequence of response objects (from OData.defaultHttpClient)
+         * @param {Integer} index - The starting index of the read
+         * @param {Integer} count - The count of items in the read
+         * @param {String} description - The description of the requests being verified
+         * @param {Boolean} backwards - Whether or not filterBack is being verified
+         * @param {Boolean} isPrefetch - Whether the requests being verified come from the prefetcher
+         */
         var that = this;
 
         index = (index < 0 ? 0 : index);
         var pageIndex = function (index) {
-            /// <summary>Returns the page index that the given item index belongs to</summary>
-            /// <param name="index" type="Integer">The item index</param>
-            /// <returns>The page index</returns>
+            /** Returns the page index that the given item index belongs to
+             * @param {Integer} index - The item index
+             * @returns The page index
+             */
             return Math.floor(index / that.pageSize);
         };
 
         var estimateSize = function (obj) {
-            /// <summary>Estimates the size of an object in bytes.</summary>
-            /// <param name="obj" type="Object">Object to determine the size of.</param>
-            /// <returns type="Number">Estimated size of the object in bytes.</returns>
+            /** Estimates the size of an object in bytes.
+             * @param {Object} obj - Object to determine the size of.
+             * @returns {Number} Estimated size of the object in bytes.
+             */
 
             var size = 0;
             var type = typeof obj;
@@ -186,12 +192,13 @@
     };
 
     CacheOracle.getExpectedFilterResults = function (data, filterIndex, filterCount, predicate, backwards) {
-        /// <summary>Verifies the cache filter returns the correct data</summary>
-        /// <param name="collection" type="Array">Array of items in the collection</param>
-        /// <param name="filterIndex" type="Integer">The index value</param>
-        /// <param name="filterCount" type="Integer">The count value</param>
-        /// <param name="predicate" type="Function">Predicate to be applied in filter, takes an item</param>
-        /// <param name="backwards" type="Boolean">Whether or not filterBackwards is being verified</param>
+        /** Verifies the cache filter returns the correct data
+         * @param {Array} collection - Array of items in the collection
+         * @param {Integer} filterIndex - The index value
+         * @param {Integer} filterCount - The count value
+         * @param {Function} predicate - Predicate to be applied in filter, takes an item
+         * @param {Boolean} backwards - Whether or not filterBackwards is being verified
+         */
         if (!data || !data.value) {
             return data;
         }

@@ -143,15 +143,16 @@
     };
 
     var validateFilterResultsAndRequests = function (feed, cache, index, count, predicate, finished, backwards, session, cacheOracle) {
-        /// <summary>Runs filter and validates the results and network requests</summary>
-        /// <param name="feed" type="Object">The feed being read from</param>
-        /// <param name="cache" type="Object">The cache to perform the filter on</param>
-        /// <param name="index" type="Integer">The index value</param>
-        /// <param name="count" type="Integer">The count value</param>
-        /// <param name="predicate" type="Object">Filter string to append to the feed to validate the predicate</param>
-        /// <param name="finished" type="Function">Callback function called after data is verified</param>
-        /// <param name="session" type="Object">Session object to validate the network requests</param>
-        /// <param name="cacheOracle" type="Object">cacheOracle object to validate the network requests</param>
+        /** Runs filter and validates the results and network requests
+         * @param {Object} feed - The feed being read from
+         * @param {Object} cache - The cache to perform the filter on
+         * @param {Integer} index - The index value
+         * @param {Integer} count - The count value
+         * @param {Object} predicate - Filter string to append to the feed to validate the predicate
+         * @param {Function} finished - Callback function called after data is verified
+         * @param {Object} session - Session object to validate the network requests
+         * @param {Object} cacheOracle - cacheOracle object to validate the network requests
+         */
 
         if (count < 0) {
             count = itemsInCollection;

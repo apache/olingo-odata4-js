@@ -24,8 +24,9 @@
 
     var warmedUp = false;
     var getBrowserMemorySize = function (success) {
-        /// <summary>Gets the memory size (in bytes) of the browser process</summary>
-        /// <param name="success" type="Function">The success callback</param>
+        /** Gets the memory size (in bytes) of the browser process
+         * @param {Function} success - The success callback
+         */
         var makeRequest = function (success) {
             $.get("./common/Instrument.svc/GetBrowserMemorySize", function (data) {
                 success(parseInt(data));

@@ -29,13 +29,14 @@
     var maxPostLength = 2097152;
 
     var callTestSynchronizer = function (methodName, parameterUrl) {
-        /// <summary>Invokes a function on the test synchronizer.</summary>
-        /// <param name="partialUrl" type="String" optional="true">URL to work with.</param>
-        /// <returns type="String">A response from the server, possibly null.</returns>
-        /// <remarks>
-        /// If the recording variable is assigned, then the call is logged
-        /// but nothing is invoked.
-        /// </remarks>
+        /** Invokes a function on the test synchronizer.
+         * @param {String} [partialUrl] - 
+         * @returns {String} A response from the server, possibly null.
+        
+         * If the recording variable is assigned, then the call is logged
+         * but nothing is invoked.
+         */
+        
 
         var partialUrl;
         if (testRunId) {
@@ -76,13 +77,14 @@
     };
 
     var getLogPrefix = function (result) {
-        /// <summary>Returns the log prefix for a given result</summary>
-        /// <param name="result" type="Boolean">Whether the result is pass or fail. If null, the log line is assumed to be diagnostic</param>
+        /** Returns the log prefix for a given result
+         * @param {Boolean} result - Whether the result is pass or fail. If null, the log line is assumed to be diagnostic
+         */
         return "[" + getShortDate() + "] " + (result === true ? "[PASS] " : (result === false ? "[FAIL] " : ""));
     };
 
     var getShortDate = function () {
-        /// <summary>Returns the current date and time formatted as "yyyy-mm-dd hh:mm:ss.nnn".</summary>
+        /** Returns the current date and time formatted as "yyyy-mm-dd hh:mm:ss.nnn".*/
         var padToLength = function (number, length) {
             var result = number + "";
             var lengthDiff = length - result.length;
@@ -112,7 +114,8 @@
     };
 
     var postToUrl = function (methodName, body) {
-        /// <summary>POSTs body to the designated methodName.</summary>
+        /** POSTs body to the designated methodName.
+        */
         var xhr;
         if (window.XMLHttpRequest) {
             xhr = new window.XMLHttpRequest();
@@ -154,8 +157,9 @@
     }
 
     var extractTestRunId = function () {
-        /// <summary>Extracts the testRunId value from the window query string.</summary>
-        /// <returns type="String">testRunId, possibly empty.</returns>
+        /** Extracts the testRunId value from the window query string.
+         * @returns {String} testRunId, possibly empty.
+         */
         var i, len;
         var uri = window.location.search;
         if (uri) {
@@ -172,9 +176,10 @@
     };
 
     var init = function (qunit) {
-        /// <summary>Initializes the test logger synchronizer.</summary>
-        /// <param name="qunit">Unit testing to hook into.</param>
-        /// <remarks>If there is no testRunId present, the QUnit functions are left as they are.</remarks>
+        /** Initializes the test logger synchronizer.
+        * @param qunit - Unit testing to hook into.
+        * If there is no testRunId present, the QUnit functions are left as they are.</remarks>
+        */
         var logToConsole = function (context) {
             if (window.console && window.console.log) {
                 window.console.log(context.result + ' :: ' + context.message);
