@@ -19,8 +19,7 @@
 
 /** @module store/dom */
 
-/** DomStore (see {@link DomStore}) */
-module.exports = DomStore;
+
 
 var utils = require('./../datajs.js').utils;
 
@@ -328,3 +327,6 @@ DomStore.prototype.update = function (key, value, success, error) {
 };
 
 
+
+/** DomStore (see {@link DomStore}) */
+module.exports = DomStore;

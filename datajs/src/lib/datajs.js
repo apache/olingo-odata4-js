@@ -17,6 +17,7 @@
  * under the License.
  */
 
+/** @module datajs */
 
 //expose all external usable functions via self.apiFunc = function
 exports.version = {

@@ -17,6 +17,10 @@
  * under the License.
  */
 
+/** @module odata/net */
+
+
+
 var utils    = require('./../datajs.js').utils;
 // Imports.
 
@@ -35,24 +39,24 @@ var ticks = 0;
  * We allow data to come in a different format, as the servers SHOULD honor the Accept
  * request but may in practice return content with a different MIME type.
  */
-var canUseJSONP = function (request) {
+function canUseJSONP(request) {
     
     if (request.method && request.method !== "GET") {
         return false;
     }
 
     return true;
-};
+}
 
 /** Creates an IFRAME tag for loading the JSONP script
  * @param {String} url - The source URL of the script
  * @returns {HTMLElement} The IFRAME tag
  */
-var createIFrame = function (url) {
+function createIFrame(url) {
     var iframe = window.document.createElement("IFRAME");
     iframe.style.display = "none";
 
-    var attributeEncodedUrl = url.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/\</g, "&lt;");
+    var attributeEncodedUrl = url.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
     var html = "<html><head><script type=\"text/javascript\" src=\"" + attributeEncodedUrl + "\"><\/script><\/head><body><\/body><\/html>";
 
     var body = window.document.getElementsByTagName("BODY")[0];
@@ -65,7 +69,7 @@ var createIFrame = function (url) {
 /** Creates a XmlHttpRequest object.
  * @returns {XmlHttpRequest} XmlHttpRequest object.
  */
-var createXmlHttpRequest = function () {
+function createXmlHttpRequest() {
     if (window.XMLHttpRequest) {
         return new window.XMLHttpRequest();
     }
@@ -84,23 +88,23 @@ var createXmlHttpRequest = function () {
         exception = { message: "XMLHttpRequest not supported" };
     }
     throw exception;
-};
+}
 
 /** Checks whether the specified URL is an absolute URL.
  * @param {String} url - URL to check.
  * @returns {Boolean} true if the url is an absolute URL; false otherwise.
 */
-var isAbsoluteUrl = function (url) {
+function isAbsoluteUrl(url) {
     return url.indexOf("http://") === 0 ||
         url.indexOf("https://") === 0 ||
         url.indexOf("file://") === 0;
-};
+}
 
 /** Checks whether the specified URL is local to the current context.
  * @param {String} url - URL to check.
  * @returns {Boolean} true if the url is a local URL; false otherwise.
  */
-var isLocalUrl = function (url) {
+function isLocalUrl(url) {
 
     if (!isAbsoluteUrl(url)) {
         return true;
@@ -110,13 +114,13 @@ var isLocalUrl = function (url) {
     var location = window.location;
     var locationDomain = location.protocol + "//" + location.host + "/";
     return (url.indexOf(locationDomain) === 0);
-};
+}
 
 /** Removes a callback used for a JSONP request.
  * @param {String} name - Function name to remove.
  * @param {Number} tick - Tick count used on the callback.
  */
-var removeCallback = function (name, tick) {
+function removeCallback(name, tick) {
     try {
         delete window[name];
     } catch (err) {
@@ -131,7 +135,7 @@ var removeCallback = function (name, tick) {
  * @param {Object} iframe - The iframe to remove.
  * @returns {Object} Null value to be assigned to iframe reference.
  */
-var removeIFrame = function (iframe) {
+function removeIFrame(iframe) {
     if (iframe) {
         writeHtmlToIFrame(iframe, "");
         iframe.parentNode.removeChild(iframe);
@@ -144,7 +148,7 @@ var removeIFrame = function (iframe) {
  * @param {XMLHttpRequest} xhr - HTTP request with response available.
  * @param {Array} headers - Target array to fill with name/value pairs.
  */
-var readResponseHeaders = function (xhr, headers) {
+function readResponseHeaders(xhr, headers) {
 
     var responseHeaders = xhr.getAllResponseHeaders().split(/\r?\n/);
     var i, len;
@@ -154,18 +158,18 @@ var readResponseHeaders = function (xhr, headers) {
             headers[header[0]] = header[1];
         }
     }
-};
+}
 
 /** Writes HTML to an IFRAME document.
  * @param {HTMLElement} iframe - The IFRAME element to write to.
  * @param {String} html - The HTML to write.
  */
-var writeHtmlToIFrame = function (iframe, html) {
+function writeHtmlToIFrame(iframe, html) {
     var frameDocument = (iframe.contentWindow) ? iframe.contentWindow.document : iframe.contentDocument.document;
     frameDocument.open();
     frameDocument.write(html);
     frameDocument.close();
-};
+}
 
 exports.defaultHttpClient = {
     callbackParameterName: "$callback",
@@ -329,7 +333,8 @@ exports.defaultHttpClient = {
     }
 };
 
+
+
 exports.canUseJSONP = canUseJSONP;
 exports.isAbsoluteUrl = isAbsoluteUrl;
 exports.isLocalUrl = isLocalUrl;
-

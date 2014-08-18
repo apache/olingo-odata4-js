@@ -17,6 +17,9 @@
  * under the License.
  */
 
+/** @module odata/handler */
+
+
 var utils    = require('./../datajs.js').utils;
 var oDataUtils    = require('./utils.js');
 
@@ -31,7 +34,7 @@ var MAX_DATA_SERVICE_VERSION = "4.0";
  * @param {String} str - String with media type to parse.
  * @return null if the string is empty; an object with 'mediaType' and a 'properties' dictionary otherwise.
  */
-var contentType = function (str) {
+function contentType(str) {
 
     if (!str) {
         return null;
@@ -47,13 +50,13 @@ var contentType = function (str) {
     }
 
     return { mediaType: trimString(contentTypeParts[0]), properties: properties };
-};
+}
 
 /** Serializes an object with media type and properties dictionary into a string.
  * @param contentType - Object with media type and properties dictionary to serialize.
  * @return String representation of the media type object; undefined if contentType is null or undefined.</returns>
  */
-var contentTypeToString = function (contentType) {
+function contentTypeToString(contentType) {
     if (!contentType) {
         return undefined;
     }
@@ -64,7 +67,7 @@ var contentTypeToString = function (contentType) {
         result += ";" + property + "=" + contentType.properties[property];
     }
     return result;
-};
+}
 
 /** Creates an object that is going to be used as the context for the handler's parser and serializer.
  * @param contentType - Object with media type and properties dictionary.
@@ -73,7 +76,7 @@ var contentTypeToString = function (contentType) {
  * @param handler - Handler object that is processing a resquest or response.
  * @return Context object.</returns>
  */
-var createReadWriteContext = function (contentType, dataServiceVersion, context, handler) {
+function createReadWriteContext(contentType, dataServiceVersion, context, handler) {
 
     var rwContext = {};
     extend(rwContext, context);
@@ -84,14 +87,14 @@ var createReadWriteContext = function (contentType, dataServiceVersion, context,
     });
 
     return rwContext;
-};
+}
 
 /** Sets a request header's value. If the header has already a value other than undefined, null or empty string, then this method does nothing.
  * @param request - Request object on which the header will be set.
  * @param {String} name - Header name.
  * @param {String} value - Header value.
  */
-var fixRequestHeader = function (request, name, value) {
+function fixRequestHeader(request, name, value) {
     if (!request) {
         return;
     }
@@ -100,48 +103,48 @@ var fixRequestHeader = function (request, name, value) {
     if (!headers[name]) {
         headers[name] = value;
     }
-};
+}
 
 /** Sets the DataServiceVersion header of the request if its value is not yet defined or of a lower version.
  * @param request - Request object on which the header will be set.
  * @param {String} version - Version value.
  *  If the request has already a version value higher than the one supplied the this function does nothing.
  */
-var fixDataServiceVersionHeader = function (request, version) {   
+function fixDataServiceVersionHeader(request, version) {   
 
     if (request) {
         var headers = request.headers;
         var dsv = headers["OData-Version"];
         headers["OData-Version"] = dsv ? maxVersion(dsv, version) : version;
     }
-};
+}
 
 /** Gets the value of a request or response header.
  * @param requestOrResponse - Object representing a request or a response.
  * @param {String} name - Name of the header to retrieve.
  * @returns {String} String value of the header; undefined if the header cannot be found.
  */
-var getRequestOrResponseHeader = function (requestOrResponse, name) {
+function getRequestOrResponseHeader(requestOrResponse, name) {
 
     var headers = requestOrResponse.headers;
     return (headers && headers[name]) || undefined;
-};
+}
 
 /** Gets the value of the Content-Type header from a request or response.
  * @param requestOrResponse - Object representing a request or a response.
  * @returns {Object} Object with 'mediaType' and a 'properties' dictionary; null in case that the header is not found or doesn't have a value.
  */
-var getContentType = function (requestOrResponse) {
+function getContentType(requestOrResponse) {
 
     return contentType(getRequestOrResponseHeader(requestOrResponse, "Content-Type"));
-};
+}
 
 var versionRE = /^\s?(\d+\.\d+);?.*$/;
 /** Gets the value of the DataServiceVersion header from a request or response.
  * @param requestOrResponse - Object representing a request or a response.
  * @returns {String} Data service version; undefined if the header cannot be found.
  */
-var getDataServiceVersion = function (requestOrResponse) {
+function getDataServiceVersion(requestOrResponse) {
 
     var value = getRequestOrResponseHeader(requestOrResponse, "OData-Version");
     if (value) {
@@ -152,7 +155,7 @@ var getDataServiceVersion = function (requestOrResponse) {
     }
 
     // Fall through and return undefined.
-};
+}
 
 /** Checks that a handler can process a particular mime type.
  * @param handler - Handler object that is processing a resquest or response.
@@ -162,9 +165,9 @@ var getDataServiceVersion = function (requestOrResponse) {
  * The following check isn't as strict because if cType.mediaType = application/; it will match an accept value of "application/xml";
  * however in practice we don't not expect to see such "suffixed" mimeTypes for the handlers.
  */
-var handlerAccepts = function (handler, cType) {
+function handlerAccepts(handler, cType) {
     return handler.accept.indexOf(cType.mediaType) >= 0;
-};
+}
 
 /** Invokes the parser associated with a handler for reading the payload of a HTTP response.
  * @param handler - Handler object that is processing the response.
@@ -173,7 +176,7 @@ var handlerAccepts = function (handler, cType) {
  * @param context - Object used as the context for processing the response.
  * @returns {Boolean} True if the handler processed the response payload and the response.data property was set; false otherwise.
  */
-var handlerRead = function (handler, parseCallback, response, context) {
+function handlerRead(handler, parseCallback, response, context) {
 
     if (!response || !response.headers) {
         return false;
@@ -195,7 +198,7 @@ var handlerRead = function (handler, parseCallback, response, context) {
     }
 
     return false;
-};
+}
 
 /** Invokes the serializer associated with a handler for generating the payload of a HTTP request.
  * @param handler - Handler object that is processing the request.
@@ -204,7 +207,7 @@ var handlerRead = function (handler, parseCallback, response, context) {
  * @param context - Object used as the context for serializing the request.
  * @returns {Boolean} True if the handler serialized the request payload and the request.body property was set; false otherwise.
  */
-var handlerWrite = function (handler, serializeCallback, request, context) {
+function handlerWrite(handler, serializeCallback, request, context) {
     if (!request || !request.headers) {
         return false;
     }
@@ -228,7 +231,7 @@ var handlerWrite = function (handler, serializeCallback, request, context) {
     }
 
     return false;
-};
+}
 
 /** Creates a handler object for processing HTTP requests and responses.
  * @param {Function} parseCallback - Parser function that will process the response payload.
@@ -237,7 +240,7 @@ var handlerWrite = function (handler, serializeCallback, request, context) {
  * @param {String} maxDataServiceVersion - String indicating the highest version of the protocol that this handler can work with.
  * @returns {Object} Handler object.
  */
-var handler = function (parseCallback, serializeCallback, accept, maxDataServiceVersion) {
+function handler(parseCallback, serializeCallback, accept, maxDataServiceVersion) {
 
     return {
         accept: accept,
@@ -251,19 +254,22 @@ var handler = function (parseCallback, serializeCallback, accept, maxDataService
             return handlerWrite(this, serializeCallback, request, context);
         }
     };
-};
+}
 
-var textParse = function (handler, body /*, context */) {
+function textParse(handler, body /*, context */) {
     return body;
-};
+}
 
-var textSerialize = function (handler, data /*, context */) {
+function textSerialize(handler, data /*, context */) {
     if (assigned(data)) {
         return data.toString();
     } else {
         return undefined;
     }
-};
+}
+
+
+
 
 exports.textHandler = handler(textParse, textSerialize, "text/plain", MAX_DATA_SERVICE_VERSION);
 

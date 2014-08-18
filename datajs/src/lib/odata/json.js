@@ -17,6 +17,10 @@
  * under the License.
  */
 
+/** @module odata/json */
+
+
+
 var utils        = require('./../datajs.js').utils;
 var oDataUtils   = require('./utils.js');
 var oDataHandler = require('./handler.js');
@@ -93,7 +97,7 @@ var jsonDateRE = /^\/Date\((-?\d+)(\+|-)?(\d+)?\)\/$/;
  * @param {Number} minutes - Number of minutes to format.
  * @returns {String} The minutes in (+/-)hh:mm format.
  */
-var minutesToOffset = function (minutes) {
+function minutesToOffset(minutes) {
 
     var sign;
     if (minutes < 0) {
@@ -107,13 +111,13 @@ var minutesToOffset = function (minutes) {
     minutes = minutes - (60 * hours);
 
     return sign + formatNumberWidth(hours, 2) + ":" + formatNumberWidth(minutes, 2);
-};
+}
 
 /** Parses the JSON Date representation into a Date object.
  * @param {String} value - String value.
  * @returns {Date} A Date object if the value matches one; falsy otherwise.
  */
-var parseJsonDateString = function (value) {
+function parseJsonDateString(value) {
 
     var arr = value && jsonDateRE.exec(value);
     if (arr) {
@@ -138,7 +142,7 @@ var parseJsonDateString = function (value) {
     }
 
     // Allow undefined to be returned.
-};
+}
 
 // Some JSON implementations cannot produce the character sequence \/
 // which is needed to format DateTime and DateTimeOffset into the
@@ -152,7 +156,7 @@ var parseJsonDateString = function (value) {
  * @param {Object} context - Object with parsing context.
  * @return An object representation of the OData payload.</returns>
  */
-var jsonParser = function (handler, text, context) {
+function jsonParser(handler, text, context) {
 
     var recognizeDates = defined(context.recognizeDates, handler.recognizeDates);
     var model = context.metadata;
@@ -178,18 +182,18 @@ var jsonParser = function (handler, text, context) {
     else {
         return json;
     }
-};
+}
 
 
-var addType = function(data, name, value ) {
+function addType(data, name, value ) {
     var fullName = name + '@odata.type';
 
     if ( data[fullName] === undefined) {
         data[fullName] = value;
     }
-};
+}
 
-var addTypeNoEdm = function(data, name, value ) {
+function addTypeNoEdm(data, name, value ) {
     var fullName = name + '@odata.type';
 
     if ( data[fullName] === undefined) {
@@ -200,9 +204,9 @@ var addTypeNoEdm = function(data, name, value ) {
         }
 
     }
-};
+}
 
-var addTypeColNoEdm = function(data, name, value ) {
+function addTypeColNoEdm(data, name, value ) {
     var fullName = name + '@odata.type';
 
     if ( data[fullName] === undefined) {
@@ -212,7 +216,7 @@ var addTypeColNoEdm = function(data, name, value ) {
             data[fullName] = 'Collection('+value+ ')';
         }
     }
-};
+}
 
 
 /* Adds typeinformation for String, Boolean and numerical EDM-types. 
@@ -221,8 +225,8 @@ var addTypeColNoEdm = function(data, name, value ) {
  * @param {Boolean} recognizeDates - True if strings formatted as datetime values should be treated as datetime values. False otherwise.
  * @returns An object representation of the OData payload.
  */
-var readPayloadFull = function (data, model, recognizeDates) {
-
+function readPayloadFull(data, model, recognizeDates) {
+    var type;
     if (utils.isObject(data)) {
         for (var key in data) {
             if (data.hasOwnProperty(key)) {
@@ -235,7 +239,7 @@ var readPayloadFull = function (data, model, recognizeDates) {
                         if (data[key] !== null) {
                             //don't step into geo.. objects
                             var isGeo = false;
-                            var type = data[key+'@odata.type'];
+                            type = data[key+'@odata.type'];
                             if (type && (isGeographyEdmType(type) || isGeometryEdmType(type))) {
                                 // is gemometry type
                             } else {
@@ -243,7 +247,7 @@ var readPayloadFull = function (data, model, recognizeDates) {
                             }
                         }
                     } else {
-                        var type = data[key + '@odata.type'];
+                        type = data[key + '@odata.type'];
 
                         // On .Net OData library, some basic EDM type is omitted, e.g. Edm.String, Edm.Int, and etc.
                         // For the full metadata payload, we need to full fill the @data.type for each property if it is missing. 
@@ -276,7 +280,7 @@ var readPayloadFull = function (data, model, recognizeDates) {
     }
 
     return data;
-};
+}
 
 /** Serializes the data by returning its string representation.
  * @param handler - This handler.
@@ -284,7 +288,7 @@ var readPayloadFull = function (data, model, recognizeDates) {
  * @param {Object} context - Object with serialization context.
  * @returns {String} The string representation of data.
  */
-var jsonSerializer = function (handler, data, context) {
+function jsonSerializer(handler, data, context) {
 
     var dataServiceVersion = context.dataServiceVersion || "4.0";
     var cType = context.contentType = context.contentType || jsonContentType;
@@ -298,9 +302,9 @@ var jsonSerializer = function (handler, data, context) {
     }
 
     return undefined;
-};
+}
 
-var formatJsonRequestPayload = function (data) {
+function formatJsonRequestPayload(data) {
     if (!data) {
         return data;
     }
@@ -327,7 +331,7 @@ var formatJsonRequestPayload = function (data) {
     }
 
     return newdata;
-};
+}
 
 /** JSON replacer function for converting a value to its JSON representation.
  * @param {Object} value - Value to convert.</param>
@@ -335,7 +339,7 @@ var formatJsonRequestPayload = function (data) {
  * This method is used during JSON serialization and invoked only by the JSON.stringify function.
  * It should never be called directly.
  */
-var jsonReplacer = function (_, value) {
+function jsonReplacer(_, value) {
     
 
     if (value && value.__edmType === "Edm.Time") {
@@ -343,7 +347,7 @@ var jsonReplacer = function (_, value) {
     } else {
         return value;
     }
-};
+}
 
 
 /** Creates an object containing information for the json payload.
@@ -351,14 +355,14 @@ var jsonReplacer = function (_, value) {
  * @param {String} typeName - Type name of the JSON payload.
  * @returns {Object} Object with kind and type fields.
  */
-var jsonMakePayloadInfo = function (kind, type) {
+function jsonMakePayloadInfo(kind, type) {
 
     /// TODO docu
     /// <field name="kind" type="String">Kind of the JSON payload. One of the PAYLOADTYPE_XXX constant values.</field>
     /// <field name="type" type="String">Data type of the JSON payload.</field>
 
     return { kind: kind, type: type || null };
-};
+}
 
 /** Creates an object containing information for the context
  * TODO check dou layout
@@ -368,7 +372,7 @@ var jsonMakePayloadInfo = function (kind, type) {
  * @returns {Object.typeName(optional)}  name of the type
  * @returns {Object.type(optional)}  object containing type information for entity- and complex-types ( null if a typeName is a primitive)
 */
-var parseContextUriFragment = function( fragments, model ) {
+function parseContextUriFragment( fragments, model ) {
     var ret = {};
 
     if (fragments.indexOf('/') === -1 ) {
@@ -552,7 +556,7 @@ var parseContextUriFragment = function( fragments, model ) {
     }
 
     return ret;
-};
+}
 
 /** Infers the information describing the JSON payload from its metadata annotation, structure, and data model.
  * @param {Object} data - Json response payload object.
@@ -563,7 +567,7 @@ var parseContextUriFragment = function( fragments, model ) {
  * and allows the user to control how the library behaves with an ambigous JSON payload.
  * @return Object with kind and type fields. Null if there is no metadata annotation or the payload info cannot be obtained..
 */
-var createPayloadInfo = function (data, model) {
+function createPayloadInfo(data, model) {
     
 
     var metadataUri = data[contextUrlAnnotation];
@@ -578,7 +582,7 @@ var createPayloadInfo = function (data, model) {
 
     var fragment = metadataUri.substring(fragmentStart + 1);
     return parseContextUriFragment(fragment,model);
-};
+}
 
 /** Processe a JSON response payload with metadata-minimal
  * @param {Object} data - Json response payload object
@@ -586,7 +590,7 @@ var createPayloadInfo = function (data, model) {
  * @param {Boolean} recognizeDates - Flag indicating whether datetime literal strings should be converted to JavaScript Date objects.
  * @returns {Object} Object in the library's representation.
  */
-var readPayloadMinimal = function (data, model, recognizeDates) {
+function readPayloadMinimal(data, model, recognizeDates) {
 
     if (!assigned(model) || isArray(model)) {
         return data;
@@ -613,14 +617,14 @@ var readPayloadMinimal = function (data, model, recognizeDates) {
     }
 
     return data;
-};
+}
 
 /** Gets the key of an entry.
  * @param {Object} data - JSON entry.
  *
  * @returns {string} Entry instance key.
  */
-var jsonGetEntryKey = function (data, entityModel) {
+function jsonGetEntryKey(data, entityModel) {
 
     var entityInstanceKey;
     var entityKeys = entityModel.key[0].propertyRef;
@@ -643,9 +647,9 @@ var jsonGetEntryKey = function (data, entityModel) {
     }
     entityInstanceKey += ")";
     return entityInstanceKey;
-};
+}
 
-var readPayloadMinimalProperty = function (data, model, collectionInfo, baseURI, recognizeDates) {
+function readPayloadMinimalProperty(data, model, collectionInfo, baseURI, recognizeDates) {
     if (collectionInfo.type !== null) {
         readPayloadMinimalObject(data, collectionInfo, baseURI, model, recognizeDates);
     } else {
@@ -653,9 +657,9 @@ var readPayloadMinimalProperty = function (data, model, collectionInfo, baseURI,
         //data['value@odata.type'] = '#'+collectionInfo.typeName;
     }
     return data;
-};
+}
 
-var readPayloadMinimalCollection = function (data, model, collectionInfo, baseURI, recognizeDates) {
+function readPayloadMinimalCollection(data, model, collectionInfo, baseURI, recognizeDates) {
     //data['@odata.type'] = '#Collection('+collectionInfo.typeName + ')';
     addTypeColNoEdm(data,'', collectionInfo.typeName);
 
@@ -686,8 +690,9 @@ var readPayloadMinimalCollection = function (data, model, collectionInfo, baseUR
         data.value = entries;
     }
     return data;
-};
-var readPayloadMinimalFeed = function (data, model, feedInfo, baseURI, recognizeDates) {
+}
+
+function readPayloadMinimalFeed(data, model, feedInfo, baseURI, recognizeDates) {
     var entries = [];
     var items = data.value;
     for (i = 0, len = items.length; i < len; i++) {
@@ -712,18 +717,18 @@ var readPayloadMinimalFeed = function (data, model, feedInfo, baseURI, recognize
     }
     data.value = entries;
     return data;
-};
+}
 
-var readPayloadMinimalEntry = function (data, model, entryInfo, baseURI, recognizeDates) {
+function readPayloadMinimalEntry(data, model, entryInfo, baseURI, recognizeDates) {
     return readPayloadMinimalObject(data, entryInfo, baseURI, model, recognizeDates);
-};
+}
 
 /** Formats a value according to Uri literal format
  * @param value - Value to be formatted.
  * @param type - Edm type of the value
  * @returns {string} Value after formatting
  */
-var formatLiteral = function (value, type) {
+function formatLiteral(value, type) {
 
     value = "" + formatRowLiteral(value, type);
     value = encodeURIComponent(value.replace("'", "''"));
@@ -755,18 +760,18 @@ var formatLiteral = function (value, type) {
         default:
             return value;
     }
-};
+}
 
-var formatRowLiteral = function (value, type) {
+function formatRowLiteral(value, type) {
     switch (type) {
         case "Edm.Binary":
             return convertByteArrayToHexString(value);
         default:
             return value;
     }
-};
+}
 
-var convertDates = function (data, propertyName,type) {
+function convertDates(data, propertyName,type) {
     if (type === 'Edm.Date') {
         data[propertyName] = oDataUtils.parseDate(data[propertyName], true);
     } else if (type === 'Edm.DateTimeOffset') {
@@ -776,9 +781,9 @@ var convertDates = function (data, propertyName,type) {
     } else if (type === 'Edm.Time') {
         data[propertyName] = oDataUtils.parseTime(data[propertyName], true);
     }
-};
+}
 
-var convertDatesNoEdm = function (data, propertyName,type) {
+function convertDatesNoEdm(data, propertyName,type) {
     if (type === 'Date') {
         data[propertyName] = oDataUtils.parseDate(data[propertyName], true);
     } else if (type === 'DateTimeOffset') {
@@ -788,9 +793,9 @@ var convertDatesNoEdm = function (data, propertyName,type) {
     } else if (type === 'Time') {
         data[propertyName] = oDataUtils.parseTime(data[propertyName], true);
     }
-};
+}
 
-var checkProperties = function (data, objectInfoType, baseURI, model, recognizeDates) {
+function checkProperties(data, objectInfoType, baseURI, model, recognizeDates) {
     for (var name in data) {
         if (name.indexOf("@") === -1) {
             var curType = objectInfoType;
@@ -825,9 +830,9 @@ var checkProperties = function (data, objectInfoType, baseURI, model, recognizeD
             }
         }
     }
-};
+}
 
-var readPayloadMinimalComplexObject = function (data, property, baseURI, model, recognizeDates) {
+function readPayloadMinimalComplexObject(data, property, baseURI, model, recognizeDates) {
     var type = property.type;
     if (isCollectionType(property.type)) {
         type =property.type.substring(11,property.type.length-1);
@@ -843,9 +848,9 @@ var readPayloadMinimalComplexObject = function (data, property, baseURI, model, 
     }
   
     checkProperties(data, propertyType, baseURI, model, recognizeDates);
-};
+}
 
-var readPayloadMinimalObject = function (data, objectInfo, baseURI, model, recognizeDates) {
+function readPayloadMinimalObject(data, objectInfo, baseURI, model, recognizeDates) {
     //data['@odata.type'] = '#'+objectInfo.typeName;
     addType(data,'',objectInfo.typeName);
 
@@ -867,11 +872,11 @@ var readPayloadMinimalObject = function (data, objectInfo, baseURI, model, recog
     checkProperties(data, objectInfo.type, baseURI, model, recognizeDates);
     
     return data;
-};
+}
 
 var jsonSerializableMetadata = ["@odata.id", "@odata.type"];
 
-var isJsonSerializableProperty = function (property) {
+function isJsonSerializableProperty(property) {
     if (!property) {
         return false;
     }
@@ -889,21 +894,24 @@ var isJsonSerializableProperty = function (property) {
     }
 
     return false;
-};
+}
 
 /** Determines whether a type name is a primitive type in a JSON payload.
  * @param {String} typeName - Type name to test.
  * @returns {Boolean} True if the type name an EDM primitive type or an OData spatial type; false otherwise.
  */
-var jsonIsPrimitiveType = function (typeName) {
+function jsonIsPrimitiveType(typeName) {
 
     return isPrimitiveEdmType(typeName) || isGeographyEdmType(typeName) || isGeometryEdmType(typeName);
-};
+}
 
 
 var jsonHandler = oDataHandler.handler(jsonParser, jsonSerializer, jsonMediaType, MAX_DATA_SERVICE_VERSION);
 jsonHandler.recognizeDates = false;
 
+
+
+exports.createPayloadInfo = createPayloadInfo;
 exports.jsonHandler = jsonHandler;
 exports.jsonParser = jsonParser;
 exports.jsonSerializer = jsonSerializer;

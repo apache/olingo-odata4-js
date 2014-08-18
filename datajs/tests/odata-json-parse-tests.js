@@ -38,29 +38,29 @@
             data: null,
         };
         OData.read(metadataRequest, metaDatasuccess, errorFunc,OData.metadataHandler);
-    };
+    }
 
     djstest.addTest(function test1() {
         var checkAll = function (metadata, input, expected) {
-            var info = OData.jsonLight.jsonLightPayloadInfo({ "@odata.context" : input}, metadata)
+            var info = OData.json.createPayloadInfo({ "@odata.context" : input}, metadata);
             djstest.assertAreEqual(info,expected, "Test context fragment: "+ input);
         };
 
         var checkLastTypeName = function (metadata, input, expectedKind, expectedLastTypeName) {
-            var info = OData.jsonLight.jsonLightPayloadInfo({ "@odata.context" : input}, metadata)
+            var info = OData.json.createPayloadInfo({ "@odata.context" : input}, metadata);
             djstest.assertAreEqual(info.detectedPayloadKind,expectedKind, "Test context fragment: "+ input);
             djstest.assertAreEqual(info.typeName,expectedLastTypeName, "Test context fragment: "+ input);
         };
 
         var checkProjection = function (metadata, input, expectedKind, expectedLastTypeName, projection) {
-            var info = OData.jsonLight.jsonLightPayloadInfo({ "@odata.context" : input}, metadata)
+            var info = OData.json.createPayloadInfo({ "@odata.context" : input}, metadata);
             djstest.assertAreEqual(info.detectedPayloadKind,expectedKind, "Test context fragment: "+ input);
             djstest.assertAreEqual(info.typeName,expectedLastTypeName, "Test context fragment: "+ input);
             djstest.assertAreEqual(info.projection,projection, "Test context fragment: "+ input);
         };
 
         var checkKind = function (metadata, input, expected) {
-            var info = OData.jsonLight.jsonLightPayloadInfo({ "@odata.context" : input}, metadata)
+            var info = OData.json.createPayloadInfo({ "@odata.context" : input}, metadata);
             djstest.assertAreEqual(info.detectedPayloadKind,expected, "Test context fragment: "+ input);
         };
 
@@ -104,7 +104,7 @@
         };
 
         runWithMetadata(success);
-    },'test jsonLightPayloadInfo');
+    },'test createPayloadInfo');
 
 
 })(this);

@@ -19,15 +19,9 @@
 
  /** @module store */
 
-exports.DomStore       = DomStore       = require('./store/dom.js');
-exports.IndexedDBStore = IndexedDBStore = require('./store/indexeddb.js');
-exports.MemoryStore    = MemoryStore    = require('./store/memory.js');
 
-var mechanisms = {
-    indexeddb: IndexedDBStore,
-    dom: DomStore,
-    memory: MemoryStore
-};
+
+
 
 exports.defaultStoreMechanism = "best";
 
@@ -58,3 +52,12 @@ exports.createStore = function (name, mechanism) {
 exports.mechanisms = mechanisms;
 
 
+exports.DomStore       = DomStore       = require('./store/dom.js');
+exports.IndexedDBStore = IndexedDBStore = require('./store/indexeddb.js');
+exports.MemoryStore    = MemoryStore    = require('./store/memory.js');
+
+var mechanisms = {
+    indexeddb: IndexedDBStore,
+    dom: DomStore,
+    memory: MemoryStore
+};

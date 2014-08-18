@@ -19,33 +19,6 @@
 
 /** @module datajs/utils */
 
-exports.activeXObject = activeXObject;
-exports.assigned = assigned;
-exports.contains = contains;
-exports.defined = defined;
-exports.delay = delay;
-exports.djsassert = djsassert;
-exports.extend = extend;
-exports.find = find;
-exports.getURIInfo = getURIInfo;
-exports.isArray = isArray;
-exports.isDate = isDate;
-exports.isObject = isObject;
-exports.normalizeURI = normalizeURI;
-exports.normalizeURICase = normalizeURICase;
-exports.parseInt10 = parseInt10;
-exports.renameProperty = renameProperty;
-exports.throwErrorCallback = throwErrorCallback;
-exports.trimString = trimString;
-exports.undefinedDefault = undefinedDefault;
-exports.decodeBase64 = decodeBase64;
-exports.convertByteArrayToHexString = convertByteArrayToHexString;
-exports.getJsonValueArraryLength = getJsonValueArraryLength;
-exports.sliceJsonValueArray = sliceJsonValueArray;
-exports.concatJsonValueArray = concatJsonValueArray;
-exports.startsWith = startsWith;
-exports.endsWith = endsWith;
-exports.getFormatKind = getFormatKind;
 
 
 /** Creates a new ActiveXObject from the given progId.
@@ -575,3 +548,31 @@ function getFormatKind(format, defaultFormatKind) {
 
 
     
+    
+exports.activeXObject = activeXObject;
+exports.assigned = assigned;
+exports.contains = contains;
+exports.defined = defined;
+exports.delay = delay;
+exports.djsassert = djsassert;
+exports.extend = extend;
+exports.find = find;
+exports.getURIInfo = getURIInfo;
+exports.isArray = isArray;
+exports.isDate = isDate;
+exports.isObject = isObject;
+exports.normalizeURI = normalizeURI;
+exports.normalizeURICase = normalizeURICase;
+exports.parseInt10 = parseInt10;
+exports.renameProperty = renameProperty;
+exports.throwErrorCallback = throwErrorCallback;
+exports.trimString = trimString;
+exports.undefinedDefault = undefinedDefault;
+exports.decodeBase64 = decodeBase64;
+exports.convertByteArrayToHexString = convertByteArrayToHexString;
+exports.getJsonValueArraryLength = getJsonValueArraryLength;
+exports.sliceJsonValueArray = sliceJsonValueArray;
+exports.concatJsonValueArray = concatJsonValueArray;
+exports.startsWith = startsWith;
+exports.endsWith = endsWith;
+exports.getFormatKind = getFormatKind;

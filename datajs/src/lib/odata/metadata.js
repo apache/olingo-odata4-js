@@ -17,9 +17,13 @@
  * under the License.
  */
 
+/** @module odata/metadata */
+
 var utils    = require('./../datajs.js').utils;
 var oDSxml    = require('./../datajs.js').xml;
 var odataHandler    = require('./handler.js');
+
+
 
 // imports 
 var contains = utils.contains;
@@ -51,7 +55,7 @@ var xmlMediaType = "application/xml";
  * If a child element name ends with * then it is understood by the schema that that child element can appear 0 or more times.
  * @returns {Object} Object with attributes, elements, text, and ns fields.
  */
-var schemaElement = function (attributes, elements, text, ns) {
+function schemaElement(attributes, elements, text, ns) {
 
     return {
         attributes: attributes,
@@ -59,7 +63,7 @@ var schemaElement = function (attributes, elements, text, ns) {
         text: text || false,
         ns: ns
     };
-};
+}
 
 // It's assumed that all elements may have Documentation children and Annotation elements.
 // See http://docs.oasis-open.org/odata/odata/v4.0/cs01/part3-csdl/odata-v4.0-cs01-part3-csdl.html for a CSDL reference.
@@ -361,7 +365,7 @@ var schema = {
  * @returns {String} Converted text.
  * If the text starts with multiple uppercase characters, it is left as-is.</remarks>
  */
-var scriptCase = function (text) {
+function scriptCase(text) {
 
     if (!text) {
         return text;
@@ -377,14 +381,14 @@ var scriptCase = function (text) {
     }
 
     return text.charAt(0).toLowerCase();
-};
+}
 
 /** Gets the schema node for the specified element.
  * @param {Object} parentSchema - Schema of the parent XML node of 'element'.
  * @param candidateName - XML element name to consider.
  * @returns {Object} The schema that describes the specified element; null if not found.
  */
-var getChildSchema = function (parentSchema, candidateName) {
+function getChildSchema(parentSchema, candidateName) {
 
     var elements = parentSchema.elements;
     if (!elements) {
@@ -407,22 +411,22 @@ var getChildSchema = function (parentSchema, candidateName) {
     }
 
     return null;
-};
+}
 
 /** Checks whether the specifies namespace URI is one of the known CSDL namespace URIs.
  * @param {String} nsURI - Namespace URI to check.
  * @returns {Boolean} true if nsURI is a known CSDL namespace; false otherwise.
  */
-var isEdmNamespace = function (nsURI) {
+function isEdmNamespace(nsURI) {
 
     return nsURI === edmNs1;
-};
+}
 
 /** Parses a CSDL document.
  * @param element - DOM element to parse.
  * @returns {Object} An object describing the parsed element.
  */
-var parseConceptualModelElement = function (element) {
+function parseConceptualModelElement(element) {
 
     var localName = xmlLocalName(element);
     var nsURI = xmlNamespaceURI(element);
@@ -494,19 +498,21 @@ var parseConceptualModelElement = function (element) {
     }
 
     return item;
-};
+}
 
 /** Parses a metadata document.
  * @param handler - This handler.
  * @param {String} text - Metadata text.
  * @returns An object representation of the conceptual model.</returns>
  */
-var metadataParser = function (handler, text) {
+function metadataParser(handler, text) {
 
     var doc = xmlParse(text);
     var root = xmlFirstChildElement(doc);
     return parseConceptualModelElement(root) || undefined;
-};
+}
+
+
 
 exports.metadataHandler = odataHandler.handler(metadataParser, null, xmlMediaType, MAX_DATA_SERVICE_VERSION);
 

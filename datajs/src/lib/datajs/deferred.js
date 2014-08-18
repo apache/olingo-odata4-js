@@ -19,11 +19,7 @@
 
 /** @module datajs/deferred */
 
-/** createDeferred (see {@link createDeferred}) */
-exports.createDeferred = createDeferred;
 
-/** DjsDeferred (see {@link DjsDeferred}) */
-exports.DjsDeferred = DjsDeferred;
 
 /** Creates a new function to forward a call.
  * @param {Object} thisValue - Value to use as the 'this' object.
@@ -185,3 +181,9 @@ function createDeferred() {
 
 
 
+
+/** createDeferred (see {@link module:datajs/deferred~createDeferred}) */
+exports.createDeferred = createDeferred;
+
+/** DjsDeferred (see {@link DjsDeferred}) */
+exports.DjsDeferred = DjsDeferred;

@@ -19,8 +19,7 @@
 
 /** @module store/indexeddb */
 
-/** IndexedDBStore (see {@link IndexedDBStore}) */
-module.exports = IndexedDBStore;
+
 
 var utils = require('./../datajs.js').utils;
 
@@ -444,3 +443,5 @@ IndexedDBStore.prototype.update = function (key, value, success, error) {
 };
 
 
+/** IndexedDBStore (see {@link IndexedDBStore}) */
+module.exports = IndexedDBStore;

@@ -43,11 +43,7 @@ var getJsonValueArraryLength = utils.getJsonValueArraryLength;
 var sliceJsonValueArray = utils.sliceJsonValueArray;
 var concatJsonValueArray = utils.concatJsonValueArray;
 
-/** estimateSize (see {@link estimateSize}) */
-exports.estimateSize = estimateSize;
 
-/** createDataCache */  
-exports.createDataCache = createDataCache;
 
 /** Appends a page's data to the operation data.
  * @param {Object} operation - Operation with  (i)ndex, (c)ount and (d)ata.
@@ -363,17 +359,21 @@ function DataCacheOperation(stateMachine, promise, isCancelable, index, count, d
         }
     };
 
+
+
     /** Transitions this operation to a new state.
      * @method DataCacheOperation#transition
      * @param {Object} state - State to transition the operation to.
      * @param {Object} [data] - 
      */
-    that.transition = function (state, data) {
+    var transition = function (state, data) {
         that.s = state;
         stateData = data;
         operationStateMachine(state, cacheState, data);
     };
-
+    
+    that.transition = transition;
+    
     return that;
 }
 
@@ -1436,3 +1436,8 @@ function createDataCache (options) {
 };
 
 
+/** estimateSize (see {@link estimateSize}) */
+exports.estimateSize = estimateSize;
+
+/** createDataCache */  
+exports.createDataCache = createDataCache;

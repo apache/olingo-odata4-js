@@ -25,8 +25,7 @@ var odataRequest = require("./../odata.js");
 var parseInt10 = utils.parseInt10;
 var normalizeURICase = utils.normalizeURICase;
 
-/** ODataCacheSource (see {@link ODataCacheSource}) */
-exports.ODataCacheSource = ODataCacheSource;
+
 
 
 /** Appends the specified escaped query option to the specified URI.
@@ -202,3 +201,6 @@ function ODataCacheSource (options) {
 }
 
 
+
+/** ODataCacheSource (see {@link ODataCacheSource}) */
+exports.ODataCacheSource = ODataCacheSource;

@@ -17,6 +17,8 @@
  * under the License.
  */
 
+ /** @module odata */
+
 // Imports
 var odataUtils    = exports.utils     = require('./odata/utils.js');
 var odataHandler  = exports.handler   = require('./odata/handler.js');
@@ -25,7 +27,7 @@ var odataNet      = exports.net       = require('./odata/net.js');
 var odataJson     = exports.json      = require('./odata/json.js');
                     exports.batch     = require('./odata/batch.js');
                     
-exports.metadataHandler =  odataMetadata.metadataHandler;
+
 
 var utils = require('./datajs/utils.js');
 var assigned = utils.assigned;
@@ -47,7 +49,7 @@ var handlers = [odataJson.jsonHandler, odataHandler.textHandler];
  * @param {Object} requestOrResponse - request/response argument for delegated call.
  * @param {Object} context - context argument for delegated call.
  */
-var dispatchHandler = function (handlerMethod, requestOrResponse, context) {
+function dispatchHandler(handlerMethod, requestOrResponse, context) {
 
     var i, len;
     for (i = 0, len = handlers.length; i < len && !handlers[i][handlerMethod](requestOrResponse, context); i++) {
@@ -173,3 +175,4 @@ exports.parseMetadata = function (csdlMetadataDocument) {
 
 // Configure the batch handler to use the default handler for the batch parts.
 exports.batch.batchHandler.partHandler = exports.defaultHandler;
+exports.metadataHandler =  odataMetadata.metadataHandler;

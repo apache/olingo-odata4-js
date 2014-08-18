@@ -17,6 +17,9 @@
  * under the License.
  */
  
+
+/** @module datajs/xml */
+
 var utils    = require('./utils.js');
 
 var activeXObject = utils.activeXObject;
@@ -39,27 +42,27 @@ var mozillaParserErroNS = http + "www.mozilla.org/newlayout/xml/parsererror.xml"
  * @param {String} text - String to check.
  * @returns {Boolean} true if text has any leading or trailing whitespace; false otherwise.
  */
-var hasLeadingOrTrailingWhitespace = function (text) {
+function hasLeadingOrTrailingWhitespace(text) {
     var re = /(^\s)|(\s$)/;
     return re.test(text);
-};
+}
 
 /** Determines whether the specified text is empty or whitespace.
  * @param {String} text - Value to inspect.
  * @returns {Boolean} true if the text value is empty or all whitespace; false otherwise.
  */
-var isWhitespace = function (text) {
+function isWhitespace(text) {
 
 
     var ws = /^\s*$/;
     return text === null || ws.test(text);
-};
+}
 
 /** Determines whether the specified element has xml:space='preserve' applied.
  * @param domElement - Element to inspect.
  * @returns {Boolean} Whether xml:space='preserve' is in effect.
  */
-var isWhitespacePreserveContext = function (domElement) {
+function isWhitespacePreserveContext(domElement) {
 
 
     while (domElement !== null && domElement.nodeType === 1) {
@@ -74,36 +77,36 @@ var isWhitespacePreserveContext = function (domElement) {
     }
 
     return false;
-};
+}
 
 /** Determines whether the attribute is a XML namespace declaration.
  * @param domAttribute - Element to inspect.
  * @return {Boolean} True if the attribute is a namespace declaration (its name is 'xmlns' or starts with 'xmlns:'; false otherwise.
  */
-var isXmlNSDeclaration = function (domAttribute) {
+function isXmlNSDeclaration(domAttribute) {
     var nodeName = domAttribute.nodeName;
     return nodeName == "xmlns" || nodeName.indexOf("xmlns:") === 0;
-};
+}
 
 /** Safely set as property in an object by invoking obj.setProperty.
  * @param obj - Object that exposes a setProperty method.
  * @param {String} name - Property name
  * @param value - Property value.
  */
-var safeSetProperty = function (obj, name, value) {
+function safeSetProperty(obj, name, value) {
 
 
     try {
         obj.setProperty(name, value);
     } catch (_) { }
-};
+}
 
 /** Creates an configures new MSXML 3.0 ActiveX object.
  * @returns {Object} New MSXML 3.0 ActiveX object.
  * This function throws any exception that occurs during the creation
  * of the MSXML 3.0 ActiveX object.
  */
-var msXmlDom3 = function () {
+function msXmlDom3() {
     var msxml3 = activeXObject("Msxml2.DOMDocument.3.0");
     if (msxml3) {
         safeSetProperty(msxml3, "ProhibitDTD", true);
@@ -112,7 +115,7 @@ var msXmlDom3 = function () {
         safeSetProperty(msxml3, "AllowXsltScript", false);
     }
     return msxml3;
-};
+}
 
 /** Creates an configures new MSXML 6.0 or MSXML 3.0 ActiveX object.
  * @returns {Object} New MSXML 3.0 ActiveX object.
@@ -121,7 +124,7 @@ var msXmlDom3 = function () {
  * happens during the creation of the MSXML 6.0 will be handled by the function while
  * the ones that happend during the creation of the MSXML 3.0 will be thrown.
  */
-var msXmlDom = function () {
+function msXmlDom() {
     try {
         var msxml = activeXObject("Msxml2.DOMDocument.6.0");
         if (msxml) {
@@ -131,7 +134,7 @@ var msXmlDom = function () {
     } catch (_) {
         return msXmlDom3();
     }
-};
+}
 
 /** Parses an XML string using the MSXML DOM.
  * @returns {Object} New MSXML DOMDocument node representing the parsed XML string.
@@ -139,7 +142,7 @@ var msXmlDom = function () {
  * of the MSXML ActiveX object.  It also will throw an exception
  * in case of a parsing error.
  */
-var msXmlParse = function (text) {
+function msXmlParse(text) {
     var dom = msXmlDom();
     if (!dom) {
         return null;
@@ -151,27 +154,27 @@ var msXmlParse = function (text) {
         xmlThrowParserError(parseError.reason, parseError.srcText, text);
     }
     return dom;
-};
+}
 
 /** Throws a new exception containing XML parsing error information.
  * @param exceptionOrReason - String indicating the reason of the parsing failure or Object detailing the parsing error.
  * @param {String} srcText -     String indicating the part of the XML string that caused the parsing error.
  * @param {String} errorXmlText - XML string for wich the parsing failed.
  */
-var xmlThrowParserError = function (exceptionOrReason, srcText, errorXmlText) {
+function xmlThrowParserError(exceptionOrReason, srcText, errorXmlText) {
 
     if (typeof exceptionOrReason === "string") {
         exceptionOrReason = { message: exceptionOrReason };
     }
     throw extend(exceptionOrReason, { srcText: srcText || "", errorXmlText: errorXmlText || "" });
-};
+}
 
 /** Returns an XML DOM document from the specified text.
  * @param {String} text - Document text.
  * @returns XML DOM document.
  * This function will throw an exception in case of a parse error
  */
-var xmlParse = function (text) {
+function xmlParse(text) {
     var domParser = window.DOMParser && new window.DOMParser();
     var dom;
 
@@ -219,22 +222,22 @@ var xmlParse = function (text) {
     }
 
     return dom;
-};
+}
 
 /** Builds a XML qualified name string in the form of "prefix:name".
  * @param {String} prefix - Prefix string (may be null)
  * @param {String} name - Name string to qualify with the prefix.
  * @returns {String} Qualified name.
  */
-var xmlQualifiedName = function (prefix, name) {
+function xmlQualifiedName(prefix, name) {
     return prefix ? prefix + ":" + name : name;
-};
+}
 
 /** Appends a text node into the specified DOM element node.
  * @param domNode - DOM node for the element.
  * @param {String} text - Text to append as a child of element.
 */
-var xmlAppendText = function (domNode, textNode) {
+function xmlAppendText(domNode, textNode) {
     if (hasLeadingOrTrailingWhitespace(textNode.data)) {
         var attr = xmlAttributeNode(domNode, xmlNS, "space");
         if (!attr) {
@@ -245,19 +248,19 @@ var xmlAppendText = function (domNode, textNode) {
     }
     domNode.appendChild(textNode);
     return domNode;
-};
+}
 
 /** Iterates through the XML element's attributes and invokes the callback function for each one.
  * @param element - Wrapped element to iterate over.
  * @param {Function} onAttributeCallback - Callback function to invoke with wrapped attribute nodes.
 */
-var xmlAttributes = function (element, onAttributeCallback) {
+function xmlAttributes(element, onAttributeCallback) {
     var attributes = element.attributes;
     var i, len;
     for (i = 0, len = attributes.length; i < len; i++) {
         onAttributeCallback(attributes.item(i));
     }
-};
+}
 
 /** Returns the value of a DOM element's attribute.
  * @param domNode - DOM node for the owning element.
@@ -265,11 +268,11 @@ var xmlAttributes = function (element, onAttributeCallback) {
  * @param {String} nsURI - Namespace URI of the attribute.
  * @returns {String} - The attribute value, null if not found (may be null)
  */
-var xmlAttributeValue = function (domNode, localName, nsURI) {
+function xmlAttributeValue(domNode, localName, nsURI) {
 
     var attribute = xmlAttributeNode(domNode, localName, nsURI);
     return attribute ? xmlNodeValue(attribute) : null;
-};
+}
 
 /** Gets an attribute node from a DOM element.
  * @param domNode - DOM node for the owning element.
@@ -277,7 +280,7 @@ var xmlAttributeValue = function (domNode, localName, nsURI) {
  * @param {String} nsURI - Namespace URI of the attribute.
  * @returns The attribute node, null if not found.
  */
-var xmlAttributeNode = function (domNode, localName, nsURI) {
+function xmlAttributeNode(domNode, localName, nsURI) {
 
     var attributes = domNode.attributes;
     if (attributes.getNamedItemNS) {
@@ -285,25 +288,25 @@ var xmlAttributeNode = function (domNode, localName, nsURI) {
     }
 
     return attributes.getQualifiedItem(localName, nsURI) || null;
-};
+}
 
 /** Gets the value of the xml:base attribute on the specified element.
  * @param domNode - Element to get xml:base attribute value from.
  * @param [baseURI] - Base URI used to normalize the value of the xml:base attribute ( may be null)
  * @returns {String} Value of the xml:base attribute if found; the baseURI or null otherwise.
  */
-var xmlBaseURI = function (domNode, baseURI) {
+function xmlBaseURI(domNode, baseURI) {
 
     var base = xmlAttributeNode(domNode, "base", xmlNS);
     return (base ? normalizeURI(base.value, baseURI) : baseURI) || null;
-};
+}
 
 
 /** Iterates through the XML element's child DOM elements and invokes the callback function for each one.
  * @param element - DOM Node containing the DOM elements to iterate over.
  * @param {Function} onElementCallback - Callback function to invoke for each child DOM element.
 */
-var xmlChildElements = function (domNode, onElementCallback) {
+function xmlChildElements(domNode, onElementCallback) {
 
     xmlTraverse(domNode, /*recursive*/false, function (child) {
         if (child.nodeType === 1) {
@@ -312,7 +315,7 @@ var xmlChildElements = function (domNode, onElementCallback) {
         // continue traversing.
         return true;
     });
-};
+}
 
 /** Gets the descendant element under root that corresponds to the specified path and namespace URI.
  * @param root - DOM element node from which to get the descendant element.
@@ -322,14 +325,14 @@ var xmlChildElements = function (domNode, onElementCallback) {
  * All the elements in the path are matched against namespaceURI.
  * The function will stop searching on the first element that doesn't match the namespace and the path.
  */
-var xmlFindElementByPath = function (root, namespaceURI, path) {
+function xmlFindElementByPath(root, namespaceURI, path) {
     var parts = path.split("/");
     var i, len;
     for (i = 0, len = parts.length; i < len; i++) {
         root = root && xmlFirstChildElement(root, namespaceURI, parts[i]);
     }
     return root || null;
-};
+}
 
 /** Gets the DOM element or DOM attribute node under root that corresponds to the specified path and namespace URI.
  * @param root - DOM element node from which to get the descendant node.
@@ -341,7 +344,7 @@ var xmlFindElementByPath = function (root, namespaceURI, path) {
 * The traversal stops when the whole path has been exahusted or a node that doesn't belogong the specified namespace is encountered.
 * The last segment of the path may be decorated with a starting @ character to indicate that the desired node is a DOM attribute.
 */
-var xmlFindNodeByPath = function (root, namespaceURI, path) {
+function xmlFindNodeByPath(root, namespaceURI, path) {
     
 
     var lastSegmentStart = path.lastIndexOf("/");
@@ -356,7 +359,7 @@ var xmlFindNodeByPath = function (root, namespaceURI, path) {
         return xmlFirstChildElement(node, namespaceURI, nodePath);
     }
     return null;
-};
+}
 
 /** Returns the first child DOM element under the specified DOM node that matches the specified namespace URI and local name.
  * @param domNode - DOM node from which the child DOM element is going to be retrieved.
@@ -364,10 +367,10 @@ var xmlFindNodeByPath = function (root, namespaceURI, path) {
  * @param {String} [localName] - 
  * @return The node's first child DOM element that matches the specified namespace URI and local name; null otherwise.</returns>
  */
-var xmlFirstChildElement = function (domNode, namespaceURI, localName) {
+function xmlFirstChildElement(domNode, namespaceURI, localName) {
 
     return xmlFirstElementMaybeRecursive(domNode, namespaceURI, localName, /*recursive*/false);
-};
+}
 
 /** Returns the first descendant DOM element under the specified DOM node that matches the specified namespace URI and local name.
  * @param domNode - DOM node from which the descendant DOM element is going to be retrieved.
@@ -375,13 +378,13 @@ var xmlFirstChildElement = function (domNode, namespaceURI, localName) {
  * @param {String} [localName] - 
  * @return The node's first descendant DOM element that matches the specified namespace URI and local name; null otherwise.
 */
-var xmlFirstDescendantElement = function (domNode, namespaceURI, localName) {
+function xmlFirstDescendantElement(domNode, namespaceURI, localName) {
     if (domNode.getElementsByTagNameNS) {
         var result = domNode.getElementsByTagNameNS(namespaceURI, localName);
         return result.length > 0 ? result[0] : null;
     }
     return xmlFirstElementMaybeRecursive(domNode, namespaceURI, localName, /*recursive*/true);
-};
+}
 
 /** Returns the first descendant DOM element under the specified DOM node that matches the specified namespace URI and local name.
  * @param domNode - DOM node from which the descendant DOM element is going to be retrieved.
@@ -392,7 +395,7 @@ var xmlFirstDescendantElement = function (domNode, namespaceURI, localName) {
  * - False if the search should be scoped only to the direct children of the DOM node.
  * @return The node's first descendant DOM element that matches the specified namespace URI and local name; null otherwise.
  */
-var xmlFirstElementMaybeRecursive = function (domNode, namespaceURI, localName, recursive) {
+function xmlFirstElementMaybeRecursive(domNode, namespaceURI, localName, recursive) {
 
     var firstElement = null;
     xmlTraverse(domNode, recursive, function (child) {
@@ -407,13 +410,13 @@ var xmlFirstElementMaybeRecursive = function (domNode, namespaceURI, localName, 
         return firstElement === null;
     });
     return firstElement;
-};
+}
 
 /** Gets the concatenated value of all immediate child text and CDATA nodes for the specified element.
  * @param domElement - Element to get values for.
  * @returns {String} Text for all direct children.
  */
-var xmlInnerText = function (xmlElement) {
+function xmlInnerText(xmlElement) {
 
     var result = null;
     var root = (xmlElement.nodeType === 9 && xmlElement.documentElement) ? xmlElement.documentElement : xmlElement;
@@ -454,37 +457,37 @@ var xmlInnerText = function (xmlElement) {
         return true;
     });
     return result;
-};
+}
 
 /** Returns the localName of a XML node.
  * @param domNode - DOM node to get the value from.
  * @returns {String} localName of domNode.
  */
-var xmlLocalName = function (domNode) {
+function xmlLocalName(domNode) {
 
     return domNode.localName || domNode.baseName;
-};
+}
 
 /** Returns the namespace URI of a XML node.
  * @param node - DOM node to get the value from.
  * @returns {String} Namespace URI of domNode.
  */
-var xmlNamespaceURI = function (domNode) {
+function xmlNamespaceURI(domNode) {
 
     return domNode.namespaceURI || null;
-};
+}
 
 /** Returns the value or the inner text of a XML node.
  * @param node - DOM node to get the value from.
  * @return Value of the domNode or the inner text if domNode represents a DOM element node.
  */
-var xmlNodeValue = function (domNode) {
+function xmlNodeValue(domNode) {
     
     if (domNode.nodeType === 1) {
         return xmlInnerText(domNode);
     }
     return domNode.nodeValue;
-};
+}
 
 /** Walks through the descendants of the domNode and invokes a callback for each node.
  * @param domNode - DOM node whose descendants are going to be traversed.
@@ -493,7 +496,7 @@ var xmlNodeValue = function (domNode) {
  * - False if the traversal should be scoped only to the direct children of the DOM node.
  * @returns {String} Namespace URI of node.
  */
-var xmlTraverse = function (domNode, recursive, onChildCallback) {
+function xmlTraverse(domNode, recursive, onChildCallback) {
 
     var subtrees = [];
     var child = domNode.firstChild;
@@ -507,7 +510,7 @@ var xmlTraverse = function (domNode, recursive, onChildCallback) {
             child = child.nextSibling || subtrees.shift();
         }
     }
-};
+}
 
 /** Returns the next sibling DOM element of the specified DOM node.
  * @param domNode - DOM node from which the next sibling is going to be retrieved.
@@ -515,7 +518,7 @@ var xmlTraverse = function (domNode, recursive, onChildCallback) {
  * @param {String} [localName] - 
  * @return The node's next sibling DOM element, null if there is none.</returns>
  */
-var xmlSiblingElement = function (domNode, namespaceURI, localName) {
+function xmlSiblingElement(domNode, namespaceURI, localName) {
 
     var sibling = domNode.nextSibling;
     while (sibling) {
@@ -530,7 +533,7 @@ var xmlSiblingElement = function (domNode, namespaceURI, localName) {
         sibling = sibling.nextSibling;
     }
     return null;
-};
+}
 
 /** Creates a new empty DOM document node.
  * @return New DOM document node.</returns>
@@ -542,14 +545,12 @@ var xmlSiblingElement = function (domNode, namespaceURI, localName) {
  * for creating an MXSML 3.0 DOM will be made.  If this last attemp fails or
  * the browser doesn't support ActiveXObject then an exception will be thrown.
  */
-var xmlDom = function () {
-    
-
+function xmlDom() {
     var implementation = window.document.implementation;
     return (implementation && implementation.createDocument) ?
        implementation.createDocument(null, null, null) :
        msXmlDom();
-};
+}
 
 /** Appends a collection of child nodes or string values to a parent DOM node.
  * @param parent - DOM node to which the children will be appended.
@@ -558,7 +559,7 @@ var xmlDom = function () {
  *  If a value in the children collection is a string, then a new DOM text node is going to be created
  *  for it and then appended to the parent.
  */
-var xmlAppendChildren = function (parent, children) {
+function xmlAppendChildren(parent, children) {
     if (!isArray(children)) {
         return xmlAppendChild(parent, children);
     }
@@ -568,7 +569,7 @@ var xmlAppendChildren = function (parent, children) {
         children[i] && xmlAppendChild(parent, children[i]);
     }
     return parent;
-};
+}
 
 /** Appends a child node or a string value to a parent DOM node.
  * @param parent - DOM node to which the child will be appended.
@@ -577,7 +578,7 @@ var xmlAppendChildren = function (parent, children) {
  * If child is a string value, then a new DOM text node is going to be created
  * for it and then appended to the parent.
  */
-var xmlAppendChild = function (parent, child) {
+function xmlAppendChild(parent, child) {
 
     djsassert(parent !== child, "xmlAppendChild() - parent and child are one and the same!");
     if (child) {
@@ -591,7 +592,7 @@ var xmlAppendChild = function (parent, child) {
         }
     }
     return parent;
-};
+}
 
 /** Creates a new DOM attribute node.
  * @param dom - DOM document used to create the attribute.
@@ -599,7 +600,7 @@ var xmlAppendChild = function (parent, child) {
  * @param {String} namespaceURI - Namespace URI.
  * @return DOM attribute node for the namespace declaration.
  */
-var xmlNewAttribute = function (dom, namespaceURI, qualifiedName, value) {
+function xmlNewAttribute(dom, namespaceURI, qualifiedName, value) {
 
     var attribute =
         dom.createAttributeNS && dom.createAttributeNS(namespaceURI, qualifiedName) ||
@@ -607,7 +608,7 @@ var xmlNewAttribute = function (dom, namespaceURI, qualifiedName, value) {
 
     attribute.value = value || "";
     return attribute;
-};
+}
 
 /** Creates a new DOM element node.
  * @param dom - DOM document used to create the DOM element.
@@ -618,13 +619,13 @@ var xmlNewAttribute = function (dom, namespaceURI, qualifiedName, value) {
  * If a value in the children collection is a string, then a new DOM text node is going to be created
  * for it and then appended to the new DOM element.
  */
-var xmlNewElement = function (dom, nampespaceURI, qualifiedName, children) {
+function xmlNewElement(dom, nampespaceURI, qualifiedName, children) {
     var element =
         dom.createElementNS && dom.createElementNS(nampespaceURI, qualifiedName) ||
         dom.createNode(1, qualifiedName, nampespaceURI || undefined);
 
     return xmlAppendChildren(element, children || []);
-};
+}
 
 /** Creates a namespace declaration attribute.
  * @param dom - DOM document used to create the attribute.
@@ -632,16 +633,16 @@ var xmlNewElement = function (dom, nampespaceURI, qualifiedName, children) {
  * @param {String} prefix - Namespace prefix.
  * @return DOM attribute node for the namespace declaration.</returns>
  */
-var xmlNewNSDeclaration = function (dom, namespaceURI, prefix) {
+function xmlNewNSDeclaration(dom, namespaceURI, prefix) {
     return xmlNewAttribute(dom, xmlnsNS, xmlQualifiedName("xmlns", prefix), namespaceURI);
-};
+}
 
 /** Creates a new DOM document fragment node for the specified xml text.
  * @param dom - DOM document from which the fragment node is going to be created.
  * @param {String} text XML text to be represented by the XmlFragment.
  * @return New DOM document fragment object.
  */
-var xmlNewFragment = function (dom, text) {
+function xmlNewFragment(dom, text) {
 
     var value = "<c>" + text + "</c>";
     var tempDom = xmlParse(value);
@@ -655,16 +656,16 @@ var xmlNewFragment = function (dom, text) {
         importedChild = importedChild.nextSibling;
     }
     return fragment;
-};
+}
 
 /** Creates new DOM text node.
  * @param dom - DOM document used to create the text node.
  * @param {String} text - Text value for the DOM text node.
  * @return DOM text node.</returns>
  */ 
-var xmlNewText = function (dom, text) {
+function xmlNewText(dom, text) {
     return dom.createTextNode(text);
-};
+}
 
 /** Creates a new DOM element or DOM attribute node as specified by path and appends it to the DOM tree pointed by root.
  * @param dom - DOM document used to create the new node.
@@ -679,7 +680,7 @@ var xmlNewText = function (dom, text) {
  * The last segment of the path may be decorated with a starting @ character. In this case a new DOM attribute node
  * will be created.
  */
-var xmlNewNodeByPath = function (dom, root, namespaceURI, prefix, path) {
+function xmlNewNodeByPath(dom, root, namespaceURI, prefix, path) {
     var name = "";
     var parts = path.split("/");
     var xmlFindNode = xmlFirstChildElement;
@@ -703,13 +704,13 @@ var xmlNewNodeByPath = function (dom, root, namespaceURI, prefix, path) {
         xmlNode = childNode;
     }
     return xmlNode;
-};
+}
 
 /** Returns the text representation of the document to which the specified node belongs.
  * @param root - Wrapped element in the document to serialize.
  * @returns {String} Serialized document.
 */
-var xmlSerialize = function (domNode) {
+function xmlSerialize(domNode) {
     var xmlSerializer = window.XMLSerializer;
     if (xmlSerializer) {
         var serializer = new xmlSerializer();
@@ -721,13 +722,13 @@ var xmlSerialize = function (domNode) {
     }
 
     throw { message: "XML serialization unsupported" };
-};
+}
 
 /** Returns the XML representation of the all the descendants of the node.
  * @param domNode - Node to serialize.</param>
  * @returns {String} The XML representation of all the descendants of the node.
  */
-var xmlSerializeDescendants = function (domNode) {
+function xmlSerializeDescendants(domNode) {
     var children = domNode.childNodes;
     var i, len = children.length;
     if (len === 0) {
@@ -758,13 +759,13 @@ var xmlSerializeDescendants = function (domNode) {
     }
 
     return xml;
-};
+}
 
 /** Returns the XML representation of the node and all its descendants.
  * @param domNode - Node to serialize
  * @returns {String} The XML representation of the node and all its descendants.
  */
-var xmlSerializeNode = function (domNode) {
+function xmlSerializeNode(domNode) {
 
     var xml = domNode.xml;
     if (xml !== undefined) {
@@ -777,7 +778,7 @@ var xmlSerializeNode = function (domNode) {
     }
 
     throw { message: "XML serialization unsupported" };
-};
+}
 
 exports.http = http;
 exports.w3org = w3org;

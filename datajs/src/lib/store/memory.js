@@ -19,8 +19,7 @@
 
  /** @module store/memory */
 
-/** MemoryStore (see {@link MemoryStore}) */
-module.exports = MemoryStore;
+
 
 var utils = require('./../datajs.js').utils;
 
@@ -243,3 +242,5 @@ MemoryStore.prototype.defaultError = throwErrorCallback;
 MemoryStore.prototype.mechanism = "memory";
 
 
+/** MemoryStore (see {@link MemoryStore}) */
+module.exports = MemoryStore;
