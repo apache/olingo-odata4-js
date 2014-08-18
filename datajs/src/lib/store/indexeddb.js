@@ -17,8 +17,12 @@
  * under the License.
  */
 
-var utils = require('./../datajs.js').utils;
+/** @module store/indexeddb */
 
+/** IndexedDBStore (see {@link IndexedDBStore}) */
+module.exports = IndexedDBStore;
+
+var utils = require('./../datajs.js').utils;
 
 // Imports.
 var throwErrorCallback = utils.throwErrorCallback;
@@ -36,7 +40,7 @@ var IDBT_READ_WRITE = IDBTransaction.READ_WRITE || "readwrite";
  * @param {Function} defaultError - The default error handler
  * @returns {Function} The error callback
  */
-var getError = function (error, defaultError) {
+function getError(error, defaultError) {
 
     return function (e) {
         var errorFunc = error || defaultError;
@@ -63,14 +67,14 @@ var getError = function (error, defaultError) {
         }
         errorFunc({ name: errName, error: e });
     };
-};
+}
 
 /** Opens the store object's indexed db database.
  * @param {IndexedDBStore} store - The store object
  * @param {Function} success - The success callback
  * @param {Function} error - The error callback
  */
-var openStoreDb = function (store, success, error) {
+function openStoreDb(store, success, error) {
 
     var storeName = store.name;
     var dbName = "_datajs_" + storeName;
@@ -117,7 +121,7 @@ var openStoreDb = function (store, success, error) {
         };
         success(db);
     };
-};
+}
 
 /** Opens a new transaction to the store
  * @param {IndexedDBStore} store - The store object
@@ -125,7 +129,7 @@ var openStoreDb = function (store, success, error) {
  * @param {Function} success - The success callback
  * @param {Function} error - The error callback
  */
-var openTransaction = function (store, mode, success, error) {
+function openTransaction(store, mode, success, error) {
 
     var storeName = store.name;
     var storeDb = store.db;
@@ -140,17 +144,19 @@ var openTransaction = function (store, mode, success, error) {
         store.db = db;
         success(db.transaction(storeName, mode));
     }, errorCallback);
-};
+}
 
 /** Creates a new IndexedDBStore.
+ * @class IndexedDBStore
  * @param {String} name - The name of the store.
  * @returns {Object} The new IndexedDBStore.
  */
-var IndexedDBStore = function (name) {
+function IndexedDBStore(name) {
     this.name = name;
-};
+}
 
 /** Creates a new IndexedDBStore.
+ * @method IndexedDBStore.create
  * @param {String} name - The name of the store.
  * @returns {Object} The new IndexedDBStore.
  */
@@ -163,6 +169,7 @@ IndexedDBStore.create = function (name) {
 };
 
 /** Returns whether IndexedDB is supported.
+ * @method IndexedDBStore.isSupported
  * @returns {Boolean} True if IndexedDB is supported, false otherwise.
  */
 IndexedDBStore.isSupported = function () {
@@ -170,6 +177,7 @@ IndexedDBStore.isSupported = function () {
 };
 
 /** Adds a key/value pair to the store
+ * @method IndexedDBStore#add
  * @param {String} key - The key
  * @param {Object} value - The value
  * @param {Function} success - The success callback
@@ -206,6 +214,7 @@ IndexedDBStore.prototype.add = function (key, value, success, error) {
 };
 
 /** Adds or updates a key/value pair in the store
+ * @method IndexedDBStore#addOrUpdate
  * @param {String} key - The key
  * @param {Object} value - The value
  * @param {Function} success - The success callback
@@ -243,6 +252,7 @@ IndexedDBStore.prototype.addOrUpdate = function (key, value, success, error) {
 };
 
 /** Clears the store
+ * @method IndexedDBStore#clear
  * @param {Function} success - The success callback
  * @param {Function} error - The error callback
  */
@@ -258,10 +268,11 @@ IndexedDBStore.prototype.clear = function (success, error) {
         transaction.objectStore(name).clear();
     }, error);
 };
-
+/** Closes the connection to the database
+ * @method IndexedDBStore#close
+*/
 IndexedDBStore.prototype.close = function () {
-    /** Closes the connection to the database
-    */
+    
     if (this.db) {
         this.db.close();
         this.db = null;
@@ -269,6 +280,7 @@ IndexedDBStore.prototype.close = function () {
 };
 
 /** Returns whether the store contains a key
+ * @method IndexedDBStore#contains
  * @param {String} key - The key
  * @param {Function} success - The success callback
  * @param {Function} error - The error callback
@@ -278,7 +290,7 @@ IndexedDBStore.prototype.contains = function (key, success, error) {
     var defaultError = this.defaultError;
     openTransaction(this, IDBT_READ_ONLY, function (transaction) {
         var objectStore = transaction.objectStore(name);
-        var request = objectStore["get"](key);
+        var request = objectStore.get(key);
 
         transaction.oncomplete = function () {
             success(!!request.result);
@@ -290,6 +302,7 @@ IndexedDBStore.prototype.contains = function (key, success, error) {
 IndexedDBStore.prototype.defaultError = throwErrorCallback;
 
 /** Gets all the keys from the store
+ * @method IndexedDBStore#getAllKeys
  * @param {Function} success - The success callback
  * @param {Function} error - The error callback
  */
@@ -322,6 +335,7 @@ IndexedDBStore.prototype.getAllKeys = function (success, error) {
 IndexedDBStore.prototype.mechanism = "indexeddb";
 
 /** Reads the value for the specified key
+ * @method IndexedDBStore#read
  * @param {String} key - The key
  * @param {Function} success - The success callback
  * @param {Function} error - The error callback
@@ -347,7 +361,7 @@ IndexedDBStore.prototype.read = function (key, success, error) {
         for (var i = 0; i < keys.length; i++) {
             // Some tools have issues because get is a javascript reserved word. 
             var objectStore = transaction.objectStore(name);
-            var request = objectStore["get"].call(objectStore, keys[i]);
+            var request = objectStore.get.call(objectStore, keys[i]);
             request.onsuccess = function (event) {
                 var record = event.target.result;
                 values.push(record ? record.v : undefined);
@@ -357,6 +371,7 @@ IndexedDBStore.prototype.read = function (key, success, error) {
 };
 
 /** Removes the specified key from the store
+ * @method IndexedDBStore#remove
  * @param {String} key - The key
  * @param {Function} success - The success callback
  * @param {Function} error - The error callback
@@ -382,6 +397,7 @@ IndexedDBStore.prototype.remove = function (key, success, error) {
 };
 
 /** Updates a key/value pair in the store
+ * @method IndexedDBStore#update
  * @param {String} key - The key
  * @param {Object} value - The value
  * @param {Function} success - The success callback
@@ -422,9 +438,9 @@ IndexedDBStore.prototype.update = function (key, value, success, error) {
                 } else {
                     transaction.abort();
                 }
-            };
+            }
         }
     }, error);
 };
 
-module.exports = IndexedDBStore;
+

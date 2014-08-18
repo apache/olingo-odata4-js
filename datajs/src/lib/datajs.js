@@ -25,7 +25,6 @@ exports.version = {
     build: 1
 };
 
-
 exports.deferred = require('./datajs/deferred.js');
 exports.utils = require('./datajs/utils.js');
 exports.xml = require('./datajs/xml.js');

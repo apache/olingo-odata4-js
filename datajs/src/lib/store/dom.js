@@ -17,6 +17,11 @@
  * under the License.
  */
 
+/** @module store/dom */
+
+/** DomStore (see {@link DomStore}) */
+module.exports = DomStore;
+
 var utils = require('./../datajs.js').utils;
 
 // Imports.
@@ -25,34 +30,27 @@ var delay = utils.delay;
 
 var localStorage = null;
 
-/** Converts a Date object into an object representation friendly to JSON serialization.
- * @returns {Object} Object that represents the Date.
-
- * This method is used to override the Date.toJSON method and is called only by
+/** This method is used to override the Date.toJSON method and is called only by
  * JSON.stringify.  It should never be called directly.
+ * @summary Converts a Date object into an object representation friendly to JSON serialization.
+ * @returns {Object} Object that represents the Date.
  */
-var domStoreDateToJSON = function () {
-    
-
+function domStoreDateToJSON() {
     var newValue = { v: this.valueOf(), t: "[object Date]" };
     // Date objects might have extra properties on them so we save them.
     for (var name in this) {
         newValue[name] = this[name];
     }
     return newValue;
-};
+}
 
-/** JSON reviver function for converting an object representing a Date in a JSON stream to a Date object
+/** This method is used during JSON parsing and invoked only by the reviver function.
+ * It should never be called directly.
+ * @summary JSON reviver function for converting an object representing a Date in a JSON stream to a Date object
  * @param Object - Object to convert.
  * @returns {Date} Date object.
- * This method is used during JSON parsing and invoked only by the reviver function.
- * It should never be called directly.
  */
-var domStoreJSONToDate = function (_, value) {
-    
-   
-    
-
+function domStoreJSONToDate(_, value) {
     if (value && value.t === "[object Date]") {
         var newValue = new Date(value.v);
         for (var name in value) {
@@ -63,36 +61,36 @@ var domStoreJSONToDate = function (_, value) {
         value = newValue;
     }
     return value;
-};
+}
 
 /** Qualifies the key with the name of the store.
  * @param {Object} store - Store object whose name will be used for qualifying the key.
  * @param {String} key - Key string.
  * @returns {String} Fully qualified key string.
  */
-var qualifyDomStoreKey = function (store, key) {
-
+function qualifyDomStoreKey(store, key) {
     return store.name + "#!#" + key;
-};
+}
 
 /** Gets the key part of a fully qualified key string.
  * @param {Object} store - Store object whose name will be used for qualifying the key.
  * @param {String} key - Fully qualified key string.
  * @returns {String} Key part string
  */
-var unqualifyDomStoreKey = function (store, key) {
-
+function unqualifyDomStoreKey(store, key) {
     return key.replace(store.name + "#!#", "");
-};
+}
 
 /** Constructor for store objects that use DOM storage as the underlying mechanism.
+ * @class DomStore
  * @param {String} name - Store name.
  */
-var DomStore = function (name) {
+function DomStore(name) {
     this.name = name;
-};
+}
 
 /** Creates a store object that uses DOM Storage as its underlying mechanism.
+ * @method DomStore.create
  * @param {String} name - Store name.
  * @returns {Object} Store object.
  */
@@ -107,6 +105,7 @@ DomStore.create = function (name) {
 };
 
 /** Checks whether the underlying mechanism for this kind of store objects is supported by the browser.
+ * @method DomStore.isSupported
  * @returns {Boolean} - True if the mechanism is supported by the browser; otherwise false.
 */
 DomStore.isSupported = function () {
@@ -114,6 +113,7 @@ DomStore.isSupported = function () {
 };
 
 /** Adds a new value identified by a key to the store.
+ * @method DomStore#add
  * @param {String} key - Key string.
  * @param value - Value that is going to be added to the store.
  * @param {Funcktion} success - Callback for a successful add operation.</param>
@@ -121,8 +121,6 @@ DomStore.isSupported = function () {
  * This method errors out if the store already contains the specified key.
  */
 DomStore.prototype.add = function (key, value, success, error) {
-    
-
     error = error || this.defaultError;
     var store = this;
     this.contains(key, function (contained) {
@@ -134,17 +132,15 @@ DomStore.prototype.add = function (key, value, success, error) {
     }, error);
 };
 
-/** Adds or updates a value identified by a key to the store.
+/** This method will overwrite the key's current value if it already exists in the store; otherwise it simply adds the new key and value.
+ * @summary Adds or updates a value identified by a key to the store.
+ * @method DomStore#addOrUpdate
  * @param {String} key - Key string.
  * @param value - Value that is going to be added or updated to the store.
  * @param {Function} success - Callback for a successful add or update operation.</param>
  * @param {Function} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.</param>
-
-  * This method will overwrite the key's current value if it already exists in the store; otherwise it simply adds the new key and value.
-  */
+ */
 DomStore.prototype.addOrUpdate = function (key, value, success, error) {
-    
-
     error = error || this.defaultError;
 
     if (key instanceof Array) {
@@ -176,10 +172,11 @@ DomStore.prototype.addOrUpdate = function (key, value, success, error) {
     }
 };
 
-/** Removes all the data associated with this store object.
+/** In case of an error, this method will not restore any keys that might have been deleted at that point.
+ * @summary Removes all the data associated with this store object.
+ * @method DomStore#clear
  * @param {Function} success - Callback for a successful clear operation.</param>
  * @param {Function} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.</param>
- * In case of an error, this method will not restore any keys that might have been deleted at that point.
  */
 DomStore.prototype.clear = function (success, error) {
 
@@ -204,11 +201,13 @@ DomStore.prototype.clear = function (success, error) {
 };
 
 /** This function does nothing in DomStore as it does not have a connection model
-*/
+ * @method DomStore#close
+ */
 DomStore.prototype.close = function () {
 };
 
 /** Checks whether a key exists in the store.
+ * @method DomStore#contains
  * @param {String} key - Key string.
  * @param {Function} success - Callback indicating whether the store contains the key or not.</param>
  * @param {Function} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.</param>
@@ -227,6 +226,7 @@ DomStore.prototype.contains = function (key, success, error) {
 DomStore.prototype.defaultError = throwErrorCallback;
 
 /** Gets all the keys that exist in the store.
+ * @method DomStore#getAllKeys
  * @param {Function} success - Callback for a successful get operation.</param>
  * @param {Function} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.</param>
  */
@@ -256,6 +256,7 @@ DomStore.prototype.getAllKeys = function (success, error) {
 DomStore.prototype.mechanism = "dom";
 
 /** Reads the value associated to a key in the store.
+ * @method DomStore#read
  * @param {String} key - Key string.
  * @param {Function} success - Callback for a successful reads operation.
  * @param {Function} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.
@@ -285,6 +286,7 @@ DomStore.prototype.read = function (key, success, error) {
 };
 
 /** Removes a key and its value from the store.
+ * @method DomStore#remove
  * @param {String} key - Key string.
  * @param {Funtion} success - Callback for a successful remove operation.</param>
  * @param {Funtion} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.</param>
@@ -306,6 +308,7 @@ DomStore.prototype.remove = function (key, success, error) {
 };
 
 /** Updates the value associated to a key in the store.
+ * @method DomStore#update
  * @param {String} key - Key string.
  * @param value - New value.
  * @param {Function} success - Callback for a successful update operation.
@@ -313,8 +316,6 @@ DomStore.prototype.remove = function (key, success, error) {
  * This method errors out if the specified key is not found in the store.
  */
 DomStore.prototype.update = function (key, value, success, error) {
-    
-
     error = error || this.defaultError;
     var store = this;
     this.contains(key, function (contained) {
@@ -326,4 +327,4 @@ DomStore.prototype.update = function (key, value, success, error) {
     }, error);
 };
 
-module.exports = DomStore;
+

@@ -17,6 +17,8 @@
  * under the License.
  */
 
+ /** @module store */
+
 exports.DomStore       = DomStore       = require('./store/dom.js');
 exports.IndexedDBStore = IndexedDBStore = require('./store/indexeddb.js');
 exports.MemoryStore    = MemoryStore    = require('./store/memory.js');

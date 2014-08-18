@@ -21,6 +21,7 @@
 
 /** createDeferred (see {@link createDeferred}) */
 exports.createDeferred = createDeferred;
+
 /** DjsDeferred (see {@link DjsDeferred}) */
 exports.DjsDeferred = DjsDeferred;
 
@@ -62,13 +63,13 @@ function forwardCall(thisValue, name, returnValue) {
  * </li></ul>
  * @class DjsDeferred 
  */
-var DjsDeferred = function () {
+ function DjsDeferred() {
     this._arguments = undefined;
     this._done = undefined;
     this._fail = undefined;
     this._resolved = false;
     this._rejected = false;
-};
+}
 
 
 DjsDeferred.prototype = {

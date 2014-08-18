@@ -17,6 +17,37 @@
  * under the License.
  */
 
+/** @module datajs/utils */
+
+exports.activeXObject = activeXObject;
+exports.assigned = assigned;
+exports.contains = contains;
+exports.defined = defined;
+exports.delay = delay;
+exports.djsassert = djsassert;
+exports.extend = extend;
+exports.find = find;
+exports.getURIInfo = getURIInfo;
+exports.isArray = isArray;
+exports.isDate = isDate;
+exports.isObject = isObject;
+exports.normalizeURI = normalizeURI;
+exports.normalizeURICase = normalizeURICase;
+exports.parseInt10 = parseInt10;
+exports.renameProperty = renameProperty;
+exports.throwErrorCallback = throwErrorCallback;
+exports.trimString = trimString;
+exports.undefinedDefault = undefinedDefault;
+exports.decodeBase64 = decodeBase64;
+exports.convertByteArrayToHexString = convertByteArrayToHexString;
+exports.getJsonValueArraryLength = getJsonValueArraryLength;
+exports.sliceJsonValueArray = sliceJsonValueArray;
+exports.concatJsonValueArray = concatJsonValueArray;
+exports.startsWith = startsWith;
+exports.endsWith = endsWith;
+exports.getFormatKind = getFormatKind;
+
+
 /** Creates a new ActiveXObject from the given progId.
  * @param {String} progId - ProgId string of the desired ActiveXObject.
  * @returns {Object} The ActiveXObject instance. Null if ActiveX is not supported by the browser.
@@ -35,16 +66,16 @@ var activeXObject = function (progId) {
  * @param [value] Value to check ( may be null)
  * @returns {Boolean} true if the value is assigned; false otherwise.
 */     
-var assigned = function (value) {
+function assigned(value) {
     return value !== null && value !== undefined;
-};
+}
 
 /** Checks whether the specified item is in the array.
  * @param {Array} [arr] Array to check in.
  * @param item - Item to look for.
  * @returns {Boolean} true if the item is contained, false otherwise.
 */
-var contains = function (arr, item) {
+function contains(arr, item) {
     var i, len;
     for (i = 0, len = arr.length; i < len; i++) {
         if (arr[i] === item) {
@@ -52,22 +83,21 @@ var contains = function (arr, item) {
         }
     }
     return false;
-};
+}
 
 /** Given two values, picks the first one that is not undefined.
  * @param a - First value.
  * @param b - Second value.
  * @returns a if it's a defined value; else b.</returns>
  */
-var defined = function (a, b) {
-
+function defined(a, b) {
     return (a !== undefined) ? a : b;
-};
+}
 
 /** Delays the invocation of the specified function until execution unwinds.
  * @param {Function} callback - Callback function.
  */
-var delay = function (callback) {
+function delay(callback) {
 
     if (arguments.length === 1) {
         window.setTimeout(callback, 0);
@@ -78,7 +108,7 @@ var delay = function (callback) {
     window.setTimeout(function () {
         callback.apply(this, args);
     }, 0);
-};
+}
 
 /** Throws an exception in case that a condition evaluates to false.
  * @param {Boolean} condition - Condition to evaluate.
@@ -86,13 +116,13 @@ var delay = function (callback) {
  * @param {Object} data - Additional data to be included in the exception.
  */
 // DATAJS INTERNAL START
-var djsassert = function (condition, message, data) {
+function djsassert(condition, message, data) {
 
 
     if (!condition) {
         throw { message: "Assert fired: " + message, data: data };
-    };
-};
+    }
+}
 // DATAJS INTERNAL END
 
 /** Extends the target with the specified values.
@@ -100,15 +130,15 @@ var djsassert = function (condition, message, data) {
  * @param {Object} values - Object with properties to add into target.
  * @returns {Object} The target object.
 */
-var extend = function (target, values) {
+function extend(target, values) {
     for (var name in values) {
         target[name] = values[name];
     }
 
     return target;
-};
+}
 
-var find = function (arr, callback) {
+function find(arr, callback) {
     /** Returns the first item in the array that makes the callback function true.
      * @param {Array} [arr] Array to check in. ( may be null)
      * @param {Function} callback - Callback function to invoke once per item in the array.
@@ -124,42 +154,41 @@ var find = function (arr, callback) {
         }
     }
     return null;
-};
+}
 
-var isArray = function (value) {
+function isArray(value) {
     /** Checks whether the specified value is an array object.
      * @param value - Value to check.
      * @returns {Boolean} true if the value is an array object; false otherwise.
      */
 
     return Object.prototype.toString.call(value) === "[object Array]";
-};
+}
 
 /** Checks whether the specified value is a Date object.
  * @param value - Value to check.
  * @returns {Boolean} true if the value is a Date object; false otherwise.
  */
-var isDate = function (value) {
+function isDate(value) {
     return Object.prototype.toString.call(value) === "[object Date]";
-};
+}
 
 /** Tests whether a value is an object.
  * @param value - Value to test.
  * @returns {Boolean} True is the value is an object; false otherwise.
  * Per javascript rules, null and array values are objects and will cause this function to return true.
  */
-var isObject = function (value) {
-
+function isObject(value) {
     return typeof value === "object";
-};
+}
 
 /** Parses a value in base 10.
  * @param {String} value - String value to parse.
  * @returns {Number} The parsed value, NaN if not a valid value.
 */   
-var parseInt10 = function (value) {
+function parseInt10(value) {
     return parseInt(value, 10);
-};
+}
 
 /** Renames a property in an object.
  * @param {Object} obj - Object in which the property will be renamed.
@@ -167,31 +196,31 @@ var parseInt10 = function (value) {
  * @param {String} newName - New name of the property.
  * This function will not do anything if the object doesn't own a property with the specified old name.
  */
-var renameProperty = function (obj, oldName, newName) {
+function renameProperty(obj, oldName, newName) {
     if (obj.hasOwnProperty(oldName)) {
         obj[newName] = obj[oldName];
         delete obj[oldName];
     }
-};
+}
 
 /** Default error handler.
  * @param {Object} error - Error to handle.
  */
-var throwErrorCallback = function (error) {
+function throwErrorCallback(error) {
     throw error;
-};
+}
 
 /** Removes leading and trailing whitespaces from a string.
  * @param {String str String to trim
  * @returns {String} The string with no leading or trailing whitespace.
  */
-var trimString = function (str) {
+function trimString(str) {
     if (str.trim) {
         return str.trim();
     }
 
     return str.replace(/^\s+|\s+$/g, '');
-};
+}
 
 /** Returns a default value in place of undefined.
  * @param [value] Value to check (may be null)
@@ -200,9 +229,9 @@ var trimString = function (str) {
  * This should only be used for cases where falsy values are valid;
  * otherwise the pattern should be 'x = (value) ? value : defaultValue;'.
  */
-var undefinedDefault = function (value, defaultValue) {
+function undefinedDefault(value, defaultValue) {
     return (value !== undefined) ? value : defaultValue;
-};
+}
 
 // Regular expression that splits a uri into its components:
 // 0 - is the matched string.
@@ -218,7 +247,7 @@ var uriPartNames = ["scheme", "authority", "path", "query", "fragment"];
  * @param {String} uri - URI to get information from.
  * @return  {Object} An object with an isAbsolute flag and part names (scheme, authority, etc.) if available.
  */
-var getURIInfo = function (uri) {
+function getURIInfo(uri) {
     var result = { isAbsolute: false };
 
     if (uri) {
@@ -237,20 +266,20 @@ var getURIInfo = function (uri) {
     }
 
     return result;
-};
+}
 
 /** Builds a URI string from its components.
  * @param {Object} uriInfo -  An object with uri parts (scheme, authority, etc.).
  * @returns {String} URI string.
  */
-var getURIFromInfo = function (uriInfo) {
+function getURIFromInfo(uriInfo) {
     return "".concat(
         uriInfo.scheme || "",
         uriInfo.authority || "",
         uriInfo.path || "",
         uriInfo.query || "",
         uriInfo.fragment || "");
-};
+}
 
 // Regular expression that splits a uri authority into its subcomponents:
 // 0 - is the matched string.
@@ -266,7 +295,7 @@ var pctEncodingRegEx = /%[0-9A-F]{2}/ig;
  * @param {String} uri - URI to normalize, absolute or relative.
  * @returns {String} The URI normalized to lower case.
 */
-var normalizeURICase = function (uri) {
+function normalizeURICase(uri) {
     var uriInfo = getURIInfo(uri);
     var scheme = uriInfo.scheme;
     var authority = uriInfo.authority;
@@ -289,14 +318,14 @@ var normalizeURICase = function (uri) {
     return uri.replace(pctEncodingRegEx, function (str) {
         return str.toLowerCase();
     });
-};
+}
 
 /** Normalizes a possibly relative URI with a base URI.
  * @param {String} uri - URI to normalize, absolute or relative
  * @param {String} base - Base URI to compose with (may be null)
  * @returns {String} The composed URI if relative; the original one if absolute.
  */
-var normalizeURI = function (uri, base) {
+function normalizeURI(uri, base) {
     if (!base) {
         return uri;
     }
@@ -335,14 +364,14 @@ var normalizeURI = function (uri, base) {
     normInfo.fragment = uriInfo.fragment;
 
     return getURIFromInfo(normInfo);
-};
+}
 
 /** Merges the path of a relative URI and a base URI.
  * @param {String} uriPath - Relative URI path.</param>
  * @param {String} basePath - Base URI path.
  * @returns {String} A string with the merged path.
  */
-var mergeUriPathWithBase = function (uriPath, basePath) {
+function mergeUriPathWithBase(uriPath, basePath) {
     var path = "/";
     var end;
 
@@ -356,13 +385,13 @@ var mergeUriPathWithBase = function (uriPath, basePath) {
     }
 
     return path + uriPath;
-};
+}
 
 /** Removes the special folders . and .. from a URI's path.
  * @param {string} path - URI path component.
  * @returns {String} Path without any . and .. folders.
  */
-var removeDotsFromPath = function (path) {
+function removeDotsFromPath(path) {
     var result = "";
     var segment = "";
     var end;
@@ -391,9 +420,9 @@ var removeDotsFromPath = function (path) {
         }
     }
     return result;
-};
+}
 
-var convertByteArrayToHexString = function (str) {
+function convertByteArrayToHexString(str) {
     var arr = [];
     if (window.atob === undefined) {
         arr = decodeBase64(str);
@@ -411,9 +440,9 @@ var convertByteArrayToHexString = function (str) {
         hexValue += hexValues[t & 0x0F];
     }
     return hexValue;
-};
+}
 
-var decodeBase64 = function (str) {
+function decodeBase64(str) {
     var binaryString = "";
     for (var i = 0; i < str.length; i++) {
         var base65IndexValue = getBase64IndexValue(str[i]);
@@ -430,9 +459,9 @@ var decodeBase64 = function (str) {
         byteArray.push(intValue);
     }
     return byteArray;
-};
+}
 
-var getBase64IndexValue = function (character) {
+function getBase64IndexValue(character) {
     var asciiCode = character.charCodeAt(0);
     var asciiOfA = 65;
     var differenceBetweenZanda = 6;
@@ -449,26 +478,26 @@ var getBase64IndexValue = function (character) {
     } else {
         return null;
     }
-};
+}
 
-var addBase64Padding = function (binaryString) {
+function addBase64Padding(binaryString) {
     while (binaryString.length < 6) {
         binaryString = "0" + binaryString;
     }
     return binaryString;
 
-};
+}
 
-var getJsonValueArraryLength = function (data) {
+function getJsonValueArraryLength(data) {
     if (data && data.value) {
         return data.value.length;
     }
 
     return 0;
-};
+}
 
-var sliceJsonValueArray = function (data, start, end) {
-    if (data == undefined || data.value == undefined) {
+function sliceJsonValueArray(data, start, end) {
+    if (data === undefined || data.value === undefined) {
         return data;
     }
 
@@ -491,18 +520,18 @@ var sliceJsonValueArray = function (data, start, end) {
     }
 
     return newdata;
-};
+}
 
-var concatJsonValueArray = function (data, concatData) {
-    if (concatData == undefined || concatData.value == undefined) {
+function concatJsonValueArray(data, concatData) {
+    if (concatData === undefined || concatData.value === undefined) {
         return data;
     }
 
-    if (data == undefined || Object.keys(data).length == 0) {
+    if (data === undefined || Object.keys(data).length === 0) {
         return concatData;
     }
 
-    if (data.value == undefined) {
+    if (data.value === undefined) {
         data.value = concatData.value;
         return data;
     }
@@ -510,17 +539,17 @@ var concatJsonValueArray = function (data, concatData) {
     data.value = data.value.concat(concatData.value);
 
     return data;
-};
+}
 
-var endsWith = function (input, search) {
+function endsWith(input, search) {
     return input.indexOf(search, input.length - search.length) !== -1;
-};
+}
 
-var startsWith = function (input, search) {
-    return input.indexOf(search) == 0;
-};
+function startsWith (input, search) {
+    return input.indexOf(search) === 0;
+}
 
-var getFormatKind = function (format, defaultFormatKind) {
+function getFormatKind(format, defaultFormatKind) {
     var formatKind = defaultFormatKind;
     if (!assigned(format)) {
         return formatKind;
@@ -542,33 +571,7 @@ var getFormatKind = function (format, defaultFormatKind) {
     }
 
     return formatKind;
-};
+}
 
-exports.activeXObject = activeXObject;
-exports.assigned = assigned;
-exports.contains = contains;
-exports.defined = defined;
-exports.delay = delay;
-exports.djsassert = djsassert;
-exports.extend = extend;
-exports.find = find;
-exports.getURIInfo = getURIInfo;
-exports.isArray = isArray;
-exports.isDate = isDate;
-exports.isObject = isObject;
-exports.normalizeURI = normalizeURI;
-exports.normalizeURICase = normalizeURICase;
-exports.parseInt10 = parseInt10;
-exports.renameProperty = renameProperty;
-exports.throwErrorCallback = throwErrorCallback;
-exports.trimString = trimString;
-exports.undefinedDefault = undefinedDefault;
-exports.decodeBase64 = decodeBase64;
-exports.convertByteArrayToHexString = convertByteArrayToHexString;
-exports.getJsonValueArraryLength = getJsonValueArraryLength;
-exports.sliceJsonValueArray = sliceJsonValueArray;
-exports.concatJsonValueArray = concatJsonValueArray;
-exports.startsWith = startsWith;
-exports.endsWith = endsWith;
-exports.getFormatKind = getFormatKind;
+
     
