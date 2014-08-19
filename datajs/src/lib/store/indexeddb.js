@@ -147,6 +147,7 @@ function openTransaction(store, mode, success, error) {
 
 /** Creates a new IndexedDBStore.
  * @class IndexedDBStore
+ * @constructor
  * @param {String} name - The name of the store.
  * @returns {Object} The new IndexedDBStore.
  */
@@ -155,7 +156,7 @@ function IndexedDBStore(name) {
 }
 
 /** Creates a new IndexedDBStore.
- * @method IndexedDBStore.create
+ * @method module:store/indexeddb~IndexedDBStore.create
  * @param {String} name - The name of the store.
  * @returns {Object} The new IndexedDBStore.
  */
@@ -168,7 +169,7 @@ IndexedDBStore.create = function (name) {
 };
 
 /** Returns whether IndexedDB is supported.
- * @method IndexedDBStore.isSupported
+ * @method module:store/indexeddb~IndexedDBStore.isSupported
  * @returns {Boolean} True if IndexedDB is supported, false otherwise.
  */
 IndexedDBStore.isSupported = function () {
@@ -176,7 +177,7 @@ IndexedDBStore.isSupported = function () {
 };
 
 /** Adds a key/value pair to the store
- * @method IndexedDBStore#add
+ * @method module:store/indexeddb~IndexedDBStore#add
  * @param {String} key - The key
  * @param {Object} value - The value
  * @param {Function} success - The success callback
@@ -213,7 +214,7 @@ IndexedDBStore.prototype.add = function (key, value, success, error) {
 };
 
 /** Adds or updates a key/value pair in the store
- * @method IndexedDBStore#addOrUpdate
+ * @method module:store/indexeddb~IndexedDBStore#addOrUpdate
  * @param {String} key - The key
  * @param {Object} value - The value
  * @param {Function} success - The success callback
@@ -251,7 +252,7 @@ IndexedDBStore.prototype.addOrUpdate = function (key, value, success, error) {
 };
 
 /** Clears the store
- * @method IndexedDBStore#clear
+ * @method module:store/indexeddb~IndexedDBStore#clear
  * @param {Function} success - The success callback
  * @param {Function} error - The error callback
  */
@@ -268,7 +269,7 @@ IndexedDBStore.prototype.clear = function (success, error) {
     }, error);
 };
 /** Closes the connection to the database
- * @method IndexedDBStore#close
+ * @method module:store/indexeddb~IndexedDBStore#close
 */
 IndexedDBStore.prototype.close = function () {
     
@@ -279,7 +280,7 @@ IndexedDBStore.prototype.close = function () {
 };
 
 /** Returns whether the store contains a key
- * @method IndexedDBStore#contains
+ * @method module:store/indexeddb~IndexedDBStore#contains
  * @param {String} key - The key
  * @param {Function} success - The success callback
  * @param {Function} error - The error callback
@@ -301,7 +302,7 @@ IndexedDBStore.prototype.contains = function (key, success, error) {
 IndexedDBStore.prototype.defaultError = throwErrorCallback;
 
 /** Gets all the keys from the store
- * @method IndexedDBStore#getAllKeys
+ * @method module:store/indexeddb~IndexedDBStore#getAllKeys
  * @param {Function} success - The success callback
  * @param {Function} error - The error callback
  */
@@ -334,7 +335,7 @@ IndexedDBStore.prototype.getAllKeys = function (success, error) {
 IndexedDBStore.prototype.mechanism = "indexeddb";
 
 /** Reads the value for the specified key
- * @method IndexedDBStore#read
+ * @method module:store/indexeddb~IndexedDBStore#read
  * @param {String} key - The key
  * @param {Function} success - The success callback
  * @param {Function} error - The error callback
@@ -370,7 +371,7 @@ IndexedDBStore.prototype.read = function (key, success, error) {
 };
 
 /** Removes the specified key from the store
- * @method IndexedDBStore#remove
+ * @method module:store/indexeddb~IndexedDBStore#remove
  * @param {String} key - The key
  * @param {Function} success - The success callback
  * @param {Function} error - The error callback
@@ -396,7 +397,7 @@ IndexedDBStore.prototype.remove = function (key, success, error) {
 };
 
 /** Updates a key/value pair in the store
- * @method IndexedDBStore#update
+ * @method module:store/indexeddb~IndexedDBStore#update
  * @param {String} key - The key
  * @param {Object} value - The value
  * @param {Function} success - The success callback
@@ -443,5 +444,4 @@ IndexedDBStore.prototype.update = function (key, value, success, error) {
 };
 
 
-/** IndexedDBStore (see {@link IndexedDBStore}) */
 module.exports = IndexedDBStore;

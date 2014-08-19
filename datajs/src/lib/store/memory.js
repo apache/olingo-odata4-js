@@ -17,8 +17,7 @@
  * under the License.
  */
 
- /** @module store/memory */
-
+/** @module store/memory */
 
 
 var utils = require('./../datajs.js').utils;
@@ -29,6 +28,7 @@ var delay = utils.delay;
 
 /** Constructor for store objects that use a sorted array as the underlying mechanism.
  * @class MemoryStore
+ * @constructor
  * @param {String} name - Store name.
  */
 function MemoryStore(name) {
@@ -69,7 +69,7 @@ function MemoryStore(name) {
 
     /** This method errors out if the store already contains the specified key.
      * @summery Adds a new value identified by a key to the store.
-     * @method MemoryStore#add
+     * @method module:store/memory~MemoryStore#add
      * @param {String} key - Key string.
      * @param value - Value that is going to be added to the store.
      * @param {Function} success - Callback for a successful add operation.</param>
@@ -89,7 +89,7 @@ function MemoryStore(name) {
 
     /** This method will overwrite the key's current value if it already exists in the store; otherwise it simply adds the new key and value.
      * @summary Adds or updates a value identified by a key to the store.
-     * @method MemoryStore#addOrUpdate
+     * @method module:store/memory~MemoryStore#addOrUpdate
      * @param {String} key - Key string.
      * @param value - Value that is going to be added or updated to the store.
      * @param {Function} success - Callback for a successful add or update operation.</param>
@@ -115,7 +115,7 @@ function MemoryStore(name) {
     };
 
     /** Removes all the data associated with this store object.
-     * @method MemoryStore#clear
+     * @method module:store/memory~MemoryStore#clear
      * @param {Function} success>Callback for a successful clear operation.
      */
     this.clear = function (success) {
@@ -126,7 +126,7 @@ function MemoryStore(name) {
     };
 
     /** Checks whether a key exists in the store.
-     * @method MemoryStore#contains
+     * @method module:store/memory~MemoryStore#contains
      * @param {String} key - Key string.
      * @param {Funktion} success - Callback indicating whether the store contains the key or not.</param>
      */
@@ -136,7 +136,7 @@ function MemoryStore(name) {
     };
 
     /** Gets all the keys that exist in the store.
-     * @method MemoryStore#getAllKeys
+     * @method module:store/memory~MemoryStore#getAllKeys
      * @param {Function} success - Callback for a successful get operation.</param>
      */
     this.getAllKeys = function (success) {
@@ -149,7 +149,7 @@ function MemoryStore(name) {
     };
 
     /** Reads the value associated to a key in the store.
-     * @method MemoryStore#read
+     * @method module:store/memory~MemoryStore#read
      * @param {String} key - Key string.
      * @param {Function} Function - Callback for a successful reads operation.</param>
      * @param {Function{}Function - Callback for handling errors. If not specified then store.defaultError is invoked.</param>
@@ -164,7 +164,7 @@ function MemoryStore(name) {
     };
 
     /** Removes a key and its value from the store.
-     * @method MemoryStore#remove
+     * @method module:store/memory~MemoryStore#remove
      * @param {String} key - Key string.
      * @param {Function} success - Callback for a successful remove operation.</param>
      * @param {Function} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.</param>
@@ -194,7 +194,7 @@ function MemoryStore(name) {
     };
 
     /** Updates the value associated to a key in the store.
-     * @method MemoryStore#update
+     * @method module:store/memory~MemoryStore#update
      * @param {String} key - Key string.
      * @param value - New value.
      * @param {Function} success - Callback for a successful update operation.</param>

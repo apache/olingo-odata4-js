@@ -126,7 +126,8 @@ module.exports = function(grunt) {
         dist : {
             src: ['src/**/*.js'], 
             options: {
-                destination: 'build/doc'
+                destination: 'build/doc',
+                verbose : false 
             }
         }
     }

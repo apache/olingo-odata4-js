@@ -82,6 +82,7 @@ function unqualifyDomStoreKey(store, key) {
 
 /** Constructor for store objects that use DOM storage as the underlying mechanism.
  * @class DomStore
+ * @constructor
  * @param {String} name - Store name.
  */
 function DomStore(name) {
@@ -89,7 +90,7 @@ function DomStore(name) {
 }
 
 /** Creates a store object that uses DOM Storage as its underlying mechanism.
- * @method DomStore.create
+ * @method module:store/dom~DomStore.create
  * @param {String} name - Store name.
  * @returns {Object} Store object.
  */
@@ -112,7 +113,7 @@ DomStore.isSupported = function () {
 };
 
 /** Adds a new value identified by a key to the store.
- * @method DomStore#add
+ * @method module:store/dom~DomStore#add
  * @param {String} key - Key string.
  * @param value - Value that is going to be added to the store.
  * @param {Funcktion} success - Callback for a successful add operation.</param>
@@ -133,7 +134,7 @@ DomStore.prototype.add = function (key, value, success, error) {
 
 /** This method will overwrite the key's current value if it already exists in the store; otherwise it simply adds the new key and value.
  * @summary Adds or updates a value identified by a key to the store.
- * @method DomStore#addOrUpdate
+ * @method module:store/dom~DomStore#addOrUpdate
  * @param {String} key - Key string.
  * @param value - Value that is going to be added or updated to the store.
  * @param {Function} success - Callback for a successful add or update operation.</param>
@@ -173,7 +174,7 @@ DomStore.prototype.addOrUpdate = function (key, value, success, error) {
 
 /** In case of an error, this method will not restore any keys that might have been deleted at that point.
  * @summary Removes all the data associated with this store object.
- * @method DomStore#clear
+ * @method module:store/dom~DomStore#clear
  * @param {Function} success - Callback for a successful clear operation.</param>
  * @param {Function} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.</param>
  */
@@ -200,13 +201,13 @@ DomStore.prototype.clear = function (success, error) {
 };
 
 /** This function does nothing in DomStore as it does not have a connection model
- * @method DomStore#close
+ * @method module:store/dom~DomStore#close
  */
 DomStore.prototype.close = function () {
 };
 
 /** Checks whether a key exists in the store.
- * @method DomStore#contains
+ * @method module:store/dom~DomStore#contains
  * @param {String} key - Key string.
  * @param {Function} success - Callback indicating whether the store contains the key or not.</param>
  * @param {Function} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.</param>
@@ -225,7 +226,7 @@ DomStore.prototype.contains = function (key, success, error) {
 DomStore.prototype.defaultError = throwErrorCallback;
 
 /** Gets all the keys that exist in the store.
- * @method DomStore#getAllKeys
+ * @method module:store/dom~DomStore#getAllKeys
  * @param {Function} success - Callback for a successful get operation.</param>
  * @param {Function} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.</param>
  */
@@ -255,7 +256,7 @@ DomStore.prototype.getAllKeys = function (success, error) {
 DomStore.prototype.mechanism = "dom";
 
 /** Reads the value associated to a key in the store.
- * @method DomStore#read
+ * @method module:store/dom~DomStore#read
  * @param {String} key - Key string.
  * @param {Function} success - Callback for a successful reads operation.
  * @param {Function} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.
@@ -285,7 +286,7 @@ DomStore.prototype.read = function (key, success, error) {
 };
 
 /** Removes a key and its value from the store.
- * @method DomStore#remove
+ * @method module:store/dom~DomStore#remove
  * @param {String} key - Key string.
  * @param {Funtion} success - Callback for a successful remove operation.</param>
  * @param {Funtion} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.</param>
@@ -307,7 +308,7 @@ DomStore.prototype.remove = function (key, success, error) {
 };
 
 /** Updates the value associated to a key in the store.
- * @method DomStore#update
+ * @method module:store/dom~DomStore#update
  * @param {String} key - Key string.
  * @param value - New value.
  * @param {Function} success - Callback for a successful update operation.
@@ -326,7 +327,4 @@ DomStore.prototype.update = function (key, value, success, error) {
     }, error);
 };
 
-
-
-/** DomStore (see {@link DomStore}) */
 module.exports = DomStore;
