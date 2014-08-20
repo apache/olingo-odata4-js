@@ -108,18 +108,18 @@
                 }
 
                 var metaDatasuccess = function(metadata){
-                    datajs.V4.oData.read(requestUri, success, errorFunc, null, null, metadata);
+                    odatajs.oData.read(requestUri, success, errorFunc, null, null, metadata);
                 };
 
                 if ( metadata === 'full') {
                     requestUri.headers =  { Accept : 'application/json;odata.metadata=full' };
-                    datajs.V4.oData.read(requestUri, success, errorFunc);
+                    odatajs.oData.read(requestUri, success, errorFunc);
                 } else if ( metadata === 'minimal') {
                     requestUri.headers =  { Accept : 'application/json;odata.metadata=minimal' };
                     getMetaData(metaDatasuccess);
                 } else {
                     requestUri.headers =  { Accept : 'application/json;odata.metadata=none' };
-                    datajs.V4.oData.read(requestUri, success, errorFunc);
+                    odatajs.oData.read(requestUri, success, errorFunc);
                 }
             }
 
@@ -152,7 +152,7 @@
                     requestUri: "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata", //"http://localhost:6630/PrimitiveKeys.svc/$metadata",
                     data: null,
                 };
-                datajs.V4.oData.read(metadataRequest, metaDatasuccess, errorFunc,datajs.V4.oData.metadataHandler);
+                odatajs.oData.read(metadataRequest, metaDatasuccess, errorFunc,odatajs.oData.metadataHandler);
             }
 
             /*******Special buttons***********/           
@@ -172,7 +172,7 @@
                     data: null,
                 };
 
-                datajs.V4.oData.read(metadataRequest, success, errorFunc,datajs.V4.oData.metadataHandler);
+                odatajs.oData.read(metadataRequest, success, errorFunc,odatajs.oData.metadataHandler);
             });
 
             $('#btnPOST_entry_food').on("click", function(){
@@ -188,7 +188,7 @@
                         Name: "flour1"
                     }
                 };
-                datajs.V4.oData.read(requestUri, success, errorFunc);
+                odatajs.oData.read(requestUri, success, errorFunc);
             });
             $('#btnPOST_entry_categorie').on("click", function(){
 
@@ -204,7 +204,7 @@
                         Name: "cat111"
                     }
                 };
-                datajs.V4.oData.read(requestUri, success, errorFunc);
+                odatajs.oData.read(requestUri, success, errorFunc);
             });
 
 
