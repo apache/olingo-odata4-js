@@ -11,5 +11,5 @@ module.exports = function(grunt) {
 
  
   grunt.loadTasks('grunt-config/custom-tasks/rat/tasks');
-  grunt.registerTask('license',['rat:src','rat:test']);
+  grunt.registerTask('custom-license-check',['rat:src','rat:test']);
 };

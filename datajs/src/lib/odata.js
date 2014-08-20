@@ -58,7 +58,7 @@ function dispatchHandler(handlerMethod, requestOrResponse, context) {
     if (i === len) {
         throw { message: "no handler for data" };
     }
-};
+}
 
 /** Default success handler for OData.
  * @param data - Data to process.

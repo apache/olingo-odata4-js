@@ -5,7 +5,6 @@ module.exports = function(grunt) {
     banner: grunt.file.read('src/banner.txt'),
     filename : '<%= pkg.name %>-<%= pkg.version %>',
 
-
     browserify: {
       // start with index.js and follow all required source in order pack them together 
       datajs: {
@@ -123,27 +122,51 @@ module.exports = function(grunt) {
       },
     },
     jsdoc : {
-        dist : {
+        src : {
             src: ['src/**/*.js'], 
             options: {
                 destination: 'build/doc',
                 verbose : false 
             }
+        },
+        test : {
+            src: ['tests/**/*.js'], 
+            options: {
+                destination: 'build/doc-test',
+                verbose : false 
+            }
         }
+    },
+    "npm-clean": {
+      tmp: {
+        src: [ "build/tmp"]
+      },
+      doc: {
+        src: ["build/doc"],
+          options: {
+                force: true
+            }
+      },
+      "doc-test": {
+        src: ["build/doc-test"],
+          options: {
+                force: true
+            }
+      },
     }
   };
   
-  //join local configuration for proxies and local test servers
+  /*** Join local configuration for proxies and local test servers ***/
   if (grunt.file.exists('localgrunt.config')) {
     console.log("merge localgrunt.config");
     var localGrundConfig = grunt.file.read('localgrunt.config');
     init.connect['test-browser'].proxies = init.connect['test-browser'].proxies.concat(JSON.parse(localGrundConfig).proxies);
   }
 
-
+  /*** Init ***/
   grunt.initConfig(init);
 
-  // These plugins provide necessary tasks.
+  /*** Load tasks from npm modules ***/
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks("grunt-connect-proxy");
@@ -151,21 +174,37 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-contrib-copy");
   grunt.loadNpmTasks("grunt-contrib-concat");
   grunt.loadNpmTasks("grunt-jsdoc");
-  grunt.loadNpmTasks('grunt-node-qunit');/*TODO replace by grunt contrib-qunit*/
 
-  //load the task from the grunt-config directory
-  //these are rat, 
+  //    Start Qunit tests direcly in node js, internally qunit (npm qunit) 
+  //    is used, no phantomjs instance required
+  grunt.loadNpmTasks('grunt-node-qunit'); 
+  grunt.loadNpmTasks('grunt-contrib-clean');
+
+  //    Load the custom-* tasks from the grunt-config directory
   grunt.loadTasks('grunt-config');
+
+  //    rename some tasks to avoid name clashes with the user tasks
+  grunt.renameTask('clean','npm-clean');
   
 
-  grunt.registerTask('doc', ['jsdoc']);
+  /*** E N D U S E R   T A S K S ***/
+
+  grunt.registerTask('clean', ['npm-clean:doc','npm-clean:tmp']);
+
+  //    Runs the license header check to verify the any source file contains a license header
+  grunt.registerTask('license-check', ['custom-license-check']);
+
+  //    Create documentation in /build/doc
+  grunt.registerTask('doc', [/*'npm-clean:doc',*/'jsdoc:src']);
+  grunt.registerTask('doc-test', [/*'npm-clean:doc-test',*/'jsdoc:test']);
+
+  //    Build the odatajs library
   grunt.registerTask('build', ['browserify:datajs', 'uglify:build', 'concat','copy:forDemo']);
+
+
   grunt.registerTask('test-browser', ['configureProxies:test-browser', 'connect:test-browser']);
   grunt.registerTask('test-node', ['node-qunit:default-tests']);
 
-
-  //This task runs the Apache Relase Autit Tool (RAT)
-  //grunt.registerTask('rat', ['shell:rat'/*,'rat-check:rat'*/]);
   
 };
 
