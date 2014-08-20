@@ -27,7 +27,7 @@
             .code .comment,.code .ns{color:#666666;}
 
             .left {
-                left : 20px;
+                margin-left : 20px;
                 position:relative;
             }
 
@@ -97,15 +97,14 @@
             // Testing 
             function buttonClick(configNr) {
                 var metadata = $("input[name*='inMetadata']:checked").val();
-                var recognizeDates = $("#inRecognizeDates:checked").val();
+                var recognizeDates  = ($("#inRecognizeDates:checked").val() ==='on') ? true : false;
+                var inMinimalToFull = ($("#inMinimalToFull:checked").val() ==='on') ? true : false;
 
                 var requestUri = {
                     requestUri : config[configNr].url
                 };
 
-                if (recognizeDates==='on') {
-                    requestUri.recognizeDates = true;
-                }
+                requestUri.recognizeDates = recognizeDates;
 
                 var metaDatasuccess = function(metadata){
                     odatajs.oData.read(requestUri, success, errorFunc, null, null, metadata);
@@ -116,7 +115,11 @@
                     odatajs.oData.read(requestUri, success, errorFunc);
                 } else if ( metadata === 'minimal') {
                     requestUri.headers =  { Accept : 'application/json;odata.metadata=minimal' };
-                    getMetaData(metaDatasuccess);
+                    if (inMinimalToFull) {
+                        getMetaData(metaDatasuccess);
+                    } else {
+                        odatajs.oData.read(requestUri, success, errorFunc);   
+                    }
                 } else {
                     requestUri.headers =  { Accept : 'application/json;odata.metadata=none' };
                     odatajs.oData.read(requestUri, success, errorFunc);
