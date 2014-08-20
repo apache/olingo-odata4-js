@@ -15,24 +15,24 @@
 
 (function (window, undefined) {
 
-    var datajs = window.datajs || {};
+    var datajs = window.odatajs || {};
     var odata = window.OData || {};
 
     // Imports.
 
-    var contains = datajs.contains;
-    var djsassert = datajs.djsassert;
-    var http = datajs.http;
-    var isArray = datajs.isArray;
-    var xmlAppendChild = datajs.xmlAppendChild;
-    var xmlAttributeValue = datajs.xmlAttributeValue;
-    var xmlChildElements = datajs.xmlChildElements;
-    var xmlFirstChildElement = datajs.xmlFirstChildElement;
-    var xmlInnerText = datajs.xmlInnerText;
-    var xmlLocalName = datajs.xmlLocalName;
-    var xmlNamespaceURI = datajs.xmlNamespaceURI;
-    var xmlNewElement = datajs.xmlNewElement;
-    var xmlQualifiedName = datajs.xmlQualifiedName;
+    var contains = odatajs.contains;
+    var djsassert = odatajs.djsassert;
+    var http = odatajs.http;
+    var isArray = odatajs.isArray;
+    var xmlAppendChild = odatajs.xmlAppendChild;
+    var xmlAttributeValue = odatajs.xmlAttributeValue;
+    var xmlChildElements = odatajs.xmlChildElements;
+    var xmlFirstChildElement = odatajs.xmlFirstChildElement;
+    var xmlInnerText = odatajs.xmlInnerText;
+    var xmlLocalName = odatajs.xmlLocalName;
+    var xmlNamespaceURI = odatajs.xmlNamespaceURI;
+    var xmlNewElement = odatajs.xmlNewElement;
+    var xmlQualifiedName = odatajs.xmlQualifiedName;
     var GEOJSON_POINT = odata.GEOJSON_POINT;
     var GEOJSON_LINESTRING = odata.GEOJSON_LINESTRING;
     var GEOJSON_POLYGON = odata.GEOJSON_POLYGON;

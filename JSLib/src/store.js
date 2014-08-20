@@ -15,11 +15,11 @@
 
 (function (window, undefined) {
    
-    var datajs = window.datajs || {};
+    var datajs = window.odatajs || {};
 
-    var DomStore = datajs.DomStore;
-    var IndexedDBStore = datajs.IndexedDBStore;
-    var MemoryStore = datajs.MemoryStore;
+    var DomStore = odatajs.DomStore;
+    var IndexedDBStore = odatajs.IndexedDBStore;
+    var MemoryStore = odatajs.MemoryStore;
 
     // CONTENT START
 
@@ -29,16 +29,16 @@
         memory: MemoryStore
     };
 
-    datajs.defaultStoreMechanism = "best";
+    odatajs.defaultStoreMechanism = "best";
 
-    datajs.createStore = function (name, mechanism) {
+    odatajs.createStore = function (name, mechanism) {
         /// <summary>Creates a new store object.</summary>
         /// <param name="name" type="String">Store name.</param>
         /// <param name="mechanism" type="String" optional="true">A specific mechanism to use (defaults to best, can be "best", "dom", "indexeddb", "webdb").</param>
         /// <returns type="Object">Store object.</returns>
 
         if (!mechanism) {
-            mechanism = datajs.defaultStoreMechanism;
+            mechanism = odatajs.defaultStoreMechanism;
         }
 
         if (mechanism === "best") {
@@ -54,7 +54,7 @@
     };
 
     // DATAJS INTERNAL START
-    datajs.mechanisms = mechanisms;
+    odatajs.mechanisms = mechanisms;
     // DATAJS INTERNAL END
 
     // CONTENT END

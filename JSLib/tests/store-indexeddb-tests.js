@@ -58,14 +58,14 @@
         });
 
         djstest.addTest(function testIndexedDBStoreConstructor() {
-            var store = this.store = window.datajs.IndexedDBStore.create(getCurrentStoreName());
+            var store = this.store = window.odatajs.IndexedDBStore.create(getCurrentStoreName());
             djstest.assertAreEqual(store.name, getCurrentStoreName());
             djstest.assertAreEqual(store.mechanism, "indexeddb");
             djstest.done();
         });
 
         djstest.addTest(function testIndexedDBStoreAddGet() {
-            var store = this.store = window.datajs.IndexedDBStore.create(getCurrentStoreName());
+            var store = this.store = window.odatajs.IndexedDBStore.create(getCurrentStoreName());
             store.add("key", "value", function (key, value) {
                 djstest.assertAreEqual(key, "key");
                 djstest.assertAreEqual(value, "value");
@@ -78,7 +78,7 @@
         });
 
         djstest.addTest(function testIndexedDBStoreAddUpdateGet() {
-            var store = this.store = window.datajs.IndexedDBStore.create(getCurrentStoreName());
+            var store = this.store = window.odatajs.IndexedDBStore.create(getCurrentStoreName());
             store.add("key", "value", function (key, value) {
                 store.update("key", "value2", function (key, value) {
                     djstest.assertAreEqual(key, "key");
@@ -93,7 +93,7 @@
         });
 
         djstest.addTest(function testIndexedDBStoreAddOrUpdateGet() {
-            var store = this.store = window.datajs.IndexedDBStore.create(getCurrentStoreName());
+            var store = this.store = window.odatajs.IndexedDBStore.create(getCurrentStoreName());
             store.addOrUpdate("key", "value", function (key, value) {
                 djstest.assertAreEqual(key, "key");
                 djstest.assertAreEqual(value, "value");
@@ -110,7 +110,7 @@
         });
 
         djstest.addTest(function testIndexedDBStoreAddRemoveContains() {
-            var store = this.store = window.datajs.IndexedDBStore.create(getCurrentStoreName());
+            var store = this.store = window.odatajs.IndexedDBStore.create(getCurrentStoreName());
             store.add("key", "value", function (key, value) {
                 store.contains("key", function (result) {
                     djstest.assert(result);
@@ -126,7 +126,7 @@
         });
 
         djstest.addTest(function testIndexedDBStoreAddConsecutiveGetAllKeys() {
-            var store = this.store = window.datajs.IndexedDBStore.create(getCurrentStoreName());
+            var store = this.store = window.odatajs.IndexedDBStore.create(getCurrentStoreName());
             store.add("key", "value", function (key, value) {
                 store.add("key2", "value2", function (key, value) {
                     store.add("key3", "value3", function (key, value) {
@@ -142,7 +142,7 @@
         djstest.addTest(function testIndexedDBStoreAddArrayClear() {
             var addedKeys = ["key", "key2", "key3"];
             var addedValues = ["value", "value2", "value3"];
-            var store = this.store = window.datajs.IndexedDBStore.create(getCurrentStoreName());
+            var store = this.store = window.odatajs.IndexedDBStore.create(getCurrentStoreName());
             store.add(addedKeys, addedValues, function (keys, values) {
                 djstest.assertAreEqualDeep(keys, addedKeys);
                 djstest.assertAreEqualDeep(values, addedValues);
@@ -158,7 +158,7 @@
         djstest.addTest(function testIndexedDBStoreAddArrayUpdateArrayGetArray() {
             var addedKeys = ["key", "key2", "key3"];
             var addedValues = ["value", "value2", "value3"];
-            var store = this.store = window.datajs.IndexedDBStore.create(getCurrentStoreName());
+            var store = this.store = window.odatajs.IndexedDBStore.create(getCurrentStoreName());
             store.add(addedKeys, addedValues, function (keys, values) {
                 djstest.assertAreEqualDeep(keys, addedKeys);
                 djstest.assertAreEqualDeep(values, addedValues);
@@ -179,7 +179,7 @@
         djstest.addTest(function testIndexedDBStoreAddOrUpdateArrayGetArray() {
             var expectedKeys = ["key", "key2", "key3"];
             var expectedValues = ["value", "value2", "value3"];
-            var store = this.store = window.datajs.IndexedDBStore.create(getCurrentStoreName());
+            var store = this.store = window.odatajs.IndexedDBStore.create(getCurrentStoreName());
             store.add("key2", "value", function (key, value) {
                 store.addOrUpdate(expectedKeys, expectedValues, function (keys, values) {
                     djstest.assertAreEqualDeep(keys, expectedKeys);
@@ -193,7 +193,7 @@
         });
 
         djstest.addTest(function testIndexedDBStoreAddDuplicate() {
-            var store = this.store = window.datajs.IndexedDBStore.create(getCurrentStoreName());
+            var store = this.store = window.odatajs.IndexedDBStore.create(getCurrentStoreName());
             store.add("key", "value", function (key, value) {
                 store.add("key", "value2", unexpectedSuccess, function (err) {
                     djstest.pass("Error callback called as expected");
@@ -203,7 +203,7 @@
         });
 
         djstest.addTest(function testIndexedDBStoreAddArrayDuplicate() {
-            var store = this.store = window.datajs.IndexedDBStore.create(getCurrentStoreName());
+            var store = this.store = window.odatajs.IndexedDBStore.create(getCurrentStoreName());
             store.add(["key", "key2", "key"], ["value", "value2", "value3"], unexpectedSuccess, function (err) {
                 djstest.pass("Error callback called as expected");
                 djstest.done();
@@ -211,7 +211,7 @@
         });
 
         djstest.addTest(function testIndexedDBStoreGetArrayNonExistent() {
-            var store = this.store = window.datajs.IndexedDBStore.create(getCurrentStoreName());
+            var store = this.store = window.odatajs.IndexedDBStore.create(getCurrentStoreName());
             store.add("key", "value", function (key, value) {
                 store.read(["key", "badkey"], function (keys, values) {
                     djstest.assertAreEqualDeep(keys, ["key", "badkey"]);
@@ -222,7 +222,7 @@
         });
 
         djstest.addTest(function testIndexedDBStoreUpdateNonExistent() {
-            var store = this.store = window.datajs.IndexedDBStore.create(getCurrentStoreName());
+            var store = this.store = window.odatajs.IndexedDBStore.create(getCurrentStoreName());
             store.update("badkey", "badvalue", unexpectedSuccess, function (err) {
                 djstest.pass("Error callback called as expected");
                 djstest.done();
@@ -230,7 +230,7 @@
         });
 
         djstest.addTest(function testIndexedDBStoreUpdateArrayNonExistent() {
-            var store = this.store = window.datajs.IndexedDBStore.create(getCurrentStoreName());
+            var store = this.store = window.odatajs.IndexedDBStore.create(getCurrentStoreName());
             store.add("key", "value", function (key, value) {
                 store.update(["key", "badkey"], ["value", "badvalue"], unexpectedSuccess, function (err) {
                     djstest.pass("Error callback called as expected");

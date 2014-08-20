@@ -15,7 +15,7 @@
 
 (function (window, undefined) {
 
-    var datajs = window.datajs || {};
+    var datajs = window.odatajs || {};
 
     // CONTENT START
 
@@ -517,30 +517,30 @@
 
     // DATAJS INTERNAL START
 
-    datajs.activeXObject = activeXObject;
-    datajs.assigned = assigned;
-    datajs.contains = contains;
-    datajs.defined = defined;
-    datajs.delay = delay;
-    datajs.djsassert = djsassert;
-    datajs.extend = extend;
-    datajs.find = find;
-    datajs.getURIInfo = getURIInfo;
-    datajs.isArray = isArray;
-    datajs.isDate = isDate;
-    datajs.isObject = isObject;
-    datajs.normalizeURI = normalizeURI;
-    datajs.normalizeURICase = normalizeURICase;
-    datajs.parseInt10 = parseInt10;
-    datajs.renameProperty = renameProperty;
-    datajs.throwErrorCallback = throwErrorCallback;
-    datajs.trimString = trimString;
-    datajs.undefinedDefault = undefinedDefault;
-    datajs.decodeBase64 = decodeBase64;
-    datajs.convertByteArrayToHexString = convertByteArrayToHexString;
-    datajs.getJsonValueArraryLength = getJsonValueArraryLength;
-    datajs.sliceJsonValueArray = sliceJsonValueArray;
-    datajs.concatJsonValueArray = concatJsonValueArray;
+    odatajs.activeXObject = activeXObject;
+    odatajs.assigned = assigned;
+    odatajs.contains = contains;
+    odatajs.defined = defined;
+    odatajs.delay = delay;
+    odatajs.djsassert = djsassert;
+    odatajs.extend = extend;
+    odatajs.find = find;
+    odatajs.getURIInfo = getURIInfo;
+    odatajs.isArray = isArray;
+    odatajs.isDate = isDate;
+    odatajs.isObject = isObject;
+    odatajs.normalizeURI = normalizeURI;
+    odatajs.normalizeURICase = normalizeURICase;
+    odatajs.parseInt10 = parseInt10;
+    odatajs.renameProperty = renameProperty;
+    odatajs.throwErrorCallback = throwErrorCallback;
+    odatajs.trimString = trimString;
+    odatajs.undefinedDefault = undefinedDefault;
+    odatajs.decodeBase64 = decodeBase64;
+    odatajs.convertByteArrayToHexString = convertByteArrayToHexString;
+    odatajs.getJsonValueArraryLength = getJsonValueArraryLength;
+    odatajs.sliceJsonValueArray = sliceJsonValueArray;
+    odatajs.concatJsonValueArray = concatJsonValueArray;
     // DATAJS INTERNAL END
 
     // CONTENT END

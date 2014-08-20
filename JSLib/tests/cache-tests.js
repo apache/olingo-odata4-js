@@ -35,7 +35,7 @@
     };
 
     djstest.addTest(function dataCacheCountTest() {
-        var cache = datajs.createDataCache({ name: "cache", source: foodsFeed });
+        var cache = odatajs.createDataCache({ name: "cache", source: foodsFeed });
         cache.count().then(function (count) {
             djstest.assertAreEqual(count, collectionSize, "expected count for Foods");
             djstest.destroyCacheAndDone(cache);
@@ -43,7 +43,7 @@
     });
 
     djstest.addTest(function dataCacheCountOnLocalTest() {
-        var cache = datajs.createDataCache({ name: "cache", source: foodsFeed, pageSize: collectionSize + 10, mechanism: "memory" });
+        var cache = odatajs.createDataCache({ name: "cache", source: foodsFeed, pageSize: collectionSize + 10, mechanism: "memory" });
         cache.readRange(0, collectionSize + 10).then(function (data) {
             var expectedCount = data.value ? data.value.length : 0;
             cache.count().then(function (count) {
@@ -55,7 +55,7 @@
 
     djstest.addTest(function dataCacheCountAbortTest() {
         // Abort before completion.
-        var cache = datajs.createDataCache({ name: "cache", source: foodsFeed });
+        var cache = odatajs.createDataCache({ name: "cache", source: foodsFeed });
         var item = cache.count().then(thenFailTest, function (err) {
             djstest.assertAreEqual(true, err.canceled, "err.aborted is true");
             djstest.destroyCacheAndDone(cache);
@@ -87,9 +87,9 @@
             }
         };
 
-        var cache = datajs.createDataCache(options);
+        var cache = odatajs.createDataCache(options);
         cache.clear().then(function () {
-            var newCache = datajs.createDataCache(options);
+            var newCache = odatajs.createDataCache(options);
             resolve(newCache);
         }, function (err) {
             rejected = true;
@@ -350,7 +350,7 @@
             then(function (cache) {
                 cache.readRange(0, 2).then(function () {
                     options.source = "HtTp://ExampleURI.cOm/my%20service.svc";
-                    var newCache = datajs.createDataCache(options);
+                    var newCache = odatajs.createDataCache(options);
                     newCache.readRange(0, 2).then(function (data) {
                         djstest.assertAreEqualDeep(data.value, [1, 2], "Got the expected data from the new cache instance");
                         newCache.clear().then(function () {
@@ -503,7 +503,7 @@
                 return null;
             }
         };
-        var cache = datajs.createDataCache({
+        var cache = odatajs.createDataCache({
             name: "mem", mechanism: "memory", source: "http://www.example.org/service/",
             httpClient: httpClient
         });
@@ -675,53 +675,53 @@
         var cache;
 
         // Verify the defaults.
-        cache = datajs.createDataCache({ name: "name", source: "src" });
+        cache = odatajs.createDataCache({ name: "name", source: "src" });
 
         djstest.assertAreEqual(cache.onidle, undefined, "onidle is undefined");
 
         // Verify specific values.
-        cache = datajs.createDataCache({ name: "name", source: "src", cacheSize: 1, pageSize: 2, prefetchSize: 3, idle: 123 });
+        cache = odatajs.createDataCache({ name: "name", source: "src", cacheSize: 1, pageSize: 2, prefetchSize: 3, idle: 123 });
 
         djstest.assertAreEqual(cache.onidle, 123, "onidle is as specified");
 
         // Verify 0 pageSize 
         djstest.expectException(function () {
-            datajs.createDataCache({ name: "name", source: "src", cacheSize: 1, pageSize: 0, prefetchSize: 3, idle: 123 });
+            odatajs.createDataCache({ name: "name", source: "src", cacheSize: 1, pageSize: 0, prefetchSize: 3, idle: 123 });
         }, "zero pageSize");
 
         // Verify negative pageSize
         djstest.expectException(function () {
-            datajs.createDataCache({ name: "name", source: "src", cacheSize: 1, pageSize: -2, prefetchSize: 3, idle: 123 });
+            odatajs.createDataCache({ name: "name", source: "src", cacheSize: 1, pageSize: -2, prefetchSize: 3, idle: 123 });
         }, "negative pageSize");
 
         // Verify NaN pageSize
         djstest.expectException(function () {
-            cache = datajs.createDataCache({ name: "name", source: "src", cacheSize: 1, pageSize: "2", prefetchSize: 3, idle: 123 });
+            cache = odatajs.createDataCache({ name: "name", source: "src", cacheSize: 1, pageSize: "2", prefetchSize: 3, idle: 123 });
         }, "NaN pageSize");
 
         // Verify NaN cacheSize
         djstest.expectException(function () {
-            cache = datajs.createDataCache({ name: "name", source: "src", cacheSize: "1", pageSize: 2, prefetchSize: 3, idle: 123 });
+            cache = odatajs.createDataCache({ name: "name", source: "src", cacheSize: "1", pageSize: 2, prefetchSize: 3, idle: 123 });
         }, "NaN cacheSize");
 
         // Verify NaN prefetchSize
         djstest.expectException(function () {
-            cache = datajs.createDataCache({ name: "name", source: "src", cacheSize: 1, pageSize: 2, prefetchSize: "3", idle: 123 });
+            cache = odatajs.createDataCache({ name: "name", source: "src", cacheSize: 1, pageSize: 2, prefetchSize: "3", idle: 123 });
         }, "NaN prefetchSize");
 
         // Verify undefined name 
         djstest.expectException(function () {
-            datajs.createDataCache({ source: "src", cacheSize: 1, pageSize: 1, prefetchSize: 3, idle: 123 });
+            odatajs.createDataCache({ source: "src", cacheSize: 1, pageSize: 1, prefetchSize: 3, idle: 123 });
         }, "undefined name");
 
         // Verify null name 
         djstest.expectException(function () {
-            datajs.createDataCache({ name: null, source: "src", cacheSize: 1, pageSize: 1, prefetchSize: 3, idle: 123 });
+            odatajs.createDataCache({ name: null, source: "src", cacheSize: 1, pageSize: 1, prefetchSize: 3, idle: 123 });
         }, "null name");
 
         // Verify undefined source 
         djstest.expectException(function () {
-            datajs.createDataCache({ name: "name", cacheSize: 1, pageSize: 1, prefetchSize: 3, idle: 123 });
+            odatajs.createDataCache({ name: "name", cacheSize: 1, pageSize: 1, prefetchSize: 3, idle: 123 });
         }, "undefined source");
 
         djstest.done();
@@ -747,7 +747,7 @@
             }
         };
 
-        var cache = datajs.createDataCache({ name: "name", source: cacheSource, mechanism: "memory", pageSize: 10 });
+        var cache = odatajs.createDataCache({ name: "name", source: cacheSource, mechanism: "memory", pageSize: 10 });
         cache.count().then(function () {
             cache.readRange(0, 5).then(function () {
                 djstest.done();
@@ -760,13 +760,13 @@
         var failures = ["read-settings", "write-settings", "v2"];
         var failureIndex = 0;
 
-        var originalStore = datajs.createStore;
+        var originalStore = odatajs.createStore;
         var restoreStore = function () {
-            datajs.createStore = originalStore;
+            odatajs.createStore = originalStore;
         };
 
         var storeError = { message: "cacheInitializationFailTest error" };
-        datajs.createStore = function (name, mechanism) {
+        odatajs.createStore = function (name, mechanism) {
             return {
                 addOrUpdate: function (key, value, successCallback, errorCallback) {
                     if (failures[failureIndex] === "write-settings") {
@@ -795,7 +795,7 @@
 
         var nextFailure = function () {
             djstest.log("Failure mode: " + failures[failureIndex]);
-            var cache = datajs.createDataCache({ name: "name", source: "foo", mechanism: "memory", pageSize: 10 });
+            var cache = odatajs.createDataCache({ name: "name", source: "foo", mechanism: "memory", pageSize: 10 });
             try {
                 // The first readRange should succeed, because the data cache isn't really initialized at this time.
                 cache.readRange(1, 2).then(djstest.failAndDoneCallback("No function should succeed"), function (err) {
@@ -854,7 +854,7 @@
             }
         };
 
-        var cache = datajs.createDataCache({ name: "name", source: cacheSource, mechanism: "memory", pageSize: 10 });
+        var cache = odatajs.createDataCache({ name: "name", source: cacheSource, mechanism: "memory", pageSize: 10 });
         cache.readRange(0, 5).then(function () {
             djstest.fail("unexpected call to then success");
             djstest.done();
@@ -975,7 +975,7 @@
 
     djstest.addTest(function createDeferredTest() {
         // Verify basic use of deferred object.
-        var deferred = datajs.createDeferred();
+        var deferred = odatajs.createDeferred();
         deferred.then(function (val1, val2) {
             djstest.assertAreEqual(val1, 1, "val1 is as specified");
             djstest.assertAreEqual(val2, 2, "val2 is as specified");
@@ -986,7 +986,7 @@
 
     djstest.addTest(function deferredThenTest() {
         // Verify then registration and chaining.
-        var deferred = datajs.createDeferred();
+        var deferred = odatajs.createDeferred();
         deferred.then(function (val1, val2) {
             djstest.assertAreEqual(val1, 1, "val1 is as specified");
             djstest.assertAreEqual(val2, 2, "val2 is as specified");
@@ -996,7 +996,7 @@
             djstest.assert(foo !== "foo", "argument for chained 'then' is *not* result of previous call");
             djstest.assert(foo === 1, "argument for chained 'then' is same as for previous call");
 
-            var other = datajs.createDeferred();
+            var other = odatajs.createDeferred();
             other.then(null, function (err, msg) {
                 djstest.assertAreEqual("error", err, "err is as specified");
                 djstest.assertAreEqual("message", msg, "msg is as specified");
@@ -1007,7 +1007,7 @@
                 djstest.assertAreEqual("error", err, "err is as specified");
                 djstest.assertAreEqual("message", msg, "msg is as specified");
 
-                var multiple = datajs.createDeferred();
+                var multiple = odatajs.createDeferred();
                 var count = 0;
 
                 // See Compatibility Note A in DjsDeferred remarks.
@@ -1037,12 +1037,12 @@
 
     djstest.addTest(function deferredResolveTest() {
         // Resolve with no arguments.
-        var deferred = datajs.createDeferred();
+        var deferred = odatajs.createDeferred();
         deferred.then(function (arg) {
             djstest.assertAreEqual(arg, undefined, "resolve with no args shows up as undefined");
 
             // Resolve with no callbacks.
-            var other = datajs.createDeferred();
+            var other = odatajs.createDeferred();
             other.resolve();
             djstest.done();
         });
@@ -1052,12 +1052,12 @@
 
     djstest.addTest(function deferredRejectTest() {
         // Resolve with no arguments.   
-        var deferred = datajs.createDeferred();
+        var deferred = odatajs.createDeferred();
         deferred.then(null, function (arg) {
             djstest.assertAreEqual(arg, undefined, "reject with no args shows up as undefined");
 
             // Resolve with no callbacks.
-            var other = datajs.createDeferred();
+            var other = odatajs.createDeferred();
             other.reject();
             djstest.done();
         });
@@ -1079,7 +1079,7 @@
         var i, len;
         for (i = 0, len = tests.length; i < len; i++) {
             var test = tests[i];
-            djstest.assertAreEqual(datajs.estimateSize(test.i), test.e);
+            djstest.assertAreEqual(odatajs.estimateSize(test.i), test.e);
         }
         djstest.done();
     });
@@ -1099,7 +1099,7 @@
             }
         });
 
-        var cache = datajs.createDataCache({
+        var cache = odatajs.createDataCache({
             name: "cacheOptionsTunnel",
             source: "http://foo-bar/",
             user: "the-user",
@@ -1121,7 +1121,7 @@
     djstest.addTest(function dataCacheHandlesFullStoreTest() {
 
         var TestStore = function (name) {
-            var that = new window.datajs.MemoryStore(name);
+            var that = new window.odatajs.MemoryStore(name);
             that.addOrUpdate = function (key, value, success, error) {
                 if (key === "__settings") {
                     window.setTimeout(function () {
@@ -1160,14 +1160,14 @@
             }
         };
 
-        var originalCreateStore = window.datajs.createStore;
+        var originalCreateStore = window.odatajs.createStore;
 
-        window.datajs.createStore = function (name, mechanism) {
+        window.odatajs.createStore = function (name, mechanism) {
             return TestStore(name);
         };
 
         try {
-            var cache = datajs.createDataCache({
+            var cache = odatajs.createDataCache({
                 name: "cache",
                 pageSize: 5,
                 prefetchSize: 0,
@@ -1175,7 +1175,7 @@
                 mechanism: "teststore"
             });
         } finally {
-            window.datajs.createStore = originalCreateStore;
+            window.odatajs.createStore = originalCreateStore;
         }
 
         cache.readRange(0, 5).then(function (data) {

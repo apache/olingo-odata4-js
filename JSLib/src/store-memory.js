@@ -15,11 +15,11 @@
 
 (function (window, undefined) {
 
-    var datajs = window.datajs || {};
+    var datajs = window.odatajs || {};
 
     // Imports.
-    var throwErrorCallback = datajs.throwErrorCallback;
-    var delay = datajs.delay;
+    var throwErrorCallback = odatajs.throwErrorCallback;
+    var delay = odatajs.delay;
 
     // CONTENT START
 
@@ -224,7 +224,7 @@
     MemoryStore.prototype.mechanism = "memory";
 
     // DATAJS INTERNAL START
-    datajs.MemoryStore = MemoryStore;
+    odatajs.MemoryStore = MemoryStore;
     // DATAJS INTERNAL END
 
     // CONTENT END

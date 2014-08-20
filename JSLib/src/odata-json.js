@@ -15,17 +15,17 @@
 
 (function (window, undefined) {
 
-    var datajs = window.datajs || {};
+    var datajs = window.odatajs || {};
     var odata = window.OData || {};
 
     // Imports 
 
-    var defined = datajs.defined;
-    var extend = datajs.extend;
-    var isArray = datajs.isArray;
-    var isDate = datajs.isDate;
-    var normalizeURI = datajs.normalizeURI;
-    var parseInt10 = datajs.parseInt10;
+    var defined = odatajs.defined;
+    var extend = odatajs.extend;
+    var isArray = odatajs.isArray;
+    var isDate = odatajs.isDate;
+    var normalizeURI = odatajs.normalizeURI;
+    var parseInt10 = odatajs.parseInt10;
 
     var contentType = odata.contentType;
     var jsonLightReadPayload = odata.jsonLightReadPayload;

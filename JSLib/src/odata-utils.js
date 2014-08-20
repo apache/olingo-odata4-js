@@ -15,17 +15,17 @@
 
 (function (window, undefined) {
 
-    var datajs = window.datajs || {};
+    var datajs = window.odatajs || {};
     var odata = window.OData || {};
 
     // Imports
-    var assigned = datajs.assigned;
-    var contains = datajs.contains;
-    var find = datajs.find;
-    var isArray = datajs.isArray;
-    var isDate = datajs.isDate;
-    var isObject = datajs.isObject;
-    var parseInt10 = datajs.parseInt10;
+    var assigned = odatajs.assigned;
+    var contains = odatajs.contains;
+    var find = odatajs.find;
+    var isArray = odatajs.isArray;
+    var isDate = odatajs.isDate;
+    var isObject = odatajs.isObject;
+    var parseInt10 = odatajs.parseInt10;
 
     // CONTENT START
 

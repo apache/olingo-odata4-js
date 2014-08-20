@@ -17,23 +17,23 @@
 
 (function (window, undefined) {
 
-    var datajs = window.datajs || {};
+    var datajs = window.odatajs || {};
 
-    var assigned = datajs.assigned;
-    var delay = datajs.delay;
-    var extend = datajs.extend;
-    var djsassert = datajs.djsassert;
-    var isArray = datajs.isArray;
-    var normalizeURI = datajs.normalizeURI;
-    var parseInt10 = datajs.parseInt10;
-    var undefinedDefault = datajs.undefinedDefault;
+    var assigned = odatajs.assigned;
+    var delay = odatajs.delay;
+    var extend = odatajs.extend;
+    var djsassert = odatajs.djsassert;
+    var isArray = odatajs.isArray;
+    var normalizeURI = odatajs.normalizeURI;
+    var parseInt10 = odatajs.parseInt10;
+    var undefinedDefault = odatajs.undefinedDefault;
 
-    var createDeferred = datajs.createDeferred;
-    var DjsDeferred = datajs.DjsDeferred;
-    var ODataCacheSource = datajs.ODataCacheSource;
-    var getJsonValueArraryLength = datajs.getJsonValueArraryLength;
-    var sliceJsonValueArray = datajs.sliceJsonValueArray;
-    var concatJsonValueArray = datajs.concatJsonValueArray;
+    var createDeferred = odatajs.createDeferred;
+    var DjsDeferred = odatajs.DjsDeferred;
+    var ODataCacheSource = odatajs.ODataCacheSource;
+    var getJsonValueArraryLength = odatajs.getJsonValueArraryLength;
+    var sliceJsonValueArray = odatajs.sliceJsonValueArray;
+    var concatJsonValueArray = odatajs.concatJsonValueArray;
 
     // CONTENT START
 
@@ -413,7 +413,7 @@
         source.options = options;
 
         // Create a cache local store.
-        var store = datajs.createStore(options.name, options.mechanism);
+        var store = odatajs.createStore(options.name, options.mechanism);
 
         var that = this;
 
@@ -1331,7 +1331,7 @@
         return that;
     };
 
-    datajs.createDataCache = function (options) {
+    odatajs.createDataCache = function (options) {
         /// <summary>Creates a data cache for a collection that is efficiently loaded on-demand.</summary>
         /// <param name="options">
         /// Options for the data cache, including name, source, pageSize,
@@ -1354,7 +1354,7 @@
     };
 
     // DATAJS INTERNAL START
-    window.datajs.estimateSize = estimateSize;
+    window.odatajs.estimateSize = estimateSize;
     // DATAJS INTERNAL END
 
     // CONTENT END

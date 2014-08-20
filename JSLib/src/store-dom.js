@@ -15,11 +15,11 @@
 
 (function (window, undefined) {
 
-    var datajs = window.datajs || {};
+    var datajs = window.odatajs || {};
 
     // Imports.
-    var throwErrorCallback = datajs.throwErrorCallback;
-    var delay = datajs.delay;
+    var throwErrorCallback = odatajs.throwErrorCallback;
+    var delay = odatajs.delay;
 
     // CONTENT START
 
@@ -313,7 +313,7 @@
     };
 
     // DATAJS INTERNAL START
-    datajs.DomStore = DomStore;
+    odatajs.DomStore = DomStore;
     // DATAJS INTERNAL END
 
     // CONTENT END

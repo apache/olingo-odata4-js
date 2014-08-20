@@ -44,7 +44,7 @@
         /// <param name="threshold">The average read time threshold for test to pass; if not specified, defaults to the slowHttpClient latency</param>
         /// <returns>The test function</param>
         return function () {
-            var cache = datajs.createDataCache({ name: "cache" + new Date().valueOf(), source: source, pageSize: pageSize, prefetchSize: prefetchSize });
+            var cache = odatajs.createDataCache({ name: "cache" + new Date().valueOf(), source: source, pageSize: pageSize, prefetchSize: prefetchSize });
             var totalTime = 0;
             var readCount = 0;
 

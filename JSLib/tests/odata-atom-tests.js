@@ -1070,10 +1070,10 @@
            <title>empty entry</title> \r\n\
         </notAtom> \r\n";
 
-        var service = OData.atomReadDocument(datajs.xmlParse(emptyServiceString).documentElement);
-        var feed = OData.atomReadDocument(datajs.xmlParse(emptyFeedString).documentElement);
-        var entry = OData.atomReadDocument(datajs.xmlParse(emptyEntryString).documentElement);
-        var nonAtom = OData.atomReadDocument(datajs.xmlParse(nonAtomString).documentElement);
+        var service = OData.atomReadDocument(odatajs.xmlParse(emptyServiceString).documentElement);
+        var feed = OData.atomReadDocument(odatajs.xmlParse(emptyFeedString).documentElement);
+        var entry = OData.atomReadDocument(odatajs.xmlParse(emptyEntryString).documentElement);
+        var nonAtom = OData.atomReadDocument(odatajs.xmlParse(nonAtomString).documentElement);
 
         djstest.assert(service && service.workspaces.length === 1, "atomReadDocument deserialized a service document");
         djstest.assert(feed && feed.results.length === 0, "atomReadDocument deserialized a feed document");
@@ -1172,7 +1172,7 @@
            <title>test feed</title> \r\n\
         </feed> \r\n"
 
-        var feed = OData.atomReadFeed(datajs.xmlParse(feedWithExtensionsString).documentElement);
+        var feed = OData.atomReadFeed(odatajs.xmlParse(feedWithExtensionsString).documentElement);
         djstest.assert(feed, "atomReadFeed didn't return a feed object for a payload with feed extensions");
         djstest.assertAreEqual(feed.__metadata.feed_extensions.length, 4, "atomReadFeed didn't return the expected number of extensions");
 
@@ -1190,9 +1190,9 @@
           <link rel=\'alternate\' href=\'http://otheruri\'/> \r\n\
         </feed> \r\n";
 
-        var root = datajs.xmlParse(feedLinksString).documentElement;
+        var root = odatajs.xmlParse(feedLinksString).documentElement;
         var feed = { __metadata: {} };
-        datajs.xmlChildElements(root, function (child) {
+        odatajs.xmlChildElements(root, function (child) {
             OData.atomReadFeedLink(child, feed);
         });
 
@@ -1214,7 +1214,7 @@
               me:attr1=\'a1\' \r\n\
               attr2=\'a2\'/> \r\n";
 
-        var link = OData.atomReadLink(datajs.xmlParse(linkString).documentElement);
+        var link = OData.atomReadLink(odatajs.xmlParse(linkString).documentElement);
 
         djstest.assert(link, "atomReadLink didn't return a link object");
         djstest.assertAreEqual(link.href, "http://nexturi", "atomReadLink, link object href field has an unexpected value");
@@ -1236,7 +1236,7 @@
               attr2=\'a2\'/> \r\n";
 
 
-        var linkRoot = datajs.xmlParse(linkString).documentElement;
+        var linkRoot = odatajs.xmlParse(linkString).documentElement;
         djstest.expectException(function () {
             OData.atomReadLink(linkRoot);
         }, "atomReadLink didn't throw an exception when the link doesn't have the href attribute");
@@ -1258,7 +1258,7 @@
             djstest.assertAreEqual(ext.value, value, "atomReadExtensionElement, extension object value field has an unexpected value");
         };
 
-        var extension = OData.atomReadExtensionElement(datajs.xmlParse(extensionString).documentElement);
+        var extension = OData.atomReadExtensionElement(odatajs.xmlParse(extensionString).documentElement);
         validateExtension(extension, "ext", "http://myExtensions", 2, 1);
 
         extension = extension.children[0];
@@ -1271,7 +1271,7 @@
         var extensionString = "\
         <me:ext xmlns:me=\'http://myExtensions\' me:attr1=\'a1\' attr2=\'a2\' /> \r\n";
 
-        var extensionAttributes = OData.atomReadExtensionAttributes(datajs.xmlParse(extensionString).documentElement);
+        var extensionAttributes = OData.atomReadExtensionAttributes(odatajs.xmlParse(extensionString).documentElement);
         djstest.assertAreEqual(extensionAttributes.length, 2, "atomReadExtensionAttribute, returned collection doesn't have the expected number of attributes");
         djstest.done();
     });
@@ -1291,7 +1291,7 @@
 
         for (var name in tests) {
             var test = tests[name];
-            var xmlElement = datajs.xmlParse(test.i).documentElement;
+            var xmlElement = odatajs.xmlParse(test.i).documentElement;
             var extensions = OData.atomReadExtensionAttributes(xmlElement);
 
             djstest.assertAreEqualDeep(extensions[0], test.e, name + " - extension object is the expected one");
@@ -1342,7 +1342,7 @@
             Typed: 100
         };
 
-        var entry = OData.atomReadEntry(datajs.xmlParse(entryString).documentElement);
+        var entry = OData.atomReadEntry(odatajs.xmlParse(entryString).documentElement);
 
         djstest.assert(entry, "atomReadEntry didn't return an entry object");
         djstest.assertAreEqualDeep(entry, expectedEntry);
@@ -2571,7 +2571,7 @@
             Typed: 100
         };
 
-        var entry = OData.atomReadEntry(datajs.xmlParse(entryString).documentElement);
+        var entry = OData.atomReadEntry(odatajs.xmlParse(entryString).documentElement);
 
         djstest.assert(entry, "atomReadFeed didn't return an entry object for the media link entry payload");
         djstest.assertAreEqualDeep(entry, expectedEntry);
@@ -2586,7 +2586,7 @@
                   xmlns:me=\'http//:myExtensions\' \r\n\
                   xmlns=\'http://www.w3.org/2005/Atom\'/> \r\n";
         var entryMetadata = {};
-        OData.atomReadEntryType(datajs.xmlParse(categoryString).documentElement, entryMetadata);
+        OData.atomReadEntryType(odatajs.xmlParse(categoryString).documentElement, entryMetadata);
 
         djstest.assertAreEqual(entryMetadata.type, "the type", "atomReadEntryType, entry type has an unexpected value");
         djstest.assertAreEqual(entryMetadata.type_extensions.length, 2, "readATomEntryType, entry type_extensions doens't have the expected number of extensions");
@@ -2602,7 +2602,7 @@
                   xmlns=\'http://www.w3.org/2005/Atom\'/> \r\n";
 
         var entry = { __metadata: {} };
-        OData.atomReadEntryType(datajs.xmlParse(categoryString).documentElement, entry, entry.__metadata);
+        OData.atomReadEntryType(odatajs.xmlParse(categoryString).documentElement, entry, entry.__metadata);
 
         djstest.assert(!entry.__metadata.type, "atomReadEntryType, processed a category of without a scheme attribute!!");
         djstest.done();
@@ -2622,8 +2622,8 @@
         var entry = { __metadata: {} };
 
         djstest.expectException(function () {
-            var categories = datajs.xmlParse(categoryString).documentElement;
-            datajs.xmlChildElements(categories, function (child) {
+            var categories = odatajs.xmlParse(categoryString).documentElement;
+            odatajs.xmlChildElements(categories, function (child) {
                 OData.atomReadEntryType(child, entry, entry.__metadata);
             });
         }, "atomReadEntryType didn't throw the expected exception");
@@ -2636,7 +2636,7 @@
             <content src=\'http://mediasource\' xmlns=\'http://www.w3.org/2005/Atom\'/> \r\n"
 
         var entry = { __metadata: {} };
-        var content = datajs.xmlParse(contentString).documentElement;
+        var content = odatajs.xmlParse(contentString).documentElement;
         djstest.expectException(function () {
             OData.atomReadEntryContent(content, entry);
         }, "atomReadEntryContent didn't throw the expected exception");
@@ -2656,7 +2656,7 @@
            </content> \r\n";
 
         var entry = { __metadata: {} };
-        var content = datajs.xmlParse(contentString).documentElement;
+        var content = odatajs.xmlParse(contentString).documentElement;
         djstest.expectException(function () {
             OData.atomReadEntryContent(content, entry);
         }, "atomReadEntryContent didn't throw the expected exception");
@@ -2674,7 +2674,7 @@
 
         var entry = { __metadata: {} };
 
-        OData.atomReadEntryLink(datajs.xmlParse(linkString).documentElement, entry, entry.__metadata);
+        OData.atomReadEntryLink(odatajs.xmlParse(linkString).documentElement, entry, entry.__metadata);
 
         djstest.assertAreEqual(entry.__metadata.edit_media, "http://editmediauri", "edit_media field has a un expected value");
         djstest.assertAreEqual(entry.__metadata.media_etag, "etag", "media_etag field has a un expected value");
@@ -2713,8 +2713,8 @@
         };
 
         var entry = { __metadata: {} };
-        var links = datajs.xmlParse(linksString).documentElement;
-        datajs.xmlChildElements(links, function (child) {
+        var links = odatajs.xmlParse(linksString).documentElement;
+        odatajs.xmlChildElements(links, function (child) {
             OData.atomReadEntryLink(child, entry, entry.__metadata);
         });
 
@@ -2788,7 +2788,7 @@
             Typed: 100
         };
 
-        var entry = OData.atomReadEntry(datajs.xmlParse(entryString).documentElement);
+        var entry = OData.atomReadEntry(odatajs.xmlParse(entryString).documentElement);
 
         djstest.assertAreEqualDeep(entry, expectedEntry);
         djstest.done();
@@ -2810,7 +2810,7 @@
                </d:Complex>\r\n \
            </d:Data>\r\n";
 
-        var dataElement = datajs.xmlParse(content).documentElement;
+        var dataElement = odatajs.xmlParse(content).documentElement;
         var data = {};
         var metadata = {};
 
@@ -2950,7 +2950,7 @@
             }
         };
 
-        var entry = OData.atomReadEntry(datajs.xmlParse(entryString).documentElement);
+        var entry = OData.atomReadEntry(odatajs.xmlParse(entryString).documentElement);
 
         djstest.assert(entry, "atomReadEntry didn't return an entry object");
         djstest.assertAreEqualDeep(entry, expectedEntry, "atomReadEntry didn't return the expected entry object");
@@ -3261,7 +3261,7 @@
         };
 
         // Todo refactor all this tests to use the mock http client instead. 
-        var entry = OData.atomReadEntry(datajs.xmlParse(entryString).documentElement);
+        var entry = OData.atomReadEntry(odatajs.xmlParse(entryString).documentElement);
 
         djstest.assert(entry, "atomReadEntry didn't return an entry object");
         djstest.assertAreEqualDeep(entry, expectedEntry, "atomReadEntry didn't return the expected entry object");
@@ -4292,7 +4292,7 @@
 
     djstest.addFullTest(true, function getXmlPathValueTest() {
         // Tests with expected value and result based on doc.
-        var doc = datajs.xmlParse(
+        var doc = odatajs.xmlParse(
         "<atom:entry xmlns:atom='http://www.w3.org/2005/Atom' xmlns:c='custom'>" +
         " <atom:title>title</atom:title>" +
         " <atom:summary>summary</atom:summary>" +
@@ -4303,7 +4303,7 @@
         " <c:third><c:item><c:a>a</c:a><c:b>b</c:b><c:empty /></c:item></c:third>" +
         "</atom:entry>");
 
-        var root = datajs.xmlFirstChildElement(doc);
+        var root = odatajs.xmlFirstChildElement(doc);
 
         var atomXmlNs = "http://www.w3.org/2005/Atom";
         var tests = [
@@ -4331,8 +4331,8 @@
         var i, len;
         for (i = 0, len = tests.length; i < len; i++) {
             var test = tests[i];
-            var node = datajs.xmlFindNodeByPath(root, test.ns, test.path);
-            var actual = node && datajs.xmlNodeValue(node);
+            var node = odatajs.xmlFindNodeByPath(root, test.ns, test.path);
+            var actual = node && odatajs.xmlNodeValue(node);
             djstest.assertAreEqual(actual, test.e, "match for test #" + i + "(" + test.path + ")");
         }
 

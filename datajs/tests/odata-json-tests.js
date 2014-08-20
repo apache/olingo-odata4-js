@@ -23,12 +23,12 @@
    
     
     djstest.addTest(function isArrayTest() {
-        djstest.assert(datajs.utils.isArray([]));
-        djstest.assert(datajs.utils.isArray([1, 2]));
-        djstest.assert(!datajs.utils.isArray({}));
-        djstest.assert(!datajs.utils.isArray("1,2,3,4"));
-        djstest.assert(!datajs.utils.isArray());
-        djstest.assert(!datajs.utils.isArray(null));
+        djstest.assert(odatajs.utils.isArray([]));
+        djstest.assert(odatajs.utils.isArray([1, 2]));
+        djstest.assert(!odatajs.utils.isArray({}));
+        djstest.assert(!odatajs.utils.isArray("1,2,3,4"));
+        djstest.assert(!odatajs.utils.isArray());
+        djstest.assert(!odatajs.utils.isArray(null));
         djstest.done();
     });
 

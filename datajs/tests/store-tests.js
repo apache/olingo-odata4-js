@@ -88,9 +88,9 @@
     };
 
     var mechanismImplementations = {
-        indexeddb: { factory: datajs.IndexedDBStore, canCreate: canCreateIndexedDb, cleanup: cleanIndexedDbStorage },
-        dom: { factory: datajs.DomStore, canCreate: canCreateDomStore, cleanup: cleanDomStorage },
-        memory: { factory: datajs.MemoryStore, canCreate: canCreateMemoryStore, cleanup: cleanMemoryStorage }
+        indexeddb: { factory: odatajs.IndexedDBStore, canCreate: canCreateIndexedDb, cleanup: cleanIndexedDbStorage },
+        dom: { factory: odatajs.DomStore, canCreate: canCreateDomStore, cleanup: cleanDomStorage },
+        memory: { factory: odatajs.MemoryStore, canCreate: canCreateMemoryStore, cleanup: cleanMemoryStorage }
     };
 
     var oldWindowOnError;
@@ -99,7 +99,7 @@
         module("Unit", {
             mechanism: mechanism,
             createStore: function (name) {
-                var store = datajs.store.createStore(name + "_" + this.mechanism, this.mechanism);
+                var store = odatajs.store.createStore(name + "_" + this.mechanism, this.mechanism);
                 this.stores.push(store);
                 return store;
             },
@@ -662,7 +662,7 @@
         for (i = 0, len = tests.length; i < len; i++) {
             try {
                 var test = tests[i];
-                var store = datajs.store.createStore("testStore" + i, tests[i].mechanism);
+                var store = odatajs.store.createStore("testStore" + i, tests[i].mechanism);
 
                 if (!test.exception) {
                     djstest.assertAreEqual(store.mechanism, test.expected, "Created store of the expected mechanism");
@@ -693,7 +693,7 @@
             ];
 
             for (var i in tests) {
-                var store = datajs.store.createStore("best store ever " + i, tests[i]);
+                var store = odatajs.store.createStore("best store ever " + i, tests[i]);
                 djstest.assertAreEqual(store.mechanism, bestMechanism, "Mechanisms match");
             }
         } else {

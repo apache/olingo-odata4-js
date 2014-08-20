@@ -56,7 +56,7 @@
          * @returns The test function
          */
         return function () {
-            var cache = datajs.cache.createDataCache({ name: "cache" + new Date().valueOf(), source: source, pageSize: pageSize, prefetchSize: prefetchSize });
+            var cache = odatajs.cache.createDataCache({ name: "cache" + new Date().valueOf(), source: source, pageSize: pageSize, prefetchSize: prefetchSize });
             var totalTime = 0;
             var readCount = 0;
 

@@ -15,13 +15,13 @@
 
 (function (window, undefined) {
 
-    var datajs = window.datajs || {};
+    var datajs = window.odatajs || {};
     var odata = window.OData || {};
 
     // Imports.
-    var assigned = datajs.assigned;
-    var extend = datajs.extend;
-    var trimString = datajs.trimString;
+    var assigned = odatajs.assigned;
+    var extend = odatajs.extend;
+    var trimString = odatajs.trimString;
 
     var maxVersion = odata.maxVersion;
 

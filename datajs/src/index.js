@@ -17,15 +17,15 @@
  * under the License.
  */
 
-if ( window.datajs===undefined) {
-    window.datajs = {};
+if ( window.odatajs===undefined) {
+    window.odatajs = {};
 }
 
-window.datajs.V4 = require('./lib/datajs.js');
-window.datajs.V4.oData = require('./lib/odata.js');
+window.odatajs = require('./lib/datajs.js');
+window.odatajs.oData = require('./lib/odata.js');
 
-window.datajs.V4.store = require('./lib/store.js');
-window.datajs.V4.cache = require('./lib/cache.js');
+window.odatajs.store = require('./lib/store.js');
+window.odatajs.cache = require('./lib/cache.js');
 
 /*
 function extend(target) {

@@ -17,10 +17,10 @@
 
 (function (window, undefined) {
 
-    var datajs = window.datajs || {};
+    var datajs = window.odatajs || {};
     var odata = window.OData || {};
-    var parseInt10 = datajs.parseInt10;
-    var normalizeURICase = datajs.normalizeURICase;
+    var parseInt10 = odatajs.parseInt10;
+    var normalizeURICase = odatajs.normalizeURICase;
 
     // CONTENT START
 
@@ -190,7 +190,7 @@
     };
 
     // DATAJS INTERNAL START
-    window.datajs.ODataCacheSource = ODataCacheSource;
+    window.odatajs.ODataCacheSource = ODataCacheSource;
     // DATAJS INTERNAL END
 
     // CONTENT END

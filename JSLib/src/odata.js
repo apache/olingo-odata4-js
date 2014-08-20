@@ -15,14 +15,14 @@
 
 (function (window, undefined) {
 
-    var datajs = window.datajs || {};
+    var datajs = window.odatajs || {};
     var odata = window.OData || {};
 
     // Imports
 
-    var assigned = datajs.assigned;
-    var defined = datajs.defined;
-    var throwErrorCallback = datajs.throwErrorCallback;
+    var assigned = odatajs.assigned;
+    var defined = odatajs.defined;
+    var throwErrorCallback = odatajs.throwErrorCallback;
 
     var invokeRequest = odata.invokeRequest;
     var MAX_DATA_SERVICE_VERSION = odata.MAX_DATA_SERVICE_VERSION;

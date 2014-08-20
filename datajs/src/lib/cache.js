@@ -20,9 +20,9 @@
  /** @module cache */
 
 var datajs = require('./datajs.js');
-var utils = datajs.utils;
-var deferred = datajs.deferred;
-var storeReq = datajs.store;
+var utils = odatajs.utils;
+var deferred = odatajs.deferred;
+var storeReq = odatajs.store;
 var cacheSource = require('./cache/source');
 
 

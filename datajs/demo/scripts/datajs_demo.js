@@ -38,7 +38,7 @@ var runSimpleReadRequest = function() {
         alert("err");
         alert(JSON.stringify(err));
     };
-    datajs.V4.oData.read(request, successFunction, failFunction);
+    odatajs.oData.read(request, successFunction, failFunction);
 };
 
 var runSimpleReadRequestWithMetadata = function () {
@@ -65,7 +65,7 @@ var runSimpleReadRequestWithMetadata = function () {
             alert("err");
             alert(JSON.stringify(err));
         };
-        datajs.V4.oData.read(request, successFunction, failFunction, null, null, metadata);
+        odatajs.oData.read(request, successFunction, failFunction, null, null, metadata);
     };
 
     var readMetadataFail = function (err) {
@@ -82,7 +82,7 @@ var runSimpleReadRequestWithMetadata = function () {
         data: null,
     };
 
-    datajs.V4.oData.read(metadataRequest, readMetadataSuccess, readMetadataFail, datajs.V4.oData.metadataHandler);
+    odatajs.oData.read(metadataRequest, readMetadataSuccess, readMetadataFail, odatajs.V4.oData.metadataHandler);
 };
 
 var readWithJsonP = function() {

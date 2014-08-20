@@ -17,14 +17,14 @@
 
 (function (window, undefined) {
 
-    var datajs = window.datajs || {};
+    var datajs = window.odatajs || {};
     var odata = window.OData || {};
 
     // Imports
 
-    var extend = datajs.extend;
-    var isArray = datajs.isArray;
-    var trimString = datajs.trimString;
+    var extend = odatajs.extend;
+    var isArray = odatajs.isArray;
+    var trimString = odatajs.trimString;
 
     var contentType = odata.contentType;
     var handler = odata.handler;

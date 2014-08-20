@@ -316,7 +316,7 @@
             this.createAndAddCache = function (options) {
                 /// <summary>Returns a cache created from the options object and </summary>
                 /// <param name="options" type="Object">Object to create a cache from.</param> 
-                var cache = datajs.createDataCache(options);
+                var cache = odatajs.createDataCache(options);
                 this.caches.push({ name: options.name, cache: cache });
                 return cache;
             };

@@ -171,8 +171,8 @@
     };
 
     // DATAJS INTERNAL START
-    window.datajs.createDeferred = createDeferred;
-    window.datajs.DjsDeferred = DjsDeferred;
+    window.odatajs.createDeferred = createDeferred;
+    window.odatajs.DjsDeferred = DjsDeferred;
     // DATAJS INTERNAL END
 
     // CONTENT END

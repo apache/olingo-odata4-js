@@ -335,7 +335,7 @@
                 /** Returns a cache created from the options object and 
                  * @param {Object} options - Object to create a cache from. 
                  */
-                var cache = datajs.cache.createDataCache(options);
+                var cache = odatajs.cache.createDataCache(options);
                 this.caches.push({ name: options.name, cache: cache });
                 return cache;
             };

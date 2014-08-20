@@ -8,12 +8,12 @@
 
     // DATAJS INTERNAL START
     djstest.addTest(function isArrayTest() {
-        djstest.assert(datajs.isArray([]));
-        djstest.assert(datajs.isArray([1, 2]));
-        djstest.assert(!datajs.isArray({}));
-        djstest.assert(!datajs.isArray("1,2,3,4"));
-        djstest.assert(!datajs.isArray());
-        djstest.assert(!datajs.isArray(null));
+        djstest.assert(odatajs.isArray([]));
+        djstest.assert(odatajs.isArray([1, 2]));
+        djstest.assert(!odatajs.isArray({}));
+        djstest.assert(!odatajs.isArray("1,2,3,4"));
+        djstest.assert(!odatajs.isArray());
+        djstest.assert(!odatajs.isArray(null));
         djstest.done();
     });
 

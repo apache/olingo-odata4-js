@@ -15,22 +15,22 @@
 
 (function (window, undefined) {
 
-    var datajs = window.datajs || {};
+    var datajs = window.odatajs || {};
     var odata = window.OData || {};
 
     // imports 
 
-    var contains = datajs.contains;
-    var normalizeURI = datajs.normalizeURI;
-    var xmlAttributes = datajs.xmlAttributes;
-    var xmlChildElements = datajs.xmlChildElements;
-    var xmlFirstChildElement = datajs.xmlFirstChildElement;
-    var xmlInnerText = datajs.xmlInnerText;
-    var xmlLocalName = datajs.xmlLocalName;
-    var xmlNamespaceURI = datajs.xmlNamespaceURI;
-    var xmlNS = datajs.xmlNS;
-    var xmlnsNS = datajs.xmlnsNS;
-    var xmlParse = datajs.xmlParse;
+    var contains = odatajs.contains;
+    var normalizeURI = odatajs.normalizeURI;
+    var xmlAttributes = odatajs.xmlAttributes;
+    var xmlChildElements = odatajs.xmlChildElements;
+    var xmlFirstChildElement = odatajs.xmlFirstChildElement;
+    var xmlInnerText = odatajs.xmlInnerText;
+    var xmlLocalName = odatajs.xmlLocalName;
+    var xmlNamespaceURI = odatajs.xmlNamespaceURI;
+    var xmlNS = odatajs.xmlNS;
+    var xmlnsNS = odatajs.xmlnsNS;
+    var xmlParse = odatajs.xmlParse;
 
     var edmxNs = odata.edmxNs;
     var edmNs1 = odata.edmNs1;

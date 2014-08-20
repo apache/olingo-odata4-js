@@ -411,7 +411,7 @@
 
         var i, len;
         for (i = 0, len = cases.length; i < len; i++) {
-            var doc = window.datajs.xmlParse(cases[i].i);
+            var doc = window.odatajs.xmlParse(cases[i].i);
             var schema = window.OData.parseConceptualModelElement(doc.documentElement);
             djstest.assertAreEqualDeep(schema, cases[i].e, "parseConceptualModelElement result matches target");
         }
@@ -433,7 +433,7 @@
         '      </EntityType></Schema></edmx:DataServices></edmx:Edmx>';
 
 
-        var doc = window.datajs.xmlParse(testCsdl);
+        var doc = window.odatajs.xmlParse(testCsdl);
         var schema = window.OData.parseConceptualModelElement(doc.documentElement);
 
         djstest.assertAreEqual(schema.dataServices.schema[0].term.length, 2, "schema.DataServices.Schema.Term.length === 2");
@@ -467,7 +467,7 @@
         '    </Schema></edmx:DataServices></edmx:Edmx>';
 
 
-        var doc = window.datajs.xmlParse(testCsdl);
+        var doc = window.odatajs.xmlParse(testCsdl);
         var schema = window.OData.parseConceptualModelElement(doc.documentElement);
 
         djstest.assertAreEqual(schema.dataServices.schema[0].annotations.length, 2, "Annotations number");

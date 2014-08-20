@@ -15,38 +15,38 @@
 
 (function (window, undefined) {
 
-    var datajs = window.datajs || {};
+    var datajs = window.odatajs || {};
     var odata = window.OData || {};
 
     // Imports.
 
-    var djsassert = datajs.djsassert;
-    var http = datajs.http;
-    var isArray = datajs.isArray;
-    var isDate = datajs.isDate;
-    var isObject = datajs.isObject;
-    var normalizeURI = datajs.normalizeURI;
-    var parseInt10 = datajs.parseInt10;
-    var xmlAppendChild = datajs.xmlAppendChild;
-    var xmlAppendChildren = datajs.xmlAppendChildren;
-    var xmlAttributes = datajs.xmlAttributes;
-    var xmlBaseURI = datajs.xmlBaseURI;
-    var xmlChildElements = datajs.xmlChildElements;
-    var xmlDom = datajs.xmlDom;
-    var xmlFirstChildElement = datajs.xmlFirstChildElement;
-    var xmlInnerText = datajs.xmlInnerText;
-    var xmlLocalName = datajs.xmlLocalName;
-    var xmlNamespaceURI = datajs.xmlNamespaceURI;
-    var xmlNewAttribute = datajs.xmlNewAttribute;
-    var xmlNewElement = datajs.xmlNewElement;
-    var xmlNodeValue = datajs.xmlNodeValue;
-    var xmlNS = datajs.xmlNS;
-    var xmlnsNS = datajs.xmlnsNS;
-    var xmlParse = datajs.xmlParse;
-    var xmlQualifiedName = datajs.xmlQualifiedName;
-    var xmlSerialize = datajs.xmlSerialize;
-    var xmlSiblingElement = datajs.xmlSiblingElement;
-    var w3org = datajs.w3org;
+    var djsassert = odatajs.djsassert;
+    var http = odatajs.http;
+    var isArray = odatajs.isArray;
+    var isDate = odatajs.isDate;
+    var isObject = odatajs.isObject;
+    var normalizeURI = odatajs.normalizeURI;
+    var parseInt10 = odatajs.parseInt10;
+    var xmlAppendChild = odatajs.xmlAppendChild;
+    var xmlAppendChildren = odatajs.xmlAppendChildren;
+    var xmlAttributes = odatajs.xmlAttributes;
+    var xmlBaseURI = odatajs.xmlBaseURI;
+    var xmlChildElements = odatajs.xmlChildElements;
+    var xmlDom = odatajs.xmlDom;
+    var xmlFirstChildElement = odatajs.xmlFirstChildElement;
+    var xmlInnerText = odatajs.xmlInnerText;
+    var xmlLocalName = odatajs.xmlLocalName;
+    var xmlNamespaceURI = odatajs.xmlNamespaceURI;
+    var xmlNewAttribute = odatajs.xmlNewAttribute;
+    var xmlNewElement = odatajs.xmlNewElement;
+    var xmlNodeValue = odatajs.xmlNodeValue;
+    var xmlNS = odatajs.xmlNS;
+    var xmlnsNS = odatajs.xmlnsNS;
+    var xmlParse = odatajs.xmlParse;
+    var xmlQualifiedName = odatajs.xmlQualifiedName;
+    var xmlSerialize = odatajs.xmlSerialize;
+    var xmlSiblingElement = odatajs.xmlSiblingElement;
+    var w3org = odatajs.w3org;
 
     var dataItemTypeName = odata.dataItemTypeName;
     var EDM_BINARY = odata.EDM_BINARY;

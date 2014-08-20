@@ -15,14 +15,14 @@
 
 (function (window, undefined) {
 
-    var datajs = window.datajs;
+    var datajs = window.odatajs;
 
-    var activeXObject = datajs.activeXObject;
-    var djsassert = datajs.djsassert;
-    var extend = datajs.extend;
-    var isArray = datajs.isArray;
-    var isObject = datajs.isObject;
-    var normalizeURI = datajs.normalizeURI;
+    var activeXObject = odatajs.activeXObject;
+    var djsassert = odatajs.djsassert;
+    var extend = odatajs.extend;
+    var isArray = odatajs.isArray;
+    var isObject = odatajs.isObject;
+    var normalizeURI = odatajs.normalizeURI;
 
     // CONTENT START
 
@@ -783,40 +783,40 @@
 
     // DATAJS INTERNAL START
 
-    datajs.http = http;
-    datajs.w3org = w3org;
-    datajs.xmlNS = xmlNS;
-    datajs.xmlnsNS = xmlnsNS;
+    odatajs.http = http;
+    odatajs.w3org = w3org;
+    odatajs.xmlNS = xmlNS;
+    odatajs.xmlnsNS = xmlnsNS;
 
-    datajs.hasLeadingOrTrailingWhitespace = hasLeadingOrTrailingWhitespace;
-    datajs.isXmlNSDeclaration = isXmlNSDeclaration;
-    datajs.xmlAppendChild = xmlAppendChild;
-    datajs.xmlAppendChildren = xmlAppendChildren;
-    datajs.xmlAttributeNode = xmlAttributeNode;
-    datajs.xmlAttributes = xmlAttributes;
-    datajs.xmlAttributeValue = xmlAttributeValue;
-    datajs.xmlBaseURI = xmlBaseURI;
-    datajs.xmlChildElements = xmlChildElements;
-    datajs.xmlFindElementByPath = xmlFindElementByPath;
-    datajs.xmlFindNodeByPath = xmlFindNodeByPath;
-    datajs.xmlFirstChildElement = xmlFirstChildElement;
-    datajs.xmlFirstDescendantElement = xmlFirstDescendantElement;
-    datajs.xmlInnerText = xmlInnerText;
-    datajs.xmlLocalName = xmlLocalName;
-    datajs.xmlNamespaceURI = xmlNamespaceURI;
-    datajs.xmlNodeValue = xmlNodeValue;
-    datajs.xmlDom = xmlDom;
-    datajs.xmlNewAttribute = xmlNewAttribute;
-    datajs.xmlNewElement = xmlNewElement;
-    datajs.xmlNewFragment = xmlNewFragment;
-    datajs.xmlNewNodeByPath = xmlNewNodeByPath;
-    datajs.xmlNewNSDeclaration = xmlNewNSDeclaration;
-    datajs.xmlNewText = xmlNewText;
-    datajs.xmlParse = xmlParse;
-    datajs.xmlQualifiedName = xmlQualifiedName;
-    datajs.xmlSerialize = xmlSerialize;
-    datajs.xmlSerializeDescendants = xmlSerializeDescendants;
-    datajs.xmlSiblingElement = xmlSiblingElement;
+    odatajs.hasLeadingOrTrailingWhitespace = hasLeadingOrTrailingWhitespace;
+    odatajs.isXmlNSDeclaration = isXmlNSDeclaration;
+    odatajs.xmlAppendChild = xmlAppendChild;
+    odatajs.xmlAppendChildren = xmlAppendChildren;
+    odatajs.xmlAttributeNode = xmlAttributeNode;
+    odatajs.xmlAttributes = xmlAttributes;
+    odatajs.xmlAttributeValue = xmlAttributeValue;
+    odatajs.xmlBaseURI = xmlBaseURI;
+    odatajs.xmlChildElements = xmlChildElements;
+    odatajs.xmlFindElementByPath = xmlFindElementByPath;
+    odatajs.xmlFindNodeByPath = xmlFindNodeByPath;
+    odatajs.xmlFirstChildElement = xmlFirstChildElement;
+    odatajs.xmlFirstDescendantElement = xmlFirstDescendantElement;
+    odatajs.xmlInnerText = xmlInnerText;
+    odatajs.xmlLocalName = xmlLocalName;
+    odatajs.xmlNamespaceURI = xmlNamespaceURI;
+    odatajs.xmlNodeValue = xmlNodeValue;
+    odatajs.xmlDom = xmlDom;
+    odatajs.xmlNewAttribute = xmlNewAttribute;
+    odatajs.xmlNewElement = xmlNewElement;
+    odatajs.xmlNewFragment = xmlNewFragment;
+    odatajs.xmlNewNodeByPath = xmlNewNodeByPath;
+    odatajs.xmlNewNSDeclaration = xmlNewNSDeclaration;
+    odatajs.xmlNewText = xmlNewText;
+    odatajs.xmlParse = xmlParse;
+    odatajs.xmlQualifiedName = xmlQualifiedName;
+    odatajs.xmlSerialize = xmlSerialize;
+    odatajs.xmlSerializeDescendants = xmlSerializeDescendants;
+    odatajs.xmlSiblingElement = xmlSiblingElement;
 
     // DATAJS INTERNAL END
 

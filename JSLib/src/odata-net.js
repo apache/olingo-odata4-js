@@ -15,13 +15,13 @@
 
 (function (window, undefined) {
 
-    var datajs = window.datajs || {};
+    var datajs = window.odatajs || {};
     var odata = window.OData || {};
 
     // Imports.
 
-    var defined = datajs.defined;
-    var delay = datajs.delay;
+    var defined = odatajs.defined;
+    var delay = odatajs.delay;
 
     // CONTENT START
     var ticks = 0;

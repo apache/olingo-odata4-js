@@ -111,7 +111,7 @@
                         mechanism: params.mechanism, cacheSize: params.cacheSize
                     };
 
-                    var cache = datajs.createDataCache(options);
+                    var cache = odatajs.createDataCache(options);
                     this.caches.push({ name: options.name,
                         cache: cache
                     });
@@ -144,7 +144,7 @@
                             mechanism: params.mechanism, cacheSize: params.cacheSize
                         };
 
-                        var cache = datajs.createDataCache(options);
+                        var cache = odatajs.createDataCache(options);
                         this.caches.push({ name: options.name, cache: cache });
 
                         var cacheOracle = new CacheOracle(params.feed, params.pageSize, itemsInCollection);

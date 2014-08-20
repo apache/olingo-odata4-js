@@ -15,21 +15,21 @@
 
 (function (window, undefined) {
 
-    var datajs = window.datajs || {};
+    var datajs = window.odatajs || {};
     var odata = window.OData || {};
 
     // Imports
 
-    var assigned = datajs.assigned;
-    var djsassert = datajs.djsassert;
-    var extend = datajs.extend;
-    var getURIInfo = datajs.getURIInfo;
-    var isArray = datajs.isArray;
-    var isDate = datajs.isDate;
-    var normalizeURI = datajs.normalizeURI;
-    var renameProperty = datajs.renameProperty;
-    var undefinedDefault = datajs.undefinedDefault;
-    var convertByteArrayToHexString = datajs.convertByteArrayToHexString;
+    var assigned = odatajs.assigned;
+    var djsassert = odatajs.djsassert;
+    var extend = odatajs.extend;
+    var getURIInfo = odatajs.getURIInfo;
+    var isArray = odatajs.isArray;
+    var isDate = odatajs.isDate;
+    var normalizeURI = odatajs.normalizeURI;
+    var renameProperty = odatajs.renameProperty;
+    var undefinedDefault = odatajs.undefinedDefault;
+    var convertByteArrayToHexString = odatajs.convertByteArrayToHexString;
 
     var dataItemTypeName = odata.dataItemTypeName;
     var EDM_DATETIME = odata.EDM_DATETIME;
