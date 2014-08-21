@@ -23,6 +23,7 @@
    
     
     djstest.addTest(function isArrayTest() {
+        console.log("hier-----------------------");
         djstest.assert(odatajs.utils.isArray([]));
         djstest.assert(odatajs.utils.isArray([1, 2]));
         djstest.assert(!odatajs.utils.isArray({}));
@@ -867,7 +868,7 @@
                 type: "Point",
                 coordinates: [1.0, 2.0],
                 crs: {
-                    type: name,
+                    type: "Point",
                     properties: {
                         name: "EPSG:4326"
                     }
@@ -878,7 +879,7 @@
                 "type": "LineString",
                 "coordinates": [ [100.0, 0.0], [101.0, 1.0] ],
                 crs: {
-                    type: name,
+                    type: "LineString",
                     properties: {
                         name: "EPSG:4326"
                     }
@@ -892,7 +893,7 @@
                   [ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]
                   ],
                 crs: {
-                    type: name,
+                    type: "Polygon",
                     properties: {
                         name: "EPSG:4326"
                     }
@@ -903,7 +904,7 @@
                 "type": "MultiPoint",
                 "coordinates": [ [100.0, 0.0], [101.0, 1.0] ],
                 crs: {
-                    type: name,
+                    type: "MultiPoint",
                     properties: {
                         name: "EPSG:4326"
                     }
@@ -917,7 +918,7 @@
                       [ [102.0, 2.0], [103.0, 3.0] ]
                     ],
                 crs: {
-                    type: name,
+                    type: "MultiLineString",
                     properties: {
                         name: "EPSG:4326"
                     }
@@ -931,7 +932,7 @@
                      [[100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2]]]
                     ],
                 crs: {
-                    type: name,
+                    type: "MultiPolygon",
                     properties: {
                         name: "EPSG:4326"
                     }

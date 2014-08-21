@@ -28,23 +28,14 @@
 
     <title>OData unit tests</title>
     <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.10.0.css" type="text/css" />
-    
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.4.min.js" ></script>
 
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.4.min.js" ></script>
     <script type="text/javascript" src="http://code.jquery.com/qunit/qunit-1.10.0.js"></script>
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
 
-    <script type="text/javascript" src="common/ODataReadOracle.js"></script>
-    <script type="text/javascript" src="common/TestSynchronizerClient.js"></script>
-
-    <script type="text/javascript" src="common/rx.js"></script>
-
-    <script type="text/javascript">
-        window.TestSynchronizer.init(QUnit);
-    </script>
-    <!--<script type="text/javascript" src="../build/datajs-2.0.0.min.js"></script>-->
+    
     <script type="text/javascript" src="../build/datajs-2.0.0.js"></script>
-    <script type="text/javascript" src="common/common.js"></script>
+    <script type="text/javascript" src="./common/common.js"></script>
 
     <script type="text/javascript" src="./common/mockHttpClient.js"></script>
     <script type="text/javascript" src="./common/mockXMLHttpRequest.js"></script>
@@ -56,7 +47,6 @@
 <!--bingl: disable the failure test case. Will fix them in the next change set-->
 <!--    <script type="text/javascript" src="odata-tests.js"></script>-->
     <script type="text/javascript" src="odata-json-tests.js"></script>
-<!--    <script type="text/javascript" src="odata-json-light-tests.js"></script>-->
     <script type="text/javascript" src="odata-links-functional-tests.js"></script>
     <script type="text/javascript" src="odata-metadata-tests.js"></script>
     <script type="text/javascript" src="odata-xml-tests.js"></script>
@@ -74,4 +64,7 @@
     <ol id="qunit-tests">
     </ol>
   </body>
+  <script type="text/javascript">
+    QUnit.config.autostart = false;
+  </script>
 </html>

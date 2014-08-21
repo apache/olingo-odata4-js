@@ -19,7 +19,7 @@
 //Creates the global objects
 
 //tools
-djstest = require("./common/djstest.js").init({});
+djstest = require("./common/djstest.js");
 MockHttpClient = require("./common/MockHttpClient.js").init({});
 
 //lib

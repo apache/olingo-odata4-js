@@ -1,0 +1,18 @@
+This tests-tmp folder will repleace the tests folder.
+The plan is to 
+- select test case per testcase,
+- verify it, and 
+- copy it to the tmp-tests
+- once each tests is checkt and copied the folder tests will be deleted and replaced by tmp-tests
+
+DONE
+
+TestSynchronizerClient.js removed
+  -> Moved from custom c# logging service to jenkins
+
+
+ODataReadOracle.js removed
+  -> TODO check dependencies
+
+rx.js removed
+  -> TODO check dependencies
