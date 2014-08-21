@@ -58,11 +58,11 @@
 
     module("CrossDomain", {
         setup: function () {
-            this.oldEnableJsonpCallback = OData.net.defaultHttpClient.enableJsonpCallback;
-            OData.net.defaultHttpClient.enableJsonpCallback = true;
+            this.oldEnableJsonpCallback = window.odatajs.oData.net.defaultHttpClient.enableJsonpCallback;
+            window.odatajs.oData.net.defaultHttpClient.enableJsonpCallback = true;
         },
         teardown: function () {
-            OData.net.defaultHttpClient.enableJsonpCallback = this.oldEnableJsonpCallback;
+            window.odatajs.oData.net.defaultHttpClient.enableJsonpCallback = this.oldEnableJsonpCallback;
         }
     });
 
@@ -76,7 +76,7 @@
                 }
 
                 djstest.log("Reading data over the wire.");
-                OData.read(request, function (data, response) {
+                odatajs.read(request, function (data, response) {
                     djstest.log("Verifying data over the wire from Oracle.");
                     window.ODataReadOracle.readFeed(azureOdataFeed, function (expectedData) {
                         data = fixConstructors(data);
@@ -91,7 +91,7 @@
             var endPoint = azureOdataFeed + "(1)";
             djstest.assertsExpected(1);
             djstest.log("Reading data over the wire.");
-            OData.read({ requestUri: endPoint, headers: { Accept: handlerAccept} }, function (data, response) {
+            odatajs.read({ requestUri: endPoint, headers: { Accept: handlerAccept} }, function (data, response) {
                 djstest.log("Verifying data over the wire from Oracle.");
                 window.ODataReadOracle.readEntry(endPoint, function (expectedData) {
                     data = fixConstructors(data);
@@ -118,7 +118,7 @@
 
     var dataCacheReadRangeSingleTest = function (params) {
         var options = { name: "cache", source: params.feed, pageSize: params.pageSize, prefetchSize: params.prefetchSize, cacheSize: params.cacheSize };
-        OData.net.defaultHttpClient.enableJsonpCallback = true;
+        window.odatajs.oData.net.defaultHttpClient.enableJsonpCallback = true;
         var cache = odatajs.cache.createDataCache(options);
         cache.readRange(params.skip, params.take).then(function (data) {
             validateExpectedRange(cache, data, params.feed, params.skip, params.take);

@@ -523,7 +523,7 @@
 
     djstest.addFullTest(true, function parseNullInlineTest() {
         // Shorter version of:
-        // OData.read("/tests/endpoints/FoodStoreDataService.svc/Foods?$expand=Category&$filter=Category eq null", function(data, response) {
+        // odatajs.read("/tests/endpoints/FoodStoreDataService.svc/Foods?$expand=Category&$filter=Category eq null", function(data, response) {
 
         var body = '' +
     '<feed xml:base="http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://localhost:46541/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Foods">' +
@@ -589,7 +589,7 @@
 
         // Without metadata, this will fail because the server version won't be set to 2.0.
         var metadata = parseMetadataHelper(foodServiceV4MetadataText);
-        OData.read(foodSetUrl + "?$top=1", function (data) {
+        odatajs.read(foodSetUrl + "?$top=1", function (data) {
             var item = data.results[0];
             djstest.assert(item.Packaging, "item.Packaging is not null");
             item.Packaging = null;
@@ -597,9 +597,9 @@
             // The server will reject links for PUT operations.
             delete item.Category;
 
-            OData.request({ method: "PUT", requestUri: item.__metadata.uri, data: item, headers: { "Content-Type": "application/atom+xml"} }, function (data) {
+            odatajs.request({ method: "PUT", requestUri: item.__metadata.uri, data: item, headers: { "Content-Type": "application/atom+xml"} }, function (data) {
                 // Re-read the item.
-                OData.read(item.__metadata.uri, function (data) {
+                odatajs.read(item.__metadata.uri, function (data) {
                     djstest.assert(data, "data was read successfully again");
                     djstest.assert(!data.Packaging, "!data.Packaging");
                     resetFoodData();
@@ -614,16 +614,16 @@
         resetFoodData();
         var foodSetUrl = "./endpoints/FoodStoreDataServiceV4.svc/Foods";
         var metadata = parseMetadataHelper(foodServiceV4MetadataText);
-        OData.read(foodSetUrl + "?$top=1", function (data) {
+        odatajs.read(foodSetUrl + "?$top=1", function (data) {
             var item = data.results[0];
 
             // Turn this into something different.
             delete item.__metadata.uri;
             item.FoodID = 1001;
 
-            OData.request({ method: "POST", requestUri: foodSetUrl, data: item, headers: { "Content-Type": "application/atom+xml"} }, function (data) {
+            odatajs.request({ method: "POST", requestUri: foodSetUrl, data: item, headers: { "Content-Type": "application/atom+xml"} }, function (data) {
                 // Re-read the item.
-                OData.read(data.__metadata.uri + "?$expand=Category", function (data) {
+                odatajs.read(data.__metadata.uri + "?$expand=Category", function (data) {
                     djstest.assert(data, "data was read successfully again");
                     djstest.assert(data.Category, "data.Category");
                     djstest.assert(data.Category.Name, "data.Category.Name");
@@ -639,7 +639,7 @@
         resetFoodData();
         var foodSetUrl = "./endpoints/FoodStoreDataServiceV4.svc/Foods";
         var metadata = parseMetadataHelper(foodServiceV4MetadataText);
-        OData.read(foodSetUrl + "?$top=1", function (data) {
+        odatajs.read(foodSetUrl + "?$top=1", function (data) {
             var item = data.results[0];
 
             // Turn this into something different.
@@ -647,9 +647,9 @@
             item.FoodID = 1001;
             item.Category = null;
 
-            OData.request({ method: "POST", requestUri: foodSetUrl, data: item, headers: { "Content-Type": "application/atom+xml"} }, function (data) {
+            odatajs.request({ method: "POST", requestUri: foodSetUrl, data: item, headers: { "Content-Type": "application/atom+xml"} }, function (data) {
                 // Re-read the item.
-                OData.read(data.__metadata.uri + "?$expand=Category", function (data) {
+                odatajs.read(data.__metadata.uri + "?$expand=Category", function (data) {
                     djstest.assert(data, "data was read successfully again");
                     djstest.assert(!data.Category, "data.Category");
                     resetFoodData();

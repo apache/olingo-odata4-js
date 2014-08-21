@@ -236,10 +236,10 @@
         djstest.assert(OData.isAbsoluteUrl("http://malformed url/"));
         djstest.assert(OData.isAbsoluteUrl("https://localhost/"));
         djstest.assert(OData.isAbsoluteUrl("file://another-protocol/"));
-        djstest.assert(!OData.isAbsoluteUrl("/path"));
-        djstest.assert(!OData.isAbsoluteUrl("?query-string"));
-        djstest.assert(!OData.isAbsoluteUrl(""));
-        djstest.assert(!OData.isAbsoluteUrl("mailto:someone"));
+        djstest.assert(!window.odatajs.oData.isAbsoluteUrl("/path"));
+        djstest.assert(!window.odatajs.oData.isAbsoluteUrl("?query-string"));
+        djstest.assert(!window.odatajs.oData.isAbsoluteUrl(""));
+        djstest.assert(!window.odatajs.oData.isAbsoluteUrl("mailto:someone"));
         djstest.done();
     });
 
@@ -262,7 +262,7 @@
             djstest.assert(OData.isLocalUrl(localUrls[i]), "is local: [" + localUrls[i] + "]");
         }
         for (i = 0, len = remoteUrls.length; i < len; i++) {
-            djstest.assert(!OData.isLocalUrl(remoteUrls[i]), "is not local: [" + remoteUrls[i] + "]");
+            djstest.assert(!window.odatajs.oData.isLocalUrl(remoteUrls[i]), "is not local: [" + remoteUrls[i] + "]");
         }
         djstest.done();
     });
@@ -270,7 +270,7 @@
     // DATAJS INTERNAL END
 
     djstest.addTest(function userPasswordTest() {
-        OData.request({
+        odatajs.request({
             requestUri: "./endpoints/FoodStoreDataServiceV4.svc/UserNameAndPassword",
             user: "the-user",
             password: "the-password"

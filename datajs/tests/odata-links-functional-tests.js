@@ -169,7 +169,7 @@
 
             djstest.addTest(function readValidLinksFeedTests(params) {
                 djstest.assertsExpected(1);
-                OData.read({ requestUri: params.linksFeed, headers: headers },
+                odatajs.read({ requestUri: params.linksFeed, headers: headers },
                     function (data, response) {
                         window.ODataReadOracle.readLinksFeed(params.linksFeed,
                             function (expectedData) {
@@ -184,7 +184,7 @@
 
             djstest.addTest(function readValidLinksEntryTest(params) {
                 djstest.assertsExpected(1);
-                OData.read({ requestUri: params.linksEntry, headers: headers },
+                odatajs.read({ requestUri: params.linksEntry, headers: headers },
                     function (data, response) {
                         window.ODataReadOracle.readLinksEntry(params.linksEntry,
                             function (expectedData) {
@@ -207,7 +207,7 @@
                 };
 
 
-                OData.request(request, function (data, response) {
+                odatajs.request(request, function (data, response) {
                     var httpOperation = request.method + " " + request.requestUri;
                     djstest.assertAreEqual(response.statusCode, httpStatusCode.noContent, "Verify response code: " + httpOperation);
                     ODataReadOracle.readLinksEntry(request.requestUri, function (actualData) {
@@ -241,11 +241,11 @@
                         data: null
                     };
 
-                    OData.request(deletionRequest, function (data, response) {
+                    odatajs.request(deletionRequest, function (data, response) {
                         var httpOperation = deletionRequest.method + " " + deletionRequest.requestUri;
                         djstest.assertAreEqual(response.statusCode, httpStatusCode.noContent, "Verify response code: " + httpOperation);
 
-                        OData.read(request.requestUri, function (data, response) {
+                        odatajs.read(request.requestUri, function (data, response) {
                            var httpOperation = "Read " + request.requestUri;
                            djstest.assertAreEqual(0, response.data.value.length, "Verify links against the request: " + httpOperation);
                            djstest.done();
@@ -254,12 +254,12 @@
                 };
 
                 // add
-                OData.request(request, function (data, response) {
+                odatajs.request(request, function (data, response) {
 
                     var httpOperation = request.method + " " + request.requestUri;
                     djstest.assertAreEqual(response.statusCode, httpStatusCode.noContent, "Verify response code: " + httpOperation);
 
-                    OData.read(request.requestUri, function (data, response) {
+                    odatajs.read(request.requestUri, function (data, response) {
                         ODataReadOracle.readLinksFeed(request.requestUri, function (actualData) {
                             djstest.assertAreEqualDeep(actualData, response.data, "Verify updated links entry against the request: " + httpOperation);
                             deleteAndVerify();

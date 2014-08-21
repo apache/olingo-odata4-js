@@ -193,7 +193,7 @@
         var i, len;
         for (i = 0, len = tests.length; i < len; i++) {
             var data = JSON.stringify(tests[i].expected);
-            var actual = OData.json.jsonParser(OData.json.jsonHandler, data, tests[i].context);
+            var actual = window.odatajs.oData.json.jsonParser(window.odatajs.oData.json.jsonHandler, data, tests[i].context);
             djstest.assertAreEqualDeep(actual, tests[i].expected, "test " + i + "didn't return the expected data");
         }
 
@@ -766,7 +766,7 @@
         var i, len;
         for (i = 0, len = tests.length; i < len; i++) {
             var data = tests[i].data ? tests[i].data : tests[i].expected;
-            var actual = OData.json.jsonSerializer(OData.json.jsonHandler, data, tests[i].context);
+            var actual = window.odatajs.oData.json.jsonSerializer(window.odatajs.oData.json.jsonHandler, data, tests[i].context);
             var expected = JSON.stringify(tests[i].expected);
             djstest.assertAreEqualDeep(actual, expected, "test " + i + "didn't return the expected data");
         }
@@ -787,7 +787,7 @@
             }
         });
 
-        OData.read("/foo", function (data, response) {
+        odatajs.read("/foo", function (data, response) {
             // djstest.assertAreEqual(data.results.length, 2, "data.results.length has two entries");
             djstest.assertAreEqual(response.headers.unknown, "u", "u unmodified");
             djstest.assertAreEqual(response.headers["Content-Encoding"], "compress, gzip", "Content-Encoding available");
@@ -832,7 +832,7 @@
                 "odata-maxversion": "4.0", "prefer": "prefer"
             }
         };
-        OData.request(request, function (data) { }, undefined, undefined, MockHttpClient);
+        odatajs.request(request, function (data) { }, undefined, undefined, MockHttpClient);
 
     });
 
@@ -845,7 +845,7 @@
           body: JSON.stringify(input) 
         };
 
-        OData.json.jsonHandler.read(response, { metadata: model });
+        window.odatajs.oData.json.jsonHandler.read(response, { metadata: model });
         djstest.assertAreEqualDeep(response.data, expected, message);
     };
 
@@ -859,7 +859,7 @@
           body: JSON.stringify(input) 
         };
 
-        OData.json.jsonHandler.read(response, { metadata: model });
+        window.odatajs.oData.json.jsonHandler.read(response, { metadata: model });
         djstest.assertAreEqualDeep(response.data, expected, message);
     };
 

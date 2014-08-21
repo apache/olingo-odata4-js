@@ -282,7 +282,7 @@
             djstest.done();
         });
 
-        OData.request({
+        odatajs.request({
             requestUri: requestUri || "http://someUri",
             headers: { "Content-Type": "application/json" },
             method: "PUT",

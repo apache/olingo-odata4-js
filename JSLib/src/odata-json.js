@@ -16,7 +16,7 @@
 (function (window, undefined) {
 
     var datajs = window.odatajs || {};
-    var odata = window.OData || {};
+    var odata = window.odatajs.oData || {};
 
     // Imports 
 

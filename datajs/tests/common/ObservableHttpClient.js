@@ -37,7 +37,7 @@
 (function (window, undefined) {
 
     var ObservableHttpClient = function (provider) {
-        this.provider = provider ? provider : OData.net.defaultHttpClient;
+        this.provider = provider ? provider : window.odatajs.oData.net.defaultHttpClient;
     };
 
     ObservableHttpClient.prototype.newSession = function () {

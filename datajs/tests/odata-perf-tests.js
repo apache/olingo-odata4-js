@@ -25,7 +25,7 @@
 
     var timedHttpClient = {
         duration: 0,
-        provider: OData.net.defaultHttpClient,
+        provider: window.odatajs.oData.net.defaultHttpClient,
         request: function (request, success, error) {
             var startTime = new Date();
             return timedHttpClient.provider.request(request, function () {
@@ -53,28 +53,28 @@
             });
         },
         teardown: function () {
-            OData.net.defaultHttpClient = timedHttpClient.provider;
+            window.odatajs.oData.net.defaultHttpClient = timedHttpClient.provider;
         }
     });
 
-    OData.net.defaultHttpClient.enableJsonpCallback = true;
+    window.odatajs.oData.net.defaultHttpClient.enableJsonpCallback = true;
     $.each(feeds, function (_, feed) {
         $.each([5, 500], function (_, items) {
             var params = $.extend({}, feed, { items: items, readUri: feed.uri + "?$top=" + items });
             djstest.addTest(function readPerfTest(params) {
                 var measureRead = function (metadata) {
                     var startTime = new Date();
-                    OData.read({ requestUri: params.readUri, headers: { Accept: params.mimeType }, enableJsonpCallback: true }, function () {
+                    odatajs.read({ requestUri: params.readUri, headers: { Accept: params.mimeType }, enableJsonpCallback: true }, function () {
                         var duration = new Date() - startTime - timedHttpClient.duration;
                         djstest.pass("Duration: " + duration + " ms (Network: " + timedHttpClient.duration + " ms)");
                         djstest.done();
                     }, unexpectedErrorHandler, undefined, undefined, metadata);
                 };
 
-                OData.net.defaultHttpClient = timedHttpClient;
+                window.odatajs.oData.net.defaultHttpClient = timedHttpClient;
                 djstest.assertsExpected(1);
                 if (params.metadata) {
-                    OData.read(params.service + "$metadata", measureRead, unexpectedErrorHandler, OData.metadataHandler);
+                    odatajs.read(params.service + "$metadata", measureRead, unexpectedErrorHandler, OData.metadataHandler);
                 } else {
                     measureRead();
                 }
@@ -86,7 +86,7 @@
                 var measureRead = function (metadata) {
                     Instrument.getBrowserMemorySize(function (memoryBefore) {
                         for (var i = 0; i < total; i++) {
-                            OData.read({ requestUri: params.readUri, headers: { Accept: params.mimeType }, enableJsonpCallback: true }, function (_, response) {
+                            odatajs.read({ requestUri: params.readUri, headers: { Accept: params.mimeType }, enableJsonpCallback: true }, function (_, response) {
                                 count++;
                                 if (count >= total) {
                                     Instrument.getBrowserMemorySize(function (memoryAfter) {
@@ -102,7 +102,7 @@
 
                 djstest.assertsExpected(1);
                 if (params.metadata) {
-                    OData.read(params.service + "$metadata", measureRead, unexpectedErrorHandler, OData.metadataHandler);
+                    odatajs.read(params.service + "$metadata", measureRead, unexpectedErrorHandler, OData.metadataHandler);
                 } else {
                     measureRead();
                 }
@@ -114,7 +114,7 @@
                 var measureRead = function (metadata) {
                     Instrument.getBrowserMemorySize(function (memoryBefore) {
                         var makeRequest = function () {
-                            OData.read({ requestUri: params.readUri, headers: { Accept: params.mimeType }, enableJsonpCallback: true }, function (_, response) {
+                            odatajs.read({ requestUri: params.readUri, headers: { Accept: params.mimeType }, enableJsonpCallback: true }, function (_, response) {
                                 count++;
                                 if (count < total) {
                                     setTimeout(makeRequest, 0);
@@ -134,7 +134,7 @@
 
                 djstest.assertsExpected(1);
                 if (params.metadata) {
-                    OData.read(params.service + "$metadata", measureRead, unexpectedErrorHandler, OData.metadataHandler);
+                    odatajs.read(params.service + "$metadata", measureRead, unexpectedErrorHandler, OData.metadataHandler);
                 } else {
                     measureRead();
                 }
@@ -157,18 +157,18 @@
             djstest.addTest(function postPerfTest(params) {
                 var measurePost = function (metadata) {
                     var startTime = new Date();
-                    OData.request(params.request, function () {
+                    odatajs.request(params.request, function () {
                         var duration = new Date() - startTime - timedHttpClient.duration;
                         djstest.pass("Duration: " + duration + " ms (Network: " + timedHttpClient.duration + " ms)");
                         djstest.done();
                     }, unexpectedErrorHandler, undefined, undefined, metadata);
                 };
 
-                OData.net.defaultHttpClient = timedHttpClient;
+                window.odatajs.oData.net.defaultHttpClient = timedHttpClient;
                 djstest.assertsExpected(1);
 
                 if (params.metadata) {
-                    OData.read(params.service + "$metadata", measurePost, unexpectedErrorHandler, OData.metadataHandler);
+                    odatajs.read(params.service + "$metadata", measurePost, unexpectedErrorHandler, OData.metadataHandler);
                 } else {
                     measurePost();
                 }
@@ -180,7 +180,7 @@
                 var measurePost = function (metadata) {
                     Instrument.getBrowserMemorySize(function (memoryBefore) {
                         for (var i = 0; i < total; i++) {
-                            OData.request(params.request, function (_, response) {
+                            odatajs.request(params.request, function (_, response) {
                                 count++;
                                 if (count >= total) {
                                     Instrument.getBrowserMemorySize(function (memoryAfter) {
@@ -194,11 +194,11 @@
                     });
                 };
 
-                OData.net.defaultHttpClient = timedHttpClient;
+                window.odatajs.oData.net.defaultHttpClient = timedHttpClient;
                 djstest.assertsExpected(1);
 
                 if (params.metadata) {
-                    OData.read(params.service + "$metadata", measurePost, unexpectedErrorHandler, OData.metadataHandler);
+                    odatajs.read(params.service + "$metadata", measurePost, unexpectedErrorHandler, OData.metadataHandler);
                 } else {
                     measurePost();
                 }
@@ -210,7 +210,7 @@
                 var measurePost = function (metadata) {
                     Instrument.getBrowserMemorySize(function (memoryBefore) {
                         var makeRequest = function () {
-                            OData.request(params.request, function (_, response) {
+                            odatajs.request(params.request, function (_, response) {
                                 count++;
                                 if (count < total) {
                                     setTimeout(makeRequest, 0);
@@ -228,11 +228,11 @@
                     });
                 };
 
-                OData.net.defaultHttpClient = timedHttpClient;
+                window.odatajs.oData.net.defaultHttpClient = timedHttpClient;
                 djstest.assertsExpected(1);
 
                 if (params.metadata) {
-                    OData.read(params.service + "$metadata", measurePost, unexpectedErrorHandler, OData.metadataHandler);
+                    odatajs.read(params.service + "$metadata", measurePost, unexpectedErrorHandler, OData.metadataHandler);
                 } else {
                     measurePost();
                 }

@@ -30,7 +30,7 @@
         version: "4.0"
     };
     
-    var jsonPayload = OData.json.jsonSerializer(OData.json.jsonHandler, testPayload, { "OData-Version": "4.0" });
+    var jsonPayload = window.odatajs.oData.json.jsonSerializer(window.odatajs.oData.json.jsonHandler, testPayload, { "OData-Version": "4.0" });
 
     djstest.addTest(function writeRequestTest() {
         var request = {
@@ -46,7 +46,7 @@
                        "\r\n" +
                        "test request";
 
-        var actual = OData.batch.writeRequest(request);
+        var actual = window.odatajs.oData.batch.writeRequest(request);
         djstest.assertAreEqual(actual, expected, "WriteRequest serializes a request properly");
         djstest.done();
     });
@@ -82,7 +82,7 @@
                        "\r\n--<batchBoundary>--\r\n";
 
         MockHttpClient.clear().addRequestVerifier(request.requestUri, function (request) {
-            var cType = OData.handler.contentType(request.headers["Content-Type"]);
+            var cType = window.odatajs.oData.handler.contentType(request.headers["Content-Type"]);
             var boundary = cType.properties["boundary"];
             var expected = template.replace(/<batchBoundary>/g, boundary);
 
@@ -91,7 +91,7 @@
             djstest.done();
         });
 
-        OData.request(request, null, null, OData.batch.batchHandler, MockHttpClient);
+        odatajs.request(request, null, null, window.odatajs.oData.batch.batchHandler, MockHttpClient);
     });
 
     djstest.addTest(function serializeComplexBatchTest() {
@@ -157,8 +157,8 @@
             var start = request.body.indexOf("multipart/mixed");
             var end = request.body.indexOf("\r\n", start);
 
-            var csetBoundary = OData.handler.contentType(request.body.substring(start, end)).properties["boundary"];
-            var batchBoundary = OData.handler.contentType(request.headers["Content-Type"]).properties["boundary"];
+            var csetBoundary = window.odatajs.oData.handler.contentType(request.body.substring(start, end)).properties["boundary"];
+            var batchBoundary = window.odatajs.oData.handler.contentType(request.headers["Content-Type"]).properties["boundary"];
 
             var expected = template.replace(/<batchBoundary>/g, batchBoundary);
             expected = expected.replace(/<changesetBoundary>/g, csetBoundary);
@@ -169,7 +169,7 @@
             djstest.done();
         });
 
-        OData.request(request, null, null, OData.batch.batchHandler, MockHttpClient);
+        odatajs.request(request, null, null, window.odatajs.oData.batch.batchHandler, MockHttpClient);
     });
 
     djstest.addTest(function serializeChangeSetTest() {
@@ -207,8 +207,8 @@
             var start = request.body.indexOf("multipart/mixed");
             var end = request.body.indexOf("\r\n", start);
 
-            var csetBoundary = OData.handler.contentType(request.body.substring(start, end)).properties["boundary"];
-            var batchBoundary = OData.handler.contentType(request.headers["Content-Type"]).properties["boundary"];
+            var csetBoundary = window.odatajs.oData.handler.contentType(request.body.substring(start, end)).properties["boundary"];
+            var batchBoundary = window.odatajs.oData.handler.contentType(request.headers["Content-Type"]).properties["boundary"];
 
             var expected = template.replace(/<batchBoundary>/g, batchBoundary);
             expected = expected.replace(/<changesetBoundary>/g, csetBoundary);
@@ -219,7 +219,7 @@
             djstest.done();
         });
 
-        OData.request(request, null, null, OData.batch.batchHandler, MockHttpClient);
+        odatajs.request(request, null, null, window.odatajs.oData.batch.batchHandler, MockHttpClient);
     });
 
     djstest.addTest(function serializeNestedChangeSetsTest() {
@@ -230,7 +230,7 @@
         };
 
         djstest.expectException(function () {
-            OData.request(request, null, null, OData.batch.batchHandler);
+            odatajs.request(request, null, null, window.odatajs.oData.batch.batchHandler);
         });
 
         djstest.done();
@@ -254,7 +254,7 @@
         };
 
         djstest.expectException(function () {
-            OData.request(request, null, null, OData.batch.batchHandler);
+            odatajs.request(request, null, null, window.odatajs.oData.batch.batchHandler);
         });
 
         djstest.done();
@@ -296,14 +296,14 @@ Location: http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Categ
         };
 
         MockHttpClient.clear().addResponse("http://testuri.org", response);
-        OData.read("http://testuri.org", function (data, response) {
+        odatajs.read("http://testuri.org", function (data, response) {
             djstest.assert(data.__batchResponses, "data.__batchResponses is defined");
             djstest.assertAreEqual(data.__batchResponses[0].headers["Location"], "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(42)", "part 1 of the response was read");
             djstest.assertAreEqual(data.__batchResponses[1].headers["Location"], "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(43)", "part 2 of the response was read");
             djstest.assertAreEqual(data.__batchResponses[0].data["CategoryID"], 42, "part 1 data of the response was read");
             djstest.assertAreEqual(data.__batchResponses[1].data["CategoryID"], 43, "part 2 data of the response was read");
             djstest.done();
-        }, null, OData.batch.batchHandler, MockHttpClient);
+        }, null, window.odatajs.oData.batch.batchHandler, MockHttpClient);
     });
 
     djstest.addTest(function readBatchWithChangesetTest() {
@@ -382,7 +382,7 @@ OData-Version: 4.0;\r\n\
         };
 
         MockHttpClient.clear().addResponse("http://testuri.org", response);
-        OData.read("http://testuri.org", function (data, response) {
+        odatajs.read("http://testuri.org", function (data, response) {
 
             var batchResponses = data.__batchResponses;
             djstest.assert(batchResponses, "data contains the batch responses");
@@ -405,7 +405,7 @@ OData-Version: 4.0;\r\n\
             djstest.assertAreEqual(changesetResponses3[0].data["CategoryID"], 43, "part 1 data of the changeset response of the response 3 was read");
             djstest.assertAreEqual(changesetResponses3[1].data, undefined, "No data defined for no content only response in part 2 of the changeset response of the response 3");
             djstest.done();
-        }, null, OData.batch.batchHandler, MockHttpClient);
+        }, null, window.odatajs.oData.batch.batchHandler, MockHttpClient);
     });
 
     djstest.addTest(function readBatchWithErrorPartTest() {
@@ -439,14 +439,14 @@ Content-Type: application/json\r\n\
         };
 
         MockHttpClient.clear().addResponse("http://testuri.org", response);
-        OData.read("http://testuri.org", function (data, response) {
+        odatajs.read("http://testuri.org", function (data, response) {
             var batchResponses = data.__batchResponses;
             djstest.assert(batchResponses, "data.__batchResponses is defined");
             djstest.assertAreEqual(batchResponses.length, 2, "batch contains two responses");
             djstest.assertAreEqual(batchResponses[0].headers["Location"], "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(1)", "part 1 of the response was read");
             djstest.assert(batchResponses[1].response, "part 2 of the response was read");
             djstest.done();
-        }, null, OData.batch.batchHandler, MockHttpClient);
+        }, null, window.odatajs.oData.batch.batchHandler, MockHttpClient);
     });
 
 
@@ -487,7 +487,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
         };
 
         MockHttpClient.clear().addResponse("http://testuri.org", response);
-        OData.read("http://testuri.org", function (data, response) {
+        odatajs.read("http://testuri.org", function (data, response) {
             var batchResponses = data.__batchResponses;
             djstest.assert(batchResponses, "data.__batchResponses is defined");
             djstest.assertAreEqual(batchResponses.length, 2, "batch contains two responses");
@@ -496,7 +496,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             var error = batchResponses[1].__changeResponses[0];
             djstest.assert(error.response.body.indexOf("GET operation cannot be specified in a change set") > -1, "Response contains expected message");
             djstest.done();
-        }, null, OData.batch.batchHandler, MockHttpClient);
+        }, null, window.odatajs.oData.batch.batchHandler, MockHttpClient);
         djstest.done();
     });
 
@@ -542,14 +542,14 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                   '--batchresponse_fb681875-73dc-4e62-9898-a0af89021341--\r\n'
         };
 
-        var oldPartHandler = OData.batch.batchHandler.partHandler;
+        var oldPartHandler = window.odatajs.oData.batch.batchHandler.partHandler;
 
-        OData.batch.batchHandler.partHandler = testHandler;
+        window.odatajs.oData.batch.batchHandler.partHandler = testHandler;
 
-        OData.batch.batchHandler.write(request, { recognizeDates: true });
-        OData.batch.batchHandler.read(response, { recognizeDates: true });
+        window.odatajs.oData.batch.batchHandler.write(request, { recognizeDates: true });
+        window.odatajs.oData.batch.batchHandler.read(response, { recognizeDates: true });
 
-        OData.batch.batchHandler.partHandler = oldPartHandler;
+        window.odatajs.oData.batch.batchHandler.partHandler = oldPartHandler;
 
         djstest.done();
     });

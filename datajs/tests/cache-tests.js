@@ -513,18 +513,18 @@
     });
 
     djstest.addTest(function dataCacheDestoryStopsThePrefetcherTest() {
-        var oldHttpClientRequest = OData.net.defaultHttpClient.request;
+        var oldHttpClientRequest = window.odatajs.oData.net.defaultHttpClient.request;
         var prefetchCount = 0;
         var theCache;
 
-        OData.net.defaultHttpClient.request = function (request, success, error) {
+        window.odatajs.oData.net.defaultHttpClient.request = function (request, success, error) {
             prefetchCount++;
             djstest.assert(prefetchCount <= 3, "Expected prefetch request");
             if (prefetchCount === 3) {
                 theCache.clear().then(function () {
                     djstest.assertAreEqual(prefetchCount, 3, "cache.clear() stopped the prefetcher");
                     djstest.done();
-                    OData.net.defaultHttpClient.request = oldHttpClientRequest;
+                    window.odatajs.oData.net.defaultHttpClient.request = oldHttpClientRequest;
                 }, thenFailTest);
                 return {
                     abort: function () { }
@@ -540,7 +540,7 @@
                 cache.readRange(0, 0).then(null, thenFailTest);
             });
         } catch (e) {
-            OData.net.defaultHttpClient.request = oldHttpClientRequest;
+            window.odatajs.oData.net.defaultHttpClient.request = oldHttpClientRequest;
             djstest.fail("Exception thrown,  prefetchSize: " + tests[count] + " error:  " + e.message);
             djstest.done();
         }
@@ -951,20 +951,20 @@
             var complete = false;
             window.MockHttpClient.clear().addResponse("*", { statusCode: 500, body: "server error" });
             window.MockHttpClient.async = true;
-            var savedClient = OData.net.defaultHttpClient;
-            OData.net.defaultHttpClient = window.MockHttpClient;
+            var savedClient = window.odatajs.oData.net.defaultHttpClient;
+            window.odatajs.oData.net.defaultHttpClient = window.MockHttpClient;
             cache.toObservable().Subscribe(function (item) {
-                OData.net.defaultHttpClient = savedClient;
+                window.odatajs.oData.net.defaultHttpClient = savedClient;
                 djstest.fail("Unexpected call to OnNext");
             }, function (err) {
                 djstest.assert(complete === false, "complete === false");
                 djstest.assert(err, "err defined");
-                OData.net.defaultHttpClient = savedClient;
+                window.odatajs.oData.net.defaultHttpClient = savedClient;
                 complete = true;
                 djstest.done();
             }, function (complete) {
                 djstest.fail("Unexpected call to complete. Error handler should be called.");
-                OData.net.defaultHttpClient = savedClient;
+                window.odatajs.oData.net.defaultHttpClient = savedClient;
                 complete = true;
                 djstest.done();
             });

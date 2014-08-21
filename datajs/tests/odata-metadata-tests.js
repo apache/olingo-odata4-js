@@ -33,11 +33,11 @@
         for (i = 0, len = cases.length; i < len; i++) {
             var response = cases[i].i;
             var testClient = { request: function (r, success, error) { success(response); } };
-            window.OData.read("foo", function (data) {
+            window.odatajs.read("foo", function (data) {
                 djstest.assertAreEqualDeep(data, cases[i].e, "handler result matches target");
             }, function (err) {
                 djstest.fail(err.message);
-            }, window.OData.metadataHandler, testClient);
+            }, window.odatajs.oData.metadataHandler, testClient);
         }
 
         djstest.done();
@@ -58,7 +58,7 @@
 
         var i, len;
         for (i = 0, len = cases.length; i < len; i++) {
-            djstest.assertAreEqual(window.OData.metadata.scriptCase(cases[i].i), cases[i].e, "processed input matches expected value");
+            djstest.assertAreEqual(window.odatajs.oData.metadata.scriptCase(cases[i].i), cases[i].e, "processed input matches expected value");
         }
 
         djstest.done();
@@ -66,7 +66,7 @@
 
     djstest.addTest(function testGetChildSchema() {
         // Test cases as input parent / input element / result tuples.
-        var schema = window.OData.metadata.schema;
+        var schema = window.odatajs.oData.metadata.schema;
         var cases = [
             { ip: schema.elements.EntityType, ie: "Property", e: { isArray: true, propertyName: "property"} },
             { ip: schema.elements.EntityType, ie: "Key", e: { isArray: true, propertyName: "key"} },
@@ -76,7 +76,7 @@
 
         var i, len;
         for (i = 0, len = cases.length; i < len; i++) {
-            var result = window.OData.metadata.getChildSchema(cases[i].ip, cases[i].ie);
+            var result = window.odatajs.oData.metadata.getChildSchema(cases[i].ip, cases[i].ie);
             djstest.assertAreEqualDeep(result, cases[i].e, "getChildSchema matches target");
         }
 
@@ -425,7 +425,7 @@
         var i, len;
         for (i = 0, len = cases.length; i < len; i++) {
             var doc = window.odatajs.xml.xmlParse(cases[i].i);
-            var schema = window.OData.metadata.parseConceptualModelElement(doc.documentElement);
+            var schema = window.odatajs.oData.metadata.parseConceptualModelElement(doc.documentElement);
             djstest.assertAreEqualDeep(schema, cases[i].e, "parseConceptualModelElement result matches target");
         }
 
@@ -447,7 +447,7 @@
 
 
         var doc = window.odatajs.xml.xmlParse(testCsdl);
-        var schema = window.OData.metadata.parseConceptualModelElement(doc.documentElement);
+        var schema = window.odatajs.oData.metadata.parseConceptualModelElement(doc.documentElement);
 
         djstest.assertAreEqual(schema.dataServices.schema[0].term.length, 2, "schema.DataServices.Schema.Term.length === 2");
         djstest.assertAreEqual(schema.dataServices.schema[0].term[0].name, "Rating", "schema.DataServices.Schema.Term[0].name === 'Rating'");
@@ -481,7 +481,7 @@
 
 
         var doc = window.odatajs.xml.xmlParse(testCsdl);
-        var schema = window.OData.metadata.parseConceptualModelElement(doc.documentElement);
+        var schema = window.odatajs.oData.metadata.parseConceptualModelElement(doc.documentElement);
 
         djstest.assertAreEqual(schema.dataServices.schema[0].annotations.length, 2, "Annotations number");
         djstest.assertAreEqual(schema.dataServices.schema[0].annotations[0].annotation.length, 1, "Annotation number");

@@ -21,7 +21,7 @@
 
     var slowHttpClient = {
         latency: 750,
-        provider: OData.net.defaultHttpClient,
+        provider: window.odatajs.oData.net.defaultHttpClient,
         request: function (request, success, error) {
             setTimeout(function () {
                 slowHttpClient.provider.request(request, success, error);
@@ -35,10 +35,10 @@
 
     module("Functional", {
         setup: function () {
-            OData.net.defaultHttpClient = slowHttpClient;
+            window.odatajs.oData.net.defaultHttpClient = slowHttpClient;
         },
         teardown: function () {
-            OData.net.defaultHttpClient = slowHttpClient.provider;
+            window.odatajs.oData.net.defaultHttpClient = slowHttpClient.provider;
         }
     });
 

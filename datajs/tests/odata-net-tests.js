@@ -36,17 +36,17 @@
         };
 
         var oldXmlHttpRequest = window.XMLHttpRequest;
-        var oldEnableJsonpCallback = OData.net.defaultHttpClient.enableJsonpCallback;
+        var oldEnableJsonpCallback = window.odatajs.oData.net.defaultHttpClient.enableJsonpCallback;
         try {
             window.XMLHttpRequest = MockXMLHttpRequest.XMLHttpRequest;
             var i, len;
             for (i = 0, len = tests.length; i < len; i++) {
                 MockXMLHttpRequest.addResponse(tests[i].url, tests[i].response);
 
-                OData.net.defaultHttpClient.enableJsonpCallback = false;
+                window.odatajs.oData.net.defaultHttpClient.enableJsonpCallback = false;
                 //Need a closure to capture the current test being executed. 
                 (function (test) {
-                    OData.net.defaultHttpClient.request(
+                    window.odatajs.oData.net.defaultHttpClient.request(
                     { requestUri: test.url, headers: {} },
                     function (response) {
                         djstest.assert(response.statusCode >= 200 & response.statusCode <= 299, "response status is in the success range");
@@ -66,7 +66,7 @@
             var timer = setInterval(function () {
                 if (sentCount === tests.length) {
                     clearInterval(timer)
-                    OData.net.defaultHttpClient.enableJsonpCallback = oldEnableJsonpCallback;
+                    window.odatajs.oData.net.defaultHttpClient.enableJsonpCallback = oldEnableJsonpCallback;
                     window.XMLHttpRequest = oldXmlHttpRequest;
                     MockXMLHttpRequest.reset();
                     djstest.done();
@@ -81,12 +81,12 @@
 
         djstest.assertsExpected(1);
 
-        var oldEnableJsonpCallback = OData.net.defaultHttpClient.enableJsonpCallback;
+        var oldEnableJsonpCallback = window.odatajs.oData.net.defaultHttpClient.enableJsonpCallback;
         try {
             window.XMLHttpRequest = MockXMLHttpRequest.XMLHttpRequest;
-            OData.net.defaultHttpClient.enableJsonpCallback = false;
+            window.odatajs.oData.net.defaultHttpClient.enableJsonpCallback = false;
 
-            OData.net.defaultHttpClient.request(
+            window.odatajs.oData.net.defaultHttpClient.request(
                { requestUri: "http://test1", timeoutMS: 10, headers: { MockTimeOut: true} },
                function (response) {
                    djstest.fail("success method was hit when not expected");
@@ -102,7 +102,7 @@
             var timer = setInterval(function () {
                 if (testDone) {
                     clearInterval(timer);
-                    OData.net.defaultHttpClient.enableJsonpCallback = oldEnableJsonpCallback;
+                    window.odatajs.oData.net.defaultHttpClient.enableJsonpCallback = oldEnableJsonpCallback;
                     window.XMLHttpRequest = oldXmlHttpRequest;
                     MockXMLHttpRequest.reset();
                     djstest.done();
@@ -117,12 +117,12 @@
 
         djstest.assertsExpected(1);
 
-        var oldEnableJsonpCallback = OData.net.defaultHttpClient.enableJsonpCallback;
+        var oldEnableJsonpCallback = window.odatajs.oData.net.defaultHttpClient.enableJsonpCallback;
         try {
             window.XMLHttpRequest = MockXMLHttpRequest.XMLHttpRequest;
-            OData.net.defaultHttpClient.enableJsonpCallback = false;
+            window.odatajs.oData.net.defaultHttpClient.enableJsonpCallback = false;
 
-            var result = OData.net.defaultHttpClient.request(
+            var result = window.odatajs.oData.net.defaultHttpClient.request(
                { requestUri: "http://test1", headers: { MockNoOp: true} },
                function (response) {
                    djstest.fail("success method was hit when not expected");
@@ -134,7 +134,7 @@
             result.abort();
         }
         finally {
-            OData.net.defaultHttpClient.enableJsonpCallback = oldEnableJsonpCallback;
+            window.odatajs.oData.net.defaultHttpClient.enableJsonpCallback = oldEnableJsonpCallback;
             window.XMLHttpRequest = oldXmlHttpRequest;
             MockXMLHttpRequest.reset();
             djstest.done();
@@ -148,10 +148,10 @@
 
         djstest.assertsExpected(1);
 
-        var oldEnableJsonpCallback = OData.net.defaultHttpClient.enableJsonpCallback;
+        var oldEnableJsonpCallback = window.odatajs.oData.net.defaultHttpClient.enableJsonpCallback;
         try {
             window.XMLHttpRequest = MockXMLHttpRequest.XMLHttpRequest;
-            OData.net.defaultHttpClient.enableJsonpCallback = false;
+            window.odatajs.oData.net.defaultHttpClient.enableJsonpCallback = false;
 
             MockXMLHttpRequest.addResponse("http://test1", { headers: {}, status: 200, body: "test body" });
 
@@ -160,7 +160,7 @@
                 testDone = true;
             };
 
-            result = OData.net.defaultHttpClient.request(
+            result = window.odatajs.oData.net.defaultHttpClient.request(
                { requestUri: "http://test1", headers: {} },
                function (response) {
                    djstest.pass("success method was hit");
@@ -174,7 +174,7 @@
             var timer = setInterval(function () {
                 if (testDone) {
                     clearInterval(timer);
-                    OData.net.defaultHttpClient.enableJsonpCallback = oldEnableJsonpCallback;
+                    window.odatajs.oData.net.defaultHttpClient.enableJsonpCallback = oldEnableJsonpCallback;
                     window.XMLHttpRequest = oldXmlHttpRequest;
                     MockXMLHttpRequest.reset();
                     djstest.done();
@@ -200,10 +200,10 @@
         ];
 
         var oldXmlHttpRequest = window.XMLHttpRequest;
-        var oldEnableJsonpCallback = OData.net.defaultHttpClient.enableJsonpCallback;
+        var oldEnableJsonpCallback = window.odatajs.oData.net.defaultHttpClient.enableJsonpCallback;
         try {
             window.XMLHttpRequest = MockXMLHttpRequest.XMLHttpRequest;
-            OData.net.defaultHttpClient.enableJsonpCallback = false;
+            window.odatajs.oData.net.defaultHttpClient.enableJsonpCallback = false;
             var i, len;
 
             for (i = 0, len = tests.length; i < len; i++) {
@@ -212,14 +212,14 @@
                     djstest.assertAreEqualDeep(request, tests[i].expected, "request matches target");
                 });
 
-                OData.net.defaultHttpClient.request(
+                window.odatajs.oData.net.defaultHttpClient.request(
                     tests[i].request,
                     function (response) { });
             }
         }
         finally {
             // Restore original values.
-            OData.net.defaultHttpClient.enableJsonpCallback = oldEnableJsonpCallback;
+            window.odatajs.oData.net.defaultHttpClient.enableJsonpCallback = oldEnableJsonpCallback;
             window.XMLHttpRequest = oldXmlHttpRequest;
         }
         djstest.done();
@@ -240,21 +240,21 @@
             { pass: true, input: { headers: { Accept: "application/xml"}} }
         ];
         for (var i = 0; i < tests.length; i++) {
-            var actual = OData.net.canUseJSONP(tests[i].input);
+            var actual = window.odatajs.oData.net.canUseJSONP(tests[i].input);
             djstest.assert(actual === tests[i].pass, "test " + i + " didn't actually match pass (" + tests[i].pass + ")");
         }
         djstest.done();
     });
 
     djstest.addTest(function isAbsoluteUrlTest() {
-        djstest.assert(OData.net.isAbsoluteUrl("http://something/"));
-        djstest.assert(OData.net.isAbsoluteUrl("http://malformed url/"));
-        djstest.assert(OData.net.isAbsoluteUrl("https://localhost/"));
-        djstest.assert(OData.net.isAbsoluteUrl("file://another-protocol/"));
-        djstest.assert(!OData.net.isAbsoluteUrl("/path"));
-        djstest.assert(!OData.net.isAbsoluteUrl("?query-string"));
-        djstest.assert(!OData.net.isAbsoluteUrl(""));
-        djstest.assert(!OData.net.isAbsoluteUrl("mailto:someone"));
+        djstest.assert(window.odatajs.oData.net.isAbsoluteUrl("http://something/"));
+        djstest.assert(window.odatajs.oData.net.isAbsoluteUrl("http://malformed url/"));
+        djstest.assert(window.odatajs.oData.net.isAbsoluteUrl("https://localhost/"));
+        djstest.assert(window.odatajs.oData.net.isAbsoluteUrl("file://another-protocol/"));
+        djstest.assert(!window.odatajs.oData.net.isAbsoluteUrl("/path"));
+        djstest.assert(!window.odatajs.oData.net.isAbsoluteUrl("?query-string"));
+        djstest.assert(!window.odatajs.oData.net.isAbsoluteUrl(""));
+        djstest.assert(!window.odatajs.oData.net.isAbsoluteUrl("mailto:someone"));
         djstest.done();
     });
 
@@ -274,10 +274,10 @@
         ];
         var i, len;
         for (i = 0, len = localUrls.length; i < len; i++) {
-            djstest.assert(OData.net.isLocalUrl(localUrls[i]), "is local: [" + localUrls[i] + "]");
+            djstest.assert(window.odatajs.oData.net.isLocalUrl(localUrls[i]), "is local: [" + localUrls[i] + "]");
         }
         for (i = 0, len = remoteUrls.length; i < len; i++) {
-            djstest.assert(!OData.net.isLocalUrl(remoteUrls[i]), "is not local: [" + remoteUrls[i] + "]");
+            djstest.assert(!window.odatajs.oData.net.isLocalUrl(remoteUrls[i]), "is not local: [" + remoteUrls[i] + "]");
         }
         djstest.done();
     });
@@ -285,7 +285,7 @@
     // DATAJS INTERNAL END
 
     djstest.addTest(function userPasswordTest() {
-        OData.request({
+        odatajs.request({
             requestUri: "./endpoints/FoodStoreDataServiceV4.svc/UserNameAndPassword",
             user: "the-user",
             password: "the-password"

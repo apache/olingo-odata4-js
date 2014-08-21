@@ -106,7 +106,7 @@
         /** Common function for tests to get and cache metadata, to reduce network calls made by tests
         */
         if (!serviceMetadata) {
-            OData.read(metadataUri, function (metadata) {
+            odatajs.read(metadataUri, function (metadata) {
                 serviceMetadata = metadata;
                 callback(metadata);
             }, unexpectedErrorHandler, OData.metadataHandler);
@@ -132,7 +132,7 @@
             djstest.assertsExpected(2);
             getMetadata(function (metadata) {
                 OData.defaultMetadata.push(metadata);
-                OData.read({ requestUri: entryUri, headers: acceptHeaders }, function (data, response) {
+                odatajs.read({ requestUri: entryUri, headers: acceptHeaders }, function (data, response) {
                     djstest.assertAreEqual(response.statusCode, httpStatusCode.ok, "Verify response code");
                     ODataReadOracle.readJson(entryUri, function (expectedData) {
                         djstest.assertWithoutMetadata(data, expectedData, "Verify data");
@@ -161,7 +161,7 @@
                 djstest.assertsExpected(2);
                 getMetadata(function (metadata) {
                     OData.defaultMetadata.push(metadata);
-                    OData.read({ requestUri: entryUri, headers: acceptHeaders }, function (data, response) {
+                    odatajs.read({ requestUri: entryUri, headers: acceptHeaders }, function (data, response) {
                         djstest.assertAreEqual(response.statusCode, httpStatusCode.ok, "Verify response code");
                         ODataReadOracle.readJson(entryUri, function (expectedData) {
                             djstest.assertWithoutMetadata(data, expectedData, "Verify data");
@@ -175,7 +175,7 @@
                 var postEntry = $.extend(true, {}, params.testEntry.data, { ID: 100 });
                 djstest.assertsExpected(2);
                 getMetadata(function (metadata) {
-                    OData.request({ requestUri: params.feedUri, method: "POST", headers: djstest.clone(mimeHeaders), data: postEntry }, function (data, response) {
+                    odatajs.request({ requestUri: params.feedUri, method: "POST", headers: djstest.clone(mimeHeaders), data: postEntry }, function (data, response) {
                         djstest.assertAreEqual(response.statusCode, httpStatusCode.created, "Verify response code");
                         ODataReadOracle.readJson(feedUri + "(" + postEntry.ID + ")", function (actualData) {
                             djstest.assertWithoutMetadata(actualData, postEntry, "Verify new entry data against server");
@@ -190,7 +190,7 @@
                 djstest.assertsExpected(2);
                 getMetadata(function (metadata) {
                     OData.defaultMetadata.push(metadata);
-                    OData.request({ requestUri: entryUri, method: "PUT", headers: djstest.clone(mimeHeaders), data: params.testEntry.data }, function (data, response) {
+                    odatajs.request({ requestUri: entryUri, method: "PUT", headers: djstest.clone(mimeHeaders), data: params.testEntry.data }, function (data, response) {
                         djstest.assertAreEqual(response.statusCode, httpStatusCode.noContent, "Verify response code");
                         ODataReadOracle.readJson(entryUri, function (actualData) {
                             djstest.assertWithoutMetadata(actualData, $.extend({ ID: 0 }, params.testEntry.data), "Verify updated entry data against server");
@@ -208,7 +208,7 @@
             var entryUri = service + "/HierarchicalEntries(" + index + ")";
             djstest.assertsExpected(2);
             getMetadata(function (metadata) {
-                OData.read({ requestUri: entryUri, headers: acceptHeaders }, function (data, response) {
+                odatajs.read({ requestUri: entryUri, headers: acceptHeaders }, function (data, response) {
                     djstest.assertAreEqual(response.statusCode, httpStatusCode.ok, "Verify response code");
                     ODataReadOracle.readJson(entryUri, function (expectedData) {
                         djstest.assertWithoutMetadata(data, expectedData, "Verify data");
@@ -226,8 +226,8 @@
 
             djstest.assertsExpected(1);
             OData.jsonHandler.recognizeDates = params.recognizeDates;
-            OData.read(foodStoreDataService + "/$metadata", function (metadata) {
-                OData.read({ requestUri: specialDaysEndpoint, headers: { Accept: params.accept} }, function (data, response) {
+            odatajs.read(foodStoreDataService + "/$metadata", function (metadata) {
+                odatajs.read({ requestUri: specialDaysEndpoint, headers: { Accept: params.accept} }, function (data, response) {
                     // Because our oracle isn't metadata aware, it is not 100% correct, so we will pass in recognizeDates = true
                     // in all cases and manually fix up the property that was incorrectly converted
                     window.ODataReadOracle.readFeed(specialDaysEndpoint, function (expectedData) {

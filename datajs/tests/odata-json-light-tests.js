@@ -295,7 +295,7 @@
             djstest.done();
         });
 
-        OData.request({
+        odatajs.request({
             requestUri: requestUri || "http://someUri",
             headers: { "Content-Type": "application/json" },
             method: "PUT",
@@ -306,7 +306,7 @@
     var verifyReadJsonLightData = function (input, expected, message, model) {
         var response = { headers: { "Content-Type": "application/json;odata.metadata=full", DataServiceVersion: "4.0" }, body: JSON.stringify(input) };
 
-        OData.json.jsonHandler.read(response, { metadata: model });
+        window.odatajs.oData.json.jsonHandler.read(response, { metadata: model });
         djstest.assertAreEqualDeep(response.data, expected, message);
     };
 

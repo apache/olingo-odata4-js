@@ -292,11 +292,11 @@
     module("Functional", {
         setup: function () {
             this.observableHttpClient = new ObservableHttpClient();
-            OData.net.defaultHttpClient = this.observableHttpClient;
+            window.odatajs.oData.net.defaultHttpClient = this.observableHttpClient;
         },
 
         teardown: function () {
-            OData.net.defaultHttpClient = this.observableHttpClient.provider;
+            window.odatajs.oData.net.defaultHttpClient = this.observableHttpClient.provider;
         }
     });
 

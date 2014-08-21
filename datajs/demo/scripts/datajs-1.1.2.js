@@ -11,11 +11,11 @@
 // COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// datajs.js
+// odatajs.js
 
 (function (window, undefined) {
 
-    var datajs = window.datajs || {};
+    var datajs = window.odatajs || {};
     var odata = window.OData || {};
 
     // AMD support
@@ -23,11 +23,11 @@
         define('datajs', datajs);
         define('OData', odata);
     } else {
-        window.datajs = datajs;
+        window.odatajs = datajs;
         window.OData = odata;
     }
 
-    datajs.version = {
+    odatajs.version = {
         major: 1,
         minor: 1,
         build: 1
@@ -9109,16 +9109,16 @@
         memory: MemoryStore
     };
 
-    datajs.defaultStoreMechanism = "best";
+    odatajs.defaultStoreMechanism = "best";
 
-    datajs.createStore = function (name, mechanism) {
+    odatajs.createStore = function (name, mechanism) {
         /// <summary>Creates a new store object.</summary>
         /// <param name="name" type="String">Store name.</param>
         /// <param name="mechanism" type="String" optional="true">A specific mechanism to use (defaults to best, can be "best", "dom", "indexeddb", "webdb").</param>
         /// <returns type="Object">Store object.</returns>
 
         if (!mechanism) {
-            mechanism = datajs.defaultStoreMechanism;
+            mechanism = odatajs.defaultStoreMechanism;
         }
 
         if (mechanism === "best") {
@@ -9647,7 +9647,7 @@
         source.options = options;
 
         // Create a cache local store.
-        var store = datajs.createStore(options.name, options.mechanism);
+        var store = odatajs.createStore(options.name, options.mechanism);
 
         var that = this;
 
@@ -10550,7 +10550,7 @@
         return that;
     };
 
-    datajs.createDataCache = function (options) {
+    odatajs.createDataCache = function (options) {
         /// <summary>Creates a data cache for a collection that is efficiently loaded on-demand.</summary>
         /// <param name="options">
         /// Options for the data cache, including name, source, pageSize,

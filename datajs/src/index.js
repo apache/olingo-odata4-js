@@ -27,6 +27,9 @@ window.odatajs.oData = require('./lib/odata.js');
 window.odatajs.store = require('./lib/store.js');
 window.odatajs.cache = require('./lib/cache.js');
 
+window.odatajs.read = window.odatajs.oData.read;
+window.odatajs.request = window.odatajs.oData.request;
+
 /*
 function extend(target) {
     var sources = [].slice.call(arguments, 1);

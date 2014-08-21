@@ -17,7 +17,6 @@
  * under the License.
 */
 (function (window, undefined) {
-        window.OData = window.odatajs.oData;
         window.temp = window.odatajs;
         window.temp.store = window.odatajs.store;
         window.temp.cache = window.odatajs.cache;
