@@ -57,7 +57,7 @@
     });
 
     djstest.addTest(function simpleLocalReadTest() {
-        odatajs.read(localFeed, function (data, request) {
+        odatajs.oData.read(localFeed, function (data, request) {
             djstest.assert(data !== null, "data !== null");
             djstest.assert(request !== null, "request !== null");
             djstest.done();
@@ -65,7 +65,7 @@
     });
 
     djstest.addTest(function simpleLocalReadWithRequestTest() {
-        odatajs.read({ requestUri: localFeed, headers: { Accept: "application/json"} }, function (data, response) {
+        odatajs.oData.read({ requestUri: localFeed, headers: { Accept: "application/json"} }, function (data, response) {
             djstest.assert(data !== null, "data !== null");
             djstest.assert(response !== null, "response !== null");
             djstest.assertAreEqual(data, response.data, "data === response.data");
@@ -83,7 +83,7 @@
         OData.defaultHttpClient.enableJsonpCallback = true;
 
         var iframesBefore = countIFrames();
-        odatajs.read(northwindService + "Regions", function (data, request) {
+        odatajs.oData.read(northwindService + "Regions", function (data, request) {
             djstest.assert(data !== null, "data !== null");
             djstest.assert(request !== null, "request !== null");
 
@@ -100,7 +100,7 @@
 
     djstest.addTest(function simpleReadWithParamsTest() {
         OData.defaultHttpClient.enableJsonpCallback = true;
-        odatajs.read(northwindFeed + "?$top=3", function (data, request) {
+        odatajs.oData.read(northwindFeed + "?$top=3", function (data, request) {
             djstest.assert(data !== null, "data !== null");
             djstest.assert(request !== null, "request !== null");
             restoreJsonpCallback();
@@ -110,7 +110,7 @@
 
     djstest.addTest(function simpleReadWithNoParamsTest() {
         OData.defaultHttpClient.enableJsonpCallback = true;
-        odatajs.read(northwindFeed + "?", function (data, request) {
+        odatajs.oData.read(northwindFeed + "?", function (data, request) {
             djstest.assert(data !== null, "data !== null");
             djstest.assert(request !== null, "request !== null");
             restoreJsonpCallback();
@@ -122,7 +122,7 @@
         // Verifies that JSONP will timeout, and that the
         // enableJsonpCallback flag can be set on the request itself.
         var iframesBefore = countIFrames();
-        odatajs.request({
+        odatajs.oData.request({
             requestUri: northwindFeed + "?$fail=true",
             timeoutMS: 100,
             enableJsonpCallback: true
@@ -179,7 +179,7 @@
         try {
             var i, len;
             for (i = 0, len = testUris.length; i < len; i++) {
-                odatajs.request({ requestUri: testUris[i] });
+                odatajs.oData.request({ requestUri: testUris[i] });
             }
         }
         finally {
@@ -218,7 +218,7 @@
         MockHttpClient.addResponse("requestUpdateTest", { status: 200, body: "test response" });
         MockHttpClient.addResponse("requestUpdateTest", { status: 500, body: "error response" });
 
-        odatajs.request({ requestUri: "requestUpdateTest", method: "POST" }, testSuccess, testError, testHandler, MockHttpClient);
+        odatajs.oData.request({ requestUri: "requestUpdateTest", method: "POST" }, testSuccess, testError, testHandler, MockHttpClient);
 
         djstest.done();
     });

@@ -76,7 +76,7 @@
 
         djstest.addTest(function readFullFeedTest(handlerAccept) {
             djstest.assertsExpected(1);
-            odatajs.read({ requestUri: feed, headers: { Accept: handlerAccept} },
+            odatajs.oData.read({ requestUri: feed, headers: { Accept: handlerAccept} },
                     function (data, response) {
                         window.ODataReadOracle.readFeed(feed,
                             function (expectedData) {
@@ -92,7 +92,7 @@
         djstest.addTest(function readMaxAndNullValueEntryTest(handlerAccept) {
             var endPoint = feed + "(0)";
             djstest.assertsExpected(1);
-            odatajs.read({ requestUri: endPoint, headers: { Accept: handlerAccept} },
+            odatajs.oData.read({ requestUri: endPoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
                         window.ODataReadOracle.readEntry(endPoint,
                             function (expectedData) {
@@ -108,7 +108,7 @@
         djstest.addTest(function readMinAndZeroValueEntryTest(handlerAccept) {
             var endPoint = feed + "(1)";
             djstest.assertsExpected(1);
-            odatajs.read({ requestUri: "./endpoints/FoodStoreDataServiceV4.svc/Foods(1)", headers: { Accept: handlerAccept} },
+            odatajs.oData.read({ requestUri: "./endpoints/FoodStoreDataServiceV4.svc/Foods(1)", headers: { Accept: handlerAccept} },
                 function (data, response) {
                     window.ODataReadOracle.readEntry(endPoint,
                         function (expectedData) {
@@ -123,7 +123,7 @@
         djstest.addTest(function readNullNestedComplexTypeEntryTest(handlerAccept) {
             var endPoint = feed + "(2)";
             djstest.assertsExpected(1);
-            odatajs.read({ requestUri: endPoint, headers: { Accept: handlerAccept} },
+            odatajs.oData.read({ requestUri: endPoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
                         window.ODataReadOracle.readEntry(endPoint,
                             function (expectedData) {
@@ -139,7 +139,7 @@
         djstest.addTest(function readNullComplexTypeEntryTest(handlerAccept) {
             var endPoint = feed + "(3)";
             djstest.assertsExpected(1);
-            odatajs.read({ requestUri: endPoint, headers: { Accept: handlerAccept} },
+            odatajs.oData.read({ requestUri: endPoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
                         window.ODataReadOracle.readEntry(endPoint,
                             function (expectedData) {
@@ -155,7 +155,7 @@
         djstest.addTest(function readNullPropertiesDerivedEntryTest(handlerAccept) {
             djstest.assertsExpected(1);
             var endPoint = feed + "(4)";
-            odatajs.read({ requestUri: endPoint, headers: { Accept: handlerAccept} },
+            odatajs.oData.read({ requestUri: endPoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
                         window.ODataReadOracle.readEntry(endPoint,
                             function (expectedData) {
@@ -172,7 +172,7 @@
 
             djstest.assertsExpected(1);
             var endPoint = feed + "(5)";
-            odatajs.read({ requestUri: endPoint, headers: { Accept: handlerAccept} },
+            odatajs.oData.read({ requestUri: endPoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
                         window.ODataReadOracle.readEntry(endPoint,
                             function (expectedData) {
@@ -188,7 +188,7 @@
         djstest.addTest(function readEntryWithInlineFeedTest(handlerAccept) {
             var endpoint = categoriesFeed + "(0)?$expand=Foods";
             djstest.assertsExpected(2);
-            odatajs.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
+            odatajs.oData.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
                         window.ODataReadOracle.readEntry(endpoint,
                             function (expectedData) {
@@ -205,7 +205,7 @@
         djstest.addTest(function readFeedWithEmptyInlineFeedTest(handlerAccept) {
             var endpoint = categoriesFeed + "?$filter=Name eq 'Empty Category'&$expand=Foods";
             djstest.assertsExpected(2);
-            odatajs.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
+            odatajs.oData.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
                         window.ODataReadOracle.readFeed(endpoint,
                             function (expectedData) {
@@ -222,7 +222,7 @@
         djstest.addTest(function readEntryWithInlineEntryTest(handlerAccept) {
             var endpoint = feed + "(0)?$expand=Category";
             djstest.assertsExpected(2);
-            odatajs.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
+            odatajs.oData.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
                         window.ODataReadOracle.readEntry(endpoint,
                             function (expectedData) {
@@ -239,7 +239,7 @@
         djstest.addTest(function readFeedWithNullInlineEntryTest(handlerAccept) {
             var endpoint = feed + "?$expand=Category&$filter=Category eq null";
             djstest.assertsExpected(2);
-            odatajs.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
+            odatajs.oData.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
                         window.ODataReadOracle.readFeed(endpoint,
                             function (expectedData) {
@@ -255,7 +255,7 @@
         djstest.addTest(function readFeedWithInlineCountTest(handlerAccept) {
             var endpoint = feed + "?$count=true";
             djstest.assertsExpected(2);
-            odatajs.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
+            odatajs.oData.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
                         window.ODataReadOracle.readFeed(endpoint,
                             function (expectedData) {
@@ -272,7 +272,7 @@
         djstest.addTest(function selectSinglePropertyOnEntryTest(handlerAccept) {
             var endpoint = feed + "(0)?$select=Name";
             djstest.assertsExpected(1);
-            odatajs.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
+            odatajs.oData.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
                 function (data, response) {
                     window.ODataReadOracle.readEntry(endpoint,
                         function (expectedData) {
@@ -287,7 +287,7 @@
         djstest.addTest(function selectComplexTypeOnFeedTest(handlerAccept) {
             var endpoint = feed + "?$select=Packaging";
             djstest.assertsExpected(1);
-            odatajs.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
+            odatajs.oData.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
                 function (data, response) {
                     window.ODataReadOracle.readFeed(endpoint,
                         function (expectedData) {
@@ -302,7 +302,7 @@
         djstest.addTest(function selectMultiplePropertiesOnEntryTest(handlerAccept) {
             var endpoint = feed + "(3)?$select=Packaging,ExpirationDate,IsAvailable";
             djstest.assertsExpected(1);
-            odatajs.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
+            odatajs.oData.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
                 function (data, response) {
                     window.ODataReadOracle.readEntry(endpoint,
                         function (expectedData) {
@@ -317,7 +317,7 @@
         djstest.addTest(function readPagedCategoriesCollectionTest(handlerAccept) {
             var endpoint = categoriesFeed;
             djstest.assertsExpected(1);
-            odatajs.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
+            odatajs.oData.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
                         window.ODataReadOracle.readFeed(endpoint,
                             function (expectedData) {
@@ -331,7 +331,7 @@
         djstest.addTest(function readPagedCollectionWithInlineCountTest(handlerAccept) {
             var endpoint = categoriesFeed + "?$count=true";
             djstest.assertsExpected(2);
-            odatajs.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
+            odatajs.oData.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
                         window.ODataReadOracle.readFeed(endpoint,
                             function (expectedData) {
@@ -346,7 +346,7 @@
         djstest.addTest(function readEntryWithNamedStreams(handlerAccept) {
             var endpoint = feed + "(1)?$expand=Category";
             djstest.assertsExpected(1);
-            odatajs.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
+            odatajs.oData.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
                         window.ODataReadOracle.readEntry(endpoint,
                             function (expectedData) {
@@ -360,7 +360,7 @@
         djstest.addTest(function readEntryWithCollectionProperties(handlerAccept) {
             var endpoint = feed + "(0)";
             djstest.assertsExpected(1);
-            odatajs.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
+            odatajs.oData.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
                         window.ODataReadOracle.readEntry(endpoint,
                             function (expectedData) {
@@ -374,7 +374,7 @@
         djstest.addTest(function invalidEntryReadTest(handlerAccept) {
             var endPoint = feed + "(16)";
             djstest.assertsExpected(2);
-            odatajs.read({ requestUri: endPoint, headers: { Accept: handlerAccept} },
+            odatajs.oData.read({ requestUri: endPoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
                         djstest.assert(false, "We should not get here because data is not valid.");
                         djstest.done()
@@ -389,7 +389,7 @@
         djstest.addTest(function invalidFeedReadTest(handlerAccept) {
             var endPoint = feed + "Invalid";
             djstest.assertsExpected(2);
-            odatajs.read({ requestUri: endPoint, headers: { Accept: handlerAccept} },
+            odatajs.oData.read({ requestUri: endPoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
                         djstest.assert(false, "We should not get here because data is not valid.");
                         djstest.done();
@@ -404,7 +404,7 @@
         djstest.addTest(function standardErrorReadTest(handlerAccept) {
             var endPoint = feed + "?$foo=bar";
             djstest.assertsExpected(2);
-            odatajs.read({ requestUri: endPoint, headers: { Accept: handlerAccept} },
+            odatajs.oData.read({ requestUri: endPoint, headers: { Accept: handlerAccept} },
                                     function (data, response) {
                                         djstest.assert(false, "We should not get here because data is not valid.");
                                         djstest.done()
@@ -419,7 +419,7 @@
         djstest.addTest(function inStreamErrorReadTest(handlerAccept) {
             var endPoint = "./endpoints/ErrorDataService.svc/Entities";
             djstest.assertsExpected(1);
-            odatajs.read({ requestUri: endPoint, headers: { Accept: handlerAccept} }, function (data, response) {
+            odatajs.oData.read({ requestUri: endPoint, headers: { Accept: handlerAccept} }, function (data, response) {
                 djstest.assert(false, "Unexpected call to success handler with response: " + djstest.toString(response));
                 djstest.done()
             }, function (err) {
@@ -434,7 +434,7 @@
         djstest.addTest(function readFullFeedBasicAuthTest(handlerAccept) {
             var endpoint = "./endpoints/BasicAuthDataService.svc/Customers";
             djstest.assertsExpected(1);
-            odatajs.read({ requestUri: endpoint, headers: { Accept: handlerAccept }, user: user, password: password }, function (data, response) {
+            odatajs.oData.read({ requestUri: endpoint, headers: { Accept: handlerAccept }, user: user, password: password }, function (data, response) {
                 window.ODataReadOracle.readFeed({ url: endpoint, user: user, password: password }, function (expectedData) {
                     djstest.assertAreEqualDeep(data, expectedData, "Response data not same as expected");
                     djstest.done();
@@ -445,7 +445,7 @@
         djstest.addTest(function readEntryBasicAuthTest(handlerAccept) {
             var endpoint = "./endpoints/BasicAuthDataService.svc/Customers(1)";
             djstest.assertsExpected(1);
-            odatajs.read({ requestUri: endpoint, headers: { Accept: handlerAccept }, user: user, password: password }, function (data, response) {
+            odatajs.oData.read({ requestUri: endpoint, headers: { Accept: handlerAccept }, user: user, password: password }, function (data, response) {
                 window.ODataReadOracle.readEntry({ url: endpoint, user: user, password: password }, function (expectedData) {
                     djstest.assertAreEqualDeep(data, expectedData, "Response data not same as expected");
                     djstest.done();
@@ -465,7 +465,7 @@
 
             djstest.addTest(function validReadServiceDocumentTest(params) {
                 djstest.assertsExpected(1);
-                odatajs.read({ requestUri: params.serviceName, headers: { Accept: params.handlerAccept} },
+                odatajs.oData.read({ requestUri: params.serviceName, headers: { Accept: params.handlerAccept} },
                         function (data, response) {
                             window.ODataReadOracle.readServiceDocument(serviceName,
                                 function (expectedData) {
@@ -484,7 +484,7 @@
 
             djstest.addTest(function invalidReadServiceDocumentTest(params) {
                 djstest.assertsExpected(2);
-                odatajs.read({ requestUri: params.serviceName, headers: { Accept: params.handlerAccept} },
+                odatajs.oData.read({ requestUri: params.serviceName, headers: { Accept: params.handlerAccept} },
                         function success(data, response) {
                             djstest.fail("Reading service document should produce error with " + params.handlerAccept);
                             djstest.done();
@@ -505,7 +505,7 @@
             djstest.addTest(function validReadMetadataTest(params) {
                 djstest.assertsExpected(1);
                 var endPoint = params.serviceName + "$metadata";
-                odatajs.read({ requestUri: endPoint, headers: { Accept: params.handlerAccept} },
+                odatajs.oData.read({ requestUri: endPoint, headers: { Accept: params.handlerAccept} },
                         function (data, response) {
                             window.ODataReadOracle.readMetadata(endPoint,
                                 function (expectedData) {
@@ -525,7 +525,7 @@
             djstest.addTest(function invlaidReadMetadataTest(params) {
                 djstest.assertsExpected(2);
                 var endPoint = params.serviceName + "$metadata";
-                odatajs.read({ requestUri: endPoint, headers: { Accept: params.handlerAccept} },
+                odatajs.oData.read({ requestUri: endPoint, headers: { Accept: params.handlerAccept} },
                         function success(data, response) {
                             djstest.fail("Reading metadata should produce error with " + params.handlerAccept);
                             djstest.done();
@@ -558,7 +558,7 @@
 
         window.odatajs.oData.net.defaultHttpClient = modifyTypeHttpClient;
 
-        odatajs.read({ requestUri: csdlFile, headers: { Accept: "text/xml"} },
+        odatajs.oData.read({ requestUri: csdlFile, headers: { Accept: "text/xml"} },
             function (data) {
                 window.ODataReadOracle.readMetadata(csdlFile,
                     function (expectedData) {
@@ -574,7 +574,7 @@
     djstest.addTest(function verifyNonDefaultReadMethodCalled() {
         var endPoint = feed + "(0)";
         djstest.assertsExpected(2);
-        odatajs.read(
+        odatajs.oData.read(
                 { requestUri: endPoint },
                 function success(data, response) {
                     djstest.assert(true, "Test executed");

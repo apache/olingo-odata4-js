@@ -270,7 +270,7 @@
     // DATAJS INTERNAL END
 
     djstest.addTest(function userPasswordTest() {
-        odatajs.request({
+        odatajs.oData.request({
             requestUri: "./endpoints/FoodStoreDataServiceV4.svc/UserNameAndPassword",
             user: "the-user",
             password: "the-password"

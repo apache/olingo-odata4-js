@@ -51,7 +51,7 @@
             testItem = handledData;
             testItem.Name = "Updated name";
             
-            odatajs.request({
+            odatajs.oData.request({
                 method: "PUT",
                 data: testItem,
                 requestUri: uri,
@@ -60,7 +60,7 @@
 
         var itemUpdatedCallback = function (data, response) {
             djstest.assertAreEqual(response.statusCode, 204, "Expecting no content on update");
-            odatajs.request({
+            odatajs.oData.request({
                 method: "DELETE",
                 requestUri: uri
             }, itemDeletedCallback);
@@ -71,7 +71,7 @@
         };
 
         $.post(serviceUri + "ResetData", function () {
-            odatajs.request({
+            odatajs.oData.request({
                 requestUri: baseUri,
                 method: "POST",
                 data: { CategoryID: 1001, Name: "Name #1001" }
@@ -81,7 +81,7 @@
 
     djstest.addTest(function errorHandlerTest() {
         djstest.assertsExpected(1);
-        odatajs.read("./endpoints/FoodStoreDataServiceV4.svc/Categories?$reserved-misused=true",
+        odatajs.oData.read("./endpoints/FoodStoreDataServiceV4.svc/Categories?$reserved-misused=true",
             function (data) {
                 djstest.fail("expected an error callback");
                 djstest.done();
@@ -99,7 +99,7 @@
             body: " text ",
             headers: { "Content-Type": "text/plain" }
         });
-        odatajs.read("textHandlerParseTest", function (data) {
+        odatajs.oData.read("textHandlerParseTest", function (data) {
             djstest.assertAreEqual(data, " text ", "data matches");
             djstest.done();
         }, function (err) {
@@ -115,7 +115,7 @@
             body: "",
             headers: { "Content-Type": "text/plain" }
         });
-        odatajs.read("textHandlerParseTest", function (data) {
+        odatajs.oData.read("textHandlerParseTest", function (data) {
             djstest.assertAreEqual(data, "", "data matches");
             djstest.done();
         }, function (err) {
@@ -129,7 +129,7 @@
         MockHttpClient.clear().addRequestVerifier("uri", function (request) {
             djstest.assertAreEqual(request.body, "text", "text in request");
         }).addResponse("uri", { statusCode: 200, body: "", headers: { "Content-Type": "text/plain"} });
-        odatajs.request({ requestUri: "uri", method: "POST", data: "text", headers: { "Content-Type": "text/plain"} }, function (data) {
+        odatajs.oData.request({ requestUri: "uri", method: "POST", data: "text", headers: { "Content-Type": "text/plain"} }, function (data) {
             djstest.done();
         }, function (err) {
             djstest.fail("expected success");
@@ -142,7 +142,7 @@
         MockHttpClient.clear().addRequestVerifier("uri", function (request) {
             djstest.assertAreEqual(request.body, "", "text in request");
         }).addResponse("uri", { statusCode: 200, body: "", headers: { "Content-Type": "text/plain"} });
-        odatajs.request({ requestUri: "uri", method: "POST", data: "", headers: { "Content-Type": "text/plain"} }, function (data) {
+        odatajs.oData.request({ requestUri: "uri", method: "POST", data: "", headers: { "Content-Type": "text/plain"} }, function (data) {
             djstest.done();
         }, function (err) {
             djstest.fail("expected success");
@@ -344,7 +344,7 @@
     });
     
     djstest.addTest(function readServiceDocumentTest(headers) {
-        odatajs.request({
+        odatajs.oData.request({
             requestUri: endpoint,
             method: "GET",
             headers: headers

@@ -32,7 +32,7 @@
     var verifyPost = function (request, done) {
         var httpOperation = request.method + " " + request.requestUri;
         djstest.log(httpOperation);
-        odatajs.request(request, function (data, response) {
+        odatajs.oData.request(request, function (data, response) {
             djstest.log("Status code:" + response.statusCode);
             djstest.assertAreEqual(response.statusCode, httpStatusCode.created, "Verify response code: " + httpOperation);
             djstest.log("Uri:" + request.requestUri);
@@ -46,7 +46,7 @@
     var verifyPut = function(request, done) {
         var httpOperation = request.method + " " + request.requestUri;
         djstest.log(httpOperation);
-        odatajs.request(request, function(data, response) {
+        odatajs.oData.request(request, function(data, response) {
             djstest.log("Status code:" + response.statusCode);
             djstest.assertAreEqual(response.statusCode, httpStatusCode.noContent, "Verify response code: " + httpOperation);
             djstest.log("Uri:" + request.requestUri);
@@ -62,7 +62,7 @@
         var httpOperation = request.method + " " + request.requestUri;
         djstest.log(httpOperation);
         ODataReadOracle.readEntry(request.requestUri, function (originalData) {
-            odatajs.request(request, function (data, response) {
+            odatajs.oData.request(request, function (data, response) {
                 djstest.log("Status code:" + response.statusCode);
                 djstest.assertAreEqual(response.statusCode, httpStatusCode.noContent, "Verify response code");
                 djstest.log("Uri:" + request.requestUri);
@@ -361,7 +361,7 @@
                 djstest.addTest(function deleteEntityTest(headers) {
                     var endpoint = categoriesFeed + "(0)";
                     djstest.assertsExpected(2);
-                    odatajs.request({
+                    odatajs.oData.request({
                         requestUri: endpoint,
                         method: "DELETE",
                         headers: headers

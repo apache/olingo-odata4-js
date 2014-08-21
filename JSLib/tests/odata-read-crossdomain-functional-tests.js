@@ -62,7 +62,7 @@
                 }
 
                 djstest.log("Reading data over the wire.");
-                odatajs.read(request, function (data, response) {
+                odatajs.oData.read(request, function (data, response) {
                     djstest.log("Verifying data over the wire from Oracle.");
                     window.ODataReadOracle.readFeed(azureOdataFeed, function (expectedData) {
                         data = fixConstructors(data);
@@ -77,7 +77,7 @@
             var endPoint = azureOdataFeed + "(1)";
             djstest.assertsExpected(1);
             djstest.log("Reading data over the wire.");
-            odatajs.read({ requestUri: endPoint, headers: { Accept: handlerAccept} }, function (data, response) {
+            odatajs.oData.read({ requestUri: endPoint, headers: { Accept: handlerAccept} }, function (data, response) {
                 djstest.log("Verifying data over the wire from Oracle.");
                 window.ODataReadOracle.readEntry(endPoint, function (expectedData) {
                     data = fixConstructors(data);

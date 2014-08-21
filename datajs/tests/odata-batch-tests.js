@@ -91,7 +91,7 @@
             djstest.done();
         });
 
-        odatajs.request(request, null, null, window.odatajs.oData.batch.batchHandler, MockHttpClient);
+        odatajs.oData.request(request, null, null, window.odatajs.oData.batch.batchHandler, MockHttpClient);
     });
 
     djstest.addTest(function serializeComplexBatchTest() {
@@ -169,7 +169,7 @@
             djstest.done();
         });
 
-        odatajs.request(request, null, null, window.odatajs.oData.batch.batchHandler, MockHttpClient);
+        odatajs.oData.request(request, null, null, window.odatajs.oData.batch.batchHandler, MockHttpClient);
     });
 
     djstest.addTest(function serializeChangeSetTest() {
@@ -219,7 +219,7 @@
             djstest.done();
         });
 
-        odatajs.request(request, null, null, window.odatajs.oData.batch.batchHandler, MockHttpClient);
+        odatajs.oData.request(request, null, null, window.odatajs.oData.batch.batchHandler, MockHttpClient);
     });
 
     djstest.addTest(function serializeNestedChangeSetsTest() {
@@ -230,7 +230,7 @@
         };
 
         djstest.expectException(function () {
-            odatajs.request(request, null, null, window.odatajs.oData.batch.batchHandler);
+            odatajs.oData.request(request, null, null, window.odatajs.oData.batch.batchHandler);
         });
 
         djstest.done();
@@ -254,7 +254,7 @@
         };
 
         djstest.expectException(function () {
-            odatajs.request(request, null, null, window.odatajs.oData.batch.batchHandler);
+            odatajs.oData.request(request, null, null, window.odatajs.oData.batch.batchHandler);
         });
 
         djstest.done();
@@ -296,7 +296,7 @@ Location: http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Categ
         };
 
         MockHttpClient.clear().addResponse("http://testuri.org", response);
-        odatajs.read("http://testuri.org", function (data, response) {
+        odatajs.oData.read("http://testuri.org", function (data, response) {
             djstest.assert(data.__batchResponses, "data.__batchResponses is defined");
             djstest.assertAreEqual(data.__batchResponses[0].headers["Location"], "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(42)", "part 1 of the response was read");
             djstest.assertAreEqual(data.__batchResponses[1].headers["Location"], "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Categories(43)", "part 2 of the response was read");
@@ -382,7 +382,7 @@ OData-Version: 4.0;\r\n\
         };
 
         MockHttpClient.clear().addResponse("http://testuri.org", response);
-        odatajs.read("http://testuri.org", function (data, response) {
+        odatajs.oData.read("http://testuri.org", function (data, response) {
 
             var batchResponses = data.__batchResponses;
             djstest.assert(batchResponses, "data contains the batch responses");
@@ -439,7 +439,7 @@ Content-Type: application/json\r\n\
         };
 
         MockHttpClient.clear().addResponse("http://testuri.org", response);
-        odatajs.read("http://testuri.org", function (data, response) {
+        odatajs.oData.read("http://testuri.org", function (data, response) {
             var batchResponses = data.__batchResponses;
             djstest.assert(batchResponses, "data.__batchResponses is defined");
             djstest.assertAreEqual(batchResponses.length, 2, "batch contains two responses");
@@ -487,7 +487,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
         };
 
         MockHttpClient.clear().addResponse("http://testuri.org", response);
-        odatajs.read("http://testuri.org", function (data, response) {
+        odatajs.oData.read("http://testuri.org", function (data, response) {
             var batchResponses = data.__batchResponses;
             djstest.assert(batchResponses, "data.__batchResponses is defined");
             djstest.assertAreEqual(batchResponses.length, 2, "batch contains two responses");

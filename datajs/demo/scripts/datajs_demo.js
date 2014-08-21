@@ -93,7 +93,7 @@ var readWithJsonP = function() {
         enableJsonpCallback: true,
     };
 
-    odatajs.read(oRequest, function (data) {
+    odatajs.oData.read(oRequest, function (data) {
         document.getElementById("simpleReadWithJSONP").innerHTML = JSON.stringify(data, undefined, 2);
     },
     function (oError) {

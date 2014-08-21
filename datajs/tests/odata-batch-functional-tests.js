@@ -41,7 +41,7 @@
     };
 
     var verifyBatchRequest = function (serviceRoot, batchRequests, elementTypes, done) {
-        odatajs.request({ requestUri: serviceRoot + "/$batch", method: "POST", data: { __batchRequests: batchRequests} },
+        odatajs.oData.request({ requestUri: serviceRoot + "/$batch", method: "POST", data: { __batchRequests: batchRequests} },
             function (data, response) {
                 djstest.assertAreEqual(response.statusCode, httpStatusCode.accepted, "Verify response code");
                 djstest.assertAreEqual(data.__batchResponses.length, batchRequests.length, "Verify batch response count");
@@ -263,7 +263,7 @@
                     }
                 ];
 
-            odatajs.request({ requestUri: batchUri, method: "POST", data: { __batchRequests: batchRequests} },
+            odatajs.oData.request({ requestUri: batchUri, method: "POST", data: { __batchRequests: batchRequests} },
             function (data, response) {
                 var batchResponses = data.__batchResponses;
                 var error = batchResponses[3].__changeResponses[0];
@@ -281,7 +281,7 @@
         var batchRequests = [{ requestUri: "Categories", method: "POST", data: { CategoryID: 42, Name: "New Category"}}];
 
         djstest.assertsExpected(1);
-        odatajs.request({ requestUri: batchUri, method: "POST", data: { __batchRequests: batchRequests} },
+        odatajs.oData.request({ requestUri: batchUri, method: "POST", data: { __batchRequests: batchRequests} },
             function (data, response) {
                 djstest.assert(response.body.indexOf("An error occurred while processing this request.") == -1, "Verify that there is no error occurred.");
                 djstest.done();

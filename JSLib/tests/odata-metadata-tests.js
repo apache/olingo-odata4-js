@@ -20,7 +20,7 @@
         for (i = 0, len = cases.length; i < len; i++) {
             var response = cases[i].i;
             var testClient = { request: function (r, success, error) { success(response); } };
-            window.odatajs.read("foo", function (data) {
+            window.odatajs.oData.read("foo", function (data) {
                 djstest.assertAreEqualDeep(data, cases[i].e, "handler result matches target");
             }, function (err) {
                 djstest.fail(err.message);

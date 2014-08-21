@@ -837,7 +837,7 @@
             }
         });
 
-        odatajs.read("/foo", function (data, response) {
+        odatajs.oData.read("/foo", function (data, response) {
             // djstest.assertAreEqual(data.results.length, 2, "data.results.length has two entries");
             djstest.assertAreEqual(response.headers.unknown, "u", "u unmodified");
             djstest.assertAreEqual(response.headers["Content-Encoding"], "compress, gzip", "Content-Encoding available");
@@ -880,7 +880,7 @@
                 "odata-maxversion": "4.0", "prefer": "prefer"
             }
         };
-        odatajs.request(request, function (data) {
+        odatajs.oData.request(request, function (data) {
         }, undefined, undefined, MockHttpClient);
     });
 

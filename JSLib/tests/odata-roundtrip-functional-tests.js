@@ -24,7 +24,7 @@
 
     var verifyPost = function (request, done) {
         var httpOperation = request.method + " " + request.requestUri;
-        odatajs.request(request, function (data, response) {
+        odatajs.oData.request(request, function (data, response) {
             djstest.assertAreEqual(response.statusCode, httpStatusCode.created, "Verify response code: " + httpOperation);
             ODataReadOracle.readJson(data.__metadata.uri, function (expectedData) {
                 djstest.assertAreEqualDeep(response.data, expectedData, "Verify new entry against response: " + httpOperation);
@@ -35,7 +35,7 @@
 
     var verifyPut = function (request, done) {
         var httpOperation = request.method + " " + request.requestUri;
-        odatajs.request(request, function (data, response) {
+        odatajs.oData.request(request, function (data, response) {
             djstest.assertAreEqual(response.statusCode, httpStatusCode.noContent, "Verify response code: " + httpOperation);
             ODataReadOracle.readJson(request.requestUri, function (actualData) {
                 djstest.assertAreEqualDeep(actualData, request.data, "Verify updated entry: " + httpOperation);
@@ -47,7 +47,7 @@
     var verifyMerge = function (request, done) {
         var httpOperation = request.method + " " + request.requestUri;
         ODataReadOracle.readJson(request.requestUri, function (originalData) {
-            odatajs.request(request, function (data, response) {
+            odatajs.oData.request(request, function (data, response) {
                 djstest.assertAreEqual(response.statusCode, httpStatusCode.noContent, "Verify response code");
                 ODataReadOracle.readJson(request.requestUri, function (actualData) {
                     // Merge the original data with the updated data to get the expected data
@@ -143,7 +143,7 @@
                     };
 
                     verifyRequest(request, function () {
-                        odatajs.read({ requestUri: categoriesFeed + "(42)", headers: { Accept: mimeType} }, function (actualData, response) {
+                        odatajs.oData.read({ requestUri: categoriesFeed + "(42)", headers: { Accept: mimeType} }, function (actualData, response) {
                             actualData.CategoryID = 27;
                             var newRequest = {
                                 requestUri: categoriesFeed,
@@ -166,7 +166,7 @@
             };
 
             verifyRequest(request, function () {
-                odatajs.read({ requestUri: categoriesFeed + "(0)/Foods(42)", headers: { Accept: mimeType} }, function (actualData, response) {
+                odatajs.oData.read({ requestUri: categoriesFeed + "(0)/Foods(42)", headers: { Accept: mimeType} }, function (actualData, response) {
                     actualData.FoodID = 94;
                     var newRequest = {
                         requestUri: categoriesFeed + "(0)/Foods",
@@ -189,7 +189,7 @@
             };
 
             verifyRequest(request, function () {
-                odatajs.read({ requestUri: categoriesFeed + "(0)/Foods(0)", headers: { Accept: mimeType} }, function (actualData, response) {
+                odatajs.oData.read({ requestUri: categoriesFeed + "(0)/Foods(0)", headers: { Accept: mimeType} }, function (actualData, response) {
                     var newRequest = {
                         requestUri: categoriesFeed + "(0)/Foods(0)",
                         method: "PUT",
@@ -217,7 +217,7 @@
             };
 
             verifyRequest(request, function () {
-                odatajs.read({ requestUri: foodsFeed + "(" + newFood.FoodID + ")", headers: { Accept: mimeType} }, function (actualData, response) {
+                odatajs.oData.read({ requestUri: foodsFeed + "(" + newFood.FoodID + ")", headers: { Accept: mimeType} }, function (actualData, response) {
                     var newRequest = {
                         requestUri: categoriesFeed,
                         method: "POST",
@@ -249,7 +249,7 @@
             };
 
             verifyRequest(request, function () {
-                odatajs.read({ requestUri: foodsFeed + "(" + newFood.FoodID + ")", headers: { Accept: mimeType} }, function (actualData, response) {
+                odatajs.oData.read({ requestUri: foodsFeed + "(" + newFood.FoodID + ")", headers: { Accept: mimeType} }, function (actualData, response) {
                     actualData.FoodID = 76;
                     var newRequest = {
                         requestUri: foodsFeed,
@@ -280,7 +280,7 @@
             };
 
             verifyRequest(request, function () {
-                odatajs.read({ requestUri: categoriesFeed + "(1)", headers: { Accept: mimeType} }, function (actualData, response) {
+                odatajs.oData.read({ requestUri: categoriesFeed + "(1)", headers: { Accept: mimeType} }, function (actualData, response) {
                     actualData.CategoryID = 2;
                     var newRequest = {
                         requestUri: categoriesFeed + "(2)",
@@ -295,7 +295,7 @@
         }, "Put, read put data, put read data (mimeType = " + mimeType + ")", headers);
 
         djstest.addTest(function addEntityTest(headers) {
-            odatajs.read({ requestUri: foodsFeed + "(0)", headers: { Accept: mimeType} },
+            odatajs.oData.read({ requestUri: foodsFeed + "(0)", headers: { Accept: mimeType} },
                 function (actualData, response) {
                     actualData.CategoryID = 216;
                     var request = {
@@ -306,7 +306,7 @@
                     };
                     verifyRequest(request,
                         function () {
-                            odatajs.read({ requestUri: foodsFeed + "(216)", headers: { Accept: mimeType} },
+                            odatajs.oData.read({ requestUri: foodsFeed + "(216)", headers: { Accept: mimeType} },
                                 function (data, response) {
                                     ODataReadOracle.readJson(foodsFeed + "(216)",
                                         function (expectedData) {
@@ -319,7 +319,7 @@
         }, "Read data with dates, post read data with dates to new ID, read new ID data with dates" + mimeType + ")", headers);
 
         djstest.addTest(function addEntityTest(headers) {
-            odatajs.read({ requestUri: categoriesFeed + "(0)", headers: { Accept: mimeType} }, 
+            odatajs.oData.read({ requestUri: categoriesFeed + "(0)", headers: { Accept: mimeType} }, 
                 function (actualData, response) {
                     actualData.CategoryID = 81;
                     var request = {
@@ -330,7 +330,7 @@
                     };
                     verifyRequest(request, 
                         function () { 
-                            odatajs.read({ requestUri: categoriesFeed + "(81)", headers: { Accept: mimeType} }, 
+                            odatajs.oData.read({ requestUri: categoriesFeed + "(81)", headers: { Accept: mimeType} }, 
                                 function (data, response) {
                                     ODataReadOracle.readJson(categoriesFeed + "(81)",
                                         function (expectedData) {
@@ -348,7 +348,7 @@
 
 
         djstest.addTest(function addEntityTest(headers) {
-            odatajs.read({ requestUri: categoriesFeed + "(0)", headers: { Accept: mimeType} },
+            odatajs.oData.read({ requestUri: categoriesFeed + "(0)", headers: { Accept: mimeType} },
                 function (actualData, response) {
                     actualData.CategoryID = 81;
                     var request = {
@@ -359,7 +359,7 @@
                     };
                     verifyRequest(request,
                         function () {
-                            odatajs.read({ requestUri: categoriesFeed + "(81)", headers: { Accept: mimeType} },
+                            odatajs.oData.read({ requestUri: categoriesFeed + "(81)", headers: { Accept: mimeType} },
                                 function (data, response) {
                                     ODataReadOracle.readJson(categoriesFeed + "(81)",
                                         function (expectedData) {
