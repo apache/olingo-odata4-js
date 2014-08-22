@@ -15,19 +15,16 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- */
+*/
+//Creates the global objects
 
-var odatajs = require('./lib/datajs.js');
+//tools
 
-odatajs.oData = require('./lib/odata.js');
-odatajs.store = require('./lib/store.js');
-odatajs.cache = require('./lib/cache.js');
+var window = {};
+window.djstest = require("./djstest.js");
+window.mockHttpClient = require("./mockHttpClient.js");
+window.odatajs  = require('./../../src/index.js');
 
-if (typeof window !== 'undefined') {
-    //expose to browsers window object
-    window.odatajs = odatajs;
-} else {
-    //expose in commonjs style
-    odatajs.node = "node";
-    module.exports = odatajs;
-}
+global.window = window;
+console.log(global.window.odatajs.node+'asdfasdfasdfasdf');
+

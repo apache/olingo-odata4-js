@@ -20,6 +20,9 @@
 /** @module datajs/utils */
 
 
+function inBrowser() {
+    return typeof window !== 'undefined';
+}
 
 /** Creates a new ActiveXObject from the given progId.
  * @param {String} progId - ProgId string of the desired ActiveXObject.
@@ -549,6 +552,7 @@ function getFormatKind(format, defaultFormatKind) {
 
     
     
+exports.inBrowser = inBrowser;
 exports.activeXObject = activeXObject;
 exports.assigned = assigned;
 exports.contains = contains;

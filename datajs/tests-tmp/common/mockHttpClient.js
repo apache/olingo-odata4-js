@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -44,9 +44,19 @@
 //    MockHttpClient will throw an exception if it receives a request to a URI that is not mapped to either a request verifier or a response.
 //
 
-function init(window, undefined) {
 
-    var httpClient = {};
+if (typeof window !== 'undefined') {
+    //in browser call init() directly window as context
+    window.MockHttpClient = window.MockHttpClient || {};
+    init(window.MockHttpClient);
+} else {
+    //expose function init to be called with a custom context
+    module.exports = init();
+}
+
+
+function init(parent, undefined) {
+    httpClient = parent || {};
 
     var responses = {};
     var requestVerifiers = {};
@@ -125,13 +135,4 @@ function init(window, undefined) {
     return httpClient;
 }
 
-
-
-if (typeof window !== 'undefined') {
-    //in browser call init() directly window as context
-    window.MockHttpClient = init(window);
-} else {
-    //expose function init to be called with a custom context
-    module.exports.init = init;
-}
 

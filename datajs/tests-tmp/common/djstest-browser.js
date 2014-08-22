@@ -25,19 +25,30 @@
  * @namespace djstest
  */
 
+if (typeof window !== 'undefined') {
+    //expose to browsers window object
+    window.djstest = window.djstest || {};
+    init(window.djstest);
+} else {
+    //expose in commonjs style
+    module.exports = init();
+}
 
-var init = function init () {
 
-    var localDjstest = {};
+function init (window) {
+    var djstest = window.djstest;
+    if (!djstest) { 
+        djstest = window.djstest = {};
+    }
 
     // Initialize indexedDB if the window object is available
-    localDjstest.indexedDB = window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.indexedDB;
+    djstest.indexedDB = window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.indexedDB;
 
     /** Cleans all the test data saved in the IndexedDb database.
      * @param {Array} storeNames - Array of store objects with a property that is the name of the store
      * @param {Function} done - Callback function
      */
-    localDjstest.cleanStoreOnIndexedDb = function (storeObjects, done) {
+    djstest.cleanStoreOnIndexedDb = function (storeObjects, done) {
         var IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || {};
 
         function deleteObjectStores(db) {
@@ -47,14 +58,14 @@ var init = function init () {
         }
         var job;
 
-        if (localDjstest.indexedDB) {
+        if (djstest.indexedDB) {
             job = new djstest.Job();
             for ( var i = 0 ; i < storeObjects.length ; i ++) {
                 storeObject = storeObjects[i];
                 job.queue((function (storeObject) {
                     return function (success, fail) {
                         var dbname = "_datajs_" + storeObject.name;
-                        var request = localDjstest.indexedDB.open(dbname);
+                        var request = djstest.indexedDB.open(dbname);
                         request.onsuccess = function (event) {
                             var db = request.result;
 
@@ -77,7 +88,7 @@ var init = function init () {
 
                             // new api cleanup
                             db.close();
-                            var deleteRequest = localDjstest.indexedDB.deleteDatabase(dbname);
+                            var deleteRequest = djstest.indexedDB.deleteDatabase(dbname);
                             deleteRequest.onsuccess = function (event) {
                                 djstest.log("djstest indexeddb cleanup - deleted database " + dbname);
                                 success();
@@ -130,21 +141,5 @@ var init = function init () {
             }
         });
     }
-    return localDjstest;
-};
-
-//export djstest
-
-if (typeof window !== 'undefined') {
-    //expose to browsers window object
-    if ( window.djstest === undefined) {
-        window.djstest = init();
-    } else {
-        var tmp = init();
-        $.extend( window.djstest,tmp);
-    }
-} else {
-    //expose in commonjs style
-    module.exports = init();
+    return djstest;
 }
-

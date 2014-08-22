@@ -97,8 +97,8 @@
             // Testing 
             function buttonClick(configNr) {
                 var metadata = $("input[name*='inMetadata']:checked").val();
-                var recognizeDates  = ($("#inRecognizeDates:checked").val() ==='on') ? true : false;
-                var inMinimalToFull = ($("#inMinimalToFull:checked").val() ==='on') ? true : false;
+                var recognizeDates  = ($("#inRecognizeDates").val() ==='on') ? true : false;
+                var inMinimalToFull = ($("#inMinimalToFull").val() ==='on') ? true : false;
 
                 var requestUri = {
                     requestUri : config[configNr].url

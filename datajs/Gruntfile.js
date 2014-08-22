@@ -114,8 +114,8 @@ module.exports = function(grunt) {
           namespace: null
         },
         deps: '',
-        code: './tests/node-test-setup.js',
-        tests: ['./tests/odata-json-tests.js'],
+        code: './tests-tmp/common/node-test-setup.js',
+        tests: ['./tests-tmp/odata-json-tests.js'],
         done: function(err, res){
             !err && publishResults("node", res, this.async());
         }

@@ -18,18 +18,16 @@
  */
 
 /** @module store/indexeddb */
-
-
-
 var utils = require('./../datajs.js').utils;
 
 // Imports.
 var throwErrorCallback = utils.throwErrorCallback;
 var delay = utils.delay;
 
-var indexedDB = window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.indexedDB;
-var IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange;
-var IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || {};
+
+var indexedDB = utils.inBrowser() ? window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.indexedDB : undefined;
+var IDBKeyRange = utils.inBrowser() ? window.IDBKeyRange || window.webkitIDBKeyRange : undefined;
+var IDBTransaction = utils.inBrowser() ? window.IDBTransaction || window.webkitIDBTransaction || {} : {} ;
 
 var IDBT_READ_ONLY = IDBTransaction.READ_ONLY || "readonly";
 var IDBT_READ_WRITE = IDBTransaction.READ_WRITE || "readwrite";

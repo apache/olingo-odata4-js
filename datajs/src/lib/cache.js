@@ -19,7 +19,7 @@
 
  /** @module cache */
 
-var datajs = require('./datajs.js');
+var odatajs = require('./datajs.js');
 var utils = odatajs.utils;
 var deferred = odatajs.deferred;
 var storeReq = odatajs.store;
@@ -587,6 +587,10 @@ function DataCache(options) {
      * @returns A new Observable object that enumerates all the cache contents.
      */
     that.ToObservable = that.toObservable = function () {
+        if ( !utils.inBrowser()) {
+            throw { message: "Only in broser supported" };
+        }
+
         if (!window.Rx || !window.Rx.Observable) {
             throw { message: "Rx library not available - include rx.js" };
         }
@@ -1016,7 +1020,7 @@ function DataCache(options) {
         
 
         return function (/*error*/) {
-            // var console = window.console;
+            // var console = windo1w.console;
             // if (console && console.log) {
             //    console.log(message);
             //    console.dir(error);
@@ -1433,7 +1437,7 @@ function createDataCache (options) {
     }
 
     return new DataCache(options);
-};
+}
 
 
 /** estimateSize (see {@link estimateSize}) */

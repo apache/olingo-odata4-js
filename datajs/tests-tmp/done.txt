@@ -10,9 +10,10 @@ DONE
 TestSynchronizerClient.js removed
   -> Moved from custom c# logging service to jenkins
 
-
 ODataReadOracle.js removed
   -> TODO check dependencies
 
 rx.js removed
   -> TODO check dependencies
+
+odata-json-test.js copied and splittet 

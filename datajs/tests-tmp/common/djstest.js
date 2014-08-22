@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -25,10 +25,18 @@
  * @namespace djstest
  */
 
+if (typeof window !== 'undefined') {
+    //expose to browsers window object
+    window.djstest = window.djstest || {};
+    init(window.djstest);
+} else {
+    //expose in commonjs style
+    module.exports = init();
+}
 
-var init = function init () {
-    var djstest = {};
-  
+
+function init (parent) {
+    djstest = parent || {};
 
     /** Constructs a Job object that allows for enqueuing and synchronizing the execution of functions.
      * @class Job
@@ -400,20 +408,5 @@ var init = function init () {
     };
 
     return djstest;
-};
-
-//export djstest
-
-if (typeof window !== 'undefined') {
-    //expose to browsers window object
-    if ( window.djstest === undefined) {
-        window.djstest = init();
-    } else {
-        var tmp = init();
-        $.extend( window.djstest,tmp);
-    }
-} else {
-    //expose in commonjs style
-    module.exports = init();
 }
 
