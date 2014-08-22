@@ -35,11 +35,8 @@ if (typeof window !== 'undefined') {
 }
 
 
-function init (window) {
-    var djstest = window.djstest;
-    if (!djstest) { 
-        djstest = window.djstest = {};
-    }
+function init (parent) {
+    djstest = parent || {};
 
     // Initialize indexedDB if the window object is available
     djstest.indexedDB = window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.indexedDB;

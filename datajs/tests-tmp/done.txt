@@ -7,13 +7,17 @@ The plan is to
 
 DONE
 
-TestSynchronizerClient.js removed
+TestSynchronizerClient.js 
+  -> removed
   -> Moved from custom c# logging service to jenkins
 
-ODataReadOracle.js removed
+ODataReadOracle.js 
+  -> removed
   -> TODO check dependencies
 
-rx.js removed
+rx.js 
+  -> removed
   -> TODO check dependencies
 
-odata-json-test.js copied and splittet 
+odata-json-test.js 
+  -> copied and splittet 
