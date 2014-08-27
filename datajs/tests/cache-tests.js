@@ -889,7 +889,7 @@
     djstest.addTest(function toObservableSinglePageTest() {
         createNewCache({ name: "cache", source: foodsFeed }).then(function (cache) {
             var lastId = -1;
-            cache.ToObservable().Subscribe(function (item) {
+            cache.ToObservable().subscribe(function (item) {
                 djstest.assert(lastId < item.FoodID, "lastId < item.FoodID");
                 lastId = item.FoodID;
             }, thenFailTest, function () {
@@ -902,7 +902,7 @@
     djstest.addTest(function toObservableCaseSinglePageTest() {
         createNewCache({ name: "cache", source: foodsFeed }).then(function (cache) {
             var lastId = -1;
-            cache.toObservable().Subscribe(function (item) {
+            cache.toObservable().subscribe(function (item) {
                 djstest.assert(lastId < item.FoodID, "lastId < item.FoodID");
                 lastId = item.FoodID;
             }, thenFailTest, function () {
@@ -916,7 +916,7 @@
         createNewCache({ name: "cache", source: foodsFeed, pageSize: 2 }).then(function (cache) {
             var lastId = -1;
             var callCount = 0;
-            cache.toObservable().Subscribe(function (item) {
+            cache.toObservable().subscribe(function (item) {
                 djstest.assert(lastId < item.FoodID, "lastId < item.FoodID");
                 lastId = item.FoodID;
                 callCount += 1;
@@ -933,7 +933,7 @@
             var lastId = -1;
             var callCount = 0;
             var complete = false;
-            var observer = cache.toObservable().Subscribe(function (item) {
+            var observer = cache.toObservable().subscribe(function (item) {
                 djstest.assert(complete === false, "complete === false");
                 djstest.assert(lastId < item.FoodID, "lastId < item.FoodID");
                 lastId = item.FoodID;
@@ -953,7 +953,7 @@
             window.MockHttpClient.async = true;
             var savedClient = window.odatajs.oData.net.defaultHttpClient;
             window.odatajs.oData.net.defaultHttpClient = window.MockHttpClient;
-            cache.toObservable().Subscribe(function (item) {
+            cache.toObservable().subscribe(function (item) {
                 window.odatajs.oData.net.defaultHttpClient = savedClient;
                 djstest.fail("Unexpected call to OnNext");
             }, function (err) {
