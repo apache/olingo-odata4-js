@@ -71,6 +71,7 @@
     <Content Include="tests\common\rx.js" />
     <Content Include="tests\common\TestLogger.svc" />
     <Content Include="tests\common\TestSynchronizerClient.js" />
+    <Content Include="tests\e2etest\Test.html" />
     <Content Include="tests\odata-json-light-tests.js" />
     <Content Include="tests\datajs-startup-perf-test.html" />
     <Content Include="tests\endpoints\BasicAuthDataService.svc" />
@@ -161,7 +162,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <ProjectExtensions>

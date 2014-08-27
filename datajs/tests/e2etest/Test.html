@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>odatajs side-by-side test (V3 & V4)</title>
+    <script type="text/javascript" src="../../demo/scripts/datajs-1.1.2.js"></script>
+    <script type="text/javascript" src="../../build/datajs-2.0.0.js"></script>
+</head>
+<body>
+    <h3>
+        Test V3 and V4 running side by side...</h3>
+    <div id="msg">
+    </div>
+    <script type="text/javascript">
+
+        var headers = { "Content-Type": "application/json", Accept: "application/json" };
+        var request = {
+            requestUri: "../endpoints/FoodStoreDataServiceV4.svc/Foods",
+            method: "GET",
+            headers: headers,
+            data: null
+        };
+
+        OData.request(request, function (data, response) {
+            document.getElementById('msg').innerHTML += ("<div>datajs V3 testing failed.</div>");
+        }, function (err) {
+            if ((err.response.statusCode == '200') && (err.response.body.indexOf('}', err.response.body.length - 1) == err.response.body.length - 1) && err.response.headers['Content-Type'] == "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8") {
+                document.getElementById('msg').innerHTML += ("<div>datajs V3 testing pass!</div>");
+            } else {
+                document.getElementById('msg').innerHTML += ("<div>datajs V3 testing failed.</div>");
+            }
+        });
+
+        odatajs.oData.request(request, function (data, response) {
+            if ((response.statusCode == '200') && (response.body.indexOf('}', response.body.length - 1) == response.body.length - 1) && response.headers['Content-Type'] == "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8") {
+                document.getElementById('msg').innerHTML += ("<div>odatajs V4 testing pass!</div>");
+            } else {
+                document.getElementById('msg').innerHTML += ("<div>odatajs V4 testing failed.</div>");
+            }
+        }, function (err) {
+            document.getElementById('msg').innerHTML += ("<div>odatajs V4 testing failed.</div>");
+        });
+    </script>
+</body>
+</html>
