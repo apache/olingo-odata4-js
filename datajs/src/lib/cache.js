@@ -599,13 +599,13 @@ function DataCache(options) {
             throw cacheFailure;
         }
 
-        return window.Rx.Observable.CreateWithDisposable(function (obs) {
+        return new window.Rx.Observable(function (obs) {
             var disposed = false;
             var index = 0;
 
             var errorCallback = function (error) {
                 if (!disposed) {
-                    obs.OnError(error);
+                    obs.onError(error);
                 }
             };
 
@@ -615,11 +615,11 @@ function DataCache(options) {
                     for (i = 0, len = data.value.length; i < len; i++) {
                         // The wrapper automatically checks for Dispose
                         // on the observer, so we don't need to check it here.
-                        obs.OnNext(data.value[i]);
+                        obs.onNext(data.value[i]);
                     }
 
                     if (data.value.length < pageSize) {
-                        obs.OnCompleted();
+                        obs.onCompleted();
                     } else {
                         index += pageSize;
                         that.readRange(index, pageSize).then(successCallback, errorCallback);

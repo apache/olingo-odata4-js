@@ -1,0 +1,85 @@
+﻿<!--
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+-->
+
+<%@ ServiceHost Language="C#" Debug="true" Factory="System.ServiceModel.Activation.WebServiceHostFactory"
+    Service="DataJS.Tests.CustomDataService" %>
+
+
+using System.Collections;
+using System.IO;
+
+namespace DataJS.Tests
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.ServiceModel;
+    using System.ServiceModel.Activation;
+    using System.ServiceModel.Web;
+
+    /// <summary>
+    /// Custom data service that does not use OData
+    /// </summary>
+    [ServiceContract]
+    [ServiceBehavior(IncludeExceptionDetailInFaults = true)]
+    [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
+    public class CustomDataService
+    {
+        static readonly Item[] data = Enumerable.Range(0, 16).Select(i => new Item
+        {
+            ID = i,
+            Name = "Item " + i
+        }).ToArray();
+
+        // This uses the same URI template as OData so that the CacheOracle can be reused
+        [OperationContract]
+        [WebGet(UriTemplate = "ReadRange?$skip={skip}&$top={top}")]
+        public Stream ReadRange(int skip, int top)
+        {
+            IEnumerable selectData = data.Skip(skip).Take(top);
+            Dictionary<string, object> result = new Dictionary<string, object>();
+            List<Dictionary<string, string>> value = new List<Dictionary<string, string>>(); 
+            foreach (Item d in selectData)
+            {
+                Dictionary<string, string> item = new Dictionary<string, string>();
+                item.Add("ID", d.ID.ToString());
+                item.Add("Name", d.Name);
+                value.Add(item);
+            }
+            
+            result.Add("value", value);
+            return ReaderUtils.ConvertDictionarytoJsonlightStream(result);
+        }
+
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json)]
+        public int Count()
+        {
+            return data.Count();
+        }
+    }
+
+    public class Item
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+    }
+}

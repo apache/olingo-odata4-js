@@ -1,0 +1,121 @@
+﻿<!--/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+*/
+-->
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" Version="1.0">
+  <edmx:DataServices m:DataServiceVersion="2.0" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
+    <Schema xmlns="http://schemas.microsoft.com/ado/2007/05/edm" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:mcns="http://MyCustomNamespace.com"
+             Namespace="DataJS.Tests">
+      <EntityType Name="MappedEntry" mcns:MyCustomAnnotation="My custom attribute.">
+        <Key mcns:MyCustomAnnotation="//">
+          <PropertyRef Name="ID" mcns:MyCustomAnnotation="  "/>
+        </Key>
+        <Property Name="ID" Nullable="false" Type="Edm.Int32"/>
+        <Property Name="UnmappedField" Nullable="true" Type="Edm.String"/>
+        <Property Name="Author" Nullable="false" Type="DataJS.Tests.Author" m:FC_KeepInContent_5="false" m:FC_SourcePath_5="Contributor/Name" m:FC_ContentKind_5="text" m:FC_TargetPath_5="SyndicationContributorName" m:FC_KeepInContent_4="false" m:FC_SourcePath_4="Contributor/Email" m:FC_ContentKind_4="text" m:FC_TargetPath_4="SyndicationContributorEmail" m:FC_KeepInContent_3="false" m:FC_SourcePath_3="Uri" m:FC_ContentKind_3="text" m:FC_TargetPath_3="SyndicationAuthorUri" m:FC_KeepInContent_2="false" m:FC_SourcePath_2="Name" m:FC_ContentKind_2="text" m:FC_TargetPath_2="SyndicationAuthorName" m:FC_KeepInContent_1="false" m:FC_SourcePath_1="Email" m:FC_ContentKind_1="text" m:FC_TargetPath_1="SyndicationAuthorEmail" m:FC_KeepInContent="false" m:FC_SourcePath="Contributor/Uri" m:FC_ContentKind="text" m:FC_TargetPath="SyndicationContributorUri"/>
+        <Property Name="Published" Nullable="true" Type="Edm.String" m:FC_KeepInContent="false" m:FC_ContentKind="text" m:FC_TargetPath="SyndicationPublished"/>
+        <Property Name="Rights" Nullable="true" Type="Edm.String" m:FC_KeepInContent="false" m:FC_ContentKind="text" m:FC_TargetPath="SyndicationRights"/>
+        <Property Name="Summary" Nullable="true" Type="Edm.String" m:FC_KeepInContent="false" m:FC_ContentKind="xhtml" m:FC_TargetPath="SyndicationSummary"/>
+        <Property Name="Title" Nullable="true" Type="Edm.String" m:FC_KeepInContent="false" m:FC_ContentKind="html" m:FC_TargetPath="SyndicationTitle"/>
+        <Property Name="Updated" Nullable="true" Type="Edm.String" m:FC_KeepInContent="false" m:FC_ContentKind="text" m:FC_TargetPath="SyndicationUpdated"/>
+        <Property Name="CustomElement" Nullable="true" Type="Edm.String" m:FC_KeepInContent="false" m:FC_TargetPath="customElement" m:FC_NsPrefix="pr" m:FC_NsUri="http://www.example.org/dummy"/>
+        <Property Name="CustomAttribute" Nullable="true" Type="Edm.String" m:FC_KeepInContent="false" m:FC_TargetPath="customElement/@customAttribute" m:FC_NsPrefix="pr" m:FC_NsUri="http://www.example.org/dummy"/>
+        <Property Name="NestedElement1" Nullable="true" Type="Edm.String" m:FC_KeepInContent="false" m:FC_TargetPath="commonElement/nestedElement1" m:FC_NsPrefix="pr" m:FC_NsUri="http://www.example.com/dummy"/>
+        <Property Name="NestedElement2" Nullable="true" Type="Edm.String" m:FC_KeepInContent="false" m:FC_TargetPath="commonElement/nestedElement2" m:FC_NsPrefix="pr" m:FC_NsUri="http://www.example.com/dummy"/>
+        <Property Name="CommonAttribute1" Nullable="true" Type="Edm.String" m:FC_KeepInContent="false" m:FC_TargetPath="commonElement/@commonAttribute1" m:FC_NsPrefix="pr" m:FC_NsUri="http://www.example.com/dummy"/>
+        <Property Name="CommonAttribute2" Nullable="true" Type="Edm.String" m:FC_KeepInContent="false" m:FC_TargetPath="commonElement/@commonAttribute2" m:FC_NsPrefix="pr" m:FC_NsUri="http://www.example.com/dummy"/>
+        <Property Name="Location" Nullable="false" Type="DataJS.Tests.Location" m:FC_KeepInContent_1="false" m:FC_SourcePath_1="Long" m:FC_TargetPath_1="long" m:FC_KeepInContent="false" m:FC_SourcePath="Lat" m:FC_TargetPath="lat" m:FC_NsPrefix="geo" m:FC_NsUri="http://www.georss.org/georss" m:FC_NsPrefix_1="geo" m:FC_NsUri_1="http://www.georss.org/georss"/>
+      </EntityType>
+      <ComplexType Name="Author" mcns:MyCustomAnnotation="">
+        <Property Name="Email" Nullable="true" Type="Edm.String" mcns:MyCustomAnnotation=""/>
+        <Property Name="Name" Nullable="true" Type="Edm.String"/>
+        <Property Name="Uri" Nullable="true" Type="Edm.String"/>
+        <Property Name="Contributor" Nullable="false" Type="DataJS.Tests.Contributor"/>
+      </ComplexType>
+      <ComplexType Name="Contributor">
+        <Property Name="Email" Nullable="true" Type="Edm.String" mcns:MyCustomAnnotation=" "/>
+        <Property Name="Name" Nullable="true" Type="Edm.String"/>
+        <Property Name="Uri" Nullable="true" Type="Edm.String" mcns:MyCustomAnnotation="true"/>
+      </ComplexType>
+      <ComplexType Name="Location">
+        <Property Name="Lat" Nullable="false" Type="Edm.Single" mcns:MyCustomAnnotation="27"/>
+        <Property Name="Long" Nullable="false" Type="Edm.Single"/>
+      </ComplexType>
+      <EntityType Name="ReplicatedEntry">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Nullable="false" Type="Edm.Int32"/>
+        <Property Name="UnmappedField" Nullable="true" Type="Edm.String"/>
+        <Property Name="Author" Nullable="false" Type="DataJS.Tests.Author2" m:FC_KeepInContent_5="true" m:FC_SourcePath_5="Contributor/Uri" m:FC_ContentKind_5="text" m:FC_TargetPath_5="SyndicationContributorUri" m:FC_KeepInContent_4="true" m:FC_SourcePath_4="Contributor/Name" m:FC_ContentKind_4="text" m:FC_TargetPath_4="SyndicationContributorName" m:FC_KeepInContent_3="true" m:FC_SourcePath_3="Contributor/Email" m:FC_ContentKind_3="text" m:FC_TargetPath_3="SyndicationContributorEmail" m:FC_KeepInContent_2="true" m:FC_SourcePath_2="Uri" m:FC_ContentKind_2="text" m:FC_TargetPath_2="SyndicationAuthorUri" m:FC_KeepInContent_1="true" m:FC_SourcePath_1="Name" m:FC_ContentKind_1="text" m:FC_TargetPath_1="SyndicationAuthorName" m:FC_KeepInContent="true" m:FC_SourcePath="Email" m:FC_ContentKind="text" m:FC_TargetPath="SyndicationAuthorEmail" mcns:MyCustomAnnotation="b>100/b>"/>
+        <Property Name="Published" Nullable="true" Type="Edm.String" m:FC_KeepInContent="true" m:FC_ContentKind="text" m:FC_TargetPath="SyndicationPublished" mcns:MyCustomAnnotation=" . "/>
+        <Property Name="Rights" Nullable="true" Type="Edm.String" m:FC_KeepInContent="true" m:FC_ContentKind="text" m:FC_TargetPath="SyndicationRights"/>
+        <Property Name="Summary" Nullable="true" Type="Edm.String" m:FC_KeepInContent="true" m:FC_ContentKind="xhtml" m:FC_TargetPath="SyndicationSummary" mcns:MyCustomAnnotation="/Property"/>
+        <Property Name="Title" Nullable="true" Type="Edm.String" m:FC_KeepInContent="true" m:FC_ContentKind="html" m:FC_TargetPath="SyndicationTitle"/>
+        <Property Name="Updated" Nullable="true" Type="Edm.String" m:FC_KeepInContent="true" m:FC_ContentKind="text" m:FC_TargetPath="SyndicationUpdated"/>
+        <Property Name="CustomElement" Nullable="true" Type="Edm.String" m:FC_KeepInContent="true" m:FC_TargetPath="customElement" m:FC_NsPrefix="pr" m:FC_NsUri="http://www.example.org/dummy"/>
+        <Property Name="CustomAttribute" Nullable="true" Type="Edm.String" m:FC_KeepInContent="true" m:FC_TargetPath="customElement/@customAttribute" m:FC_NsPrefix="pr" m:FC_NsUri="http://www.example.org/dummy"/>
+        <Property Name="NestedElement1" Nullable="true" Type="Edm.String" m:FC_KeepInContent="true" m:FC_TargetPath="commonElement/nestedElement1" m:FC_NsPrefix="pr" m:FC_NsUri="http://www.example.com/dummy"/>
+        <Property Name="NestedElement2" Nullable="true" Type="Edm.String" m:FC_KeepInContent="true" m:FC_TargetPath="commonElement/nestedElement2" m:FC_NsPrefix="pr" m:FC_NsUri="http://www.example.com/dummy"/>
+        <Property Name="CommonAttribute1" Nullable="true" Type="Edm.String" m:FC_KeepInContent="true" m:FC_TargetPath="commonElement/@commonAttribute1" m:FC_NsPrefix="pr" m:FC_NsUri="http://www.example.com/dummy"/>
+        <Property Name="CommonAttribute2" Nullable="true" Type="Edm.String" m:FC_KeepInContent="true" m:FC_TargetPath="commonElement/@commonAttribute2" m:FC_NsPrefix="pr" m:FC_NsUri="http://www.example.com/dummy"/>
+        <Property Name="Location" Nullable="false" Type="DataJS.Tests.Location2" m:FC_KeepInContent_1="true" m:FC_SourcePath_1="Long" m:FC_TargetPath_1="long" m:FC_KeepInContent="true" m:FC_SourcePath="Lat" m:FC_TargetPath="lat" m:FC_NsPrefix="geo" m:FC_NsUri="http://www.georss.org/georss" m:FC_NsPrefix_1="geo" m:FC_NsUri_1="http://www.georss.org/georss"/>
+      </EntityType>
+      <ComplexType Name="Author2">
+        <Property Name="Email" Nullable="true" Type="Edm.String"/>
+        <Property Name="Name" Nullable="true" Type="Edm.String"/>
+        <Property Name="Uri" Nullable="true" Type="Edm.String"/>
+        <Property Name="Contributor" Nullable="false" Type="DataJS.Tests.Contributor2"/>
+      </ComplexType>
+      <ComplexType Name="Contributor2">
+        <Property Name="Email" Nullable="true" Type="Edm.String"/>
+        <Property Name="Name" Nullable="true" Type="Edm.String"/>
+        <Property Name="Uri" Nullable="true" Type="Edm.String"/>
+      </ComplexType>
+      <ComplexType Name="Location2">
+        <Property Name="Lat" Nullable="false" Type="Edm.Single"/>
+        <Property Name="Long" Nullable="false" Type="Edm.Single"/>
+      </ComplexType>
+      <EntityType Name="DerivedEntry" m:FC_KeepInContent="false" m:FC_SourcePath="MappedInDerivedField" m:FC_TargetPath="mappedField/@mappedInDerived" m:FC_NsPrefix="pre" m:FC_NsUri="http://www.example.com/dummy" BaseType="DataJS.Tests.BaseEntry">
+        <Property Name="UnmappedConcreteField" Nullable="true" Type="Edm.String"/>
+        <Property Name="MappedConcreteField" Nullable="true" Type="Edm.String" m:FC_KeepInContent="false" m:FC_TargetPath="mappedField/@mappedConcrete" m:FC_NsPrefix="pre" m:FC_NsUri="http://www.example.com/dummy"/>
+      </EntityType>
+      <EntityType Name="BaseEntry">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Nullable="false" Type="Edm.Int32"/>
+        <Property Name="UnmappedField" Nullable="true" Type="Edm.String"/>
+        <Property Name="MappedInDerivedField" Nullable="true" Type="Edm.String" mcns:MyCustomAnnotation="false"/>
+        <Property Name="MappedField" Nullable="true" Type="Edm.String" m:FC_KeepInContent="false" m:FC_TargetPath="mappedField" m:FC_NsPrefix="pre" m:FC_NsUri="http://www.example.com/dummy"/>
+      </EntityType>
+      <EntityContainer Name="EpmDataSource" m:IsDefaultEntityContainer="true" mcns:MyCustomAnnotation="0">
+        <EntitySet Name="MappedEntries" EntityType="DataJS.Tests.MappedEntry"/>
+        <EntitySet Name="ReplicatedEntries" EntityType="DataJS.Tests.ReplicatedEntry"/>
+        <EntitySet Name="HierarchicalEntries" EntityType="DataJS.Tests.BaseEntry"/>
+        <FunctionImport Name="ResetData" m:HttpMethod="POST" mcns:MyCustomAnnotation="null"/>
+      </EntityContainer>
+      <mcns:EmptyElement></mcns:EmptyElement>
+      <mcns:ParentCustomElement mcns:MyCustomAnnotation="annotation" mcns:MySecondCustomAnnotation="annotation 2">
+        <mcns:CustomChildElement1>Custom metadata 1.</mcns:CustomChildElement1>
+        <mcns:CustomChildElement2>Custom metadata 2.</mcns:CustomChildElement2>
+      </mcns:ParentCustomElement>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

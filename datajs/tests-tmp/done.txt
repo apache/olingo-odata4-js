@@ -21,3 +21,9 @@ rx.js
 
 odata-json-test.js 
   -> copied and splittet 
+
+  
+ODataReadOracle.js -> odataVerifyReader.js
+ODataReadOracle.svc -> odataVerifyReader.svc
+
+ODataReadOracle -> odataVerifyReader

@@ -17,14 +17,14 @@
  * under the License.
  */
 
-// CacheOracle.js
+// CacheVerifier.js
 // This object verifies the operation of the cache.
 // Internally it maintains a simple model of the cache implemented using a lookup array of the expected cached pages.
 
 (function (window, undefined) {
 
-    var CacheOracle = function (baseUri, pageSize, total, cacheSize) {
-        /** Creates a new CacheOracle
+    var CacheVerifier = function (baseUri, pageSize, total, cacheSize) {
+        /** Creates a new CacheVerifier
          * @param {String} baseUri - The base URI of the collection
          * @param {Integer} pageSize - The page size used in the cache
          * @param {Integer} total - The total number of items in the collection
@@ -42,20 +42,20 @@
         this.overflowed = this.cacheSize === 0;
     };
 
-    CacheOracle.mechanisms = {
+    CacheVerifier.mechanisms = {
         memory: "memory",
         indexeddb: "indexeddb",
         dom: "dom",
         best: "best"
     };
 
-    CacheOracle.isMechanismAvailable = function (mechanism) {
+    CacheVerifier.isMechanismAvailable = function (mechanism) {
         /** Determines if the specified local storage mechanism is available
          * @param mechanism - The name of the mechanism
          * @returns Whether the mechanism is available
          */
         switch (mechanism) {
-            case CacheOracle.mechanisms.indexeddb:
+            case CacheVerifier.mechanisms.indexeddb:
                 if (window.msIndexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.indexedDB) {
                     return true;
                 }
@@ -63,7 +63,7 @@
                     return false;
                 }
                 break;
-            case CacheOracle.mechanisms.dom:
+            case CacheVerifier.mechanisms.dom:
                 if (window.localStorage) {
                     return true;
                 }
@@ -71,25 +71,25 @@
                     return false;
                 }
                 break;
-            case CacheOracle.mechanisms.memory:
-            case CacheOracle.mechanisms.best:
+            case CacheVerifier.mechanisms.memory:
+            case CacheVerifier.mechanisms.best:
             case undefined:
                 return true;
             default:
                 return false;
         }
-    }
+    };
 
-    CacheOracle.prototype.clear = function () {
+    CacheVerifier.prototype.clear = function () {
         /** Clears the cache in the oracle
         */
         this.cachedPages = [];
         this.actualSize = 0;
         this.actualCount = 0;
         this.overflowed = this.cacheSize === 0;
-    }
+    };
 
-    CacheOracle.prototype.verifyRequests = function (requests, responses, index, count, description, backwards, isPrefetch) {
+    CacheVerifier.prototype.verifyRequests = function (requests, responses, index, count, description, backwards, isPrefetch) {
         /** Verifies the HTTP requests for a single data request, and updates the oracle with cached pages
          * @param {Array} requests - The sequence of request objects (from OData.defaultHttpClient)
          * @param {Array} responses - The sequence of response objects (from OData.defaultHttpClient)
@@ -191,7 +191,7 @@
         djstest.assertAreEqualDeep(actualUris, expectedUris, description);
     };
 
-    CacheOracle.getExpectedFilterResults = function (data, filterIndex, filterCount, predicate, backwards) {
+    CacheVerifier.getExpectedFilterResults = function (data, filterIndex, filterCount, predicate, backwards) {
         /** Verifies the cache filter returns the correct data
          * @param {Array} collection - Array of items in the collection
          * @param {Integer} filterIndex - The index value
@@ -236,6 +236,6 @@
         return expectedResults;
     };
 
-    window.CacheOracle = CacheOracle;
+    window.CacheVerifier = CacheVerifier;
 
 })(this);

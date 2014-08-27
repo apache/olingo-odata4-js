@@ -1,0 +1,113 @@
+<!--
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+-->
+
+<%@ ServiceHost Language="C#" Factory="Microsoft.OData.Service.DataServiceHostFactory, Microsoft.OData.Service, Version=6.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
+    Service="DataJS.Tests.LargeCollectionService" %>
+
+namespace DataJS.Tests
+{
+    using System;
+    using System.Collections.Generic;
+    using Microsoft.OData.Service;
+    using System.Linq;
+    using System.ServiceModel;
+    using System.ServiceModel.Web;
+    using System.Web;
+
+    [ServiceBehavior(IncludeExceptionDetailInFaults = true)]
+    public class LargeCollectionService : DataService<LargeCollection>
+    {
+        // This method is called only once to initialize service-wide policies.
+        public static void InitializeService(DataServiceConfiguration config)
+        {
+            config.SetEntitySetAccessRule("*", EntitySetRights.All);
+            config.SetServiceOperationAccessRule("*", ServiceOperationRights.All);
+            config.UseVerboseErrors = true;
+        }
+
+        [WebInvoke]
+        public void ResetData()
+        {
+            this.CurrentDataSource.ResetData();
+        }
+    }
+
+    public class LargeCollection : ReflectionDataContext, IUpdatable
+    {
+        private static bool dataInitialized;
+
+        public IQueryable<Customer> Customers
+        {
+            get { return this.GetResourceSetEntities<Customer>("Customers").AsQueryable(); }
+        }
+
+        public IQueryable<Supplier> Suppliers
+        {
+            get { return this.GetResourceSetEntities<Supplier>("Suppliers").AsQueryable(); }
+        }
+
+        public void ResetData()
+        {
+            this.ClearData();
+
+            IList<Customer> customers = this.GetResourceSetEntities<Customer>("Customers");
+            foreach (int i in Enumerable.Range(1, 2 * 1024 * 1024))
+            {
+                customers.Add(new Customer()
+                {
+                    ID = i,
+                    Name = "Customer " + i
+                });
+            }
+
+            IList<Supplier> suppliers = this.GetResourceSetEntities<Supplier>("Suppliers");
+            foreach (int i in Enumerable.Range(1, 5000))
+            {
+                suppliers.Add(new Supplier()
+                {
+                    ID = i,
+                    Name = "Supplier " + i
+                });
+            }
+        }
+
+        protected override void EnsureDataIsInitialized()
+        {
+            if (!dataInitialized)
+            {
+                this.ResetData();
+                dataInitialized = true;
+            }
+        }
+    }
+
+    public class Customer
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class Supplier
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+    }
+}

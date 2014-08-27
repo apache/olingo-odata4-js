@@ -20,8 +20,6 @@
 // odata-tests.js
 
 (function (window, undefined) {
-   
-    
     djstest.addTest(function jsonParserTest() {
         var tests = [
             { context: { response: { requestUri: "http://base.org" }, dataServiceVersion: "4.0" }, expected: {} },
@@ -827,4 +825,4 @@
     });
 
 
-})(this);
+})(window);

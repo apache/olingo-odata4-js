@@ -378,7 +378,8 @@ function init (parent) {
     djstest.log = function (message) {
 
         var context = { result: true, actual: true, expected: true, message: message };
-        QUnit.log(context);
+        QUnit.ok(true, message);
+        
     };
 
     /** Marks the current test as failed.
@@ -392,7 +393,6 @@ function init (parent) {
      * @param {Object} obj - Object to dump
      */
     djstest.toString = function (obj) {
-
         return QUnit.jsDump.parse(obj);
     };
 

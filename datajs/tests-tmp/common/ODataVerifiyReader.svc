@@ -1,0 +1,114 @@
+﻿/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+*/
+
+<%@ ServiceHost Language="C#" Debug="true" Factory="System.ServiceModel.Activation.WebScriptServiceHostFactory"
+    Service="DataJS.Tests.ODataVerifyReader" %>
+
+//uncomment this line to debug JSON serialization.
+//#define DEBUG_SERIALIZATION
+
+namespace DataJS.Tests
+{
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+    using System.Runtime.Serialization;
+    using System.ServiceModel;
+    using System.ServiceModel.Activation;
+    using System.ServiceModel.Syndication;
+    using System.ServiceModel.Web;
+    using System.Xml;
+    using System.Xml.Linq;
+    using Microsoft.Spatial;
+    using Microsoft.OData.Core;
+    using System.Web.Script.Serialization;
+
+    /// <summary>
+    /// Oracle for the OData.read library function
+    /// </summary>
+    [ServiceContract]
+    [ServiceBehavior(IncludeExceptionDetailInFaults = true)]
+    [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
+    public class ODataVerifyReader
+    {
+        const string jsonlightMediaType = "application/json";
+
+        /// <summary>
+        /// Reads a URI that will return a metadata object
+        /// </summary>
+        /// <param name="url">The URL to send the request to</param>
+        /// <returns>Stream of metadata in json light format</returns>
+        [OperationContract]
+        [WebGet]
+        public Stream ReadMetadata(string url)
+        {
+            WebResponse response = WebRequest.Create(ResolveUri(url, UriKind.Absolute)).GetResponse();
+            Dictionary<string, object> jsonObject = CsdlReader.ReadCsdl(new StreamReader(response.GetResponseStream()));
+            return ReaderUtils.ConvertDictionarytoJsonlightStream(jsonObject);
+        }
+        
+        /// <summary>
+        /// Reads a URI that will get the Json response and return the stream
+        /// </summary>
+        /// <param name="url">URL of the entry</param>
+        /// <param name="user">The username for basic authentication</param>
+        /// <param name="password">The password for basic authentication</param>
+        /// <returns>Stream of the Json response expected to be returned by OData.read</returns>
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json)]
+        public Stream ReadJson(string url, string mimeType, string user, string password)
+        {
+            if (mimeType == null)
+            {
+                mimeType = jsonlightMediaType + ";odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8";
+            }
+            
+            HttpWebRequest request = (HttpWebRequest)ReaderUtils.CreateRequest(ResolveUri(url, UriKind.Absolute), user, password);
+            request.Accept = mimeType;
+            WebResponse response = request.GetResponse();
+
+            return response.GetResponseStream();
+        }
+
+        /// <summary>
+        /// Resolves the given url string to a URI
+        /// </summary>
+        /// <param name="url">The given URL string</param>
+        /// <param name="urlKind">URI kind to resolve to</param>
+        /// <returns>The resolved URI</returns>
+        private static string ResolveUri(string url, UriKind uriKind)
+        {
+            Uri resolvedUri = new Uri(url, UriKind.RelativeOrAbsolute);
+            if (!resolvedUri.IsAbsoluteUri)
+            {
+                // If the given URI is relative, then base it on the Referer URI
+                Uri baseUri = new Uri(WebOperationContext.Current.IncomingRequest.Headers["Referer"]);
+                resolvedUri = new Uri(baseUri, resolvedUri);
+                if (uriKind == UriKind.Relative)
+                {
+                    resolvedUri = baseUri.MakeRelativeUri(resolvedUri);
+                }
+            }
+
+            return resolvedUri.ToString();
+        }
+    }
+}
