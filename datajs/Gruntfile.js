@@ -3,7 +3,7 @@ module.exports = function(grunt) {
   var init = {
     pkg: grunt.file.readJSON('package.json'),
     banner: grunt.file.read('src/banner.txt'),
-    filename : '<%= pkg.name %>-<%= pkg.version %>',
+    filename : '<%= pkg.name %>-<%= pkg.version %>-<%= pkg.postfix %>',
 
     browserify: {
       // start with index.js and follow all required source in order pack them together 
@@ -153,6 +153,20 @@ module.exports = function(grunt) {
                 force: true
             }
       },
+    },
+    compress: {
+      build: {
+        options: {archive: 'dist/<%= filename %>-lib.zip'},
+        files: [{expand: true, cwd: 'build/', src: ['*'], filter: 'isFile', dest: '<%= filename %>-lib/'}]
+      },
+      doc: {
+        options: {archive: 'dist/<%= filename %>-doc.zip'},
+        files: [{expand: true, cwd: 'build/doc/', src: ['**'], dest: '<%= filename %>-doc/'}]
+      },
+      src: {
+        options: {archive: 'dist/<%= filename %>-source.zip'},
+        files: [{expand: true, cwd: 'src/', src: ['**'], dest: '<%= filename %>-src/'}]
+      }
     }
   };
   
@@ -173,7 +187,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-contrib-connect");
   grunt.loadNpmTasks("grunt-contrib-copy");
   grunt.loadNpmTasks("grunt-contrib-concat");
+  grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks("grunt-jsdoc");
+
 
   //    Start Qunit tests direcly in node js, internally qunit (npm qunit) 
   //    is used, no phantomjs instance required
@@ -204,6 +220,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('test-browser', ['configureProxies:test-browser', 'connect:test-browser']);
   grunt.registerTask('test-node', ['node-qunit:default-tests']);
+  grunt.registerTask('release', ['build','doc','compress']);
 
   
 };
