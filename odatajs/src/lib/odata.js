@@ -29,7 +29,7 @@ var odataJson     = exports.json      = require('./odata/json.js');
                     
 
 
-var utils = require('./datajs/utils.js');
+var utils = require('./odatajs/utils.js');
 var assigned = utils.assigned;
 
 var defined = utils.defined;

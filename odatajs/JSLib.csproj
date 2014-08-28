@@ -44,9 +44,9 @@
     <Content Include="src\lib\odata.js" />
     <Content Include="src\lib\store.js" />
     <Content Include="src\lib\cache\source.js" />
-    <Content Include="src\lib\datajs\deferred.js" />
-    <Content Include="src\lib\datajs\utils.js" />
-    <Content Include="src\lib\datajs\xml.js" />
+    <Content Include="src\lib\odatajs\deferred.js" />
+    <Content Include="src\lib\odatajs\utils.js" />
+    <Content Include="src\lib\odatajs\xml.js" />
     <Content Include="src\lib\odata\batch.js" />
     <Content Include="src\lib\odata\handler.js" />
     <Content Include="src\lib\odata\json.js" />
