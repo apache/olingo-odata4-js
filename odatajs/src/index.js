@@ -17,7 +17,7 @@
  * under the License.
  */
 
-var odatajs = require('./lib/datajs.js');
+var odatajs = require('./lib/odatajs.js');
 
 odatajs.oData = require('./lib/odata.js');
 odatajs.store = require('./lib/store.js');

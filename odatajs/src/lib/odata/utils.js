@@ -18,7 +18,7 @@
  */
  /** @module odata/utils */
 
-var utils    = require('./../datajs.js').utils;
+var utils    = require('./../odatajs.js').utils;
 
 // Imports
 var assigned = utils.assigned;

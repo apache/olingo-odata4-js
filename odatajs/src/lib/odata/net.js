@@ -21,7 +21,7 @@
 
 
 
-var utils    = require('./../datajs.js').utils;
+var utils    = require('./../odatajs.js').utils;
 // Imports.
 
 var defined = utils.defined;

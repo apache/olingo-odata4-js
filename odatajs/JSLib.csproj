@@ -40,7 +40,7 @@
     <Content Include="src\index.js" />
     <Content Include="src\banner.txt" />
     <Content Include="src\lib\cache.js" />
-    <Content Include="src\lib\datajs.js" />
+    <Content Include="src\lib\odatajs.js" />
     <Content Include="src\lib\odata.js" />
     <Content Include="src\lib\store.js" />
     <Content Include="src\lib\cache\source.js" />
@@ -73,7 +73,7 @@
     <Content Include="tests\common\TestSynchronizerClient.js" />
     <Content Include="tests\e2etest\Test.html" />
     <Content Include="tests\odata-json-light-tests.js" />
-    <Content Include="tests\datajs-startup-perf-test.html" />
+    <Content Include="tests\odatajs-startup-perf-test.html" />
     <Content Include="tests\endpoints\BasicAuthDataService.svc" />
     <Content Include="tests\endpoints\FoodStoreDataServiceV4.svc" />
     <Content Include="tests\endpoints\CustomAnnotations.xml" />
@@ -82,9 +82,9 @@
     <Content Include="tests\endpoints\ErrorDataService.svc" />
     <Content Include="tests\endpoints\LargeCollectionService.svc" />
     <Content Include="tests\endpoints\web.config" />
-    <Content Include="tests\datajs-cache-large-collection-functional-tests.html" />
-    <Content Include="tests\datajs-cache-large-collection-functional-tests.js" />
-    <Content Include="tests\datajs-cache-long-haul-tests.html" />
+    <Content Include="tests\odatajs-cache-large-collection-functional-tests.html" />
+    <Content Include="tests\odatajs-cache-large-collection-functional-tests.js" />
+    <Content Include="tests\odatajs-cache-long-haul-tests.html" />
     <Content Include="tests\odata-batch-functional-tests.html" />
     <Content Include="tests\odata-batch-functional-tests.js" />
     <Content Include="tests\odata-batch-tests.js" />

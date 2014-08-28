@@ -19,7 +19,7 @@
 
  /** @module cache/source */
  
-var utils = require("./../datajs.js").utils;
+var utils = require("./../odatajs.js").utils;
 var odataRequest = require("./../odata.js");
 
 var parseInt10 = utils.parseInt10;

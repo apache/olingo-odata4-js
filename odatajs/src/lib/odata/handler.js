@@ -20,7 +20,7 @@
 /** @module odata/handler */
 
 
-var utils    = require('./../datajs.js').utils;
+var utils    = require('./../odatajs.js').utils;
 var oDataUtils    = require('./utils.js');
 
 // Imports.

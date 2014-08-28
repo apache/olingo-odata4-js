@@ -19,7 +19,7 @@
 
  /** @module cache */
 
-var odatajs = require('./datajs.js');
+var odatajs = require('./odatajs.js');
 var utils = odatajs.utils;
 var deferred = odatajs.deferred;
 var storeReq = odatajs.store;
