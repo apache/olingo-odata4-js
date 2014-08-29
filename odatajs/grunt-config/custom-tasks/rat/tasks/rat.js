@@ -14,7 +14,7 @@ module.exports = function (grunt) {
     var dir = this.data.dir;
     var out = options.tmpDir + '/' + (options.xml ? 'rat.xml' : 'rat.txt');
 
-    var pathToRat =  path.resolve(__dirname,'./../tools/apache-rat-0.10/apache-rat-0.10.jar');
+    var pathToRat =  path.resolve(__dirname,'./../extern_modules/apache-rat-0.10/apache-rat-0.10.jar');
     
     //sample command java -jar apache-rat-0.10.jar -x -d ./src > ./build/tmp/rat.txt
     var cmd = 'java -jar ' + pathToRat+ ' ';

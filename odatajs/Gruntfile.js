@@ -1,59 +1,61 @@
 module.exports = function(grunt) {
   'use strict';
+/*
+  var x = grunt.file.isMatch( { dot : true} ,
+    '**node_modules/**',
+    ['node_modules/1']
+    );
+  console.log('X: '+ x);
+  process.exit(1);*/
+
   var init = {
     pkg: grunt.file.readJSON('package.json'),
     banner: grunt.file.read('src/banner.txt'),
     filename : '<%= pkg.name %>-<%= pkg.version %>-<%= pkg.postfix %>',
 
-    browserify: {
-      // start with index.js and follow all required source in order pack them together 
-      datajs: {
+
+    browserify: { // convert code from nodejs style to brower style
+      src: {
         files: {
           'build/<%= filename %>.js': ['src/index.js'],
         },
-        options: {
-          transform: ['./grunt-config/browserify_transforms/stripheader/stripheader.js'],
-          browserifyOptions: {
-          } ,
-          bundleOptions: {
-          },
+        options: { 
+          transform: ['./grunt-config/browserify_transforms/stripheader/stripheader.js'], // remove apache license headers before contatenating
+          browserifyOptions: { } ,
+          bundleOptions: { },
         }
       }
     },
-    uglify: {
+    uglify: { // uglify and minify the lib
       options: {
         sourceMap : true,
-        sourceMapName :  'build/<%= filename %>.map',
-        sourceMapIncludeSources :true,
+        sourceMapName : 'build/<%= filename %>.map',
+        sourceMapIncludeSources : true,
       },
-      // uglify and compress the packed sources
       build: {
         src: 'build/<%= filename %>.js',
         dest: 'build/<%= filename %>.min.js'
       }
     },
-    concat : {
+    concat : { // add the apache license headers
       options : {
         banner : '<%= banner %>'
+      },
+      licence: {
+        src: 'build/<%= filename %>.js',
+        dest: 'build/<%= filename %>.js',
       },
       licence_min: {
         src: 'build/<%= filename %>.min.js',
         dest: 'build/<%= filename %>.min.js',
       },
-      licence: {
-        src: 'build/<%= filename %>.js',
-        dest: 'build/<%= filename %>.js',
-      }
     },
-    copy: {
+    copy: { // copy odatajs library files to demo folder withch contains samples
       forDemo: {
-        files: [
-          // includes files within path
-          {expand: true, cwd: 'build/', src: ['**'], dest: 'demo/scripts/', filter: 'isFile'},
-        ]
+        files: [{ expand: true, cwd: 'build/', src: ['<%= filename %>*.*'], dest: 'demo/scripts/', filter: 'isFile'}]
       }
     },
-    connect: {
+    connect: { // not used, start a testing server
       demo: {
         options: {
           port: 4001 ,
@@ -121,7 +123,7 @@ module.exports = function(grunt) {
         }
       },
     },
-    jsdoc : {
+    'jsdoc' : { // generate documentation
         src : {
             src: ['src/**/*.js'], 
             options: {
@@ -137,7 +139,7 @@ module.exports = function(grunt) {
             }
         }
     },
-    "npm-clean": {
+    'npm-clean': {
       tmp: {
         src: [ "build/tmp"]
       },
@@ -154,20 +156,37 @@ module.exports = function(grunt) {
             }
       },
     },
-    compress: {
-      build: {
+    compress: { // build the zip files for the release 
+    /*
+      build: { // just the lib
         options: {archive: 'dist/<%= filename %>-lib.zip'},
-        files: [{expand: true, cwd: 'build/', src: ['*'], filter: 'isFile', dest: '<%= filename %>-lib/'}]
-      },
-      doc: {
+        files: [{expand: true, cwd: 'build/', src: '*', filter: 'isFile', dest: '<%= filename %>-lib/'}]
+      },*/
+      doc: { // just the documentation
         options: {archive: 'dist/<%= filename %>-doc.zip'},
         files: [{expand: true, cwd: 'build/doc/', src: ['**'], dest: '<%= filename %>-doc/'}]
       },
-      src: {
+      src: { // just the source
         options: {archive: 'dist/<%= filename %>-source.zip'},
         files: [{expand: true, cwd: 'src/', src: ['**'], dest: '<%= filename %>-src/'}]
+      },
+      sources :  { // the full repository with out the git stuff
+        options: {archive: 'dist/<%= filename %>-source.zip'},
+        files: [
+          {expand: true, cwd: 'demo/', src: ['**'], dest: '<%= filename %>-src/'},
+          {expand: true, cwd: 'src/', src: ['**'], dest: '<%= filename %>-src/'}
+        ]
       }
-    }
+    }, 
+    curl: {
+      'license': {
+        src: {
+          url: 'http://apache.org/licenses/LICENSE-2.0.txt',
+          proxy: 'http://proxy:8080'
+        },
+        dest: 'LICENSE'
+      }
+    } 
   };
   
   /*** Join local configuration for proxies and local test servers ***/
@@ -179,6 +198,13 @@ module.exports = function(grunt) {
 
   /*** Init ***/
   grunt.initConfig(init);
+  grunt.config.merge({compress: { // build the zip files for the release 
+      build: { // just the lib
+        options: {archive: 'dist/<%= filename %>-lib.zip'},
+        files: [{expand: true, cwd: 'build/', src: '*', filter: 'isFile', dest: '<%= filename %>-lib/'}]
+      }}});
+
+
 
   /*** Load tasks from npm modules ***/
   grunt.loadNpmTasks('grunt-browserify');
@@ -188,24 +214,24 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-contrib-copy");
   grunt.loadNpmTasks("grunt-contrib-concat");
   grunt.loadNpmTasks('grunt-contrib-compress');
+  grunt.loadNpmTasks('grunt-curl');
   grunt.loadNpmTasks("grunt-jsdoc");
-
 
   //    Start Qunit tests direcly in node js, internally qunit (npm qunit) 
   //    is used, no phantomjs instance required
   grunt.loadNpmTasks('grunt-node-qunit'); 
-  grunt.loadNpmTasks('grunt-contrib-clean');
+  //grunt.loadNpmTasks('grunt-contrib-clean');
 
   //    Load the custom-* tasks from the grunt-config directory
   grunt.loadTasks('grunt-config');
 
   //    rename some tasks to avoid name clashes with the user tasks
-  grunt.renameTask('clean','npm-clean');
+  //grunt.renameTask('clean','npm-clean');
   
 
   /*** E N D U S E R   T A S K S ***/
 
-  grunt.registerTask('clean', ['npm-clean:doc','npm-clean:tmp']);
+  //grunt.registerTask('clean', ['npm-clean:doc','npm-clean:tmp']);
 
   //    Runs the license header check to verify the any source file contains a license header
   grunt.registerTask('license-check', ['custom-license-check']);
@@ -215,12 +241,13 @@ module.exports = function(grunt) {
   grunt.registerTask('doc-test', [/*'npm-clean:doc-test',*/'jsdoc:test']);
 
   //    Build the odatajs library
-  grunt.registerTask('build', ['browserify:datajs', 'uglify:build', 'concat','copy:forDemo']);
+  grunt.registerTask('build', ['browserify:src', 'uglify:build', 'concat','copy:forDemo']);
 
 
   grunt.registerTask('test-browser', ['configureProxies:test-browser', 'connect:test-browser']);
   grunt.registerTask('test-node', ['node-qunit:default-tests']);
-  grunt.registerTask('release', ['build','doc','compress']);
+  //grunt.registerTask('release', ['build','doc','compress']);
+  grunt.registerTask('update-legal', ['curl:license']);
 
   
 };
