@@ -124,10 +124,10 @@ module.exports = function(grunt) {
       },
     },
     'jsdoc' : { // generate documentation
-        src : {
+        'src' : {
             src: ['src/**/*.js'], 
             options: {
-                destination: 'build/doc',
+                destination: 'build/doc-src',
                 verbose : false 
             }
         },
@@ -156,28 +156,6 @@ module.exports = function(grunt) {
             }
       },
     },
-    compress: { // build the zip files for the release 
-    /*
-      build: { // just the lib
-        options: {archive: 'dist/<%= filename %>-lib.zip'},
-        files: [{expand: true, cwd: 'build/', src: '*', filter: 'isFile', dest: '<%= filename %>-lib/'}]
-      },*/
-      doc: { // just the documentation
-        options: {archive: 'dist/<%= filename %>-doc.zip'},
-        files: [{expand: true, cwd: 'build/doc/', src: ['**'], dest: '<%= filename %>-doc/'}]
-      },
-      src: { // just the source
-        options: {archive: 'dist/<%= filename %>-source.zip'},
-        files: [{expand: true, cwd: 'src/', src: ['**'], dest: '<%= filename %>-src/'}]
-      },
-      sources :  { // the full repository with out the git stuff
-        options: {archive: 'dist/<%= filename %>-source.zip'},
-        files: [
-          {expand: true, cwd: 'demo/', src: ['**'], dest: '<%= filename %>-src/'},
-          {expand: true, cwd: 'src/', src: ['**'], dest: '<%= filename %>-src/'}
-        ]
-      }
-    }, 
     curl: {
       'license': {
         src: {
@@ -198,13 +176,6 @@ module.exports = function(grunt) {
 
   /*** Init ***/
   grunt.initConfig(init);
-  grunt.config.merge({compress: { // build the zip files for the release 
-      build: { // just the lib
-        options: {archive: 'dist/<%= filename %>-lib.zip'},
-        files: [{expand: true, cwd: 'build/', src: '*', filter: 'isFile', dest: '<%= filename %>-lib/'}]
-      }}});
-
-
 
   /*** Load tasks from npm modules ***/
   grunt.loadNpmTasks('grunt-browserify');

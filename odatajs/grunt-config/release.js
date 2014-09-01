@@ -12,19 +12,46 @@ module.exports = function(grunt) {
     return hay.indexOf(needle) > -1;
   }
 
+  // clean
+  grunt.config.merge( { 
+    'clean': {
+      'release-dist': {
+        options: { force: true },
+        src: [ "./../dist/<%= filename %>*"]
+      }
+    }
+  });
+
+  grunt.loadNpmTasks("grunt-contrib-clean");
+
+  // doc
+  grunt.config.merge( { 
+    'jsdoc' : { // generate documentation
+      "release-doc-src" : {
+        src: ['src/**/*.js'], 
+        options: {
+          destination: './../dist/<%= filename %>/doc',
+          verbose : false 
+        }
+      },
+    },
+  });
+
   // copy
   grunt.config.merge( { 
     'copy' : {
       'release-lib' : {
         files: [
           { expand: true, cwd: 'build', src: ['<%= filename %>*.*'], dest: './../dist/<%= filename %>/lib/lib', filter: 'isFile'},
-          { expand: true, src :'LICENSE',dest: './../dist/<%= filename %>/lib', filter: 'isFile' }
+          { expand: true, src :'LICENSE',dest: './../dist/<%= filename %>/lib', filter: 'isFile' },
+          { expand: true, src :'NOTICE',dest: './../dist/<%= filename %>/lib', filter: 'isFile' }
         ]
       },
       'release-doc' : {
         files: [
-            { expand: true, cwd: 'build/doc', src: ['**'], dest: './../dist/<%= filename %>/doc/doc', filter: 'isFile'},
-            { expand: true, src :'LICENSE',dest: './../dist/<%= filename %>/doc', filter: 'isFile' }
+            { expand: true, cwd: 'build/doc-src', src: ['**'], dest: './../dist/<%= filename %>/doc/doc', filter: 'isFile'},
+            { expand: true, src :'LICENSE',dest: './../dist/<%= filename %>/doc', filter: 'isFile' },
+            { expand: true, src :'NOTICE',dest: './../dist/<%= filename %>/doc', filter: 'isFile' }
           ]
       },
       'release-sources' : {
@@ -61,17 +88,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-contrib-copy");
   
 
-  // clean
-  grunt.config.merge( { 
-    'clean': {
-      'release-dist': {
-        options: { force: true },
-        src: [ "./../dist/<%= filename %>"]
-      }
-    }
-  });
 
-  grunt.loadNpmTasks("grunt-contrib-clean");
 
   // zip
   grunt.config.merge( { 
@@ -94,14 +111,14 @@ module.exports = function(grunt) {
   });
 
 
-
   grunt.loadNpmTasks('grunt-contrib-compress');
 
   //tasks
   grunt.registerTask('dist',[
-    'build',
-    'doc',
     'clean:release-dist',
+
+    'build',
+    'jsdoc:src',
     'copy:release-lib','copy:release-doc','copy:release-sources',
     'compress:release-lib','compress:release-doc','compress:release-sources']);
 };

@@ -43,21 +43,23 @@ var dataItemTypeName = function (value, metadata) {
 };
 
 var EDM = "Edm.";
-var EDM_BINARY = EDM + "Binary";
 var EDM_BOOLEAN = EDM + "Boolean";
 var EDM_BYTE = EDM + "Byte";
-var EDM_DATETIME = EDM + "DateTime";
-var EDM_DATETIMEOFFSET = EDM + "DateTimeOffset";
-var EDM_DECIMAL = EDM + "Decimal";
-var EDM_DOUBLE = EDM + "Double";
-var EDM_GUID = EDM + "Guid";
+var EDM_SBYTE = EDM + "SByte";
 var EDM_INT16 = EDM + "Int16";
 var EDM_INT32 = EDM + "Int32";
 var EDM_INT64 = EDM + "Int64";
-var EDM_SBYTE = EDM + "SByte";
 var EDM_SINGLE = EDM + "Single";
+var EDM_DOUBLE = EDM + "Double";
+var EDM_DECIMAL = EDM + "Decimal";
 var EDM_STRING = EDM + "String";
-var EDM_TIME = EDM + "Time";
+
+var EDM_BINARY = EDM + "Binary";
+var EDM_DATE = EDM + "Date";
+var EDM_DATETIMEOFFSET = EDM + "DateTimeOffset";
+var EDM_DURATION = EDM + "Duration";
+var EDM_GUID = EDM + "Guid";
+var EDM_TIMEOFDAY = EDM + "Time";
 
 var GEOGRAPHY = "Geography";
 var EDM_GEOGRAPHY = EDM + GEOGRAPHY;
@@ -110,9 +112,10 @@ var primitiveEdmTypes = [
     EDM_BOOLEAN,
     EDM_DOUBLE,
     EDM_SINGLE,
-    EDM_DATETIME,
+    EDM_DATE,
     EDM_DATETIMEOFFSET,
-    EDM_TIME,
+    EDM_DURATION,
+    EDM_TIMEOFDAY,
     EDM_DECIMAL,
     EDM_GUID,
     EDM_BYTE,
@@ -1174,8 +1177,9 @@ exports.dataItemTypeName = dataItemTypeName;
 exports.EDM_BINARY = EDM_BINARY;
 exports.EDM_BOOLEAN = EDM_BOOLEAN;
 exports.EDM_BYTE = EDM_BYTE;
-exports.EDM_DATETIME = EDM_DATETIME;
+exports.EDM_DATE = EDM_DATE;
 exports.EDM_DATETIMEOFFSET = EDM_DATETIMEOFFSET;
+exports.EDM_DURATION = EDM_DURATION;
 exports.EDM_DECIMAL = EDM_DECIMAL;
 exports.EDM_DOUBLE = EDM_DOUBLE;
 exports.EDM_GEOGRAPHY = EDM_GEOGRAPHY;
@@ -1201,7 +1205,7 @@ exports.EDM_INT64 = EDM_INT64;
 exports.EDM_SBYTE = EDM_SBYTE;
 exports.EDM_SINGLE = EDM_SINGLE;
 exports.EDM_STRING = EDM_STRING;
-exports.EDM_TIME = EDM_TIME;
+exports.EDM_TIMEOFDAY = EDM_TIMEOFDAY;
 exports.GEOJSON_POINT = GEOJSON_POINT;
 exports.GEOJSON_LINESTRING = GEOJSON_LINESTRING;
 exports.GEOJSON_POLYGON = GEOJSON_POLYGON;
