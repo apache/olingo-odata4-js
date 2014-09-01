@@ -7,6 +7,15 @@ module.exports = function(grunt) {
     test: {                      
       dir: './tests'
     },
+    'src-manual': {                      
+      options: { xml : false, tmpDir : './build/tmp' },
+      dir: './src',
+    },
+    'test-manual': {                      
+      options: { xml : false, tmpDir : './build/tmp' },
+      dir: './tests'
+    },
+
   });
 
  
