@@ -1,7 +1,15 @@
-node_modules/
-build
-dist
 localgrunt.config
+
+# testing copies
+demo/scripts/odatajs-4.0.0-beta-01*
+
+# build artefacts
+build
+
+# nodejs temporary objects
+node_modules
+
+# C.net server temporary objects
 bin/
 obj/
 packages/
