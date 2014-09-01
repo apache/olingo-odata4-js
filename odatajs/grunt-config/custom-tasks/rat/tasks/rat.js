@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = function (grunt) {
   grunt.registerMultiTask('rat', 'Run Apache Rat', function () {
     var path = require('path');
@@ -10,12 +8,26 @@ module.exports = function (grunt) {
 
     var cb = this.async();
 
+
+
     var options = this.options({ xml : true, tmpDir : './build/tmp'});
     var dir = this.data.dir;
     var out = options.tmpDir + '/' + (options.xml ? 'rat.xml' : 'rat.txt');
 
-    var pathToRat =  path.resolve(__dirname,'./../extern_modules/apache-rat-0.10/apache-rat-0.10.jar');
+    var pathToRat =  path.resolve(__dirname,'./../extern-tools/apache-rat-0.11/apache-rat-0.11.jar');
     
+    if(!fs.existsSync(options.tmpDir)){
+         fs.mkdirSync(options.tmpDir, 0766, function(err){
+           if(err){ 
+             grunt.fail.warn('rat --> ' + 'Output directory could not be created: ' + options.tmpDir, 1); 
+           }
+         });   
+     }
+
+
+
+
+
     //sample command java -jar apache-rat-0.10.jar -x -d ./src > ./build/tmp/rat.txt
     var cmd = 'java -jar ' + pathToRat+ ' ';
     cmd += options.xml ? ' -x' : '';
@@ -27,8 +39,6 @@ module.exports = function (grunt) {
       if (err) {
         grunt.fail.warn('rat --> ' + err, 1); //exit grunt with error code 1
       }
-      
-      
       
       if (!options.xml) {
         grunt.fail.warn('rat --> ' + 'No XML output: checkRatLogFile skipped!', 1); 

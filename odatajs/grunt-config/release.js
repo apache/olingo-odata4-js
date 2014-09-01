@@ -44,14 +44,16 @@ module.exports = function(grunt) {
         files: [
           { expand: true, cwd: 'build', src: ['<%= filename %>*.*'], dest: './../dist/<%= filename %>/lib/lib', filter: 'isFile'},
           { expand: true, src :'LICENSE',dest: './../dist/<%= filename %>/lib', filter: 'isFile' },
-          { expand: true, src :'NOTICE',dest: './../dist/<%= filename %>/lib', filter: 'isFile' }
+          { expand: true, src :'NOTICE',dest: './../dist/<%= filename %>/lib', filter: 'isFile' },
+          { expand: true, src :'DEPENDENCIES',dest: './../dist/<%= filename %>/lib', filter: 'isFile' }
         ]
       },
       'release-doc' : {
         files: [
             { expand: true, cwd: 'build/doc-src', src: ['**'], dest: './../dist/<%= filename %>/doc/doc', filter: 'isFile'},
             { expand: true, src :'LICENSE',dest: './../dist/<%= filename %>/doc', filter: 'isFile' },
-            { expand: true, src :'NOTICE',dest: './../dist/<%= filename %>/doc', filter: 'isFile' }
+            { expand: true, src :'NOTICE',dest: './../dist/<%= filename %>/doc', filter: 'isFile' },
+            { expand: true, src :'DEPENDENCIES',dest: './../dist/<%= filename %>/doc', filter: 'isFile' }
           ]
       },
       'release-sources' : {
