@@ -57,7 +57,7 @@
     <Content Include="src\lib\store\indexeddb.js" />
     <Content Include="src\lib\store\memory.js" />
     <Content Include="tests\cache-tests.js" />
-    <Content Include="tests\common\CacheOracle.js" />
+    <Content Include="tests\common\CacheVerifier.js" />
     <Content Include="tests\common\common.js" />
     <Content Include="tests\common\Instrument.svc" />
     <Content Include="tests\common\Instrument.js" />
@@ -66,8 +66,8 @@
     <Content Include="tests\common\djstest.js" />
     <Content Include="tests\common\gpo-ie8-tour-disable.reg" />
     <Content Include="tests\common\ObservableHttpClient.js" />
-    <Content Include="tests\common\ODataReadOracle.js" />
-    <Content Include="tests\common\ODataReadOracle.svc" />
+    <Content Include="tests\common\ODataVerifyReader.js" />
+    <Content Include="tests\common\ODataVerifyReader.svc" />
     <Content Include="tests\common\rx.js" />
     <Content Include="tests\common\TestLogger.svc" />
     <Content Include="tests\common\TestSynchronizerClient.js" />
@@ -138,18 +138,23 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.OData.Client, Version=6.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>packages\Microsoft.OData.Client.6.5.0\lib\net40\Microsoft.OData.Client.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.OData.Core">
+    <Reference Include="Microsoft.OData.Core, Version=6.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>packages\Microsoft.OData.Core.6.5.0\lib\portable-net40+sl5+wp8+win8+wpa\Microsoft.OData.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.OData.Edm">
+    <Reference Include="Microsoft.OData.Edm, Version=6.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>packages\Microsoft.OData.Edm.6.5.0\lib\portable-net40+sl5+wp8+win8+wpa\Microsoft.OData.Edm.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.OData.Service, Version=6.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>packages\Microsoft.OData.Service.6.5.0\lib\net40\Microsoft.OData.Service.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Spatial">
+    <Reference Include="Microsoft.Spatial, Version=6.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>packages\Microsoft.Spatial.6.5.0\lib\portable-net40+sl5+wp8+win8+wpa\Microsoft.Spatial.dll</HintPath>
     </Reference>
     <Reference Include="System" />
