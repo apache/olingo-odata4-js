@@ -142,7 +142,7 @@
         };
     };
 
-    var validateFilterResultsAndRequests = function (feed, cache, index, count, predicate, finished, backwards, session, cacheOracle) {
+    var validateFilterResultsAndRequests = function (feed, cache, index, count, predicate, finished, backwards, session, cacheVerifier) {
         /** Runs filter and validates the results and network requests
          * @param {Object} feed - The feed being read from
          * @param {Object} cache - The cache to perform the filter on
@@ -151,7 +151,7 @@
          * @param {Object} predicate - Filter string to append to the feed to validate the predicate
          * @param {Function} finished - Callback function called after data is verified
          * @param {Object} session - Session object to validate the network requests
-         * @param {Object} cacheOracle - cacheOracle object to validate the network requests
+         * @param {Object} cacheVerifier - CacheVerifier object to validate the network requests
          */
 
         if (count < 0) {
@@ -165,10 +165,10 @@
         window.ODataVerifyReader.readJsonAcrossServerPages(feed, function (expectData) {
             if (backwards) {
                 cache.filterBack(index, count, predicate).then(function (actualResults) {
-                    var expectedResults = CacheOracle.getExpectedFilterResults(expectData, index, count, predicate, backwards);
+                    var expectedResults = CacheVerifier.getExpectedFilterResults(expectData, index, count, predicate, backwards);
                     djstest.assertAreEqualDeep(actualResults, expectedResults, "results for " + "filterBack requests");
 
-                    if (session && cacheOracle) {
+                    if (session && cacheVerifier) {
                         // If the count is not satisfied in the expected results, read to the beginning of the collection
                         // otherwise read to the first expected index
                         var firstIndex = 0; 
@@ -177,17 +177,17 @@
                         }
                         // The effective count is the number of items between the first and last index
                         var expectedCount = index - firstIndex + 1;
-                        cacheOracle.verifyRequests(session.requests, session.responses, firstIndex, expectedCount, "filterBack requests", backwards);
+                        cacheVerifier.verifyRequests(session.requests, session.responses, firstIndex, expectedCount, "filterBack requests", backwards);
                     }
                     finished();
                 });
             }
             else {
                 cache.filterForward(index, count, predicate).then(function (actualResults) {
-                    var expectedResults = CacheOracle.getExpectedFilterResults(expectData, index, count, predicate, backwards)
+                    var expectedResults = CacheVerifier.getExpectedFilterResults(expectData, index, count, predicate, backwards)
                     djstest.assertAreEqualDeep(actualResults, expectedResults, "results for " + "filterForward requests");
 
-                    if (session && cacheOracle) {
+                    if (session && cacheVerifier) {
                         if (expectedResults.value.length > 0) {
                             // If the count is not satisfied in the expected results, read to the end of the collection
                             // otherwise read to the last index
@@ -199,7 +199,7 @@
                             var expectedCount = itemsInCollection;
                         }
 
-                        cacheOracle.verifyRequests(session.requests, session.responses, index, expectedCount, "filterForward requests", backwards);
+                        cacheVerifier.verifyRequests(session.requests, session.responses, index, expectedCount, "filterForward requests", backwards);
                     }
                     finished();
                 });
@@ -223,9 +223,9 @@
         var options = { name: "cache" + new Date().valueOf(), source: params.feed, pageSize: params.pageSize, prefetchSize: params.prefetchSize };
 
         var cache = odatajs.cache.createDataCache(options);
-        var cacheOracle = new CacheOracle(params.feed, params.pageSize, itemsInCollection);
+        var cacheVerifier = new CacheVerifier(params.feed, params.pageSize, itemsInCollection);
         var session = this.observableHttpClient.newSession();
-        validateFilterResultsAndRequests(params.feed, cache, params.index, params.count, params.predicate, function () { djstest.destroyCacheAndDone(cache) }, params.backwards, session, cacheOracle);
+        validateFilterResultsAndRequests(params.feed, cache, params.index, params.count, params.predicate, function () { djstest.destroyCacheAndDone(cache) }, params.backwards, session, cacheVerifier);
     };
 
     var filterAfterReadRangeTest = function (params) {
@@ -233,13 +233,13 @@
         var options = { name: "cache" + new Date().valueOf(), source: params.feed, pageSize: params.pageSize, prefetchSize: params.prefetchSize };
 
         var cache = odatajs.cache.createDataCache(options);
-        var cacheOracle = new CacheOracle(params.feed, params.pageSize, itemsInCollection);
+        var cacheVerifier = new CacheVerifier(params.feed, params.pageSize, itemsInCollection);
         var session = this.observableHttpClient.newSession();
 
         cache.readRange(params.skip, params.take).then(function (data) {
-            cacheOracle.verifyRequests(session.requests, session.responses, params.skip, params.take, "readRange requests");
+            cacheVerifier.verifyRequests(session.requests, session.responses, params.skip, params.take, "readRange requests");
             session.clear();
-            validateFilterResultsAndRequests(params.feed, cache, params.index, params.count, params.predicate, function () { djstest.destroyCacheAndDone(cache); }, params.backwards, session, cacheOracle);
+            validateFilterResultsAndRequests(params.feed, cache, params.index, params.count, params.predicate, function () { djstest.destroyCacheAndDone(cache); }, params.backwards, session, cacheVerifier);
         });
     };
 
@@ -267,7 +267,7 @@
         var options = { name: "cache" + new Date().valueOf(), source: params.feed, pageSize: params.pageSize, prefetchSize: params.prefetchSize };
 
         var cache = odatajs.cache.createDataCache(options);
-        var cacheOracle = new CacheOracle(params.feed, params.pageSize, itemsInCollection);
+        var cacheVerifier = new CacheVerifier(params.feed, params.pageSize, itemsInCollection);
         var session = this.observableHttpClient.newSession();
 
         var filterMethod = function (index, count, predicate, backwards) {
@@ -284,8 +284,8 @@
                 validateFilterResultsAndRequests(params.feed, cache, params.firstIndex, params.firstCount, params.predicate,
                 function () {
                     session.clear();
-                    validateFilterResultsAndRequests(params.feed, cache, params.secondIndex, params.secondCount, params.predicate, function () { djstest.destroyCacheAndDone(cache) }, params.backwards, session, cacheOracle);
-                }, params.backwards, session, cacheOracle);
+                    validateFilterResultsAndRequests(params.feed, cache, params.secondIndex, params.secondCount, params.predicate, function () { djstest.destroyCacheAndDone(cache) }, params.backwards, session, cacheVerifier);
+                }, params.backwards, session, cacheVerifier);
             });
     };
 

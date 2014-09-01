@@ -18,7 +18,7 @@
  */
  
 
-// Client for the odata.read oracle service
+// Client for the odata.read verifier service
 
 (function (window, undefined) {
     var jsonMime = "application/json";
@@ -31,7 +31,7 @@
          * @param {String} mimeType - The MIME media type in the Accept header
          */
         var readMethod = getReadMethod(mimeType);
-        oracleRequest("GET", readMethod, typeof url === "string" ? { url: url} : url, mimeType, recognizeDates, function (data) {
+        verifyRequest("GET", readMethod, typeof url === "string" ? { url: url} : url, mimeType, recognizeDates, function (data) {
             success(data);
         });
     };
@@ -43,7 +43,7 @@
          * @param {String} mimeType - The MIME media type in the Accept header
          */
         var readMethod = getReadMethod(mimeType);
-        oracleRequest("GET", readMethod, typeof url === "string" ? { url: url} : url, mimeType, recognizeDates, success);
+        verifyRequest("GET", readMethod, typeof url === "string" ? { url: url} : url, mimeType, recognizeDates, success);
     };
 
     var readLinksEntry = function (url, success) {
@@ -75,7 +75,7 @@
          * @param {String} url - The URL to read the metadata from
          * @param {Function} success - The success callback function
          */
-        oracleRequest("GET", "ReadMetadata", typeof url === "string" ? { url: url} : url, null, null, success);
+        verifyRequest("GET", "ReadMetadata", typeof url === "string" ? { url: url} : url, null, null, success);
     };
 
     var readServiceDocument = function (url, success, mimeType) {
@@ -85,7 +85,7 @@
          * @param {String} mimeType - The MIME type being tested
          */
         var readMethod = getReadMethod(mimeType);
-        oracleRequest("GET", readMethod, typeof url === "string" ? { url: url} : url, mimeType, null, success);
+        verifyRequest("GET", readMethod, typeof url === "string" ? { url: url} : url, mimeType, null, success);
     };
 
     var readJson = function (url, success) {
@@ -147,10 +147,10 @@
         }
     };
 
-    var oracleRequest = function (method, endpoint, data, mimeType, recognizeDates, success) {
-        /** Requests a JSON object from the oracle service, removing WCF-specific artifacts
+    var verifyRequest = function (method, endpoint, data, mimeType, recognizeDates, success) {
+        /** Requests a JSON object from the verifier service, removing WCF-specific artifacts
          * @param {String} method - The HTTP method (GET or POST)
-         * @param {String} endpoint - The oracle endpoint
+         * @param {String} endpoint - The verifier endpoint
          * @param {Object} data - The data to send with the request
          * @param {Function} reviver - The reviver function to run on each deserialized object
          * @param {Function} success - Success callback

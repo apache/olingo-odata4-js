@@ -228,7 +228,7 @@
             OData.jsonHandler.recognizeDates = params.recognizeDates;
             odatajs.oData.read(foodStoreDataService + "/$metadata", function (metadata) {
                 odatajs.oData.read({ requestUri: specialDaysEndpoint, headers: { Accept: params.accept} }, function (data, response) {
-                    // Because our oracle isn't metadata aware, it is not 100% correct, so we will pass in recognizeDates = true
+                    // Because our verifier isn't metadata aware, it is not 100% correct, so we will pass in recognizeDates = true
                     // in all cases and manually fix up the property that was incorrectly converted
                     window.ODataVerifyReader.readFeed(specialDaysEndpoint, function (expectedData) {
                         // Fix up the string property that has a "date-like" string deliberately injected

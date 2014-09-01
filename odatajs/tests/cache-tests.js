@@ -642,13 +642,13 @@
                         var expectedResults = {};
                         if (test.backwards) {
                             cache.filterBack(test.index, test.count, test.predicate).then(function (results) {
-                                expectedResults = CacheOracle.getExpectedFilterResults(expectData, test.index, test.count, test.predicate, test.backwards);
+                                expectedResults = CacheVerifier.getExpectedFilterResults(expectData, test.index, test.count, test.predicate, test.backwards);
                                 djstest.assertAreEqualDeep(results, expectedResults, "results for " + testDescription(test));
                                 doneAfterAllTests();
                             }, filterErrorCallback);
                         } else {
                             cache.filterForward(test.index, test.count, test.predicate).then(function (results) {
-                                expectedResults = CacheOracle.getExpectedFilterResults(expectData, test.index, test.count, test.predicate, test.backwards);
+                                expectedResults = CacheVerifier.getExpectedFilterResults(expectData, test.index, test.count, test.predicate, test.backwards);
                                 djstest.assertAreEqualDeep(results, expectedResults, "results for " + testDescription(test));
                                 doneAfterAllTests();
                             }, filterErrorCallback);

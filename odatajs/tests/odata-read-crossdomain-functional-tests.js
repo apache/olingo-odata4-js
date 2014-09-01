@@ -29,7 +29,7 @@
         */
         
         /// When using IE9 or a non-IE browser, the JSONP support in the library creates objects in a separate IFRAME,
-        /// causing the constructor property to be different to that of objects created by the oracle. This function
+        /// causing the constructor property to be different to that of objects created by the verifier. This function
         /// stringifies and then re-parses the object, which fixes the constructors.
         
         if (!window.ActiveXObject || window.DOMParser) {
@@ -77,7 +77,7 @@
 
                 djstest.log("Reading data over the wire.");
                 odatajs.oData.read(request, function (data, response) {
-                    djstest.log("Verifying data over the wire from Oracle.");
+                    djstest.log("Verifying data over the wire from verifiert.");
                     window.ODataVerifyReader.readFeed(azureOdataFeed, function (expectedData) {
                         data = fixConstructors(data);
                         djstest.assertWithoutMetadata(data, expectedData, "Response data not same as expected");
@@ -92,7 +92,7 @@
             djstest.assertsExpected(1);
             djstest.log("Reading data over the wire.");
             odatajs.oData.read({ requestUri: endPoint, headers: { Accept: handlerAccept} }, function (data, response) {
-                djstest.log("Verifying data over the wire from Oracle.");
+                djstest.log("Verifying data over the wire from verifier.");
                 window.ODataVerifyReader.readEntry(endPoint, function (expectedData) {
                     data = fixConstructors(data);
                     djstest.assertWithoutMetadata(data, expectedData, "Response data not same as expected");

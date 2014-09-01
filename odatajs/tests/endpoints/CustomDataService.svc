@@ -49,7 +49,7 @@ namespace DataJS.Tests
             Name = "Item " + i
         }).ToArray();
 
-        // This uses the same URI template as OData so that the CacheOracle can be reused
+        // This uses the same URI template as OData so that the CacheVerifier can be reused
         [OperationContract]
         [WebGet(UriTemplate = "ReadRange?$skip={skip}&$top={top}")]
         public Stream ReadRange(int skip, int top)

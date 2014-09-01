@@ -42,7 +42,7 @@ namespace DataJS.Tests
     using System.Web.Script.Serialization;
 
     /// <summary>
-    /// Oracle for the OData.read library function
+    /// Verifier for the OData.read library function
     /// </summary>
     [ServiceContract]
     [ServiceBehavior(IncludeExceptionDetailInFaults = true)]

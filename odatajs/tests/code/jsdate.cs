@@ -18,7 +18,7 @@
  */
 
 /// <summary>
-/// The oracle's representation of a Javascript date object as deserialized by the library
+/// The verifiers's representation of a Javascript date object as deserialized by the library
 /// </summary>
 
 namespace DataJS.Tests

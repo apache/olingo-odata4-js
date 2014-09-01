@@ -60,8 +60,8 @@
         var that = this;
         var storeCleanup = [];
 
-        $.each(CacheOracle.mechanisms, function(_, mechanism) {
-            if (CacheOracle.isMechanismAvailable(mechanism)) {
+        $.each(CacheVerifier.mechanisms, function(_, mechanism) {
+            if (CacheVerifier.isMechanismAvailable(mechanism)) {
                 storeCleanup.push(function(done) {
                     if (storageMechanisms[mechanism]) {
                         storageMechanisms[mechanism].cleanup.call(that, done);
@@ -118,7 +118,7 @@
     });
 
     $.each(["dom", "indexeddb"], function (_, mechanism) {
-        if (CacheOracle.isMechanismAvailable(mechanism)) {
+        if (CacheVerifier.isMechanismAvailable(mechanism)) {
             $.each([-1, 10 * 1024 * 1024, 1024 * 10248], function (_, cacheSize) {
                 var prefetchParameters = { mechanism: mechanism, feed: largeCollectionFeed, skip: 0, take: 5, pageSize: 1024, prefetchSize: -1, cacheSize: cacheSize };
                 djstest.addTest(function (params) {
@@ -138,12 +138,12 @@
                         djstest.done();
                     };
 
-                    var cacheOracle = new CacheOracle(params.feed, params.pageSize, itemsInCollection);
+                    var cacheVerifier = new CacheVerifier(params.feed, params.pageSize, itemsInCollection);
                     var session = this.observableHttpClient.newSession();
 
                     cache.readRange(params.skip, params.take).then(function (data) {
                         var expectedRangeUrl = params.feed + "?$skip=" + params.skip + "&$top=" + params.take;
-                        cacheOracle.verifyRequests(session.requests, session.responses, params.skip, params.take, "largeCollection requests with prefetch", false, true);
+                        cacheVerifier.verifyRequests(session.requests, session.responses, params.skip, params.take, "largeCollection requests with prefetch", false, true);
                         window.ODataVerifyReader.readJsonAcrossServerPages(expectedRangeUrl, function (expectedData) {
                             djstest.assertAreEqualDeep(data, expectedData, "Verify response data");
                         });
@@ -164,12 +164,12 @@
                         var cache = odatajs.cache.createDataCache(options);
                         this.caches.push({ name: options.name, cache: cache });
 
-                        var cacheOracle = new CacheOracle(params.feed, params.pageSize, itemsInCollection);
+                        var cacheVerifier = new CacheVerifier(params.feed, params.pageSize, itemsInCollection);
                         var session = this.observableHttpClient.newSession();
 
                         cache.readRange(params.skip, params.take).then(function (data) {
                             var expectedRangeUrl = params.feed + "?$skip=" + params.skip + "&$top=" + params.take;
-                            cacheOracle.verifyRequests(session.requests, session.responses, params.skip, params.take, "largeCollection requests without prefetch", false, false);
+                            cacheVerifier.verifyRequests(session.requests, session.responses, params.skip, params.take, "largeCollection requests without prefetch", false, false);
                             window.ODataVerifyReader.readJsonAcrossServerPages(expectedRangeUrl, function (expectedData) {
                                 djstest.assertAreEqualDeep(data, expectedData, "Verify response data");
                                 djstest.done();

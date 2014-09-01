@@ -187,9 +187,9 @@
 
         var cache = this.createAndAddCache(options);
         var session = typeof params.source === "string" ? this.observableHttpClient.newSession() : new Session(params.source);
-        var cacheOracle = new CacheOracle(params.source, params.pageSize, itemsInCollection, params.cacheSize);
+        var cacheVerifier = new CacheVerifier(params.source, params.pageSize, itemsInCollection, params.cacheSize);
         cache.readRange(params.skip, params.take).then(function (data) {
-            cacheOracle.verifyRequests(session.requests, session.responses, params.skip, params.take, "readRange requests");
+            cacheVerifier.verifyRequests(session.requests, session.responses, params.skip, params.take, "readRange requests");
             validateExpectedRange(cache, data, params.source, params.skip, params.take, function () {
                 djstest.destroyCacheAndDone(cache);
             });
@@ -223,11 +223,11 @@
         djstest.assertsExpected(4);
         var options = { name: "cache" + new Date().valueOf(), source: params.source, pageSize: params.pageSize, prefetchSize: params.prefetchSize, cacheSize: params.cacheSize };
 
-        var cacheOracle = new CacheOracle(params.source, params.pageSize, itemsInCollection, params.cacheSize);
+        var cacheVerifier = new CacheVerifier(params.source, params.pageSize, itemsInCollection, params.cacheSize);
         var secondRead = function () {
             session.clear();
             cache.readRange(params.secondSkip, params.secondTake).then(function (data) {
-                cacheOracle.verifyRequests(session.requests, session.responses, params.secondSkip, params.secondTake, "Second readRange requests");
+                cacheVerifier.verifyRequests(session.requests, session.responses, params.secondSkip, params.secondTake, "Second readRange requests");
                 validateExpectedRange(cache, data, params.source, params.secondSkip, params.secondTake, djstest.done);
             }, makeUnexpectedErrorHandler(cache));
         };
@@ -235,11 +235,11 @@
         var cache = this.createAndAddCache(options);
         var session = typeof params.source === "string" ? this.observableHttpClient.newSession() : new Session(params.source);
         cache.readRange(params.firstSkip, params.firstTake).then(function (data) {
-            cacheOracle.verifyRequests(session.requests, session.responses, params.firstSkip, params.firstTake, "First readRange requests");
+            cacheVerifier.verifyRequests(session.requests, session.responses, params.firstSkip, params.firstTake, "First readRange requests");
             validateExpectedRange(cache, data, params.source, params.firstSkip, params.firstTake, function () {
                 if (params.destroyCacheBetweenReads === true) {
                     cache.clear().then(function () {
-                        cacheOracle.clear();
+                        cacheVerifier.clear();
                         secondRead();
                     }, function (err) {
                         djstest.fail("Error destroying the cache: " + djstest.toString(err));
@@ -265,16 +265,16 @@
 
         var cache = this.createAndAddCache(options);
         var session = typeof params.source === "string" ? this.observableHttpClient.newSession() : new Session(params.source);
-        var cacheOracle = new CacheOracle(params.source, params.pageSize, itemsInCollection, params.cacheSize);
+        var cacheVerifier = new CacheVerifier(params.source, params.pageSize, itemsInCollection, params.cacheSize);
 
         cache.readRange(params.skip, params.take).then(function (data) {
-            cacheOracle.verifyRequests(session.requests, session.responses, params.skip, params.take, "readRange requests");
+            cacheVerifier.verifyRequests(session.requests, session.responses, params.skip, params.take, "readRange requests");
             session.clear();
         }, makeUnexpectedErrorHandler(cache));
 
         cache.onidle = function () {
             var prefetchSize = params.prefetchSize < 0 ? itemsInCollection : params.prefetchSize;
-            cacheOracle.verifyRequests(session.requests, session.responses, params.skip + params.take, prefetchSize, "prefetch requests", false, true);
+            cacheVerifier.verifyRequests(session.requests, session.responses, params.skip + params.take, prefetchSize, "prefetch requests", false, true);
             cache.onidle = false;
             djstest.destroyCacheAndDone(cache);
         };
@@ -307,8 +307,8 @@
         var that = this;
         var storeCleanup = [];
 
-        $.each(CacheOracle.mechanisms, function (_, mechanism) {
-            if (CacheOracle.isMechanismAvailable(mechanism)) {
+        $.each(CacheVerifier.mechanisms, function (_, mechanism) {
+            if (CacheVerifier.isMechanismAvailable(mechanism)) {
                 storeCleanup.push(function (done) {
                     if (storageMechanisms[mechanism]) {
                         storageMechanisms[mechanism].cleanup.call(that, done);
@@ -379,9 +379,9 @@
         }
     });
 
-    $.each(CacheOracle.mechanisms, function (_, mechanism) {
+    $.each(CacheVerifier.mechanisms, function (_, mechanism) {
         var parameters = { mechanism: mechanism, source: sources[1].source, take: 5, skip: 0, pageSize: 5, prefetchSize: 5 };
-        if (CacheOracle.isMechanismAvailable(mechanism)) {
+        if (CacheVerifier.isMechanismAvailable(mechanism)) {
             djstest.addTest(dataCacheSingleReadRangeTest, "Specified mechanism: " + parameters.mechanism + createSingleReadTestName(parameters), parameters);
         }
         else {

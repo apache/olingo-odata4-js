@@ -90,8 +90,8 @@
         };
     };
 
-    $.each(CacheOracle.mechanisms, function (_, mechanism) {
-        if (mechanism !== "best" && CacheOracle.isMechanismAvailable(mechanism)) {
+    $.each(CacheVerifier.mechanisms, function (_, mechanism) {
+        if (mechanism !== "best" && CacheVerifier.isMechanismAvailable(mechanism)) {
             $.each(feeds, function (_, feed) {
                 djstest.addTest(cacheReadRangeWallClockTest(2, 1000, mechanism, feed.uri, 5, 0, function () {
                     return { index: 0, count: 5 };
