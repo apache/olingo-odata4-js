@@ -144,7 +144,7 @@
                     cache.readRange(params.skip, params.take).then(function (data) {
                         var expectedRangeUrl = params.feed + "?$skip=" + params.skip + "&$top=" + params.take;
                         cacheOracle.verifyRequests(session.requests, session.responses, params.skip, params.take, "largeCollection requests with prefetch", false, true);
-                        window.ODataReadOracle.readJsonAcrossServerPages(expectedRangeUrl, function (expectedData) {
+                        window.ODataVerifyReader.readJsonAcrossServerPages(expectedRangeUrl, function (expectedData) {
                             djstest.assertAreEqualDeep(data, expectedData, "Verify response data");
                         });
                     }, function (err) {
@@ -170,7 +170,7 @@
                         cache.readRange(params.skip, params.take).then(function (data) {
                             var expectedRangeUrl = params.feed + "?$skip=" + params.skip + "&$top=" + params.take;
                             cacheOracle.verifyRequests(session.requests, session.responses, params.skip, params.take, "largeCollection requests without prefetch", false, false);
-                            window.ODataReadOracle.readJsonAcrossServerPages(expectedRangeUrl, function (expectedData) {
+                            window.ODataVerifyReader.readJsonAcrossServerPages(expectedRangeUrl, function (expectedData) {
                                 djstest.assertAreEqualDeep(data, expectedData, "Verify response data");
                                 djstest.done();
                             });

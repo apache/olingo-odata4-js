@@ -171,7 +171,7 @@
                 djstest.assertsExpected(1);
                 odatajs.oData.read({ requestUri: params.linksFeed, headers: headers },
                     function (data, response) {
-                        window.ODataReadOracle.readLinksFeed(params.linksFeed,
+                        window.ODataVerifyReader.readLinksFeed(params.linksFeed,
                             function (expectedData) {
                                 djstest.assertAreEqualDeep(data, expectedData, "Response data not same as expected");
                                 djstest.done();
@@ -186,7 +186,7 @@
                 djstest.assertsExpected(1);
                 odatajs.oData.read({ requestUri: params.linksEntry, headers: headers },
                     function (data, response) {
-                        window.ODataReadOracle.readLinksEntry(params.linksEntry,
+                        window.ODataVerifyReader.readLinksEntry(params.linksEntry,
                             function (expectedData) {
                                 djstest.assertAreEqualDeep(data, expectedData, "Response data not same as expected");
                                 djstest.done();
@@ -210,7 +210,7 @@
                 odatajs.oData.request(request, function (data, response) {
                     var httpOperation = request.method + " " + request.requestUri;
                     djstest.assertAreEqual(response.statusCode, httpStatusCode.noContent, "Verify response code: " + httpOperation);
-                    ODataReadOracle.readLinksEntry(request.requestUri, function (actualData) {
+                    ODataVerifyReader.readLinksEntry(request.requestUri, function (actualData) {
                         if (actualData && actualData["@odata.context"]) {
                             delete actualData["@odata.context"];
                         }
@@ -260,7 +260,7 @@
                     djstest.assertAreEqual(response.statusCode, httpStatusCode.noContent, "Verify response code: " + httpOperation);
 
                     odatajs.oData.read(request.requestUri, function (data, response) {
-                        ODataReadOracle.readLinksFeed(request.requestUri, function (actualData) {
+                        ODataVerifyReader.readLinksFeed(request.requestUri, function (actualData) {
                             djstest.assertAreEqualDeep(actualData, response.data, "Verify updated links entry against the request: " + httpOperation);
                             deleteAndVerify();
                         });

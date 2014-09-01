@@ -41,7 +41,7 @@
         var httpOperation = request.method + " " + request.requestUri;
         odatajs.oData.request(request, function (data, response) {
             djstest.assertAreEqual(response.statusCode, httpStatusCode.created, "Verify response code: " + httpOperation);
-            ODataReadOracle.readJson(data.__metadata.uri, function (expectedData) {
+            ODataVerifyReader.readJson(data.__metadata.uri, function (expectedData) {
                 djstest.assertAreEqualDeep(response.data, expectedData, "Verify new entry against response: " + httpOperation);
                 done();
             }, request.headers.Accept);
@@ -52,7 +52,7 @@
         var httpOperation = request.method + " " + request.requestUri;
         odatajs.oData.request(request, function (data, response) {
             djstest.assertAreEqual(response.statusCode, httpStatusCode.noContent, "Verify response code: " + httpOperation);
-            ODataReadOracle.readJson(request.requestUri, function (actualData) {
+            ODataVerifyReader.readJson(request.requestUri, function (actualData) {
                 djstest.assertAreEqualDeep(actualData, request.data, "Verify updated entry: " + httpOperation);
                 done();
             }, request.headers.Accept);
@@ -61,10 +61,10 @@
 
     var verifyMerge = function (request, done) {
         var httpOperation = request.method + " " + request.requestUri;
-        ODataReadOracle.readJson(request.requestUri, function (originalData) {
+        ODataVerifyReader.readJson(request.requestUri, function (originalData) {
             odatajs.oData.request(request, function (data, response) {
                 djstest.assertAreEqual(response.statusCode, httpStatusCode.noContent, "Verify response code");
-                ODataReadOracle.readJson(request.requestUri, function (actualData) {
+                ODataVerifyReader.readJson(request.requestUri, function (actualData) {
                     // Merge the original data with the updated data to get the expected data
                     var expectedData = $.extend(true, {}, originalData, request.data);
                     djstest.assertAreEqualDeep(actualData, expectedData, "Verify merged data");
@@ -323,7 +323,7 @@
                         function () {
                             odatajs.oData.read({ requestUri: foodsFeed + "(216)", headers: { Accept: mimeType} },
                                 function (data, response) {
-                                    ODataReadOracle.readJson(foodsFeed + "(216)",
+                                    ODataVerifyReader.readJson(foodsFeed + "(216)",
                                         function (expectedData) {
                                             djstest.assertAreEqualDeep(data, expectedData, "Response data not same as expected");
                                             djstest.done();
@@ -347,7 +347,7 @@
                         function () { 
                             odatajs.oData.read({ requestUri: categoriesFeed + "(81)", headers: { Accept: mimeType} }, 
                                 function (data, response) {
-                                    ODataReadOracle.readJson(categoriesFeed + "(81)",
+                                    ODataVerifyReader.readJson(categoriesFeed + "(81)",
                                         function (expectedData) {
                                             djstest.assertAreEqualDeep(data, expectedData, "Response data not same as expected");
                                             djstest.done();
@@ -376,7 +376,7 @@
                         function () {
                             odatajs.oData.read({ requestUri: categoriesFeed + "(81)", headers: { Accept: mimeType} },
                                 function (data, response) {
-                                    ODataReadOracle.readJson(categoriesFeed + "(81)",
+                                    ODataVerifyReader.readJson(categoriesFeed + "(81)",
                                         function (expectedData) {
                                             djstest.assertAreEqualDeep(data, expectedData, "Response data not same as expected");
                                             djstest.done();

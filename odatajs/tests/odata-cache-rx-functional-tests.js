@@ -75,7 +75,7 @@
                     var options = { name: "cache" + new Date().valueOf(), source: params.feedUri, pageSize: params.pageSize, prefetchSize: 0 };
                     var cache = odatajs.cache.createDataCache(options);
 
-                    ODataReadOracle.readJsonAcrossServerPages(params.feedUri, function (collection) {
+                    ODataVerifyReader.readJsonAcrossServerPages(params.feedUri, function (collection) {
                         assertObservables(params.operator(cache.toObservable()), params.operator(window.Rx.Observable.FromArray(collection.value)), function () {
                             djstest.destroyCacheAndDone(cache);
                         });

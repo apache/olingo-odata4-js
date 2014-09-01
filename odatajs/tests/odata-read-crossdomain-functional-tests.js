@@ -78,7 +78,7 @@
                 djstest.log("Reading data over the wire.");
                 odatajs.oData.read(request, function (data, response) {
                     djstest.log("Verifying data over the wire from Oracle.");
-                    window.ODataReadOracle.readFeed(azureOdataFeed, function (expectedData) {
+                    window.ODataVerifyReader.readFeed(azureOdataFeed, function (expectedData) {
                         data = fixConstructors(data);
                         djstest.assertWithoutMetadata(data, expectedData, "Response data not same as expected");
                         djstest.done();
@@ -93,7 +93,7 @@
             djstest.log("Reading data over the wire.");
             odatajs.oData.read({ requestUri: endPoint, headers: { Accept: handlerAccept} }, function (data, response) {
                 djstest.log("Verifying data over the wire from Oracle.");
-                window.ODataReadOracle.readEntry(endPoint, function (expectedData) {
+                window.ODataVerifyReader.readEntry(endPoint, function (expectedData) {
                     data = fixConstructors(data);
                     djstest.assertWithoutMetadata(data, expectedData, "Response data not same as expected");
                     djstest.done();
@@ -127,7 +127,7 @@
 
     var validateExpectedRange = function (cache, data, feed, skipValue, takeValue) {
         var expectedRangeUrl = feed + "?$skip=" + skipValue + "&$top=" + takeValue;
-        window.ODataReadOracle.readFeed(expectedRangeUrl, function (expectedData) {
+        window.ODataVerifyReader.readFeed(expectedRangeUrl, function (expectedData) {
             if (expectedData.results) {
                 expectedData = expectedData.results;
             }

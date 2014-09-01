@@ -155,7 +155,7 @@
          * @param {Function} reviver - The reviver function to run on each deserialized object
          * @param {Function} success - Success callback
          */
-        var url = "./common/ODataReadOracle.svc/" + endpoint;
+        var url = "./common/ODataVerifyReader.svc/" + endpoint;
         if (mimeType) {
             data.mimeType = mimeType;
         }
@@ -188,7 +188,7 @@
         }
     };
 
-    window.ODataReadOracle = {
+    window.ODataVerifyReader = {
         readFeed: readFeed,
         readEntry: readEntry,
         readLinksEntry: readLinksEntry,

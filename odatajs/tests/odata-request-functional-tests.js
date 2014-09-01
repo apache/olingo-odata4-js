@@ -51,7 +51,7 @@
             djstest.log("Status code:" + response.statusCode);
             djstest.assertAreEqual(response.statusCode, httpStatusCode.created, "Verify response code: " + httpOperation);
             djstest.log("Uri:" + request.requestUri);
-            ODataReadOracle.readEntry(response.headers["Location"], function (expectedData) {
+            ODataVerifyReader.readEntry(response.headers["Location"], function (expectedData) {
                 djstest.assertAreEqualDeep(response.data, expectedData, "Verify new entry against response: " + httpOperation);
                 done();
             }, request.headers.Accept);
@@ -65,7 +65,7 @@
             djstest.log("Status code:" + response.statusCode);
             djstest.assertAreEqual(response.statusCode, httpStatusCode.noContent, "Verify response code: " + httpOperation);
             djstest.log("Uri:" + request.requestUri);
-            ODataReadOracle.readEntry(request.requestUri, function(actualData) {
+            ODataVerifyReader.readEntry(request.requestUri, function(actualData) {
                 var requestData = tryRemoveOdataType(request.data);
                 djstest.assertAreEqualDeep(subset(actualData, requestData), requestData, "Verify updated entry: " + httpOperation);
                 done();
@@ -76,12 +76,12 @@
     var verifyPatch = function (request, done) {
         var httpOperation = request.method + " " + request.requestUri;
         djstest.log(httpOperation);
-        ODataReadOracle.readEntry(request.requestUri, function (originalData) {
+        ODataVerifyReader.readEntry(request.requestUri, function (originalData) {
             odatajs.oData.request(request, function (data, response) {
                 djstest.log("Status code:" + response.statusCode);
                 djstest.assertAreEqual(response.statusCode, httpStatusCode.noContent, "Verify response code");
                 djstest.log("Uri:" + request.requestUri);
-                ODataReadOracle.readEntry(request.requestUri, function (actualData) {
+                ODataVerifyReader.readEntry(request.requestUri, function (actualData) {
 
                     // Merge the original data with the updated data to get the expected data
                     var expectedData = $.extend(true, {}, originalData, request.data);
@@ -256,7 +256,7 @@
 
                     djstest.assertsExpected(3);
                     verifyRequest(request, function () {
-                        ODataReadOracle.readEntry(foodsFeed + "(" + newFood.FoodID + ")", function (actualData) {
+                        ODataVerifyReader.readEntry(foodsFeed + "(" + newFood.FoodID + ")", function (actualData) {
                             djstest.assertAreEqual(actualData.Name, newFood.Name, "Verify inline entities were added");
                             djstest.done();
                         }, headers ? headers.Accept : undefined);
@@ -278,7 +278,7 @@
 
                     djstest.assertsExpected(3);
                     verifyRequest(request, function () {
-                        ODataReadOracle.readEntry(categoriesFeed + "(" + request.data.Category.CategoryID + ")", function (actualData) {
+                        ODataVerifyReader.readEntry(categoriesFeed + "(" + request.data.Category.CategoryID + ")", function (actualData) {
                             djstest.assertAreEqual(actualData.Name, request.data.Category.Name, "Verify inline entities were added");
                             djstest.done();
                         }, headers ? headers.Accept : undefined);

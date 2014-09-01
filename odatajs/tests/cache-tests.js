@@ -635,7 +635,7 @@
             return result;
         };
 
-        ODataReadOracle.readJsonAcrossServerPages(foodsFeed, function (expectData) {
+        ODataVerifyReader.readJsonAcrossServerPages(foodsFeed, function (expectData) {
             $.each(tests, function (_, test) {
                 createNewCache(options).then(function (cache) {
                     try {

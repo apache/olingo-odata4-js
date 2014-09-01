@@ -78,7 +78,7 @@
             djstest.assertsExpected(1);
             odatajs.oData.read({ requestUri: feed, headers: { Accept: handlerAccept} },
                     function (data, response) {
-                        window.ODataReadOracle.readFeed(feed,
+                        window.ODataVerifyReader.readFeed(feed,
                             function (expectedData) {
                                 djstest.assertAreEqualDeep(data, expectedData, "Response data not same as expected");
                                 djstest.done();
@@ -94,7 +94,7 @@
             djstest.assertsExpected(1);
             odatajs.oData.read({ requestUri: endPoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
-                        window.ODataReadOracle.readEntry(endPoint,
+                        window.ODataVerifyReader.readEntry(endPoint,
                             function (expectedData) {
                                 djstest.assertAreEqualDeep(data, expectedData, "Response data not same as expected");
                                 djstest.done();
@@ -110,7 +110,7 @@
             djstest.assertsExpected(1);
             odatajs.oData.read({ requestUri: "./endpoints/FoodStoreDataServiceV4.svc/Foods(1)", headers: { Accept: handlerAccept} },
                 function (data, response) {
-                    window.ODataReadOracle.readEntry(endPoint,
+                    window.ODataVerifyReader.readEntry(endPoint,
                         function (expectedData) {
                             djstest.assertAreEqualDeep(data, expectedData, "Response data not same as expected");
                             djstest.done();
@@ -125,7 +125,7 @@
             djstest.assertsExpected(1);
             odatajs.oData.read({ requestUri: endPoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
-                        window.ODataReadOracle.readEntry(endPoint,
+                        window.ODataVerifyReader.readEntry(endPoint,
                             function (expectedData) {
                                 djstest.assertAreEqualDeep(data, expectedData, "Response data not same as expected");
                                 djstest.done();
@@ -141,7 +141,7 @@
             djstest.assertsExpected(1);
             odatajs.oData.read({ requestUri: endPoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
-                        window.ODataReadOracle.readEntry(endPoint,
+                        window.ODataVerifyReader.readEntry(endPoint,
                             function (expectedData) {
                                 djstest.assertAreEqualDeep(data, expectedData, "Response data not same as expected");
                                 djstest.done();
@@ -157,7 +157,7 @@
             var endPoint = feed + "(4)";
             odatajs.oData.read({ requestUri: endPoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
-                        window.ODataReadOracle.readEntry(endPoint,
+                        window.ODataVerifyReader.readEntry(endPoint,
                             function (expectedData) {
                                 djstest.assertAreEqualDeep(data, expectedData, "Response data not same as expected");
                                 djstest.done();
@@ -174,7 +174,7 @@
             var endPoint = feed + "(5)";
             odatajs.oData.read({ requestUri: endPoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
-                        window.ODataReadOracle.readEntry(endPoint,
+                        window.ODataVerifyReader.readEntry(endPoint,
                             function (expectedData) {
                                 djstest.assertAreEqualDeep(data, expectedData, "Response data not same as expected");
                                 djstest.done();
@@ -190,7 +190,7 @@
             djstest.assertsExpected(2);
             odatajs.oData.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
-                        window.ODataReadOracle.readEntry(endpoint,
+                        window.ODataVerifyReader.readEntry(endpoint,
                             function (expectedData) {
                                 djstest.assertAreEqualDeep(data.value, expectedData.value, "Verify inline feed");
                                 djstest.assertAreEqualDeep(data, expectedData, "Verify entry");
@@ -207,7 +207,7 @@
             djstest.assertsExpected(2);
             odatajs.oData.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
-                        window.ODataReadOracle.readFeed(endpoint,
+                        window.ODataVerifyReader.readFeed(endpoint,
                             function (expectedData) {
                                 djstest.assertAreEqualDeep(data.value, expectedData.value, "Verify inline feed");
                                 djstest.assertAreEqualDeep(data, expectedData, "Verify feed");
@@ -224,7 +224,7 @@
             djstest.assertsExpected(2);
             odatajs.oData.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
-                        window.ODataReadOracle.readEntry(endpoint,
+                        window.ODataVerifyReader.readEntry(endpoint,
                             function (expectedData) {
                                 djstest.assertAreEqualDeep(data.Category, expectedData.Category, "Verify inline entry");
                                 djstest.assertAreEqualDeep(data, expectedData, "Verify entry");
@@ -241,7 +241,7 @@
             djstest.assertsExpected(2);
             odatajs.oData.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
-                        window.ODataReadOracle.readFeed(endpoint,
+                        window.ODataVerifyReader.readFeed(endpoint,
                             function (expectedData) {
                                 djstest.assertAreEqualDeep(data.value, expectedData.value, "Verify inline data");
                                 djstest.assertAreEqualDeep(data, expectedData, "Verify feed");
@@ -257,7 +257,7 @@
             djstest.assertsExpected(2);
             odatajs.oData.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
-                        window.ODataReadOracle.readFeed(endpoint,
+                        window.ODataVerifyReader.readFeed(endpoint,
                             function (expectedData) {
                                 djstest.assertAreEqual(data["@odata.count"], expectedData["@odata.count"], "Verify count in response data");
                                 djstest.assertAreEqualDeep(data, expectedData, "Verify feed");
@@ -274,7 +274,7 @@
             djstest.assertsExpected(1);
             odatajs.oData.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
                 function (data, response) {
-                    window.ODataReadOracle.readEntry(endpoint,
+                    window.ODataVerifyReader.readEntry(endpoint,
                         function (expectedData) {
                             djstest.assertAreEqualDeep(data, expectedData, "Verify select result");
                             djstest.done();
@@ -289,7 +289,7 @@
             djstest.assertsExpected(1);
             odatajs.oData.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
                 function (data, response) {
-                    window.ODataReadOracle.readFeed(endpoint,
+                    window.ODataVerifyReader.readFeed(endpoint,
                         function (expectedData) {
                             djstest.assertAreEqualDeep(data, expectedData, "Verify select result");
                             djstest.done();
@@ -304,7 +304,7 @@
             djstest.assertsExpected(1);
             odatajs.oData.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
                 function (data, response) {
-                    window.ODataReadOracle.readEntry(endpoint,
+                    window.ODataVerifyReader.readEntry(endpoint,
                         function (expectedData) {
                             djstest.assertAreEqualDeep(data, expectedData, "Verify select result");
                             djstest.done();
@@ -319,7 +319,7 @@
             djstest.assertsExpected(1);
             odatajs.oData.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
-                        window.ODataReadOracle.readFeed(endpoint,
+                        window.ODataVerifyReader.readFeed(endpoint,
                             function (expectedData) {
                                 djstest.assertAreEqualDeep(data, expectedData, "Verify response data");
                                 djstest.done();
@@ -333,7 +333,7 @@
             djstest.assertsExpected(2);
             odatajs.oData.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
-                        window.ODataReadOracle.readFeed(endpoint,
+                        window.ODataVerifyReader.readFeed(endpoint,
                             function (expectedData) {
                                 djstest.assertAreEqual(data["@odata.context"], expectedData["@odata.context"], "Verify count in response data");
                                 djstest.assertAreEqualDeep(data, expectedData, "Verify feed");
@@ -348,7 +348,7 @@
             djstest.assertsExpected(1);
             odatajs.oData.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
-                        window.ODataReadOracle.readEntry(endpoint,
+                        window.ODataVerifyReader.readEntry(endpoint,
                             function (expectedData) {
                                 djstest.assertAreEqualDeep(data, expectedData, "Verify entry");
                                 djstest.done();
@@ -362,7 +362,7 @@
             djstest.assertsExpected(1);
             odatajs.oData.read({ requestUri: endpoint, headers: { Accept: handlerAccept} },
                     function (data, response) {
-                        window.ODataReadOracle.readEntry(endpoint,
+                        window.ODataVerifyReader.readEntry(endpoint,
                             function (expectedData) {
                                 djstest.assertAreEqualDeep(data, expectedData, "Verify entry");
                                 djstest.done();
@@ -435,7 +435,7 @@
             var endpoint = "./endpoints/BasicAuthDataService.svc/Customers";
             djstest.assertsExpected(1);
             odatajs.oData.read({ requestUri: endpoint, headers: { Accept: handlerAccept }, user: user, password: password }, function (data, response) {
-                window.ODataReadOracle.readFeed({ url: endpoint, user: user, password: password }, function (expectedData) {
+                window.ODataVerifyReader.readFeed({ url: endpoint, user: user, password: password }, function (expectedData) {
                     djstest.assertAreEqualDeep(data, expectedData, "Response data not same as expected");
                     djstest.done();
                 }, handlerAccept);
@@ -446,7 +446,7 @@
             var endpoint = "./endpoints/BasicAuthDataService.svc/Customers(1)";
             djstest.assertsExpected(1);
             odatajs.oData.read({ requestUri: endpoint, headers: { Accept: handlerAccept }, user: user, password: password }, function (data, response) {
-                window.ODataReadOracle.readEntry({ url: endpoint, user: user, password: password }, function (expectedData) {
+                window.ODataVerifyReader.readEntry({ url: endpoint, user: user, password: password }, function (expectedData) {
                     djstest.assertAreEqualDeep(data, expectedData, "Response data not same as expected");
                     djstest.done();
                 }, handlerAccept);
@@ -467,7 +467,7 @@
                 djstest.assertsExpected(1);
                 odatajs.oData.read({ requestUri: params.serviceName, headers: { Accept: params.handlerAccept} },
                         function (data, response) {
-                            window.ODataReadOracle.readServiceDocument(serviceName,
+                            window.ODataVerifyReader.readServiceDocument(serviceName,
                                 function (expectedData) {
                                     djstest.assertAreEqualDeep(data, expectedData, "Response data not same as expected");
                                     djstest.done();
@@ -507,7 +507,7 @@
                 var endPoint = params.serviceName + "$metadata";
                 odatajs.oData.read({ requestUri: endPoint, headers: { Accept: params.handlerAccept} },
                         function (data, response) {
-                            window.ODataReadOracle.readMetadata(endPoint,
+                            window.ODataVerifyReader.readMetadata(endPoint,
                                 function (expectedData) {
                                     djstest.assertAreEqualDeep(data, expectedData, "Response data not same as expected");
                                     djstest.done();
@@ -560,7 +560,7 @@
 
         odatajs.oData.read({ requestUri: csdlFile, headers: { Accept: "text/xml"} },
             function (data) {
-                window.ODataReadOracle.readMetadata(csdlFile,
+                window.ODataVerifyReader.readMetadata(csdlFile,
                     function (expectedData) {
                         djstest.assertAreEqualDeep(data, expectedData, "Response data not same as expected");
                         djstest.done();

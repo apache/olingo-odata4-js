@@ -18,7 +18,7 @@
 */
 
 <%@ ServiceHost Language="C#" Debug="true" Factory="System.ServiceModel.Activation.WebScriptServiceHostFactory"
-    Service="DataJS.Tests.ODataReadOracle" %>
+    Service="DataJS.Tests.ODataVerifyReader" %>
 
 //uncomment this line to debug JSON serialization.
 //#define DEBUG_SERIALIZATION
@@ -47,7 +47,7 @@ namespace DataJS.Tests
     [ServiceContract]
     [ServiceBehavior(IncludeExceptionDetailInFaults = true)]
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
-    public class ODataReadOracle
+    public class ODataVerifyReader
     {
         const string jsonlightMediaType = "application/json";
 

@@ -53,7 +53,7 @@
     var verifyBatchResponses = function (batchRequests, elementTypes, serviceRoot, batchResponses, done) {
         forEachAsync(batchRequests, function (index, batchRequest, doneOne) {
             if (batchRequest.requestUri) {
-                var readFeedOrEntry = elementTypes[index] == "feed" ? ODataReadOracle.readFeed : ODataReadOracle.readEntry;
+                var readFeedOrEntry = elementTypes[index] == "feed" ? ODataVerifyReader.readFeed : ODataVerifyReader.readEntry;
                 djstest.assertAreEqual(batchResponses[index].statusCode, httpStatusCode.ok, "Verify response code for: GET " + batchRequest.requestUri);
                 readFeedOrEntry(serviceRoot + "/" + batchRequest.requestUri, function (expectedData) {
                     djstest.assertAreEqualDeep(batchResponses[index].data, expectedData, "Verify data for: GET " + batchRequest.requestUri);
@@ -73,7 +73,7 @@
 
             if (changeRequest.method == "POST") {
                 djstest.assertAreEqual(changeResponse.statusCode, httpStatusCode.created, "Verify response code for: " + httpOperation);
-                ODataReadOracle.readEntry(changeResponse.headers["Location"], function (expectedData) {
+                ODataVerifyReader.readEntry(changeResponse.headers["Location"], function (expectedData) {
                     djstest.assertAreEqualDeep(changeResponse.data, expectedData, "Verify response data for: " + httpOperation);
                     doneOne();
                 }, changeRequest.headers.Accept);

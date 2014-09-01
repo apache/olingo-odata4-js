@@ -134,7 +134,7 @@
                 OData.defaultMetadata.push(metadata);
                 odatajs.oData.read({ requestUri: entryUri, headers: acceptHeaders }, function (data, response) {
                     djstest.assertAreEqual(response.statusCode, httpStatusCode.ok, "Verify response code");
-                    ODataReadOracle.readJson(entryUri, function (expectedData) {
+                    ODataVerifyReader.readJson(entryUri, function (expectedData) {
                         djstest.assertWithoutMetadata(data, expectedData, "Verify data");
                         djstest.done();
                     })
@@ -163,7 +163,7 @@
                     OData.defaultMetadata.push(metadata);
                     odatajs.oData.read({ requestUri: entryUri, headers: acceptHeaders }, function (data, response) {
                         djstest.assertAreEqual(response.statusCode, httpStatusCode.ok, "Verify response code");
-                        ODataReadOracle.readJson(entryUri, function (expectedData) {
+                        ODataVerifyReader.readJson(entryUri, function (expectedData) {
                             djstest.assertWithoutMetadata(data, expectedData, "Verify data");
                             djstest.done();
                         })
@@ -177,7 +177,7 @@
                 getMetadata(function (metadata) {
                     odatajs.oData.request({ requestUri: params.feedUri, method: "POST", headers: djstest.clone(mimeHeaders), data: postEntry }, function (data, response) {
                         djstest.assertAreEqual(response.statusCode, httpStatusCode.created, "Verify response code");
-                        ODataReadOracle.readJson(feedUri + "(" + postEntry.ID + ")", function (actualData) {
+                        ODataVerifyReader.readJson(feedUri + "(" + postEntry.ID + ")", function (actualData) {
                             djstest.assertWithoutMetadata(actualData, postEntry, "Verify new entry data against server");
                             djstest.done();
                         })
@@ -192,7 +192,7 @@
                     OData.defaultMetadata.push(metadata);
                     odatajs.oData.request({ requestUri: entryUri, method: "PUT", headers: djstest.clone(mimeHeaders), data: params.testEntry.data }, function (data, response) {
                         djstest.assertAreEqual(response.statusCode, httpStatusCode.noContent, "Verify response code");
-                        ODataReadOracle.readJson(entryUri, function (actualData) {
+                        ODataVerifyReader.readJson(entryUri, function (actualData) {
                             djstest.assertWithoutMetadata(actualData, $.extend({ ID: 0 }, params.testEntry.data), "Verify updated entry data against server");
                             djstest.done();
                         })
@@ -210,7 +210,7 @@
             getMetadata(function (metadata) {
                 odatajs.oData.read({ requestUri: entryUri, headers: acceptHeaders }, function (data, response) {
                     djstest.assertAreEqual(response.statusCode, httpStatusCode.ok, "Verify response code");
-                    ODataReadOracle.readJson(entryUri, function (expectedData) {
+                    ODataVerifyReader.readJson(entryUri, function (expectedData) {
                         djstest.assertWithoutMetadata(data, expectedData, "Verify data");
                         djstest.done();
                     })
@@ -230,7 +230,7 @@
                 odatajs.oData.read({ requestUri: specialDaysEndpoint, headers: { Accept: params.accept} }, function (data, response) {
                     // Because our oracle isn't metadata aware, it is not 100% correct, so we will pass in recognizeDates = true
                     // in all cases and manually fix up the property that was incorrectly converted
-                    window.ODataReadOracle.readFeed(specialDaysEndpoint, function (expectedData) {
+                    window.ODataVerifyReader.readFeed(specialDaysEndpoint, function (expectedData) {
                         // Fix up the string property that has a "date-like" string deliberately injected
                         expectedData.results[2].Name = "/Date(" + expectedData.results[2].Name.valueOf() + ")/";
                         djstest.assertAreEqualDeep(data, expectedData, "Verify response data");

@@ -154,7 +154,7 @@
 
         if (typeof source === "string") {
             var expectedRangeUrl = source + "?$skip=" + skipValue + "&$top=" + takeValue;
-            window.ODataReadOracle.readJsonAcrossServerPages(expectedRangeUrl, assertData);
+            window.ODataVerifyReader.readJsonAcrossServerPages(expectedRangeUrl, assertData);
         } else {
             source.read(skipValue, takeValue, assertData);
         }

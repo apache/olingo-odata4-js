@@ -162,7 +162,7 @@
             index = 0;
         }
 
-        window.ODataReadOracle.readJsonAcrossServerPages(feed, function (expectData) {
+        window.ODataVerifyReader.readJsonAcrossServerPages(feed, function (expectData) {
             if (backwards) {
                 cache.filterBack(index, count, predicate).then(function (actualResults) {
                     var expectedResults = CacheOracle.getExpectedFilterResults(expectData, index, count, predicate, backwards);
