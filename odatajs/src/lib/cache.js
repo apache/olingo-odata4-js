@@ -629,7 +629,10 @@ function DataCache(options) {
 
             that.readRange(index, pageSize).then(successCallback, errorCallback);
 
-            return { Dispose: function () { disposed = true; } };
+            return { Dispose: function () { 
+                obs.dispose(); // otherwise the check isStopped obs.onNext(data.value[i]);
+                disposed = true; 
+                } };
         });
     };
 
