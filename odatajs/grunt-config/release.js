@@ -60,14 +60,28 @@ module.exports = function(grunt) {
         files: [
             { dot: true, expand: true, cwd: '', src: ['**'], dest: './../dist/<%= filename %>/sources',
             filter: function(srcPath)  {
-              //no node_modules
+              // no node_modules
               if (srcPath === 'node_modules' || contains(srcPath, 'node_modules\\')) {
                 return false; 
               }
-              if (srcPath === 'extern_modules' || contains(srcPath, 'extern_modules\\')) {
+              if (srcPath === 'extern-tools' || contains(srcPath, 'extern-tools\\')) {
                 return false; 
               }
 
+              // no c# files
+              if (srcPath === 'obj' || startsWith(srcPath, 'obj\\')) {
+                return false; 
+              }
+
+              if (srcPath === 'bin' || startsWith(srcPath, 'bin\\')) {
+                return false; 
+              }
+
+              if (srcPath === 'packages' || startsWith(srcPath, 'packages\\')) {
+                return false; 
+              }
+
+              // no build retults
               if (srcPath === 'build' || startsWith(srcPath, 'build\\')) {
                 return false; 
               }
@@ -118,9 +132,8 @@ module.exports = function(grunt) {
   //tasks
   grunt.registerTask('dist',[
     'clean:release-dist',
-
     'build',
-    'jsdoc:src',
+    'doc',
     'copy:release-lib','copy:release-doc','copy:release-sources',
     'compress:release-lib','compress:release-doc','compress:release-sources']);
 };

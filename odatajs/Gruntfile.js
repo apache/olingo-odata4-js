@@ -205,7 +205,7 @@ module.exports = function(grunt) {
 
   //    Create documentation in /build/doc
   grunt.registerTask('doc', ['clearEnv', 'jsdoc:src']);
-  grunt.registerTask('doc-test', [/*'npm-clean:doc-test',*/'jsdoc:test']);
+  grunt.registerTask('doc-test', ['clearEnv', 'jsdoc:test']);
 
   //    Build the odatajs library
   grunt.registerTask('build', ['browserify:src', 'uglify:build', 'concat','copy:forDemo']);
