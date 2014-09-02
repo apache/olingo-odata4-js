@@ -1,12 +1,5 @@
 module.exports = function(grunt) {
   'use strict';
-/*
-  var x = grunt.file.isMatch( { dot : true} ,
-    '**node_modules/**',
-    ['node_modules/1']
-    );
-  console.log('X: '+ x);
-  process.exit(1);*/
 
   var init = {
     pkg: grunt.file.readJSON('package.json'),
@@ -199,6 +192,9 @@ module.exports = function(grunt) {
   //    rename some tasks to avoid name clashes with the user tasks
   //grunt.renameTask('clean','npm-clean');
   
+  grunt.registerTask('clearEnv', 'iterate files', function() {
+    process.env['JAVA_TOOL_OPTIONS'] = ''; 
+  });
 
   /*** E N D U S E R   T A S K S ***/
 
@@ -208,7 +204,7 @@ module.exports = function(grunt) {
   grunt.registerTask('license-check', ['custom-license-check']);
 
   //    Create documentation in /build/doc
-  grunt.registerTask('doc', [/*'npm-clean:doc',*/'jsdoc:src']);
+  grunt.registerTask('doc', ['clearEnv', 'jsdoc:src']);
   grunt.registerTask('doc-test', [/*'npm-clean:doc-test',*/'jsdoc:test']);
 
   //    Build the odatajs library
