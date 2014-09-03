@@ -57,7 +57,7 @@
             var format = (value.length > 7) ? (value.substr(value.length - 7, 7) == '/$value' ? '' : '&$format=json' ) : '';
             format = (value.length > 10) ? (value.substr(value.length - 10, 10) == '/$metadata' ? '' : '&$format=json' ) : '';
             var separator = (value.indexOf('?') == -1) ? '?' : '&';
-            return '<span class="string">"<a href="' + value + separator + 'sap-ds-debug=true' + format + fragment + '">' + encodeHtml(value) + encodeHtml(fragment) + '</a>"</span>';
+            return '<span class="string">"<a href="' + value + format + fragment + '">' + encodeHtml(value) + encodeHtml(fragment) + '</a>"</span>';
           } else {
             return '<span class="string">"' + encodeHtml(value) + '"</span>'
           }
@@ -132,7 +132,7 @@
               if (attribute.nodeName == 'href' || attribute.nodeName == 'src') {
                 var separator = (attribute.nodeValue.indexOf('?') == -1) ? '?' : '&';
                 var href = (element.baseURI && attribute.nodeValue[0] != '/') ? element.baseURI + attribute.nodeValue : attribute.nodeValue;
-                html += '"<a class="link" href="' + href + separator + 'sap-ds-debug=true">' + encodeHtml(attribute.nodeValue) + '</a>"';                    
+                html += '"<a class="link" href="' + href + '">' + encodeHtml(attribute.nodeValue) + '</a>"';                    
               } else {
                 html += '"<span class="atv">' + encodeHtml(attribute.nodeValue) + '</span>"';
               }                
