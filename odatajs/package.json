@@ -21,6 +21,10 @@
     {
       "name": "Sven Kobler-Morris",
       "email": "koblers@apache.org"
+    },
+    {
+      "name": "Challen He",
+      "email": "challenh@apache.org"
     }
   ],
   "scripts": {},
