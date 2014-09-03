@@ -86,6 +86,13 @@ module.exports = function(grunt) {
                 return false; 
               }
 
+              if (contains(srcPath, 'demo\\scripts\\datajs-')) {
+                return false; 
+              }
+              if (contains(srcPath, 'demo\\scripts\\odatajs-')) {
+                return false; 
+              }
+
               // no c# files
               if (srcPath === 'obj' || startsWith(srcPath, 'obj\\')) {
                 return false; 
