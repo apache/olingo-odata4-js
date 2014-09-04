@@ -35,7 +35,7 @@ module.exports = function(grunt) {
     'clean': {
       'release-dist': {
         options: { force: true },
-        src: [ "./../dist/<%= filename %>*"]
+        src: [ "./../dist/<%= artifactname %>*"]
       }
     }
   });
@@ -48,7 +48,7 @@ module.exports = function(grunt) {
       "release-doc-src" : {
         src: ['src/**/*.js'], 
         options: {
-          destination: './../dist/<%= filename %>/doc',
+          destination: './../dist/<%= artifactname %>/doc',
           verbose : false 
         }
       },
@@ -60,23 +60,23 @@ module.exports = function(grunt) {
     'copy' : {
       'release-lib' : {
         files: [
-          { expand: true, cwd: 'build', src: ['<%= filename %>*.*'], dest: './../dist/<%= filename %>/lib/lib', filter: 'isFile'},
-          { expand: true, src :'LICENSE',dest: './../dist/<%= filename %>/lib', filter: 'isFile' },
-          { expand: true, src :'NOTICE',dest: './../dist/<%= filename %>/lib', filter: 'isFile' },
-          { expand: true, src :'DEPENDENCIES',dest: './../dist/<%= filename %>/lib', filter: 'isFile' }
+          { expand: true, cwd: 'build', src: ['<%= artifactname %>*.*'], dest: './../dist/<%= artifactname %>/lib/lib', filter: 'isFile'},
+          { expand: true, src :'LICENSE',dest: './../dist/<%= artifactname %>/lib', filter: 'isFile' },
+          { expand: true, src :'NOTICE',dest: './../dist/<%= artifactname %>/lib', filter: 'isFile' },
+          { expand: true, src :'DEPENDENCIES',dest: './../dist/<%= artifactname %>/lib', filter: 'isFile' }
         ]
       },
       'release-doc' : {
         files: [
-            { expand: true, cwd: 'build/doc-src', src: ['**'], dest: './../dist/<%= filename %>/doc/doc', filter: 'isFile'},
-            { expand: true, src :'LICENSE',dest: './../dist/<%= filename %>/doc', filter: 'isFile' },
-            { expand: true, src :'NOTICE',dest: './../dist/<%= filename %>/doc', filter: 'isFile' },
-            { expand: true, src :'DEPENDENCIES',dest: './../dist/<%= filename %>/doc', filter: 'isFile' }
+            { expand: true, cwd: 'build/doc-src', src: ['**'], dest: './../dist/<%= artifactname %>/doc/doc', filter: 'isFile'},
+            { expand: true, src :'LICENSE',dest: './../dist/<%= artifactname %>/doc', filter: 'isFile' },
+            { expand: true, src :'NOTICE',dest: './../dist/<%= artifactname %>/doc', filter: 'isFile' },
+            { expand: true, src :'DEPENDENCIES',dest: './../dist/<%= artifactname %>/doc', filter: 'isFile' }
           ]
       },
       'release-sources' : {
         files: [
-            { dot: true, expand: true, cwd: '', src: ['**'], dest: './../dist/<%= filename %>/sources',
+            { dot: true, expand: true, cwd: '', src: ['**'], dest: './../dist/<%= artifactname %>/sources',
             filter: function(srcPath)  {
               // no node_modules
               if (srcPath === 'node_modules' || contains(srcPath, 'node_modules\\')) {
@@ -135,17 +135,17 @@ module.exports = function(grunt) {
   grunt.config.merge( { 
     compress: { // build the zip files for the release 
       'release-lib': { // just the lib
-        options: {archive: './../dist/<%= filename %>-lib.zip'},
-        files: [{expand: true, cwd: './../dist/<%= filename %>/lib', src: ['**'],  dest: '/'}]
+        options: {archive: './../dist/<%= artifactname %>/<%= artifactname %>-lib.zip'},
+        files: [{expand: true, cwd: './../dist/<%= artifactname %>/lib', src: ['**'],  dest: '/'}]
       },
       'release-doc': { // just the documentation
-        options: {archive: './../dist/<%= filename %>-doc.zip'},
-        files: [{expand: true, cwd: './../dist/<%= filename %>/doc', src: ['**'], dest: '/'}]
+        options: {archive: './../dist/<%= artifactname %>/<%= artifactname %>-doc.zip'},
+        files: [{expand: true, cwd: './../dist/<%= artifactname %>/doc', src: ['**'], dest: '/'}]
       },
       'release-sources' :  { // the full repository with out the git stuff
-        options: { archive: './../dist/<%= filename %>-sources.zip'},
+        options: { archive: './../dist/<%= artifactname %>/<%= artifactname %>-sources.zip'},
         files: [
-          {expand: true, cwd: './../dist/<%= filename %>/sources', src: ['**'], dest: '/'},
+          {expand: true, cwd: './../dist/<%= artifactname %>/sources', src: ['**'], dest: '/'},
         ]
       }
     },

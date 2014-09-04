@@ -1,9 +1,11 @@
 {
   "name": "odatajs",
-  "postfix": "beta-01",
-  "title": "Olingo OData Client for Java Script",
   "version": "4.0.0",
-  "description": "odatajs is a new cross-browser JavaScript library that enables data-centric web applications by leveraging modern protocols such as JSON and OData and HTML5-enabled browser features. It's designed to be small, fast and easy to use.",
+  "postfix": "beta-01",
+  "releaseCandidate" : "RC01",
+
+  "title": "Olingo OData Client for Java Script",
+  "description": "the Olingo OData Client for Java Script library is a new cross-browser JavaScript library that enables data-centric web applications by leveraging modern protocols such as JSON and OData and HTML5-enabled browser features. It's designed to be small, fast and easy to use.",
   "homepage": "http://olingo.apache.org",
   "main": "index.js",
   "repository": {
@@ -36,12 +38,10 @@
     "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-compress": "^0.10.0",
     "grunt-contrib-concat": "^0.5.0",
-    "grunt-contrib-connect": "^0.7.1",
     "grunt-contrib-copy": "^0.5.0",
     "grunt-contrib-uglify": "^0.4.0",
     "grunt-curl": "^2.0.2",
     "grunt-jsdoc": "^0.5.6",
-    "grunt-node-qunit": "^2.0.2",
     "through": "^2.3.4"
   }
 }

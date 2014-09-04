@@ -1,33 +1,35 @@
 module.exports = function(grunt) {
   'use strict';
+  var pkg = grunt.file.readJSON('package.json');
+
+  // Build artifact base name
+  //<%= pkg.name %>-<%= pkg.version %>-<%= pkg.postfix %>-<%= pkg.releaseCandidate %>'
+  var artifactname = pkg.name + '-' + pkg.version +
+     (pkg.postfix.length > 0 ? "-" : "") + pkg.postfix +
+     (pkg.releaseCandidate.length > 0 ? "-" : "") + pkg.releaseCandidate;
 
   var init = {
-    pkg: grunt.file.readJSON('package.json'),
+    pkg: pkg,
     banner: grunt.file.read('src/banner.txt'),
-    filename : '<%= pkg.name %>-<%= pkg.version %>-<%= pkg.postfix %>',
+    artifactname : artifactname,
 
-
-    browserify: { // convert code from nodejs style to brower style
+    browserify: { // convert code from nodejs style to browser style
       src: {
-        files: {
-          'build/<%= filename %>.js': ['src/index.js'],
-        },
-        options: { 
-          transform: ['./grunt-config/browserify_transforms/stripheader/stripheader.js'], // remove apache license headers before contatenating
-          browserifyOptions: { } ,
-          bundleOptions: { },
+        files: { 'build/<%= artifactname %>.js': ['src/index.js'] },
+        options: { // remove apache license headers before contatenating
+          transform: ['./grunt-config/browserify_transforms/stripheader/stripheader.js'], 
         }
       }
     },
     uglify: { // uglify and minify the lib
       options: {
         sourceMap : true,
-        sourceMapName : 'build/<%= filename %>.map',
+        sourceMapName : 'build/<%= artifactname %>.map',
         sourceMapIncludeSources : true,
       },
       build: {
-        src: 'build/<%= filename %>.js',
-        dest: 'build/<%= filename %>.min.js'
+        src: 'build/<%= artifactname %>.js',
+        dest: 'build/<%= artifactname %>.min.js'
       }
     },
     concat : { // add the apache license headers
@@ -35,101 +37,31 @@ module.exports = function(grunt) {
         banner : '<%= banner %>'
       },
       licence: {
-        src: 'build/<%= filename %>.js',
-        dest: 'build/<%= filename %>.js',
+        src: 'build/<%= artifactname %>.js',
+        dest: 'build/<%= artifactname %>.js',
       },
       licence_min: {
-        src: 'build/<%= filename %>.min.js',
-        dest: 'build/<%= filename %>.min.js',
+        src: 'build/<%= artifactname %>.min.js',
+        dest: 'build/<%= artifactname %>.min.js',
       },
     },
-    copy: { // copy odatajs library files to demo folder withch contains samples
+    'copy': { // copy odatajs library files to demo folder withch contains samples
       forDemo: {
-        files: [{ expand: true, cwd: 'build/', src: ['<%= filename %>*.*'], dest: 'demo/scripts/', filter: 'isFile'}]
+        files: [{ 
+          expand: true, cwd: 'build/', filter: 'isFile',
+          src: ['<%= artifactname %>*.*'], 
+          dest: 'demo/scripts/' 
+        }]
       }
     },
-    connect: { // not used, start a testing server
-      demo: {
-        options: {
-          port: 4001 ,
-          hostname: "localhost",
-          base: "demo",
-          keepalive : true,
-          middleware: function (connect, options) {
-            return [
-              require("grunt-connect-proxy/lib/utils").proxyRequest ,
-              connect.static(options.base),   // static content
-              connect.directory(options.base) // browse directories
-            ];
-          },
-        },
-      },
-      // start a node webserver with proxy to host the qunit-test html files
-      'test-browser': {             
-        options: {
-          port: 4003 ,
-          hostname: "localhost",
-          base: "",
-          keepalive : true,
-          //changeOrigin: true,
-          middleware: function (connect, options) {
-            return [
-              require("grunt-connect-proxy/lib/utils").proxyRequest ,
-              connect.static(options.base),   // static content
-              connect.directory(options.base) // browse directories
-            ];
-          },
-        },
-        // proxy all request going to /tests/endpoints/ to the .net data services
-        proxies: [{
-          context: "/tests/endpoints/",  // When the url contains this...
-          host: "localhost",
-          changeOrigin: true,
-          https: false,
-          port: 46541,
-          rejectUnauthorized: false, 
-        }],
-      },
-    },
-    'node-qunit': {   
-      //used to run some background qunit test on node         
-      'default-tests': {
-        setup: {
-          log: {
-            summary: true,
-            assertions: true,
-            errors: true,
-            globalSummary: true,
-            coverage: false,
-            globalCoverage: false,
-            testing: true
-          },
-          coverage: false,
-          deps: null,
-          namespace: null
-        },
-        deps: '',
-        code: './tests-tmp/common/node-test-setup.js',
-        tests: ['./tests-tmp/odata-json-tests.js'],
-        done: function(err, res){
-            !err && publishResults("node", res, this.async());
-        }
-      },
-    },
     'jsdoc' : { // generate documentation
-        'src' : {
+        src : {
             src: ['src/**/*.js'], 
-            options: {
-                destination: 'build/doc-src',
-                verbose : false 
-            }
+            options: { destination: 'build/doc-src', verbose : false }
         },
         test : {
             src: ['tests/**/*.js'], 
-            options: {
-                destination: 'build/doc-test',
-                verbose : false 
-            }
+            options: { destination: 'build/doc-test', verbose : false }
         }
     },
     'npm-clean': {
@@ -139,13 +71,13 @@ module.exports = function(grunt) {
       doc: {
         src: ["build/doc"],
           options: {
-                force: true
-            }
+            force: true
+          }
       },
       "doc-test": {
         src: ["build/doc-test"],
           options: {
-                force: true
+              force: true
             }
       },
     },
@@ -173,8 +105,6 @@ module.exports = function(grunt) {
   /*** Load tasks from npm modules ***/
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks("grunt-connect-proxy");
-  grunt.loadNpmTasks("grunt-contrib-connect");
   grunt.loadNpmTasks("grunt-contrib-copy");
   grunt.loadNpmTasks("grunt-contrib-concat");
   grunt.loadNpmTasks('grunt-contrib-compress');
@@ -190,15 +120,15 @@ module.exports = function(grunt) {
   grunt.loadTasks('grunt-config');
 
   //    rename some tasks to avoid name clashes with the user tasks
-  //grunt.renameTask('clean','npm-clean');
+  grunt.renameTask('clean','npm-clean');
   
-  grunt.registerTask('clearEnv', 'iterate files', function() {
+  grunt.registerTask('clearEnv', 'clear JAVA_TOOL_OPTIONS', function() {
     process.env['JAVA_TOOL_OPTIONS'] = ''; 
   });
 
   /*** E N D U S E R   T A S K S ***/
 
-  //grunt.registerTask('clean', ['npm-clean:doc','npm-clean:tmp']);
+  grunt.registerTask('clean', ['npm-clean:doc','npm-clean:tmp']);
 
   //    Runs the license header check to verify the any source file contains a license header
   grunt.registerTask('license-check', ['custom-license-check']);
