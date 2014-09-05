@@ -113,7 +113,7 @@ module.exports = function(grunt) {
 
   //    Start Qunit tests direcly in node js, internally qunit (npm qunit) 
   //    is used, no phantomjs instance required
-  grunt.loadNpmTasks('grunt-node-qunit'); 
+  //grunt.loadNpmTasks('grunt-node-qunit'); 
   //grunt.loadNpmTasks('grunt-contrib-clean');
 
   //    Load the custom-* tasks from the grunt-config directory
