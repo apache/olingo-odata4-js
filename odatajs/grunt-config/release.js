@@ -76,7 +76,10 @@ module.exports = function(grunt) {
       },
       'release-sources' : {
         files: [
-            { dot: true, expand: true, cwd: '', src: ['**'], dest: './../dist/<%= artifactname %>/sources',
+            { expand: true, src :'LICENSE',dest: './../dist/<%= artifactname %>/sources', filter: 'isFile' },
+            { expand: true, src :'NOTICE',dest: './../dist/<%= artifactname %>/sources', filter: 'isFile' },
+            { expand: true, src :'DEPENDENCIES',dest: './../dist/<%= artifactname %>/sources', filter: 'isFile' },
+            { dot: true, expand: true, cwd: './../', src: ['odatajs/**'], dest: './../dist/<%= artifactname %>/sources',
             filter: function(srcPath)  {
               // no node_modules
               if (srcPath === 'node_modules' || contains(srcPath, 'node_modules\\')) {
@@ -94,20 +97,20 @@ module.exports = function(grunt) {
               }
 
               // no c# files
-              if (srcPath === 'obj' || startsWith(srcPath, 'obj\\')) {
+              if (srcPath === 'obj' || contains(srcPath, 'odatajs\\obj')) {
                 return false; 
               }
 
-              if (srcPath === 'bin' || startsWith(srcPath, 'bin\\')) {
+              if (srcPath === 'bin' || contains(srcPath, 'odatajs\\bin')) {
                 return false; 
               }
 
-              if (srcPath === 'packages' || startsWith(srcPath, 'packages\\')) {
+              if (srcPath === 'packages' || contains(srcPath, 'odatajs\\packages')) {
                 return false; 
               }
 
               // no build retults
-              if (srcPath === 'build' || startsWith(srcPath, 'build\\')) {
+              if (srcPath === 'build' || contains(srcPath, 'odatajs\\build')) {
                 return false; 
               }
 
