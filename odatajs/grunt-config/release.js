@@ -82,35 +82,37 @@ module.exports = function(grunt) {
             { dot: true, expand: true, cwd: './../', src: ['odatajs/**'], dest: './../dist/<%= artifactname %>/sources',
             filter: function(srcPath)  {
               // no node_modules
-              if (srcPath === 'node_modules' || contains(srcPath, 'node_modules\\')) {
+              if (srcPath === 'node_modules' || contains(srcPath, 'node_modules\\')|| contains(srcPath, 'node_modules/')) {
                 return false; 
               }
-              if (srcPath === 'extern-tools' || contains(srcPath, 'extern-tools\\')) {
+              if (srcPath === 'extern-tools' || contains(srcPath, 'extern-tools\\')|| contains(srcPath, 'extern-tools/')) {
                 return false; 
               }
 
-              if (contains(srcPath, 'demo\\scripts\\datajs-')) {
+              if (contains(srcPath, 'demo\\scripts\\datajs-') || 
+                  contains(srcPath, 'demo/scripts/datajs-')) {
                 return false; 
               }
-              if (contains(srcPath, 'demo\\scripts\\odatajs-')) {
+              if (contains(srcPath, 'demo\\scripts\\odatajs-') || 
+                  contains(srcPath, 'demo/scripts/odatajs-')) {
                 return false; 
               }
 
               // no c# files
-              if (srcPath === 'obj' || contains(srcPath, 'odatajs\\obj')) {
+              if (srcPath === 'obj' || contains(srcPath, 'odatajs\\obj')|| contains(srcPath, 'odatajs/obj')) {
                 return false; 
               }
 
-              if (srcPath === 'bin' || contains(srcPath, 'odatajs\\bin')) {
+              if (srcPath === 'bin' || contains(srcPath, 'odatajs\\bin')|| contains(srcPath, 'odatajs/bin')) {
                 return false; 
               }
 
-              if (srcPath === 'packages' || contains(srcPath, 'odatajs\\packages')) {
+              if (srcPath === 'packages' || contains(srcPath, 'odatajs\\packages')|| contains(srcPath, 'odatajs/packages')) {
                 return false; 
               }
 
               // no build retults
-              if (srcPath === 'build' || contains(srcPath, 'odatajs\\build')) {
+              if (srcPath === 'build' || contains(srcPath, 'odatajs\\build')|| contains(srcPath, 'odatajs/build')) {
                 return false; 
               }
 
