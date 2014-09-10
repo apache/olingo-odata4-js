@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 module.exports = function(grunt) {
   'use strict';
   var pkg = grunt.file.readJSON('package.json');
@@ -13,48 +31,39 @@ module.exports = function(grunt) {
     banner: grunt.file.read('src/banner.txt'),
     artifactname : artifactname,
 
-    browserify: { // convert code from nodejs style to browser style
+    "browserify": { // convert code from nodejs style to browser style
       src: {
-        files: { 'build/<%= artifactname %>.js': ['src/index.js'] },
+        files: { 'build/lib/<%= artifactname %>.js': ['src/index.js'] },
         options: { // remove apache license headers before contatenating
           transform: ['./grunt-config/browserify_transforms/stripheader/stripheader.js'], 
         }
       }
     },
-    uglify: { // uglify and minify the lib
+    "uglify": { // uglify and minify the lib
       options: {
         sourceMap : true,
-        sourceMapName : 'build/<%= artifactname %>.map',
+        sourceMapName : 'build/lib/<%= artifactname %>.map',
         sourceMapIncludeSources : true,
       },
       build: {
-        src: 'build/<%= artifactname %>.js',
-        dest: 'build/<%= artifactname %>.min.js'
+        src: 'build/lib/<%= artifactname %>.js',
+        dest: 'build/lib/<%= artifactname %>.min.js'
       }
     },
-    concat : { // add the apache license headers
+    "concat" : { // add the apache license headers
       options : {
         banner : '<%= banner %>'
       },
       licence: {
-        src: 'build/<%= artifactname %>.js',
-        dest: 'build/<%= artifactname %>.js',
+        src: 'build/lib/<%= artifactname %>.js',
+        dest: 'build/lib/<%= artifactname %>.js',
       },
       licence_min: {
-        src: 'build/<%= artifactname %>.min.js',
-        dest: 'build/<%= artifactname %>.min.js',
+        src: 'build/lib/<%= artifactname %>.min.js',
+        dest: 'build/lib/<%= artifactname %>.min.js',
       },
     },
-    'copy': { // copy odatajs library files to demo folder withch contains samples
-      forDemo: {
-        files: [{ 
-          expand: true, cwd: 'build/', filter: 'isFile',
-          src: ['<%= artifactname %>*.*'], 
-          dest: 'demo/scripts/' 
-        }]
-      }
-    },
-    'jsdoc' : { // generate documentation
+    "jsdoc" : { // generate documentation
         src : {
             src: ['src/**/*.js'], 
             options: { destination: 'build/doc-src', verbose : false }
@@ -64,24 +73,25 @@ module.exports = function(grunt) {
             options: { destination: 'build/doc-test', verbose : false }
         }
     },
-    'npm-clean': {
-      tmp: {
+    "npm-clean": {
+      options: {force: true},
+      "build": {
+        src: [ "build"],
+      },
+      "lib": {
+        src: [ "build/lib"]
+      },
+      "tmp": {
         src: [ "build/tmp"]
       },
-      doc: {
+      "doc": {
         src: ["build/doc"],
-          options: {
-            force: true
-          }
       },
       "doc-test": {
         src: ["build/doc-test"],
-          options: {
-              force: true
-            }
       },
     },
-    curl: {
+    "curl": {
       'license': {
         src: {
           url: 'http://apache.org/licenses/LICENSE-2.0.txt',
@@ -128,23 +138,22 @@ module.exports = function(grunt) {
 
   /*** E N D U S E R   T A S K S ***/
 
-  grunt.registerTask('clean', ['npm-clean:doc','npm-clean:tmp']);
+  grunt.registerTask('clean', ['npm-clean']);
 
   //    Runs the license header check to verify the any source file contains a license header
-  grunt.registerTask('license-check', ['custom-license-check']);
+  grunt.registerTask('license-check', ['rat:manual']);
 
   //    Create documentation in /build/doc
   grunt.registerTask('doc', ['clearEnv', 'jsdoc:src']);
   grunt.registerTask('doc-test', ['clearEnv', 'jsdoc:test']);
 
   //    Build the odatajs library
-  grunt.registerTask('build', ['browserify:src', 'uglify:build', 'concat','copy:forDemo']);
-
+  grunt.registerTask('build', ['clean:lib','browserify:src', 'uglify:build', 'concat']);
 
   grunt.registerTask('test-browser', ['configureProxies:test-browser', 'connect:test-browser']);
   grunt.registerTask('test-node', ['node-qunit:default-tests']);
   //grunt.registerTask('release', ['build','doc','compress']);
-  grunt.registerTask('update-legal', ['curl:license']);
+  //grunt.registerTask('update-legal', ['curl:license']);
 
   
 };

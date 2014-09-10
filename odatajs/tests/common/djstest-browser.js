@@ -21,7 +21,7 @@
 // Because this code contains a init function to be useable directly inside the browser as well as in nodejs
 // we define the @namespace djstest here instead of the a @module name djstest
 
-/** Create namespace djstest in window.djstest when this file is loaded as java script by the browser
+/** Create namespace djstest in window.djstest when this file is loaded as JavaScript by the browser
  * @namespace djstest
  */
 

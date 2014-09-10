@@ -30,9 +30,11 @@ module.exports = function(grunt) {
     return hay.indexOf(needle) > -1;
   }
 
+  
+
   // clean
   grunt.config.merge( { 
-    'clean': {
+    'npm-clean': {
       'release-dist': {
         options: { force: true },
         src: [ "./../dist/<%= artifactname %>*"]
@@ -60,7 +62,7 @@ module.exports = function(grunt) {
     'copy' : {
       'release-lib' : {
         files: [
-          { expand: true, cwd: 'build', src: ['<%= artifactname %>*.*'], dest: './../dist/<%= artifactname %>/lib/lib', filter: 'isFile'},
+          { expand: true, cwd: 'build/lib', src: ['<%= artifactname %>*.*'], dest: './../dist/<%= artifactname %>/lib/lib', filter: 'isFile'},
           { expand: true, src :'LICENSE',dest: './../dist/<%= artifactname %>/lib', filter: 'isFile' },
           { expand: true, src :'NOTICE',dest: './../dist/<%= artifactname %>/lib', filter: 'isFile' },
           { expand: true, src :'DEPENDENCIES',dest: './../dist/<%= artifactname %>/lib', filter: 'isFile' }
@@ -79,7 +81,7 @@ module.exports = function(grunt) {
             { expand: true, src :'LICENSE',dest: './../dist/<%= artifactname %>/sources', filter: 'isFile' },
             { expand: true, src :'NOTICE',dest: './../dist/<%= artifactname %>/sources', filter: 'isFile' },
             { expand: true, src :'DEPENDENCIES',dest: './../dist/<%= artifactname %>/sources', filter: 'isFile' },
-            { dot: true, expand: true, cwd: './../', src: ['odatajs/**'], dest: './../dist/<%= artifactname %>/sources',
+            { dot: true, expand: true, cwd: './', src: ['**'], dest: './../dist/<%= artifactname %>/sources/odatajs',
             filter: function(srcPath)  {
               // no node_modules
               if (srcPath === 'node_modules' || contains(srcPath, 'node_modules\\')|| contains(srcPath, 'node_modules/')) {
@@ -99,20 +101,20 @@ module.exports = function(grunt) {
               }
 
               // no c# files
-              if (srcPath === 'obj' || contains(srcPath, 'odatajs\\obj')|| contains(srcPath, 'odatajs/obj')) {
+              if (srcPath === 'obj' || contains(srcPath, 'obj')|| contains(srcPath, 'obj')) {
                 return false; 
               }
 
-              if (srcPath === 'bin' || contains(srcPath, 'odatajs\\bin')|| contains(srcPath, 'odatajs/bin')) {
+              if (srcPath === 'bin' || contains(srcPath, 'bin')|| contains(srcPath, 'bin')) {
                 return false; 
               }
 
-              if (srcPath === 'packages' || contains(srcPath, 'odatajs\\packages')|| contains(srcPath, 'odatajs/packages')) {
+              if (srcPath === 'packages' || contains(srcPath, 'packages')|| contains(srcPath, 'packages')) {
                 return false; 
               }
 
               // no build retults
-              if (srcPath === 'build' || contains(srcPath, 'odatajs\\build')|| contains(srcPath, 'odatajs/build')) {
+              if (srcPath === 'build' || contains(srcPath, 'build')|| contains(srcPath, 'build')) {
                 return false; 
               }
 
@@ -120,6 +122,12 @@ module.exports = function(grunt) {
                 return false; 
               }
               if (endsWith(srcPath, 'localgrunt.config')) {
+                return false; 
+              }
+              if (endsWith(srcPath, 'JSLib.suo')) {
+                return false; 
+              }
+              if (endsWith(srcPath, 'JSLib.csproj.user')) {
                 return false; 
               }
               
@@ -161,10 +169,11 @@ module.exports = function(grunt) {
 
   //tasks
   grunt.registerTask('dist',[
-    'clean:release-dist',
+    'npm-clean:release-dist',
     'build',
     'doc',
     'copy:release-lib','copy:release-doc','copy:release-sources',
+    'rat:dist',
     'compress:release-lib','compress:release-doc','compress:release-sources']);
 };
 

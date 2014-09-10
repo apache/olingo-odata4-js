@@ -18,25 +18,46 @@
  */
 module.exports = function(grunt) {
   grunt.config('rat', {
-    options: { xml : true, tmpDir : './build/tmp' },
-    src: {                      
-      dir: './src',
+    dist:  { 
+      options: { 
+        dest : './build/tmp', 
+        exclude: [
+          "node_modules","extern-tools",".gitignore",
+          "DEPENDENCIES","LICENSE","NOTICE",
+          "JSLib.sln","package.json"
+        ] },
+      files: [
+        /*{ src: ['./../dist/<%= artifactname %>/doc'], options:{ tag:"dist-doc"}},generated*/
+        /*{ src: ['./../dist/<%= artifactname %>/lib'], options:{ tag:"dist-lib"}},very slow*/
+        { src: ['./../dist/<%= artifactname %>/sources'], options:{ tag:"dist-src"}},
+      ]
     },
-    test: {                      
-      dir: './tests'
+    "manual-dist":  { 
+      options: { xml:false, 
+        dest : './build/tmp', 
+        exclude: [
+          "node_modules","extern-tools",".gitignore",
+          "DEPENDENCIES","LICENSE","NOTICE",
+          "JSLib.sln","package.json"
+        ] },
+      files: [
+        /*{ src: ['./../dist/<%= artifactname %>/doc'], options:{ tag:"dist-doc"}},generated*/
+        /*{ src: ['./../dist/<%= artifactname %>/lib'], options:{ tag:"dist-lib"}},very slow*/
+        { src: ['./../dist/<%= artifactname %>/sources'], options:{ tag:"dist-src"}},
+      ]
     },
-    'src-manual': {                      
-      options: { xml : false, tmpDir : './build/tmp' },
-      dir: './src',
+    manual:  {  // with txt output
+      options: { xml:false, 
+        dest : './build/tmp', 
+        exclude: ["node_modules","extern-tools",".gitignore"] },
+      files: [
+        { src: ['./src'], options:{ tag:"src"}},
+        { src: ['./tests'], options:{ tag:"tests"}},
+        { src: ['./demo'], options:{ tag:"demo"}},
+        { src: ['./grunt-config'], options:{ tag:"grunt-config" }}
+      ]
     },
-    'test-manual': {                      
-      options: { xml : false, tmpDir : './build/tmp' },
-      dir: './tests'
-    },
-
   });
 
- 
   grunt.loadTasks('grunt-config/custom-tasks/rat/tasks');
-  grunt.registerTask('custom-license-check',['rat:src','rat:test']);
 };

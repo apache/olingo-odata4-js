@@ -1,5 +1,4 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
+﻿Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JSLib", "JSLib.csproj", "{73ADF1A7-613B-4679-885B-2AE4AFAA9A6A}"
 EndProject
