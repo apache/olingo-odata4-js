@@ -23,7 +23,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
         <title>datajs startup perf test</title>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        <script type="text/javascript" src="./../build/lib/odatajs-4.0.0-beta-01-RC01.js"></script>
+        <script type="text/javascript" src="./../build/lib/odatajs-4.0.0-beta-01-RC01.min.js"></script>
         <script type="text/javascript" src="./scripts/tools.js" ></script>
         <style type="text/css">
             .code{font-family:"Courier New",monospace;font-size:13px;line-height:18px;}
@@ -189,8 +189,7 @@
                 var metadataRequest =
                 {
                     headers: oHeaders,
-                    requestUri: "https://ldcigmd.wdf.sap.corp:44355/sap/bc/ds/odata/v4/$metadata", 
-                    //requestUri: "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata", 
+                    requestUri: "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata", 
                     data: null,
                 };
 

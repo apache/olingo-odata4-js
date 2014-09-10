@@ -65,7 +65,8 @@ module.exports = function(grunt) {
           { expand: true, cwd: 'build/lib', src: ['<%= artifactname %>*.*'], dest: './../dist/<%= artifactname %>/lib/lib', filter: 'isFile'},
           { expand: true, src :'LICENSE',dest: './../dist/<%= artifactname %>/lib', filter: 'isFile' },
           { expand: true, src :'NOTICE',dest: './../dist/<%= artifactname %>/lib', filter: 'isFile' },
-          { expand: true, src :'DEPENDENCIES',dest: './../dist/<%= artifactname %>/lib', filter: 'isFile' }
+          { expand: true, src :'DEPENDENCIES',dest: './../dist/<%= artifactname %>/lib', filter: 'isFile' },
+          { expand: true, src :'README.md',dest: './../dist/<%= artifactname %>/lib', filter: 'isFile' }
         ]
       },
       'release-doc' : {
@@ -73,7 +74,8 @@ module.exports = function(grunt) {
             { expand: true, cwd: 'build/doc-src', src: ['**'], dest: './../dist/<%= artifactname %>/doc/doc', filter: 'isFile'},
             { expand: true, src :'LICENSE',dest: './../dist/<%= artifactname %>/doc', filter: 'isFile' },
             { expand: true, src :'NOTICE',dest: './../dist/<%= artifactname %>/doc', filter: 'isFile' },
-            { expand: true, src :'DEPENDENCIES',dest: './../dist/<%= artifactname %>/doc', filter: 'isFile' }
+            { expand: true, src :'DEPENDENCIES',dest: './../dist/<%= artifactname %>/doc', filter: 'isFile' },
+            { expand: true, src :'README.md',dest: './../dist/<%= artifactname %>/doc', filter: 'isFile' }
           ]
       },
       'release-sources' : {
