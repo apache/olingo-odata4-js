@@ -17,6 +17,8 @@
  * under the License.
  */
 module.exports = function(grunt) {
+  
+  
   grunt.config('rat', {
     dist:  { 
       options: { 
@@ -59,5 +61,5 @@ module.exports = function(grunt) {
     },
   });
 
-  grunt.loadTasks('grunt-config/custom-tasks/rat/tasks');
+  
 };
