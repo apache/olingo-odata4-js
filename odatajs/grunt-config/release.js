@@ -190,7 +190,10 @@ module.exports = function(grunt) {
     'copy:release-lib','copy:release-doc','copy:release-sources',
     'rat:dist', // check the license headers
     'compress:release-lib','compress:release-doc','compress:release-sources',
-     'sign:release'
     ]);
+  grunt.registerTask('release:sign',[
+    'sign:release','sign:asc','sign:asc-verify'
+    ]);
+
 };
 

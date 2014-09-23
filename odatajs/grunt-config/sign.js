@@ -32,8 +32,28 @@ module.exports = function(grunt) {
           '<%= artifactname %>-doc.zip',
           '<%= artifactname %>-sources.zip'
         ]
+      },
+      'asc' : {
+        options: { types : ['asc']},
+        expand : true,
+        cwd : './../dist/<%= artifactname %>/',
+        src : [ 
+          '<%= artifactname %>-lib.zip',
+          '<%= artifactname %>-doc.zip',
+          '<%= artifactname %>-sources.zip'
+        ]
+      },
+      'asc-verify' : {
+        options: { types : ['asc-verify']},
+        expand : true,
+        cwd : './../dist/<%= artifactname %>/',
+        src : [ 
+          '<%= artifactname %>-lib.zip',
+          '<%= artifactname %>-doc.zip',
+          '<%= artifactname %>-sources.zip'
+        ]
       }
-    }
+    },
   });
 };
 

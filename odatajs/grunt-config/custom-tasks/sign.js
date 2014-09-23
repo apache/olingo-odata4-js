@@ -23,13 +23,14 @@ module.exports = function(grunt) {
         var self = this;
 
         var path = require('path');
-        var fs = require( "fs" );
-
+        var fs = require( 'fs' );
+        var chalk = require('./rat/node_modules/chalk');
         
         var globalDone = this.async();
         
         var options = this.options({ types : [] });
         var workLoad = [];
+        var writeToLogOk = function(data) { grunt.log.ok(data.toString()); };
         
         // fill workLoad
         for(var i = 0; i < this.files.length; i++) {
@@ -52,46 +53,82 @@ module.exports = function(grunt) {
             var workItem = workLoad.pop();
             // make source file releative to cwd, since cwd is used as workdir from spawn
             var fileName =  path.relative(self.data.cwd,workItem.src);
-            var taskOptions,pipeTo;
+            var taskOptions,pipeTo,pipeSrc = 'out';
             console.log (fileName);
             if ( workItem.type === 'md5' ) {
-                grunt.log.writeln('Signing ('+workItem.type+')' + fileName + " ...");
                 pipeTo = workItem.src+'.md5';
+
+                grunt.log.writeln(chalk.yellow('Signing ('+workItem.type+') ' + fileName + " ..."));
+                
                 taskOptions = { 
                     cmd : 'openssl', 
-                    //args: ['dgst','-md5','-out',fileName+'.md5',fileName],
                     args: ['dgst','-md5',fileName],
                     opts : { cwd :self.data.cwd }
                 };
             } else if ( workItem.type === 'sha' ) {  
-                grunt.log.writeln('Signing ('+workItem.type+')' + fileName + " ...");
-                //gpg --print-md SHA512 odatajs-4.0.0-beta-01-RC02-doc.zip
                 pipeTo = workItem.src+'.sha';
+
+                grunt.log.writeln(chalk.yellow('Signing ('+workItem.type+') ' + fileName + " ..."));
+
+                //gpg --print-md SHA512 odatajs-4.0.0-beta-01-RC02-doc.zip
                 taskOptions = { 
                     cmd : 'gpg', 
                     args: ['--print-md','SHA512',fileName],
                     opts : { cwd :self.data.cwd }
                 };
-            } else {
+            } else if ( workItem.type === 'asc' ) {  
+                pipeTo = undefined; // done by gpg
+
+                grunt.log.writeln(chalk.yellow('Signing ('+workItem.type+') ' + fileName + " ..."));
+                
+                //gpg --armor --detach-sign odatajs-4.0.0-beta-01-RC02-sources.zip
+                taskOptions = { 
+                    cmd : 'gpg', 
+                    args: ['--armor','--detach-sign',fileName],
+                    opts : { cwd :self.data.cwd }
+                };
+            } else if ( workItem.type === 'asc-verify' ) {  
+                pipeTo = 'console';
+                pipeSrc = 'err';
+
+                grunt.log.writeln(chalk.yellow('Verify ('+workItem.type+') ' +fileName+ '.asc' + " ..."));
+                
+                //gpg --verify --detach-sign odatajs-4.0.0-beta-01-RC02-sources.zip.asc 
+                taskOptions = { 
+                    cmd : 'gpg', 
+                    args: ['--verify', fileName+'.asc'],
+                    opts : { cwd :self.data.cwd }
+                };
+            } else { 
                 grunt.fail.warn('Unknown sign type: "'+ workItem.type + '"', 1);
             }
+
+            //console.log(taskOptions);
 
             var task = grunt.util.spawn(taskOptions, function done(err,result) {
                     if (err) {
                         grunt.fail.warn('Sign: '+err);
                     }
                 });
-            //console.log('pipeTo'+pipeTo);
-            //console.log('task'+JSON.stringify(task));
-            var outStream = fs.createWriteStream(pipeTo/* ,{flags: 'w'}*/);
             
-            /*task.stdout.on('data', function(data) {
-                outStream.write(data.toString());
-                //console.log('1'+data.toString());
-            });*/
-            task.stdout.pipe(outStream, { end: false });
+
+            
+            if (pipeTo) {
+                if (pipeTo === 'console') {
+                    if (pipeSrc ==='err') {
+                        task.stderr.on('data', writeToLogOk );
+                    } else {
+                        task.stdout.on('data', writeToLogOk);
+                    }
+                } else {
+                    var outStream = fs.createWriteStream(pipeTo/* ,{flags: 'w'}*/);
+                    var src = (pipeSrc ==='err') ? task.stderr : task.stdout;
+                    src.pipe(outStream, { end: false });
+                }
+            }
+    
             task.on('close', function (code) {
-                grunt.log.ok('Signed ('+workItem.type+'):' + workItem.src);
+                grunt.log.ok('Processed ('+workItem.type+') :' + workItem.src);
                 grunt.log.ok('with code ' + code);
                 process();
             });
