@@ -19,7 +19,7 @@
 
 /** @module odata/batch */
 
-var utils    = require('./../odatajs.js').utils;
+var utils    = require('./../odatajs/utils.js');
 var odataUtils    = require('./utils.js');
 var odataHandler = require('./handler.js');
 

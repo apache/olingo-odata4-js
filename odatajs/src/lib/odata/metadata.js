@@ -19,8 +19,8 @@
 
 /** @module odata/metadata */
 
-var utils    = require('./../odatajs.js').utils;
-var oDSxml    = require('./../odatajs.js').xml;
+var utils    = require('./../odatajs/utils.js');
+var oDSxml    = require('./../odatajs/xml.js');
 var odataHandler    = require('./handler.js');
 
 

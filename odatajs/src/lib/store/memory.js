@@ -20,7 +20,7 @@
 /** @module store/memory */
 
 
-var utils = require('./../odatajs.js').utils;
+var utils = require('./../odatajs/utils.js');
 
 // Imports.
 var throwErrorCallback = utils.throwErrorCallback;

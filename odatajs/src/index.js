@@ -17,7 +17,17 @@
  * under the License.
  */
 
-var odatajs = require('./lib/odatajs.js');
+var odatajs = {};
+
+odatajs.version = {
+    major: 1,
+    minor: 1,
+    build: 1
+};
+
+odatajs.deferred = require('./lib/odatajs/deferred.js');
+odatajs.utils = require('./lib/odatajs/utils.js');
+odatajs.xml = require('./lib/odatajs/xml.js');
 
 odatajs.oData = require('./lib/odata.js');
 odatajs.store = require('./lib/store.js');

@@ -62,6 +62,11 @@ module.exports = function(grunt) {
         src: 'build/lib/<%= artifactname %>.min.js',
         dest: 'build/lib/<%= artifactname %>.min.js',
       },
+      src: {
+        src: ['src/**/*.js'], 
+        dest: 'build/lib/<%= artifactname %>.js',
+      },
+
     },
     "jsdoc" : { // generate documentation
         src : {
@@ -78,6 +83,16 @@ module.exports = function(grunt) {
             src: 'grunt-config/nugetpack.nuspec',
             dest: 'build/'
         }
+    },
+    'copy' : {
+      'to-latest' : {
+        files: [
+          { 
+            src :'build/lib/<%= artifactname %>.js',
+            dest: 'build/lib/odatajs-latest.js' },
+          ]
+        }
+      
     },
     "npm-clean": {
       options: {force: true},
@@ -155,7 +170,8 @@ module.exports = function(grunt) {
   grunt.registerTask('doc-test', ['clearEnv', 'jsdoc:test']);
 
   //    Build the odatajs library
-  grunt.registerTask('build', ['clean:lib','browserify:src', 'uglify:build', 'concat', 'nugetpack']);
+  grunt.registerTask('build', ['clean:lib','browserify:src', 'uglify:build', 'concat:licence','concat:licence_min','copy:to-latest','nugetpack']);
+  grunt.registerTask('build2', ['clean:lib','concat:src', 'uglify:build', 'concat:licence','concat:licence_min','nugetpack']);
 
   grunt.registerTask('test-browser', ['configureProxies:test-browser', 'connect:test-browser']);
   grunt.registerTask('test-node', ['node-qunit:default-tests']);

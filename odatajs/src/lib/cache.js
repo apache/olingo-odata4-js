@@ -19,10 +19,10 @@
 
  /** @module cache */
 
-var odatajs = require('./odatajs.js');
-var utils = odatajs.utils;
-var deferred = odatajs.deferred;
-var storeReq = odatajs.store;
+//var odatajs = require('./odatajs/utils.js');
+var utils =  require('./odatajs/utils.js');
+var deferred = require('./odatajs/deferred.js');
+var storeReq = require('./store.js');
 var cacheSource = require('./cache/source');
 
 
