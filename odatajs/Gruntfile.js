@@ -73,6 +73,12 @@ module.exports = function(grunt) {
             options: { destination: 'build/doc-test', verbose : false }
         }
     },
+    "nugetpack" : { // create nuget pagckage
+        dist: {
+            src: 'grunt-config/nugetpack.nuspec',
+            dest: 'build/'
+        }
+    },
     "npm-clean": {
       options: {force: true},
       "build": {
@@ -120,6 +126,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-curl');
   grunt.loadNpmTasks("grunt-jsdoc");
+  grunt.loadNpmTasks("grunt-nuget");
 
   //    Start Qunit tests direcly in node js, internally qunit (npm qunit) 
   //    is used, no phantomjs instance required
@@ -148,7 +155,7 @@ module.exports = function(grunt) {
   grunt.registerTask('doc-test', ['clearEnv', 'jsdoc:test']);
 
   //    Build the odatajs library
-  grunt.registerTask('build', ['clean:lib','browserify:src', 'uglify:build', 'concat']);
+  grunt.registerTask('build', ['clean:lib','browserify:src', 'uglify:build', 'concat', 'nugetpack']);
 
   grunt.registerTask('test-browser', ['configureProxies:test-browser', 'connect:test-browser']);
   grunt.registerTask('test-node', ['node-qunit:default-tests']);
