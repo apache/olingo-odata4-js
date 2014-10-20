@@ -59,8 +59,8 @@ module.exports = function(grunt) {
 
   // copy
   grunt.config.merge( { 
-    'copy' : {
-      'release-lib' : {
+    "copy" : {
+      "release-lib" : {
         files: [
           { expand: true, cwd: 'build/lib', src: ['<%= artifactname %>*.*'], dest: './../dist/<%= artifactname %>/lib/lib', filter: 'isFile'},
           { expand: true, src :'LICENSE',dest: './../dist/<%= artifactname %>/lib', filter: 'isFile' },
@@ -69,7 +69,7 @@ module.exports = function(grunt) {
           { expand: true, src :'README.md',dest: './../dist/<%= artifactname %>/lib', filter: 'isFile' }
         ]
       },
-      'release-doc' : {
+      "release-doc" : {
         files: [
             { expand: true, cwd: 'build/doc-src', src: ['**'], dest: './../dist/<%= artifactname %>/doc/doc', filter: 'isFile'},
             { expand: true, src :'LICENSE',dest: './../dist/<%= artifactname %>/doc', filter: 'isFile' },
@@ -78,7 +78,7 @@ module.exports = function(grunt) {
             { expand: true, src :'README.md',dest: './../dist/<%= artifactname %>/doc', filter: 'isFile' }
           ]
       },
-      'release-sources' : {
+      "release-sources" : {
         files: [
             { expand: true, src :'LICENSE',dest: './../dist/<%= artifactname %>/sources', filter: 'isFile' },
             { expand: true, src :'NOTICE',dest: './../dist/<%= artifactname %>/sources', filter: 'isFile' },

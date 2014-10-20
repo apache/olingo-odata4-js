@@ -29,16 +29,14 @@ module.exports = function(grunt) {
   //options
   var init = {
     pkg: pkg,
-    banner: grunt.file.read('src/banner.txt'),
+    banner: grunt.file.read('grunt-config/banner.txt'),
     artifactname : artifactname,
 
     "toBrowser" : {
       "release" : {
-        options: { index : "src/index-browser.js" },
-        files: [{ 
-            src: ["src/lib/**/*.js"], 
-            dest: "build/lib/<%= artifactname %>.js",
-        }]
+          options: { index : "src/index-browser.js" },
+          src: ["src/lib/**/*.js"], 
+          dest: "build/lib/<%= artifactname %>.js",
       }
     },
     "uglify": { // uglify and minify the lib
@@ -46,63 +44,48 @@ module.exports = function(grunt) {
         sourceMap : true,
         sourceMapName : "build/lib/<%= artifactname %>.map",
         sourceMapIncludeSources : true,
+        banner : "<%= banner %>",
       },
-      build: {
-        src: "build/lib/<%= artifactname %>.js",
-        dest: "build/lib/<%= artifactname %>.min.js"
+      "browser": {
+          src: "build/lib/<%= artifactname %>.js",
+          dest: "build/lib/<%= artifactname %>.min.js"
       }
     },
-    "concat" : { // add the apache license headers
-      options : {
-        banner : "<%= banner %>"
-      },
-      licence: {
-        src: "build/lib/<%= artifactname %>.js",
-        dest: "build/lib/<%= artifactname %>.js",
-      },
-      licence_min: {
-        src: "build/lib/<%= artifactname %>.min.js",
-        dest: "build/lib/<%= artifactname %>.min.js",
-      },
-    },
     "jsdoc" : {
-        src : {
-            src: ["src/**/*.js"], 
-            options: { destination: "build/doc-src", verbose : false }
-        },
-        test : {
-            src: ["tests/**/*.js"], 
-            options: { destination: "build/doc-test", verbose : false }
-        }
+      "src" : {
+          src: ["src/**/*.js"], 
+          options: { destination: "build/doc-src", verbose : false }
+      },
+      "test" : {
+          src: ["tests/**/*.js"], 
+          options: { destination: "build/doc-test", verbose : false }
+      }
     },
     "nugetpack" : { // create nuget pagckage
-        dist: {
-            src: 'grunt-config/nugetpack.nuspec',
-            dest: 'build/'
-        }
+      "dist": {
+          src: 'grunt-config/nugetpack.nuspec',
+          dest: 'build/'
+      }
     },
     "copy" : {
       "to-latest" : {
-        files: [
-          { 
-            src :"build/lib/<%= artifactname %>.js",
-            dest: "build/lib/odatajs-latest.js" },
-        ]
+          src :"build/lib/<%= artifactname %>.js",
+          dest: "build/lib/odatajs-latest.js"
       }
     },
     "npm-clean": {
       options: {force: true},
       "build": {
-        src: [ "build"]
+          src: [ "build"]
       },
     },
     "curl": {
       "license": {
-        src: {
-          url: "http://apache.org/licenses/LICENSE-2.0.txt",
-          proxy: "http://proxy:8080"
-        },
-        dest: "LICENSE"
+          src: {
+            url: "http://apache.org/licenses/LICENSE-2.0.txt",
+            proxy: "http://proxy:8080"
+          },
+          dest: "LICENSE"
       }
     }
   };
@@ -120,7 +103,6 @@ module.exports = function(grunt) {
   //    Load tasks from npm modules ***/
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks("grunt-contrib-copy");
-  grunt.loadNpmTasks("grunt-contrib-concat");
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-curl');
   grunt.loadNpmTasks("grunt-jsdoc");
@@ -149,17 +131,14 @@ module.exports = function(grunt) {
   //    Create documentation in /build/doc
   grunt.registerTask('doc', ['clearEnv', 'jsdoc:src']);
   grunt.registerTask('doc-test', ['clearEnv', 'jsdoc:test']);
-
-  //    Build the odatajs library
-
-
-  grunt.registerTask('test-browser', ['configureProxies:test-browser', 'connect:test-browser']);
-  grunt.registerTask('test-node', ['node-qunit:default-tests']);
+  
+  //grunt.registerTask('test-browser', ['configureProxies:test-browser', 'connect:test-browser']);
+  //grunt.registerTask('test-node', ['node-qunit:default-tests']);
   //grunt.registerTask('release', ['build','doc','compress']);
   //grunt.registerTask('update-legal', ['curl:license']);
 
-
-  grunt.registerTask('build', ['clean:lib','toBrowser:release', 'uglify:build', 'concat:licence_min','copy:to-latest','nugetpack']);
+  //    Build the odatajs library
+  grunt.registerTask('build', ['clean:lib','toBrowser:release', 'uglify:browser', 'copy:to-latest', 'nugetpack']);
 
   grunt.registerTask('get-licence', ['curl:license']);
 
@@ -171,12 +150,12 @@ module.exports = function(grunt) {
     'copy:release-lib','copy:release-doc','copy:release-sources',
     'rat:dist', // check the license headers
     'compress:release-lib','compress:release-doc','compress:release-sources',
-    ]);
+  ]);
 
   
   grunt.registerTask('release:sign',[
     'sign:release','sign:asc','sign:asc-verify'
-    ]);
+  ]);
 
 };
 
