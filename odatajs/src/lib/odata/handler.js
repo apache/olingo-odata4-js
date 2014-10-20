@@ -20,8 +20,8 @@
 /** @module odata/handler */
 
 
-var utils    = require('./../odatajs/utils.js');
-var oDataUtils    = require('./utils.js');
+var utils    = require('./../utils.js');
+var oDataUtils    = require('./odatautils.js');
 
 // Imports.
 var assigned = utils.assigned;

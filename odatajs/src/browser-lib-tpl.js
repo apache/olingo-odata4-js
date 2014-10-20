@@ -16,37 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-//console.log('main starting');
-//var a = require('./a.js');
-//var b = require('./b.js');
-//console.log('in main, a.done=%j, b.done=%j', a.done, b.done);
-
-var odatajs = {};
-
-odatajs.version = {
-    major: 4,
-    minor: 0,
-    build: 0
+var init = function(exports, module, require) {
+  '<% initFunction %>'
 };
 
-// core stuff, alway needed
-odatajs.deferred = require('./lib/deferred.js');
-odatajs.utils = require('./lib/utils.js');
+var datas = '<% filesAsFunctionList %>';
 
-// only neede for xml metadata
-odatajs.xml = require('./lib/ext/xml.js');
+var modules = {};
 
-// only need in browser case
-odatajs.oData = require('./lib/odata.js');
-odatajs.store = require('./lib/store.js');
-odatajs.cache = require('./lib/cache.js');
+var require = function(path) {
+    var name = path.substring(path.lastIndexOf('/')+1,path.length-3);
+    if (modules[name]) { return modules[name].exports; }
 
-if (typeof window !== 'undefined') {
-    //expose to browsers window object
-    window.odatajs = odatajs;
-} else {
-    //expose in commonjs style
-    odatajs.node = "node";
-    module.exports = odatajs;
-}
+    modules[name] = { exports : {}};
+    console.log(name);
+    if (name === 'sou') {
+      var i = 0;
+    }
+    datas[name].call(this,modules[name].exports,modules[name],require);
+    return modules[name].exports;
+  };
+
+window.odatajs = {};
+init.call(this,window.odatajs,window.odatajs,require);
+
+

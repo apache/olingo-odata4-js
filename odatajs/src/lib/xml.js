@@ -20,7 +20,7 @@
 
 /** @module datajs/xml */
 
-var utils    = require('./utils.js');
+var utils    = require('./../utils.js');
 
 var activeXObject = utils.activeXObject;
 var djsassert = utils.djsassert;

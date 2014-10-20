@@ -21,8 +21,8 @@
 
 
 
-var utils        = require('./../odatajs/utils.js');
-var oDataUtils   = require('./utils.js');
+var utils        = require('./../utils.js');
+var oDataUtils   = require('./odatautils.js');
 var oDataHandler = require('./handler.js');
 
 var odataNs = "odata";

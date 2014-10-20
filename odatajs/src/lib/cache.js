@@ -20,10 +20,10 @@
  /** @module cache */
 
 //var odatajs = require('./odatajs/utils.js');
-var utils =  require('./odatajs/utils.js');
-var deferred = require('./odatajs/deferred.js');
+var utils =  require('./utils.js');
+var deferred = require('./deferred.js');
 var storeReq = require('./store.js');
-var cacheSource = require('./cache/source');
+var cacheSource = require('./cache/source.js');
 
 
 var assigned = utils.assigned;
@@ -1448,3 +1448,6 @@ exports.estimateSize = estimateSize;
 
 /** createDataCache */  
 exports.createDataCache = createDataCache;
+
+
+

@@ -19,7 +19,6 @@
 module.exports = function(grunt) {
 
   
-  
   //sign
   grunt.config.merge( { 
     'sign' : {

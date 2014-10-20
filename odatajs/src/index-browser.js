@@ -1,4 +1,4 @@
-/*
+/*1
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,27 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-var through = require('through');
 
-module.exports = function (file) {
-  //if (/\.json$/.test(file)) return through();
-  //console.log('strip header from ' + file);
-  var data = "";
+// version information 
+exports.version = { major: 4, minor: 0, build: 0 };
+
+// core stuff, always needed
+exports.deferred = require('./lib/deferred.js');
+exports.utils = require('./lib/utils.js');
+
+// only needed for xml metadata 
+exports.xml = require('./lib/ext/xml.js');
+
+// only need in browser case
+exports.oData = require('./lib/odata.js');
+exports.store = require('./lib/store.js');
+exports.cache = require('./lib/cache.js');
 
 
-  return through(
-    function (buf) { data += buf;    },
-    function () {
-      try {
-        //console.log('\nin--------------\na'+data.substring(0,1000));
-        var out = data.replace(/(\/\*(.|\n|\r)*?\*\/)/i,"");
-        //console.log('\nout--------------\n'+out.substring(0,300));
-        this.queue(out);
-      } catch (er) {
-        this.emit("error", new Error(er.toString().replace("Error: ", "") + " (" + file + ")"));
-      }
-      this.queue(null);
-    }
-  );
-};
 

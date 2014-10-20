@@ -166,34 +166,8 @@ module.exports = function(grunt) {
     },
   });
 
-  
-  
-  /*
-  //sign
-  grunt.config.merge( { 
-    sign : {
-      'release-lib': { // just the lib
-        options: {archive: './../dist/<%= artifactname %>/<%= artifactname %>-lib.zip'},
-        files: [{expand: true, cwd: './../dist/<%= artifactname %>/lib', src: ['**'],  dest: '/'}]
-      },
-    }
-  });
-*/
 
   grunt.loadNpmTasks('grunt-contrib-compress');
-
-  //tasks
-  grunt.registerTask('release',[
-    'npm-clean:release-dist',
-    'build',
-    'doc',
-    'copy:release-lib','copy:release-doc','copy:release-sources',
-    'rat:dist', // check the license headers
-    'compress:release-lib','compress:release-doc','compress:release-sources',
-    ]);
-  grunt.registerTask('release:sign',[
-    'sign:release','sign:asc','sign:asc-verify'
-    ]);
-
+ 
 };
 

@@ -16,37 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-//console.log('main starting');
-//var a = require('./a.js');
-//var b = require('./b.js');
-//console.log('in main, a.done=%j, b.done=%j', a.done, b.done);
-
-var odatajs = {};
-
-odatajs.version = {
-    major: 4,
-    minor: 0,
-    build: 0
-};
-
-// core stuff, alway needed
-odatajs.deferred = require('./lib/deferred.js');
-odatajs.utils = require('./lib/utils.js');
-
-// only neede for xml metadata
-odatajs.xml = require('./lib/ext/xml.js');
-
-// only need in browser case
-odatajs.oData = require('./lib/odata.js');
-odatajs.store = require('./lib/store.js');
-odatajs.cache = require('./lib/cache.js');
-
-if (typeof window !== 'undefined') {
-    //expose to browsers window object
-    window.odatajs = odatajs;
-} else {
-    //expose in commonjs style
-    odatajs.node = "node";
-    module.exports = odatajs;
-}
+var x = require('./../src/index-no-browserify.js');
+//x.show();
+//x.included.show();
+console.log(x);

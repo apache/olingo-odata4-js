@@ -16,5 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-Place apache-rat-0.11.jar in ./apache-rat-0.11/apache-rat-0.11.jar.
+Place apache-rat-0.11.jar from http://creadur.apache.org/rat/download_rat.cgi
+in ./apache-rat-0.11/apache-rat-0.11.jar.
+
 See ./../readme.md for details
