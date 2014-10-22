@@ -5,7 +5,7 @@
     <id>odatajs</id>
     <tags>restful api open protocol odata client javascript node.js</tags>
     <version>4.0.0-beta-01</version>
-    <authors>Kobler-Morris Sven, Challen He, Bing Li</authors>
+    <authors>Kobler-Morris Sven, Challen He</authors>
     <owners>Apache Olingo</owners>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
     <projectUrl>http://olingo.apache.org/</projectUrl>
@@ -14,7 +14,7 @@
     <summary>JavaScript library to easily interact with OData V4 service.</summary>
     <description>odatajs is a lightweight cross-browser JavaScript library that will enable web browser and node.js to consume and interact with OData V4 service.</description>
     <releaseNotes>
-      This odatajs library for OData V4 is a new version based on datajs(http://datajs.codeplex.com/) which is for OData.
+      This odatajs library for OData V4 is a new version based on datajs(http://datajs.codeplex.com/) which is for OData V3.
     </releaseNotes>
   </metadata>
   <files>
