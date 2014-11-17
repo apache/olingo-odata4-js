@@ -26,7 +26,7 @@ module.exports = function(grunt) {
         exclude: [
           "node_modules","extern-tools",".gitignore",
           "DEPENDENCIES","LICENSE","NOTICE",
-          "JSLib.sln","package.json"
+          "JSLib.sln","package.json", "mocha.opts"
         ] },
       files: [
         /*{ src: ['./../dist/<%= artifactname %>/doc'], options:{ tag:"dist-doc"}},generated*/
@@ -40,7 +40,7 @@ module.exports = function(grunt) {
         exclude: [
           "node_modules","extern-tools",".gitignore",
           "DEPENDENCIES","LICENSE","NOTICE",
-          "JSLib.sln","package.json"
+          "JSLib.sln","package.json", "mocha.opts"
         ] },
       files: [
         /*{ src: ['./../dist/<%= artifactname %>/doc'], options:{ tag:"dist-doc"}},generated*/

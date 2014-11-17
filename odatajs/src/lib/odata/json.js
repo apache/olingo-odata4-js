@@ -188,7 +188,7 @@ function addType(data, name, value ) {
     var fullName = name + '@odata.type';
 
     if ( data[fullName] === undefined) {
-        data[fullName] = value;
+        data[fullName] = '#' + value;
     }
 }
 
@@ -197,9 +197,9 @@ function addTypeNoEdm(data, name, value ) {
 
     if ( data[fullName] === undefined) {
         if ( value.substring(0,4)==='Edm.') {
-            data[fullName] = value.substring(4);
+            data[fullName] = '#' + value.substring(4);
         } else {
-            data[fullName] = value;
+            data[fullName] = '#' + value;
         }
 
     }
@@ -210,9 +210,9 @@ function addTypeColNoEdm(data, name, value ) {
 
     if ( data[fullName] === undefined) {
         if ( value.substring(0,4)==='Edm.') {
-            data[fullName] = 'Collection('+value.substring(4)+ ')';
+            data[fullName] = '#Collection('+value.substring(4)+ ')';
         } else {
-            data[fullName] = 'Collection('+value+ ')';
+            data[fullName] = '#Collection('+value+ ')';
         }
     }
 }
@@ -256,14 +256,14 @@ function readPayloadFull(data, model, recognizeDates) {
                             // To do: we need to get the type from metadata instead of guessing. 
                             var typeFromObject = typeof data[key];
                             if (typeFromObject === 'string') {
-                                addType(data, key, '#String');
+                                addType(data, key, 'String');
                             } else if (typeFromObject === 'boolean') {
-                                addType(data, key, '#Boolean');
+                                addType(data, key, 'Boolean');
                             } else if (typeFromObject === 'number') {
                                 if (data[key] % 1 === 0) { // has fraction 
-                                    addType(data, key, '#Int32'); // the biggst integer
+                                    addType(data, key, 'Int32'); // the biggst integer
                                 } else {
-                                    addType(data, key, '#Decimal'); // the biggst float single,doulbe,decimal
+                                    addType(data, key, 'Decimal'); // the biggst float single,doulbe,decimal
                                 }
                             }
                         }
