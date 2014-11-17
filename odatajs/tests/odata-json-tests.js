@@ -23,7 +23,7 @@
    
     
     djstest.addTest(function isArrayTest() {
-        console.log("hier-----------------------");
+        //also on node
         djstest.assert(odatajs.utils.isArray([]));
         djstest.assert(odatajs.utils.isArray([1, 2]));
         djstest.assert(!odatajs.utils.isArray({}));

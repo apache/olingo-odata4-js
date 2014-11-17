@@ -25,7 +25,7 @@ exports.deferred = require('./lib/deferred.js');
 exports.utils = require('./lib/utils.js');
 
 // only needed for xml metadata 
-exports.xml = require('./lib/ext/xml.js');
+exports.xml = require('./lib/xml.js');
 
 // only need in browser case
 exports.oData = require('./lib/odata.js');

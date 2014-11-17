@@ -30,7 +30,7 @@ odatajs.deferred = require('./lib/deferred.js');
 odatajs.utils = require('./lib/utils.js');
 
 // only neede for xml metadata
-odatajs.xml = require('./lib/ext/xml.js');
+odatajs.xml = require('./lib/xml.js');
 
 // only need in browser case
 odatajs.oData = require('./lib/odata.js');

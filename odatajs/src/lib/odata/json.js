@@ -157,7 +157,6 @@ function parseJsonDateString(value) {
  * @return An object representation of the OData payload.</returns>
  */
 function jsonParser(handler, text, context) {
-
     var recognizeDates = defined(context.recognizeDates, handler.recognizeDates);
     var model = context.metadata;
     var json = (typeof text === "string") ? JSON.parse(text) : text;
