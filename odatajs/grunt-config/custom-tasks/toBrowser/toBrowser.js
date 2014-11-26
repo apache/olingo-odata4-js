@@ -40,16 +40,36 @@ module.exports = function(grunt) {
       // fill workLoad
       for(var i = 0; i < this.files.length; i++) {
         for(var ii = 0; ii < this.files[i].src.length; ii++) {
+
+
           var srcFile = this.files[i].src[ii];
+          
+          var srcPath = srcFile.substring(0,srcFile.lastIndexOf('/')+1);
+          var srcName = srcFile.substring(srcFile.lastIndexOf('/')+1,srcFile.length-3);
+
+          //console.log('exists :'+srcPath+srcName+'-browser.js' );
+          tarName = srcName;
+          if (srcName.indexOf('-browser') > 0) {
+            tarName = tarName.substring(0,srcName.indexOf('-browser'));
+            //console.log('new srcName :'+srcName );
+          } else if (grunt.file.exists(srcPath+srcName+'-browser.js')) {
+            //console.log('exists :yes');
+            continue; //skip that file
+          }
+          
+
           workLoad.push({
-                  srcFile : srcFile,
-                  name : srcFile.substring(srcFile.lastIndexOf('/')+1,srcFile.length-3)
+                  srcPath : srcPath,
+                  srcName : srcName,
+                  tarName : tarName
               });
+
         }
       
         var concat = '{';
         for(var x = 0; x < workLoad.length; x++) {
-          var src = grunt.file.read(workLoad[x].srcFile);
+          console.log('workLoad :'+JSON.stringify(workLoad[x] ));
+          var src = grunt.file.read(workLoad[x].srcPath+workLoad[x].srcName+'.js');
           // remove the first comment
           src = stripHeader(src);
         
@@ -57,7 +77,7 @@ module.exports = function(grunt) {
             concat+= ', ';
           }
 
-          concat+= '"' + workLoad[x].name + '" : ';
+          concat+= '"' + workLoad[x].tarName + '" : ';
           concat+= 'function(exports, module, require) {';
           concat+= src +'}';
         }
