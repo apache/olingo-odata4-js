@@ -175,7 +175,12 @@ function xmlThrowParserError(exceptionOrReason, srcText, errorXmlText) {
  * This function will throw an exception in case of a parse error
  */
 function xmlParse(text) {
-    var domParser = window.DOMParser && new window.DOMParser();
+    var domParser = undefined;
+    if (utils.inBrowser()) {
+        domParser = window.DOMParser && new window.DOMParser();
+    } else {
+        domParser = new (require('xmldom').DOMParser)();
+    }
     var dom;
 
     if (!domParser) {
