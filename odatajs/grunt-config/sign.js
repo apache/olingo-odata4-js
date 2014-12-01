@@ -28,6 +28,7 @@ module.exports = function(grunt) {
         cwd : './../dist/<%= artifactname %>/',
         src : [ 
           '<%= artifactname %>-lib.zip',
+          'odatajs.4.0.0-beta01.nupkg',
           '<%= artifactname %>-doc.zip',
           '<%= artifactname %>-sources.zip'
         ]
@@ -38,6 +39,7 @@ module.exports = function(grunt) {
         cwd : './../dist/<%= artifactname %>/',
         src : [ 
           '<%= artifactname %>-lib.zip',
+          'odatajs.4.0.0-beta01.nupkg',
           '<%= artifactname %>-doc.zip',
           '<%= artifactname %>-sources.zip'
         ]
@@ -48,6 +50,7 @@ module.exports = function(grunt) {
         cwd : './../dist/<%= artifactname %>/',
         src : [ 
           '<%= artifactname %>-lib.zip',
+          'odatajs.4.0.0-beta01.nupkg',
           '<%= artifactname %>-doc.zip',
           '<%= artifactname %>-sources.zip'
         ]

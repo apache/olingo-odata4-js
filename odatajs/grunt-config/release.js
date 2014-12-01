@@ -69,6 +69,11 @@ module.exports = function(grunt) {
           { expand: true, src :'README.md',dest: './../dist/<%= artifactname %>/lib', filter: 'isFile' }
         ]
       },
+      "release-nuget": {
+          files: [
+              { expand: true, cwd: 'build', src: ['odatajs.4.0.0-beta01.nupkg'], dest: './../dist/<%= artifactname %>', filter: 'isFile' },
+          ]
+      },
       "release-doc" : {
         files: [
             { expand: true, cwd: 'build/doc-src', src: ['**'], dest: './../dist/<%= artifactname %>/doc/doc', filter: 'isFile'},
