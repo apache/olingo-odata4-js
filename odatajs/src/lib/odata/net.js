@@ -152,7 +152,7 @@ exports.defaultHttpClient = {
 
         xhr.on('error', function(e) {
             //console.log('_22'+e);
-            var response = { requestUri: url, statusCode: 400, statusText: e.message, headers: headers, body: body };
+            var response = { requestUri: url, statusCode: 400, statusText: e.message };
             error({ message: "HTTP request failed", request: request, response: response });
         });
              
