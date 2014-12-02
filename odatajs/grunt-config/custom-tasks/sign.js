@@ -59,7 +59,7 @@ module.exports = function(grunt) {
                 pipeTo = workItem.src+'.md5';
 
                 grunt.log.writeln(chalk.yellow('Signing ('+workItem.type+') ' + fileName + " ..."));
-                
+                //openssl dgst -md5 odatajs.4.0.0-beta01.nupkg
                 taskOptions = { 
                     cmd : 'openssl', 
                     args: ['dgst','-md5',fileName],
