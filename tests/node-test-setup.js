@@ -20,10 +20,10 @@
 
 //tools
 djstest = require("./common/djstest.js");
-MockHttpClient = require("./common/MockHttpClient.js").init({});
+MockHttpClient = require("./common/mockHttpClient.js").init({});
 
 //lib
-datajs = require('./../src/lib/datajs.js');
+datajs = require('././lib/datajs.js');
 OData = require('./../src/lib/odata.js');
 
 
