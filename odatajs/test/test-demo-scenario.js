@@ -46,7 +46,7 @@ var testDataJsonParserMetadataNone = [{
   input:   '{"value":["ground cereal","ground grain"]}',
   expected: {"value":["ground cereal","ground grain"]}
 },{
-  description: "Collection Property with metadata=none",
+  description: "Complex Property with metadata=none",
   header:  "application/json;odata.metadata=none",
   usedUrl: "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods(0)/Packaging",
   input:   '{"Type":null,"Color":"","NumberPerPackage":2147483647,"RequiresRefridgeration":false,"ShipDate":"2000-12-29T00:00:00Z","PackageDimensions":{"Length":79228162514264337593543950335,"Height":32767,"Width":9223372036854775807,"Volume":1.7976931348623157E+308}}',
@@ -84,7 +84,7 @@ var testDataJsonParserMetadataMinimal = [{
   input:   '{"@odata.context":"http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Foods(0)/AlternativeNames","value":["ground cereal","ground grain"]}',
   expected: {"@odata.context":"http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Foods(0)/AlternativeNames","value":["ground cereal","ground grain"]}
 },{
-  description: "Collection Property with metadata=minimal",
+  description: "Complex Property with metadata=minimal",
   header:  "application/json;odata.metadata=minimal",
   usedUrl: "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods(0)/Packaging",
   input:   '{"@odata.context":"http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Foods(0)/Packaging","Type":null,"Color":"","NumberPerPackage":2147483647,"RequiresRefridgeration":false,"ShipDate":"2000-12-29T00:00:00Z","PackageDimensions":{"Length":79228162514264337593543950335,"Height":32767,"Width":9223372036854775807,"Volume":1.7976931348623157E+308}}',
@@ -123,7 +123,7 @@ var testDataJsonParserMetadataMinimalToFull = [{
   input:   '{"@odata.context":"http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Foods(0)/AlternativeNames","value":["ground cereal","ground grain"]}',
   expected: {"@odata.context":"http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Foods(0)/AlternativeNames","@odata.type":"#Collection(String)","value":["ground cereal","ground grain"]}
 },{
-  description: "Collection Property with metadata=minimal",
+  description: "Complex Property with metadata=minimal",
   header:  "application/json;odata.metadata=minimal",
   usedUrl: "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods(0)/Packaging",
   input:   '{"@odata.context":"http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Foods(0)/Packaging","Type":null,"Color":"","NumberPerPackage":2147483647,"RequiresRefridgeration":false,"ShipDate":"2000-12-29T00:00:00Z","PackageDimensions":{"Length":79228162514264337593543950335,"Height":32767,"Width":9223372036854775807,"Volume":1.7976931348623157E+308}}',
@@ -162,7 +162,7 @@ var testDataJsonParserMetadataFull = [{
   input:   '{"@odata.context":"http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Foods(0)/AlternativeNames","@odata.type":"#Collection(String)","value":["ground cereal","ground grain"]}',
   expected: {"@odata.context":"http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Foods(0)/AlternativeNames","@odata.type":"#Collection(String)","value":["ground cereal","ground grain"]}
 },{
-  description: "Collection Property with metadata=full",
+  description: "Complex Property with metadata=full",
   header:  "application/json;odata.metadata=full",
   usedUrl: "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods(0)/Packaging",
   input:   '{"@odata.context":"http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Foods(0)/Packaging","@odata.type":"#DataJS.Tests.V4.Package","Type":null,"Color":"","NumberPerPackage":2147483647,"RequiresRefridgeration":false,"ShipDate@odata.type":"#DateTimeOffset","ShipDate":"2000-12-29T00:00:00Z","PackageDimensions":{"@odata.type":"#DataJS.Tests.V4.Dimensions","Length@odata.type":"#Decimal","Length":79228162514264337593543950335,"Height@odata.type":"#Int16","Height":32767,"Width@odata.type":"#Int64","Width":9223372036854775807,"Volume":1.7976931348623157E+308}}',
