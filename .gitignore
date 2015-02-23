@@ -1,13 +1,17 @@
-dist
+# ignore local stuff
+_*
+
+# ignore IDE
 .idea
 
+# ignore local config
 localgrunt.config
 
 # testing copies
 ../demo/scripts/odatajs-4.0.0-beta-01*
 
 # build artefacts
-build/
+#build/
 
 # nodejs temporary objects
 node_modules/

@@ -22,6 +22,6 @@
     <file src="..\LICENS*E" target="odatajs\" />
     <file src="..\NOTIC*E" target="odatajs\" />
     <file src="..\DEPENDENCIE*S" target="odatajs\" />
-    <file src="..\build\lib\*" target="odatajs\" />
+    <file src="..\_build\lib\*" target="odatajs\" />
   </files>
 </package>

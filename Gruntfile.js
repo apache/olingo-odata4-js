@@ -1,3 +1,4 @@
+'use strict';
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -36,56 +37,47 @@ module.exports = function(grunt) {
       "release" : {
           options: { index : "src/index-browser.js" },
           src: ["src/lib/**/*.js", '!**/*-node.*'], 
-          dest: "build/lib/<%= artifactname %>.js",
+          dest: "_build/lib/<%= artifactname %>.js"
       }
     },
     "uglify": { // uglify and minify the lib
       options: {
         sourceMap : true,
-        sourceMapName : "build/lib/<%= artifactname %>.map",
+        sourceMapName : "_build/lib/<%= artifactname %>.map",
         sourceMapIncludeSources : true,
-        banner : "<%= banner %>",
+        banner : "<%= banner %>"
       },
       "browser": {
-          src: "build/lib/<%= artifactname %>.js",
-          dest: "build/lib/<%= artifactname %>.min.js"
+          src: "_build/lib/<%= artifactname %>.js",
+          dest: "_build/lib/<%= artifactname %>.min.js"
       }
     },
     "jsdoc" : {
       "src" : {
           src: ["src/**/*.js"], 
-          options: { destination: "build/doc-src", verbose : false }
+          options: { destination: "_build/doc-src", verbose : false }
       },
       "test" : {
           src: ["tests/**/*.js"], 
-          options: { destination: "build/doc-test", verbose : false }
+          options: { destination: "_build/doc-test", verbose : false }
       }
     },
     "nugetpack" : { // create nuget pagckage
       "dist": {
           src: 'grunt-config/nugetpack.nuspec',
-          dest: 'build/'
+          dest: '_build/'
       }
     },
     "copy" : {
       "to-latest" : {
-          src :"build/lib/<%= artifactname %>.js",
-          dest: "build/lib/odatajs-latest.js"
+          src :"_build/lib/<%= artifactname %>.js",
+          dest: "_build/lib/odatajs-latest.js"
       }
     },
-    "npm-clean": {
+    "priv-clean": {
       options: {force: true},
       "build": {
-          src: [ "build"]
-      },
-    },
-    "curl": {
-      "license": {
-          src: {
-            url: "http://apache.org/licenses/LICENSE-2.0.txt",
-            proxy: "http://proxy:8080"
-          },
-          dest: "LICENSE"
+          src: [ "_build/*"]
       }
     }
   };
@@ -108,54 +100,49 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-jsdoc");
   grunt.loadNpmTasks("grunt-nuget");
 
-  //    Load the custom-* tasks from the grunt-config directory
-  grunt.loadTasks('grunt-config/custom-tasks');
+  //    Load the custom-* tasks from the grunt-config/custom-tasks directory
+  grunt.loadTasks('grunt-config/custom-tasks'); //currently rat.js/sign.js/toBrowser.js
 
-  //    Load the custom-* tasks from the grunt-config directory
-  grunt.loadTasks('grunt-config');
+  //    Load the custom-* config from the grunt-config directory
+  grunt.loadTasks('grunt-config'); //rat.js/sign.js/toBrowser.js
 
-  //    rename some tasks to avoid name clashes with the user tasks
-  grunt.renameTask('clean','npm-clean');
-  
+  //    Rename some tasks to avoid name clashes with the user tasks
+  grunt.renameTask('clean','priv-clean'); //rat-config.js/sign-config.js/release-config.js
+
+  //    Avoid problems with apache-rat tool
   grunt.registerTask('clearEnv', 'clear JAVA_TOOL_OPTIONS', function() {
     process.env['JAVA_TOOL_OPTIONS'] = ''; 
   });
 
+
   //    E N D U S E R   T A S K S 
 
-  grunt.registerTask('clean', ['npm-clean:build']);
+  grunt.registerTask('clean', ['priv-clean:build']);
 
-  //    Runs the license header check to verify the any source file contains a license header
-  grunt.registerTask('license-check', ['rat:manual']);
+  //    BUILD the odatajs library
+  grunt.registerTask('build', ['clean:build','toBrowser:release', 'uglify:browser', 'copy:to-latest', 'nugetpack']);
 
-  //    Create documentation in /build/doc
+  //    Create DOCumentation in /_build/doc
   grunt.registerTask('doc', ['clearEnv', 'jsdoc:src']);
   grunt.registerTask('doc-test', ['clearEnv', 'jsdoc:test']);
-  
-  //grunt.registerTask('test-browser', ['configureProxies:test-browser', 'connect:test-browser']);
-  //grunt.registerTask('test-node', ['node-qunit:default-tests']);
-  //grunt.registerTask('release', ['build','doc','compress']);
-  //grunt.registerTask('update-legal', ['curl:license']);
 
-  //    Build the odatajs library
-  grunt.registerTask('build', ['clean:lib','toBrowser:release', 'uglify:browser', 'copy:to-latest', 'nugetpack']);
-
-  grunt.registerTask('get-licence', ['curl:license']);
-
-  //    R E L E A S E    T A S K S 
+  //    R E L E A S E    T A S K S ( tasts defined in release-config.js)
   grunt.registerTask('release',[
-    'npm-clean:release-dist',
+    'priv-clean:release-dist',
     'build',
     'doc',
     'copy:release-lib','copy:release-doc','copy:release-sources',
-    'rat:dist', // check the license headers
-    'compress:release-lib','compress:release-doc','compress:release-sources',
+    /*'rat:dist', // check the license headers
+    'compress:release-lib','compress:release-doc','compress:release-sources',*/
   ]);
 
   
   grunt.registerTask('release:sign',[
     'sign:release','sign:asc','sign:asc-verify'
   ]);
+
+  //    Runs the license header check to verify the any source file contains a license header
+  grunt.registerTask('license-check', ['rat:manual']);
 
 };
 

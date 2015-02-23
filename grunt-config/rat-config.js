@@ -1,3 +1,4 @@
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -29,9 +30,9 @@ module.exports = function(grunt) {
           "JSLib.sln","package.json", "mocha.opts"
         ] },
       files: [
-        /*{ src: ['./../dist/<%= artifactname %>/doc'], options:{ tag:"dist-doc"}},generated*/
-        /*{ src: ['./../dist/<%= artifactname %>/lib'], options:{ tag:"dist-lib"}},very slow*/
-        { src: ['./../dist/<%= artifactname %>/sources'], options:{ tag:"dist-src"}},
+        /*{ src: ['./../_dist/<%= artifactname %>/doc'], options:{ tag:"dist-doc"}},generated*/
+        /*{ src: ['./../_dist/<%= artifactname %>/lib'], options:{ tag:"dist-lib"}},very slow*/
+        { src: ['./../_dist/<%= artifactname %>/sources'], options:{ tag:"dist-src"}},
       ]
     },
     "manual-dist":  { 
@@ -43,9 +44,9 @@ module.exports = function(grunt) {
           "JSLib.sln","package.json", "mocha.opts"
         ] },
       files: [
-        /*{ src: ['./../dist/<%= artifactname %>/doc'], options:{ tag:"dist-doc"}},generated*/
-        /*{ src: ['./../dist/<%= artifactname %>/lib'], options:{ tag:"dist-lib"}},very slow*/
-        { src: ['./../dist/<%= artifactname %>/sources'], options:{ tag:"dist-src"}},
+        /*{ src: ['./../_dist/<%= artifactname %>/doc'], options:{ tag:"dist-doc"}},generated*/
+        /*{ src: ['./../_dist/<%= artifactname %>/lib'], options:{ tag:"dist-lib"}},very slow*/
+        { src: ['./../_dist/<%= artifactname %>/sources'], options:{ tag:"dist-src"}},
       ]
     },
     manual:  {  // with txt output
@@ -58,7 +59,7 @@ module.exports = function(grunt) {
         { src: ['./demo'], options:{ tag:"demo"}},
         { src: ['./grunt-config'], options:{ tag:"grunt-config" }}
       ]
-    },
+    }
   });
 
   

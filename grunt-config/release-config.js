@@ -34,10 +34,10 @@ module.exports = function(grunt) {
 
   // clean
   grunt.config.merge( { 
-    'npm-clean': {
+    'priv-clean': {
       'release-dist': {
         options: { force: true },
-        src: [ "./../dist/<%= artifactname %>*"]
+        src: [ "./_dist/<%= artifactname %>*"]
       }
     }
   });
@@ -50,7 +50,7 @@ module.exports = function(grunt) {
       "release-doc-src" : {
         src: ['src/**/*.js'], 
         options: {
-          destination: './../dist/<%= artifactname %>/doc',
+          destination: './_dist/<%= artifactname %>/doc',
           verbose : false 
         }
       },
@@ -62,33 +62,33 @@ module.exports = function(grunt) {
     "copy" : {
       "release-lib" : {
         files: [
-          { expand: true, cwd: 'build/lib', src: ['<%= artifactname %>*.*'], dest: './../dist/<%= artifactname %>/lib/lib', filter: 'isFile'},
-          { expand: true, src :'LICENSE',dest: './../dist/<%= artifactname %>/lib', filter: 'isFile' },
-          { expand: true, src :'NOTICE',dest: './../dist/<%= artifactname %>/lib', filter: 'isFile' },
-          { expand: true, src :'DEPENDENCIES',dest: './../dist/<%= artifactname %>/lib', filter: 'isFile' },
-          { expand: true, src :'README.md',dest: './../dist/<%= artifactname %>/lib', filter: 'isFile' }
+          { expand: true, cwd: '_build/lib', src: ['<%= artifactname %>*.*'], dest: './_dist/<%= artifactname %>/lib/lib', filter: 'isFile'},
+          { expand: true, src :'LICENSE',dest: './_dist/<%= artifactname %>/lib', filter: 'isFile' },
+          { expand: true, src :'NOTICE',dest: './_dist/<%= artifactname %>/lib', filter: 'isFile' },
+          { expand: true, src :'DEPENDENCIES',dest: './_dist/<%= artifactname %>/lib', filter: 'isFile' },
+          { expand: true, src :'README.md',dest: './_dist/<%= artifactname %>/lib', filter: 'isFile' }
         ]
       },
       "release-nuget": {
           files: [
-              { expand: true, cwd: 'build', src: ['odatajs.4.0.0-beta01.nupkg'], dest: './../dist/<%= artifactname %>', filter: 'isFile' },
+              { expand: true, cwd: '_build', src: ['odatajs.4.0.0-beta01.nupkg'], dest: './_dist/<%= artifactname %>', filter: 'isFile' },
           ]
       },
       "release-doc" : {
         files: [
-            { expand: true, cwd: 'build/doc-src', src: ['**'], dest: './../dist/<%= artifactname %>/doc/doc', filter: 'isFile'},
-            { expand: true, src :'LICENSE',dest: './../dist/<%= artifactname %>/doc', filter: 'isFile' },
-            { expand: true, src :'NOTICE',dest: './../dist/<%= artifactname %>/doc', filter: 'isFile' },
-            { expand: true, src :'DEPENDENCIES',dest: './../dist/<%= artifactname %>/doc', filter: 'isFile' },
-            { expand: true, src :'README.md',dest: './../dist/<%= artifactname %>/doc', filter: 'isFile' }
+            { expand: true, cwd: '_build/doc-src', src: ['**'], dest: './_dist/<%= artifactname %>/doc/doc', filter: 'isFile'},
+            { expand: true, src :'LICENSE',dest: './_dist/<%= artifactname %>/doc', filter: 'isFile' },
+            { expand: true, src :'NOTICE',dest: './_dist/<%= artifactname %>/doc', filter: 'isFile' },
+            { expand: true, src :'DEPENDENCIES',dest: './_dist/<%= artifactname %>/doc', filter: 'isFile' },
+            { expand: true, src :'README.md',dest: './_dist/<%= artifactname %>/doc', filter: 'isFile' }
           ]
       },
       "release-sources" : {
         files: [
-            { expand: true, src :'LICENSE',dest: './../dist/<%= artifactname %>/sources', filter: 'isFile' },
-            { expand: true, src :'NOTICE',dest: './../dist/<%= artifactname %>/sources', filter: 'isFile' },
-            { expand: true, src :'DEPENDENCIES',dest: './../dist/<%= artifactname %>/sources', filter: 'isFile' },
-            { dot: true, expand: true, cwd: './', src: ['**'], dest: './../dist/<%= artifactname %>/sources/odatajs',
+            { expand: true, src :'LICENSE',dest: './_dist/<%= artifactname %>/sources', filter: 'isFile' },
+            { expand: true, src :'NOTICE',dest: './_dist/<%= artifactname %>/sources', filter: 'isFile' },
+            { expand: true, src :'DEPENDENCIES',dest: './_dist/<%= artifactname %>/sources', filter: 'isFile' },
+            { dot: true, expand: true, cwd: './', src: ['**'], dest: './_dist/<%= artifactname %>/sources/odatajs',
             filter: function(srcPath)  {
               // no node_modules
               if (srcPath === 'node_modules' || contains(srcPath, 'node_modules\\')|| contains(srcPath, 'node_modules/')) {
@@ -120,9 +120,21 @@ module.exports = function(grunt) {
                 return false; 
               }
 
-              // no build retults
-              if (srcPath === 'build' || contains(srcPath, 'build')|| contains(srcPath, 'build')) {
+              // no IDE stuff
+              if (srcPath === '.idea' || contains(srcPath, '.idea')|| contains(srcPath, '.idea')) {
+                return false;
+              }
+
+              // no build results
+              if (srcPath === '_build' || contains(srcPath, '_build')|| contains(srcPath, '_build')) {
                 return false; 
+              }
+              if (srcPath === '_dist' || contains(srcPath, '_dist')|| contains(srcPath, '_dist')) {
+                return false;
+              }
+
+              if (srcPath === '.git' || contains(srcPath, '.git')|| contains(srcPath, '.git')) {
+                return false;
               }
 
               if (endsWith(srcPath, '.gitignore')) {
@@ -155,17 +167,17 @@ module.exports = function(grunt) {
   grunt.config.merge( { 
     compress: { // build the zip files for the release 
       'release-lib': { // just the lib
-        options: {archive: './../dist/<%= artifactname %>/<%= artifactname %>-lib.zip'},
-        files: [{expand: true, cwd: './../dist/<%= artifactname %>/lib', src: ['**'],  dest: '/'}]
+        options: {archive: './_dist/<%= artifactname %>/<%= artifactname %>-lib.zip'},
+        files: [{expand: true, cwd: './_dist/<%= artifactname %>/lib', src: ['**'],  dest: '/'}]
       },
       'release-doc': { // just the documentation
-        options: {archive: './../dist/<%= artifactname %>/<%= artifactname %>-doc.zip'},
-        files: [{expand: true, cwd: './../dist/<%= artifactname %>/doc', src: ['**'], dest: '/'}]
+        options: {archive: './_dist/<%= artifactname %>/<%= artifactname %>-doc.zip'},
+        files: [{expand: true, cwd: './_dist/<%= artifactname %>/doc', src: ['**'], dest: '/'}]
       },
       'release-sources' :  { // the full repository with out the git stuff
-        options: { archive: './../dist/<%= artifactname %>/<%= artifactname %>-sources.zip'},
+        options: { archive: './_dist/<%= artifactname %>/<%= artifactname %>-sources.zip'},
         files: [
-          {expand: true, cwd: './../dist/<%= artifactname %>/sources', src: ['**'], dest: '/'},
+          {expand: true, cwd: './_dist/<%= artifactname %>/sources', src: ['**'], dest: '/'},
         ]
       }
     },
