@@ -35,9 +35,9 @@
             headers: oHeaders,
             //requestUri: "http://services.odata.org/OData/OData.svc/$metadata",
             requestUri: "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata", //"http://localhost:6630/PrimitiveKeys.svc/$metadata",
-            data: null,
+            data: null
         };
-        odatajs.oData.read(metadataRequest, metaDatasuccess, errorFunc,OData.metadataHandler);
+        odatajs.oData.read(metadataRequest, metaDatasuccess, errorFunc,odatajs.oData.metadataHandler);
     }
 
     djstest.addTest(function test1() {

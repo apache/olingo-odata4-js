@@ -57,7 +57,7 @@
                 done();
             }, request.headers.Accept);
         }, unexpectedErrorHandler);
-    }
+    };
 
     var verifyMerge = function (request, done) {
         var httpOperation = request.method + " " + request.requestUri;
@@ -72,13 +72,13 @@
                 }, request.headers["Content-Type"]);
             }, unexpectedErrorHandler);
         }, request.headers["Content-Type"]);
-    }
+    };
 
     // Returns a subset of object with the same set of properties (recursive) as the subsetObject
     var subset = function (object, subsetObject) {
         if (typeof (object) == "object" && typeof (subsetObject) == "object") {
             var result = {};
-            for (subsetProp in subsetObject) {
+            for (var subsetProp in subsetObject) {
                 result[subsetProp] = subset(object[subsetProp], subsetObject[subsetProp]);
             }
             return result;
@@ -135,7 +135,7 @@
 
     var newFoodLinks = {
         uri: foodsFeed + "(1)"
-    }
+    };
 
     module("Functional", {
         setup: function () {

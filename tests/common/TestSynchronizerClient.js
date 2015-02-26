@@ -93,7 +93,7 @@
             }
 
             return result;
-        }
+        };
 
         var date = new Date();
         var day = padToLength(date.getDate(), 2);
@@ -132,7 +132,7 @@
         }
 
         return xhr.responseText;
-    }
+    };
 
     function LogAssert(result, message, name, expected, actual) {
         var parameterUrl = "pass=" + result + "&message=" + encodeURIComponent(message) + "&name=" + encodeURIComponent(name);
@@ -177,8 +177,8 @@
 
     var init = function (qunit) {
         /** Initializes the test logger synchronizer.
-        * @param qunit - Unit testing to hook into.
-        * If there is no testRunId present, the QUnit functions are left as they are.</remarks>
+        * @param context - Unit testing to hook into.
+        * If there is no testRunId present, the QUnit functions are left as they are.
         */
         var logToConsole = function (context) {
             if (window.console && window.console.log) {
@@ -208,7 +208,7 @@
 
             qunit.testDone = function (context) {
                 LogTestDone(context.name, context.failed, context.total);
-            }
+            };
 
             qunit.done = function (context) {
                 submitRecording();

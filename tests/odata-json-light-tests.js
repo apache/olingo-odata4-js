@@ -387,7 +387,7 @@
             }
         };
 
-        for (name in tests) {
+        for (var name in tests) {
             var test = tests[name];
             verifyReadJsonLightData(test.input, test.expected, name + " - Json light entry metadata uri was read properly.");
         }
@@ -445,7 +445,7 @@
             }
         };
 
-        for (name in tests) {
+        for (var name in tests) {
             var test = tests[name];
             verifyReadJsonLightData(test.input, test.expected, name + " - Json light entry metadata uri was read properly.", testModel);
         }
@@ -1556,7 +1556,7 @@
             }
         };
 
-        input = {
+        var input = {
             "odata.metadata": "http://someUri/$metadata#EntitySet",
             "#action1": {
                 target: "action1/item(0)",
@@ -1569,7 +1569,7 @@
             value: []
         };
 
-        expected = {
+        var expected = {
             __metadata: {
                 actions: [
                     {
@@ -1618,7 +1618,7 @@
             }
         };
 
-        input = {
+        var input = {
             "odata.metadata": "http://someUri/$metadata#EntitySet/@Element",
             "#function2": [
                 {
@@ -1658,7 +1658,7 @@
             ]
         };
 
-        expected = {
+        var expected = {
             __metadata: {
                 type: null,
                 actions: [
@@ -2216,7 +2216,7 @@
                     },
                     "P1": {
                         "type": "Edm.Decimal"
-                    },
+                    }
                 },
                 "id": "http:\/\/someUri\/EntityTypes('5')",
                 "uri": "http:\/\/someUri\/EntityTypes('5')",
@@ -2236,7 +2236,7 @@
         var model = getSampleModelWithNavPropertiesAndInheritedTypes();
         var input = {
             "odata.metadata": "http://someUri/$metadata#Products/@Element",
-            ID: 5,
+            ID: 5
         };
 
         var expected = {
@@ -2248,7 +2248,7 @@
                     },
                     "Category": {
                         "type": "ODataDemo.Category",
-                        "associationLinkUrl": "http:\/\/someUri\/Products(5)\/$links\/Category",
+                        "associationLinkUrl": "http:\/\/someUri\/Products(5)\/$links\/Category"
                     }
                 },
                 "id": "http:\/\/someUri\/Products(5)",
@@ -2368,7 +2368,7 @@
         var input = {
             "odata.metadata": "http:\/myexample.com\/MyService.svc\/$metadata#Products\/@Element",
             "odata.type": "ODataDemo.FeaturedProduct",
-            "ID": 9,
+            "ID": 9
         };
 
         var expected = {
@@ -2420,9 +2420,9 @@
                  {
                     "odata.type": "ODataDemo.FeaturedProduct",
                     "Category": {
-                        "ID": 1,
+                        "ID": 1
                     },
-                    "ID": 9,
+                    "ID": 9
                 }
              ]                          
         };

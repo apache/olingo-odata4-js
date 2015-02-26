@@ -1,4 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */-->
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -37,30 +56,28 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <!-- Product code. -->
-    <Content Include="src\cache-source.js" />
-    <Content Include="src\odata-gml.js" />
-    <Content Include="src\utils.js" />
-    <Content Include="src\odata-json-light.js" />
-    <Content Include="src\datajs.js" />
-    <Content Include="src\cache.js" />
-    <Content Include="src\deferred.js" />
-    <Content Include="src\odata.js" />
-    <Content Include="src\odata-batch.js" />
-    <Content Include="src\odata-handler.js" />
-    <Content Include="src\odata-utils.js" />
-    <Content Include="src\odata-xml.js" />
-    <Content Include="src\odata-metadata.js" />
-    <Content Include="src\odata-json.js" />
-    <Content Include="src\odata-atom.js" />
-    <Content Include="src\odata-net.js" />
-    <Content Include="src\store-dom.js" />
-    <Content Include="src\store-indexeddb.js" />
-    <Content Include="src\store-memory.js" />
-    <Content Include="src\store.js" />
-    <Content Include="src\xml.js" />
+    <Content Include="src\index.js" />
+    <Content Include="src\banner.txt" />
+    <Content Include="src\lib\cache.js" />
+    <Content Include="src\lib\odatajs.js" />
+    <Content Include="src\lib\odata.js" />
+    <Content Include="src\lib\store.js" />
+    <Content Include="src\lib\cache\source.js" />
+    <Content Include="src\lib\odatajs\deferred.js" />
+    <Content Include="src\lib\odatajs\utils.js" />
+    <Content Include="src\lib\odatajs\xml.js" />
+    <Content Include="src\lib\odata\batch.js" />
+    <Content Include="src\lib\odata\handler.js" />
+    <Content Include="src\lib\odata\json.js" />
+    <Content Include="src\lib\odata\metadata.js" />
+    <Content Include="src\lib\odata\net.js" />
+    <Content Include="src\lib\odata\utils.js" />
+    <Content Include="src\lib\store\dom.js" />
+    <Content Include="src\lib\store\indexeddb.js" />
+    <Content Include="src\lib\store\memory.js" />
     <Content Include="tests\cache-tests.js" />
-    <Content Include="tests\common\CacheOracle.js" />
+    <Content Include="tests\common\CacheVerifier.js" />
+    <Content Include="tests\common\common.js" />
     <Content Include="tests\common\Instrument.svc" />
     <Content Include="tests\common\Instrument.js" />
     <Content Include="tests\common\mockXMLHttpRequest.js" />
@@ -68,13 +85,14 @@
     <Content Include="tests\common\djstest.js" />
     <Content Include="tests\common\gpo-ie8-tour-disable.reg" />
     <Content Include="tests\common\ObservableHttpClient.js" />
-    <Content Include="tests\common\ODataReadOracle.js" />
-    <Content Include="tests\common\ODataReadOracle.svc" />
+    <Content Include="tests\common\ODataVerifyReader.js" />
+    <Content Include="tests\common\ODataVerifyReader.svc" />
     <Content Include="tests\common\rx.js" />
     <Content Include="tests\common\TestLogger.svc" />
     <Content Include="tests\common\TestSynchronizerClient.js" />
+    <Content Include="tests\e2etest\Test.html" />
     <Content Include="tests\odata-json-light-tests.js" />
-    <Content Include="tests\datajs-startup-perf-test.html" />
+    <Content Include="tests\odatajs-startup-perf-test.html" />
     <Content Include="tests\endpoints\BasicAuthDataService.svc" />
     <Content Include="tests\endpoints\FoodStoreDataServiceV4.svc" />
     <Content Include="tests\endpoints\CustomAnnotations.xml" />
@@ -83,10 +101,9 @@
     <Content Include="tests\endpoints\ErrorDataService.svc" />
     <Content Include="tests\endpoints\LargeCollectionService.svc" />
     <Content Include="tests\endpoints\web.config" />
-    <Content Include="tests\datajs-cache-large-collection-functional-tests.html" />
-    <Content Include="tests\datajs-cache-large-collection-functional-tests.js" />
-    <Content Include="tests\datajs-cache-long-haul-tests.html" />
-    <Content Include="tests\odata-atom-tests.js" />
+    <Content Include="tests\odatajs-cache-large-collection-functional-tests.html" />
+    <Content Include="tests\odatajs-cache-large-collection-functional-tests.js" />
+    <Content Include="tests\odatajs-cache-long-haul-tests.html" />
     <Content Include="tests\odata-batch-functional-tests.html" />
     <Content Include="tests\odata-batch-functional-tests.js" />
     <Content Include="tests\odata-batch-tests.js" />
@@ -124,10 +141,11 @@
     <Content Include="tests\test-list.js" />
     <Content Include="tests\test-manager.html" />
     <!-- Configuration file for the web project. -->
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="tests\code\AtomReader.cs" />
     <Compile Include="tests\code\CsdlReader.cs" />
     <Compile Include="tests\code\JsDate.cs" />
     <Compile Include="tests\code\JsonObject.cs" />
@@ -138,20 +156,25 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.OData.Client, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.OData.Client.6.0.0-beta1\lib\net40\Microsoft.OData.Client.dll</HintPath>
+    <Reference Include="Microsoft.OData.Client, Version=6.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\special-packages\Microsoft.OData.Client.6.5.0\lib\net40\Microsoft.OData.Client.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.OData.Core">
-      <HintPath>packages\Microsoft.OData.Core.6.0.0-beta1\lib\portable-net40+sl5+wp8+win8\Microsoft.OData.Core.dll</HintPath>
+    <Reference Include="Microsoft.OData.Core, Version=6.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\special-packages\Microsoft.OData.Core.6.5.0\lib\portable-net40+sl5+wp8+win8+wpa\Microsoft.OData.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.OData.Edm">
-      <HintPath>packages\Microsoft.OData.Edm.6.0.0-beta1\lib\portable-net40+sl5+wp8+win8\Microsoft.OData.Edm.dll</HintPath>
+    <Reference Include="Microsoft.OData.Edm, Version=6.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\special-packages\Microsoft.OData.Edm.6.5.0\lib\portable-net40+sl5+wp8+win8+wpa\Microsoft.OData.Edm.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.OData.Service, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.OData.Service.6.0.0-beta1\lib\net40\Microsoft.OData.Service.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\special-packages\Microsoft.OData.Service.6.5.0\lib\net40\Microsoft.OData.Service.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Spatial">
-      <HintPath>packages\Microsoft.Spatial.6.0.0-beta1\lib\portable-net40+sl5+wp8+win8\Microsoft.Spatial.dll</HintPath>
+    <Reference Include="Microsoft.Spatial, Version=6.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\special-packages\Microsoft.Spatial.6.5.0\lib\portable-net40+sl5+wp8+win8+wpa\Microsoft.Spatial.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Net" />
@@ -171,7 +194,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>46541</DevelopmentServerPort>
+          <DevelopmentServerPort>4002</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

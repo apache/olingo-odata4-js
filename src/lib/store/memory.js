@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+'use strict';
 
 /** @module store/memory */
 
@@ -68,12 +69,12 @@ function MemoryStore(name) {
     }
 
     /** This method errors out if the store already contains the specified key.
-     * @summery Adds a new value identified by a key to the store.
+     * @summary Adds a new value identified by a key to the store.
      * @method module:store/memory~MemoryStore#add
      * @param {String} key - Key string.
      * @param value - Value that is going to be added to the store.
-     * @param {Function} success - Callback for a successful add operation.</param>
-     * @param {Function} error - Callback for handling errors. If not specified then store.defaultError is invoked.</param>
+     * @param {Function} success - Callback for a successful add operation.
+     * @param {Function} error - Callback for handling errors. If not specified then store.defaultError is invoked.
      */
     this.add = function (key, value, success, error) {
         error = getErrorCallback(error);
@@ -92,8 +93,8 @@ function MemoryStore(name) {
      * @method module:store/memory~MemoryStore#addOrUpdate
      * @param {String} key - Key string.
      * @param value - Value that is going to be added or updated to the store.
-     * @param {Function} success - Callback for a successful add or update operation.</param>
-     * @param {Function} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.</param>
+     * @param {Function} success - Callback for a successful add or update operation.
+     * @param {Function} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.
     */
     this.addOrUpdate = function (key, value, success, error) {
         
@@ -116,7 +117,7 @@ function MemoryStore(name) {
 
     /** Removes all the data associated with this store object.
      * @method module:store/memory~MemoryStore#clear
-     * @param {Function} success>Callback for a successful clear operation.
+     * @param {Function} success - Callback for a successful clear operation.
      */
     this.clear = function (success) {
         items = [];
@@ -128,7 +129,7 @@ function MemoryStore(name) {
     /** Checks whether a key exists in the store.
      * @method module:store/memory~MemoryStore#contains
      * @param {String} key - Key string.
-     * @param {Funktion} success - Callback indicating whether the store contains the key or not.</param>
+     * @param {Function} success - Callback indicating whether the store contains the key or not.
      */
     this.contains = function (key, success) {
         var contained = keys.hasOwnProperty(key);
@@ -137,7 +138,7 @@ function MemoryStore(name) {
 
     /** Gets all the keys that exist in the store.
      * @method module:store/memory~MemoryStore#getAllKeys
-     * @param {Function} success - Callback for a successful get operation.</param>
+     * @param {Function} success - Callback for a successful get operation.
      */
     this.getAllKeys = function (success) {
 
@@ -151,8 +152,8 @@ function MemoryStore(name) {
     /** Reads the value associated to a key in the store.
      * @method module:store/memory~MemoryStore#read
      * @param {String} key - Key string.
-     * @param {Function} Function - Callback for a successful reads operation.</param>
-     * @param {Function{}Function - Callback for handling errors. If not specified then store.defaultError is invoked.</param>
+     * @param {Function} success - Callback for a successful reads operation.
+     * @param {Function} error - Callback for handling errors. If not specified then store.defaultError is invoked.
      */
     this.read = function (key, success, error) {
         error = getErrorCallback(error);
@@ -166,8 +167,8 @@ function MemoryStore(name) {
     /** Removes a key and its value from the store.
      * @method module:store/memory~MemoryStore#remove
      * @param {String} key - Key string.
-     * @param {Function} success - Callback for a successful remove operation.</param>
-     * @param {Function} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.</param>
+     * @param {Function} success - Callback for a successful remove operation.
+     * @param {Function} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.
      */
     this.remove = function (key, success, error) {
         error = getErrorCallback(error);
@@ -197,8 +198,8 @@ function MemoryStore(name) {
      * @method module:store/memory~MemoryStore#update
      * @param {String} key - Key string.
      * @param value - New value.
-     * @param {Function} success - Callback for a successful update operation.</param>
-     * @param {Function} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.</param>
+     * @param {Function} success - Callback for a successful update operation.
+     * @param {Function} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.
      * This method errors out if the specified key is not found in the store.
      */
     this.update = function (key, value, success, error) {

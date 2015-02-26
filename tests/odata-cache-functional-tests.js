@@ -18,7 +18,7 @@
  */
 
 (function (window, undefined) {
-    OData.defaultHandler.accept = "application/json;q=0.9, */*;q=0.1";
+    odatajs.oData.defaultHandler.accept = "application/json;q=0.9, */*;q=0.1";
     var CustomDataSource = function (baseUri) {
         this.baseUri = baseUri;
     };
@@ -45,7 +45,7 @@
             success: success,
             error: error
         });
-    },
+    };
     CustomDataSource.prototype.toString = function () {
         return this.baseUri;
     };
@@ -138,15 +138,16 @@
         };
     };
 
+    /** Validates the data returned by readRange
+     * @param {Object} cache - The cache object
+     * @param {Object} data - The data returned by the cache
+     * @param {Object} source - The base URI of the feed, or the custom data source
+     * @param {Integer} skipValue - The skip value
+     * @param {Integer} takeValue - The take value
+     * @param {Function} finished - Callback function called after data is verified
+     */
     var validateExpectedRange = function (cache, data, source, skipValue, takeValue, finished) {
-        /** Validates the data returned by readRange
-         * @param {Object} cache - The cache object
-         * @param {Object} data - The data returned by the cache
-         * @param {Object} source - The base URI of the feed, or the custom data source
-         * @param {Integer} skipValue - The skip value
-         * @param {Integer} takeValue - The take value
-         * @param {Function} finished - Callback function called after data is verified
-         */
+
         var assertData = function (expectedData) {
             djstest.assertAreEqualDeep(data, expectedData, "Verify response data");
             finished();

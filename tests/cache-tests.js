@@ -618,11 +618,12 @@
             doneAfterAllTests();
         };
 
+        /** Removes Safari-specific properties from an exception object
+         * @param {Exception} err -The exception object to operate on
+         * @returns {Exception} The original exception object with the Safari-specific properties removed
+         */
         var removeSafariExceptionProperties = function (err) {
-            /** Removes Safari-specific properties from an exception object
-             * @param {Exception} err -The exception object to operate on
-             * @returns {Exception} The original exception object with the Safari-specific properties removed
-             */
+
             var safariProperties = ["line", "expressionBeginOffset", "expressionEndOffset", "sourceId", "sourceURL"];
 
             var result = {};

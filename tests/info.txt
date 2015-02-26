@@ -1,0 +1,23 @@
+                Monday, February 23, 2015 10:44 AM        2,315 odata-batch-functional-tests.html
+OK   904 /  904 Monday, February 23, 2015 10:44 AM        2,580 odata-cache-filter-functional-tests.html
+OK    12 /   12 Monday, February 23, 2015 10:44 AM        2,406 odata-cache-fperf-tests.html
+OK  1062 / 1062 Monday, February 23, 2015 10:44 AM       2,585 odata-cache-functional-tests.html
+OK    42 /   42 Monday, February 23, 2015 10:44 AM        2,420 odata-cache-rx-functional-tests.html
+??              Monday, February 23, 2015 10:44 AM       34,770 odata-fuzz.html
+OK     1 /    1 Monday, February 23, 2015 10:44 AM        3,399 odata-json-parse-tests.html
+OK    16 /   16 Monday, February 23, 2015 10:44 AM        2,372 odata-links-functional-tests.html
+FAIL  23 /   52 Monday, February 23, 2015 10:44 AM        2,350 odata-metadata-awareness-functional-tests.html
+                Tests 1-6 OK; Tests 7-27 are using old __metadata
+OK    36 /   36 Monday, February 23, 2015 10:44 AM        2,295 odata-perf-tests.html
+                ->calls to nexflix defect --> removed
+FAIL 751 / 763  Monday, February 23, 2015 03:54 PM        3,744 odata-qunit-tests.htm
+                -> problems with observable and localstoreage
+??    0/ 31     Monday, February 23, 2015 10:44 AM        2,378 odata-read-crossdomain-functional-tests.html
+                -> calls to odatasampleservices.azurewebsites.net fail
+OK  124/124     Monday, February 23, 2015 10:44 AM        2,375 odata-read-functional-tests.html
+OK   52/ 52     Monday, February 23, 2015 10:44 AM        2,332 odata-request-functional-tests.html
+OK   17/ 18     Monday, February 23, 2015 10:44 AM        2,554 odatajs-cache-large-collection-functional-tests.html
+                -> one timeout on server side
+??              Monday, February 23, 2015 10:44 AM        8,264 odatajs-cache-long-haul-tests.html
+OK    1/  1     Monday, February 23, 2015 10:44 AM        5,359 odatajs-startup-perf-test.html
+??              Monday, February 23, 2015 10:44 AM        4,577 test-manager.html

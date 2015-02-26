@@ -46,7 +46,7 @@
         } else {
             makeRequest(success);
         }
-    }
+    };
 
     window.Instrument = {
         getBrowserMemorySize: getBrowserMemorySize

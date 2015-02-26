@@ -27,7 +27,7 @@
     <meta http-equiv="expires" content="-1" />
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.4.js"></script>
-    <script type="text/javascript" src="../build/odatajs-4.0.0-beta-01.js"></script>   
+    <script type="text/javascript" src="../_build/lib/odatajs-latest.js"></script>
     <script type="text/javascript" src="common/common.js"></script>
     <script type="text/javascript">
 
@@ -319,10 +319,11 @@
             { w: 3, v: "insert" }
         ];
 
+        /** Fuzzes the specified string.
+         * @param {String} text - Text to fuzz.
+         * @returns {String} The fuzzes text.
+         */
         var fuzzText = function (text) {
-            /** Fuzzes the specified string.
-             * @param {String} text - Text to fuzz.
-             * @returns {String} The fuzzes text.
 
             var location = Math.round(Math.random() * text.length - 1);
             var content = randomFromWeighted(fuzzingTextTable);
@@ -352,7 +353,7 @@
             }
 
             return result;
-        }
+        };
 
         var generateResponse = function (suggestedContentType, body) {
             var url = rarely(null, "http://foo/bar");
@@ -362,8 +363,8 @@
             headers["Content-Length"] = rarely(Math.random() * 200, undefined);
             headers["Content-Type"] = rarely("foo bar baz", suggestedContentType);
 
-            var response = { requestUri: url, statusCode: statusCode, statusText: statusText, headers: headers, body: body };
-            return response;
+
+            return { requestUri: url, statusCode: statusCode, statusText: statusText, headers: headers, body: body };
         };
 
         var generateRandom = function () {
@@ -476,12 +477,13 @@
         ];
 
         var fakeHttpClient = {
+            /** Performs a fake network request.
+             * @param {Function} request - Request
+             * @param {Function} success - Success callback with the response object.
+             * @param {Function} error - Error callback with an error object.
+             * @returns {Object} Object with an 'abort' method for the operation.
+             */
             request: function (request, success, error) {
-                /** Performs a network request.
-                 * @param {Function} success - Success callback with the response object.
-                 * @param {Function} error - Error callback with an error object.
-                 * @returns {Object} Object with an 'abort' method for the operation.
-
                 var shouldError = rarely(true, false);
                 var format = randomFromWeighted(formatTable);
                 var response = format();

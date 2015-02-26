@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+'use strict';
 
  /** @module cache/source */
  
@@ -100,8 +101,7 @@ function findQueryOptionStart(uri, name) {
  * @returns {Object} Object with an abort method.
  */
 function queryForData (uri, options, success, error) {
-    var request = queryForDataInternal(uri, options, {}, success, error);
-    return request;
+    return queryForDataInternal(uri, options, {}, success, error);
 }
 
 /** Gets data from an OData service taking into consideration server side paging.

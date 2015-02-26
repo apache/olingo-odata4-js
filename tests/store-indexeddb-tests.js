@@ -253,7 +253,7 @@
                     store.read("key", function (key, value) {
                         djstest.assertAreEqual(value, "value", "value was not changed");
                         djstest.done();
-                    }), unexpectedError;
+                    }, unexpectedError);
                 });
             }, unexpectedError);
         });

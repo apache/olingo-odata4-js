@@ -27,9 +27,10 @@
     <meta http-equiv="expires" content="-1" />
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.4.js"></script>
-    <script type="text/javascript" src="../build/odatajs-4.0.0-beta-01.js"></script>   
+    <script type="text/javascript" src="../build/lib/odatajs-latest.js"></script>
     <script type="text/javascript" src="common/common.js"></script>
     <script type="text/javascript" src="common/djstest.js"></script>
+    <script type="text/javascript" src="common/djstest-browser-ext.js"></script>
     <script type="text/javascript" src="common/Instrument.js"></script>
     <script type="text/javascript">
         var cache;
@@ -88,11 +89,13 @@
             });
         };
 
+        /** Calls readRange over the whole collection and done when all items have been read.
+         * @param {Number} index - Index to start the read.
+         * @param {String} count - The count of each readRange.
+         * @param {Function} done - Function to be called when all items in collection have been read.
+         */
         var callReadRangeRepeatedly = function (index, count, done) {
-            /** Calls readRange over the whole collection and done when all items have been read.
-             * @param {Integer} index - Index to start the read.
-             * @param {String} count - The count of each readRange.
-             * @param {Function} done - Function to be called when all items in collection have been read.
+
             var cacheRead = function () {
                 cache.readRange(index, count).then(function () {
                     if (index < itemsInCollection) {
@@ -111,7 +114,7 @@
             else {
                 cacheRead(); 
             }
-        }
+        };
 
         function startTest() {
             var prefetchSize =

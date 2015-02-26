@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+'use strict';
 
 /** @module datajs/utils */
 
@@ -64,7 +65,7 @@ function contains(arr, item) {
 /** Given two values, picks the first one that is not undefined.
  * @param a - First value.
  * @param b - Second value.
- * @returns a if it's a defined value; else b.</returns>
+ * @returns a if it's a defined value; else b.
  */
 function defined(a, b) {
     return (a !== undefined) ? a : b;
@@ -187,7 +188,7 @@ function throwErrorCallback(error) {
 }
 
 /** Removes leading and trailing whitespaces from a string.
- * @param {String str String to trim
+ * @param {String} str String to trim
  * @returns {String} The string with no leading or trailing whitespace.
  */
 function trimString(str) {
@@ -343,7 +344,7 @@ function normalizeURI(uri, base) {
 }
 
 /** Merges the path of a relative URI and a base URI.
- * @param {String} uriPath - Relative URI path.</param>
+ * @param {String} uriPath - Relative URI path.
  * @param {String} basePath - Base URI path.
  * @returns {String} A string with the merged path.
  */

@@ -54,7 +54,7 @@
             odatajs.oData.request({
                 method: "PUT",
                 data: testItem,
-                requestUri: uri,
+                requestUri: uri
             }, itemUpdatedCallback);
         };
 

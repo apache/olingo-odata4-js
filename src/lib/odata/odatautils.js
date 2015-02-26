@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+'use strict';
  /** @module odata/utils */
 
 var utils    = require('./../utils.js');
@@ -200,10 +201,10 @@ function forEachSchema(metadata, callback) {
 }
 
 /** Formats a millisecond and a nanosecond value into a single string.
- * @param {Numaber} ms - Number of milliseconds to format.</param>
- * @param {Numaber} ns - Number of nanoseconds to format.</param>
+ * @param {Number} ms - Number of milliseconds to format.
+ * @param {Number} ns - Number of nanoseconds to format.
  * @returns {String} Formatted text.
- * If the value is already as string it's returned as-is.</remarks>
+ * If the value is already as string it's returned as-is.
  */
 function formatMilliseconds(ms, ns) {
 
@@ -400,7 +401,7 @@ var collectionTypeRE = /Collection\((.*)\)/;
 
 /** Tests whether a value is a collection value in the library's internal representation.
  * @param value - Value to test.
- * @param {Sting} typeName - Type name of the value. This is used to disambiguate from a collection property value.
+ * @param {String} typeName - Type name of the value. This is used to disambiguate from a collection property value.
  * @returns {Boolean} True is the value is a feed value; false otherwise.
  */
 function isCollection(value, typeName) {
@@ -464,7 +465,7 @@ function isEntry(value) {
 
 /** Tests whether a value is a feed value in the library's internal representation.
  * @param value - Value to test.
- * @param {Sting} typeName - Type name of the value. This is used to disambiguate from a collection property value.
+ * @param {String} typeName - Type name of the value. This is used to disambiguate from a collection property value.
  * @returns {Boolean} True is the value is a feed value; false otherwise.
  */
 function isFeed(value, typeName) {
@@ -481,11 +482,9 @@ function isFeed(value, typeName) {
  * @returns {Boolean} True if the type is a geography EDM type; false otherwise.
  */
 function isGeographyEdmType(typeName) {
-
     //check with edm
-    var ret = contains(geographyEdmTypes, typeName) || 
+    return contains(geographyEdmTypes, typeName) ||
         (typeName.indexOf('.') === -1 && contains(geographyTypes, typeName));
-    return ret; 
         
 }
 
@@ -494,11 +493,11 @@ function isGeographyEdmType(typeName) {
  * @returns {Boolean} True if the type is a geometry EDM type; false otherwise.
  */
 function isGeometryEdmType(typeName) {
-
-    var ret = contains(geometryEdmTypes, typeName) ||
+    return contains(geometryEdmTypes, typeName) ||
         (typeName.indexOf('.') === -1 && contains(geometryTypes, typeName));
-    return ret; 
 }
+
+
 
 /** Tests whether a value is a named stream value in the library's internal representation.
  * @param value - Value to test.
@@ -587,7 +586,7 @@ function lookupInMetadata(name, metadata, kind) {
 }
 
 /** Looks up a entity set by name.
- * @param {Array} properties - Array of entity set objects as per EDM metadata( may be null)
+ * @param {Array} entitySets - Array of entity set objects as per EDM metadata( may be null)
  * @param {String} name - Name to look for.
  * @returns {Object} The entity set object; null if not found.
  */
@@ -599,7 +598,7 @@ function lookupEntitySet(entitySets, name) {
 }
 
 /** Looks up a entity set by name.
- * @param {Array} properties - Array of entity set objects as per EDM metadata (may be null)
+ * @param {Array} singletons - Array of entity set objects as per EDM metadata (may be null)
  * @param {String} name - Name to look for.
  * @returns {Object} The entity set object; null if not found.
  */
@@ -613,7 +612,7 @@ function lookupSingleton(singletons, name) {
 /** Looks up a complex type object by name.
  * @param {String} name - Name, possibly null or empty.
  * @param metadata - Metadata store; one of edmx, schema, or an array of any of them.
- * @returns A complex type description if the name is found; null otherwise.</returns>
+ * @returns A complex type description if the name is found; null otherwise.
  */
 function lookupComplexType(name, metadata) {
 
@@ -623,7 +622,7 @@ function lookupComplexType(name, metadata) {
 /** Looks up an entity type object by name.
  * @param {String} name - Name, possibly null or empty.
  * @param metadata - Metadata store; one of edmx, schema, or an array of any of them.
- * @returns An entity type description if the name is found; null otherwise.</returns>
+ * @returns An entity type description if the name is found; null otherwise.
  */
 function lookupEntityType(name, metadata) {
 
@@ -632,9 +631,8 @@ function lookupEntityType(name, metadata) {
 
 
 /** Looks up an
- * @param {String} name - Name, possibly null or empty.
  * @param metadata - Metadata store; one of edmx, schema, or an array of any of them.
- * @returns An entity container description if the name is found; null otherwise.</returns>
+ * @returns An entity container description if the name is found; null otherwise.
  */
 function lookupDefaultEntityContainer(metadata) {
 
@@ -648,7 +646,7 @@ function lookupDefaultEntityContainer(metadata) {
 /** Looks up an entity container object by name.
  * @param {String} name - Name, possibly null or empty.
  * @param metadata - Metadata store; one of edmx, schema, or an array of any of them.
- * @returns An entity container description if the name is found; null otherwise.</returns>
+ * @returns An entity container description if the name is found; null otherwise.
  */
 function lookupEntityContainer(name, metadata) {
 
@@ -656,7 +654,7 @@ function lookupEntityContainer(name, metadata) {
 }
 
 /** Looks up a function import by name.
- * @param {Array} properties - Array of function import objects as per EDM metadata (May be null)
+ * @param {Array} functionImports - Array of function import objects as per EDM metadata (May be null)
  * @param {String} name - Name to look for.
  * @returns {Object} The entity set object; null if not found.
  */
@@ -705,7 +703,9 @@ function lookupNavigationPropertyType(navigationProperty, metadata) {
 
 /** Looks up the target entityset name for a navigation property.
  * @param {Object} navigationProperty - 
- * @param {Object} metadata - 
+ * @param {Object} sourceEntitySetName -
+ * @param {Object} metadata -
+ * metadata
  * @returns {String} The entityset name for the specified property, null if not found.
  */
 function lookupNavigationPropertyEntitySet(navigationProperty, sourceEntitySetName, metadata) {
@@ -734,7 +734,7 @@ function lookupNavigationPropertyEntitySet(navigationProperty, sourceEntitySetNa
 }
 
 /** Gets the entitySet info, container name and functionImports for an entitySet
- * @param {Object} navigationProperty - 
+ * @param {Object} entitySetName -
  * @param {Object} metadata - 
  * @returns {Object} The info about the entitySet.
  */
@@ -774,7 +774,7 @@ function removeNamespace(ns, fullName) {
  * @param {String} name - Name (assigned).
  * @param schema - Schema object as per EDM metadata.
  * @param {String} kind - Kind of object to look for as per EDM metadata.
- * @returns An entity type description if the name is found; null otherwise.</returns>
+ * @returns An entity type description if the name is found; null otherwise.
  */
 function lookupInSchema(name, schema, kind) {
 
@@ -887,6 +887,7 @@ var parseDateTimeRE = /^(-?\d{4,})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?(
 /** Parses a string into a DateTime value.
  * @param {String} value - Value to parse.
  * @param {Boolean} withOffset - Whether offset is expected.
+ * @param {Boolean} nullOnError - return null instead of throwing an exception
  * @returns {Date} The parsed value.
  */
 function parseDateTimeMaybeOffset(value, withOffset, nullOnError) {
@@ -971,6 +972,7 @@ function parseDateTimeMaybeOffset(value, withOffset, nullOnError) {
 
 /** Parses a string into a Date object.
  * @param {String} propertyValue - Value to parse.
+ * @param {Boolean} nullOnError - return null instead of throwing an exception
  * @returns {Date} The parsed with year, month, day set, time values are set to 0
  */
 function parseDate(propertyValue, nullOnError) {
@@ -990,6 +992,11 @@ function parseDate(propertyValue, nullOnError) {
 
 var parseTimeOfDayRE = /^(\d+):(\d+)(:(\d+)(.(\d+))?)?$/;
 
+/**Parses a time into a Date object.
+ * @param propertyValue
+ * @param {Boolean} nullOnError - return null instead of throwing an exception
+ * @returns {{h: Number, m: Number, s: Number, ms: Number}}
+ */
 function parseTimeOfDay(propertyValue, nullOnError) {
     var parts = parseTimeOfDayRE.exec(propertyValue);
 
@@ -998,15 +1005,14 @@ function parseTimeOfDay(propertyValue, nullOnError) {
         'h' :parseInt10(parts[1]),
         'm' :parseInt10(parts[2]),
         's' :parseInt10(parts[4]),
-        'ms' :parseInt10(parts[6]),
+        'ms' :parseInt10(parts[6])
      };
 }
 
 /** Parses a string into a DateTimeOffset value.
  * @param {String} propertyValue - Value to parse.
+ * @param {Boolean} nullOnError - return null instead of throwing an exception
  * @returns {Date} The parsed value.
-
-
  * The resulting object is annotated with an __edmType property and
  * an __offset property reflecting the original intended offset of
  * the value. The time is adjusted for UTC time, as the current
@@ -1138,9 +1144,10 @@ function prepareRequest(request, handler, context) {
 
 /** Traverses a tree of objects invoking callback for every value.
  * @param {Object} item - Object or array to traverse.
+ * @param {Object} owner - Pass through each callback
  * @param {Function} callback - Callback function with key and value, similar to JSON.parse reviver.
  * @returns {Object} The object with traversed properties.
- Unlike the JSON reviver, this won't delete null members.</remarks>
+ Unlike the JSON reviver, this won't delete null members.
 */
 function traverseInternal(item, owner, callback) {
 
@@ -1166,7 +1173,7 @@ function traverseInternal(item, owner, callback) {
  * @param {Object} item - Object or array to traverse.
  * @param {Function} callback - Callback function with key and value, similar to JSON.parse reviver.
  * @returns {Object} The traversed object.
- * Unlike the JSON reviver, this won't delete null members.</remarks>
+ * Unlike the JSON reviver, this won't delete null members.
 */
 function traverse(item, callback) {
 
@@ -1262,4 +1269,5 @@ exports.parseInt10 = parseInt10;
 exports.prepareRequest = prepareRequest;
 exports.removeNamespace = removeNamespace;
 exports.traverse = traverse;
+
 

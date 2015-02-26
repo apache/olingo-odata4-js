@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+'use strict';
 
 /** @module odata/handler */
 
@@ -54,7 +55,7 @@ function contentType(str) {
 
 /** Serializes an object with media type and properties dictionary into a string.
  * @param contentType - Object with media type and properties dictionary to serialize.
- * @return String representation of the media type object; undefined if contentType is null or undefined.</returns>
+ * @return String representation of the media type object; undefined if contentType is null or undefined.
  */
 function contentTypeToString(contentType) {
     if (!contentType) {
@@ -74,7 +75,7 @@ function contentTypeToString(contentType) {
  * @param {String} dataServiceVersion - String indicating the version of the protocol to use.
  * @param context - Operation context.
  * @param handler - Handler object that is processing a resquest or response.
- * @return Context object.</returns>
+ * @return Context object.
  */
 function createReadWriteContext(contentType, dataServiceVersion, context, handler) {
 
@@ -203,7 +204,7 @@ function handlerRead(handler, parseCallback, response, context) {
 /** Invokes the serializer associated with a handler for generating the payload of a HTTP request.
  * @param handler - Handler object that is processing the request.
  * @param {Function} serializeCallback - Serializer function that will generate the request payload.
- * @param response - HTTP request whose payload is going to be generated.
+ * @param request - HTTP request whose payload is going to be generated.
  * @param context - Object used as the context for serializing the request.
  * @returns {Boolean} True if the handler serialized the request payload and the request.body property was set; false otherwise.
  */
@@ -272,7 +273,6 @@ function textSerialize(handler, data /*, context */) {
 
 
 exports.textHandler = handler(textParse, textSerialize, "text/plain", MAX_DATA_SERVICE_VERSION);
-
 exports.contentType = contentType;
 exports.contentTypeToString = contentTypeToString;
 exports.handler = handler;

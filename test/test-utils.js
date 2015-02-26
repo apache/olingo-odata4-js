@@ -16,12 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+'use strict';
 
 var odatajs = require('./../src/index-node.js');
 var chai = require('chai');
 var assert = chai.assert;
 
-describe('TEST utils.js', function() {
+describe('TEST utils.js', function () {
     it('utils.isArray', function () {
         assert.isTrue(odatajs.utils.isArray([]));
         assert.isTrue(odatajs.utils.isArray([1, 2]));

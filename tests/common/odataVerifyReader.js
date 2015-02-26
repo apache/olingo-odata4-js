@@ -182,7 +182,7 @@
                 delete data[property];
             }
 
-            for (prop in data) {
+            for (var prop in data) {
                 removeProperty(data[prop], property);
             }
         }

@@ -41,11 +41,9 @@ var ticks = 0;
  */
 function canUseJSONP(request) {
     
-    if (request.method && request.method !== "GET") {
-        return false;
-    }
+    return !(request.method && request.method !== "GET");
 
-    return true;
+
 }
 
 /** Creates an IFRAME tag for loading the JSONP script
@@ -64,7 +62,7 @@ function createIFrame(url) {
 
     writeHtmlToIFrame(iframe, html);
     return iframe;
-};
+}
 
 /** Creates a XmlHttpRequest object.
  * @returns {XmlHttpRequest} XmlHttpRequest object.
@@ -129,7 +127,7 @@ function removeCallback(name, tick) {
             ticks -= 1;
         }
     }
-};
+}
 
 /** Removes an iframe.
  * @param {Object} iframe - The iframe to remove.
@@ -142,7 +140,7 @@ function removeIFrame(iframe) {
     }
 
     return null;
-};
+}
 
 /** Reads response headers into array.
  * @param {XMLHttpRequest} xhr - HTTP request with response available.
@@ -184,7 +182,12 @@ exports.defaultHttpClient = {
      * @param {Function} error - Error callback with an error object.
      * @returns {Object} Object with an 'abort' method for the operation.
      */
-    request: function (request, success, error) {
+    request: function createRequest() {
+
+        var that = this;
+
+
+        return function(request, success, error) {
 
         var result = {};
         var xhr = null;
@@ -217,9 +220,9 @@ exports.defaultHttpClient = {
 
         var name;
         var url = request.requestUri;
-        var enableJsonpCallback = defined(request.enableJsonpCallback, this.enableJsonpCallback);
-        var callbackParameterName = defined(request.callbackParameterName, this.callbackParameterName);
-        var formatQueryString = defined(request.formatQueryString, this.formatQueryString);
+        var enableJsonpCallback = defined(request.enableJsonpCallback , that.enableJsonpCallback);
+        var callbackParameterName = defined(request.callbackParameterName, that.callbackParameterName);
+        var formatQueryString = defined(request.formatQueryString, that.formatQueryString);
         if (!enableJsonpCallback || isLocalUrl(url)) {
 
             xhr = createXmlHttpRequest();
@@ -331,6 +334,7 @@ exports.defaultHttpClient = {
 
         return result;
     }
+    }()
 };
 
 

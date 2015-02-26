@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+'use strict';
 
 /** @module store/dom */
 
@@ -46,7 +47,8 @@ function domStoreDateToJSON() {
 /** This method is used during JSON parsing and invoked only by the reviver function.
  * It should never be called directly.
  * @summary JSON reviver function for converting an object representing a Date in a JSON stream to a Date object
- * @param Object - Object to convert.
+ * @param value _
+ * @param value - Object to convert.
  * @returns {Date} Date object.
  */
 function domStoreJSONToDate(_, value) {
@@ -116,8 +118,8 @@ DomStore.isSupported = function () {
  * @method module:store/dom~DomStore#add
  * @param {String} key - Key string.
  * @param value - Value that is going to be added to the store.
- * @param {Funcktion} success - Callback for a successful add operation.</param>
- * @param {Funcktion} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.</param>
+ * @param {Function} success - Callback for a successful add operation.
+ * @param {Function} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.
  * This method errors out if the store already contains the specified key.
  */
 DomStore.prototype.add = function (key, value, success, error) {
@@ -137,8 +139,8 @@ DomStore.prototype.add = function (key, value, success, error) {
  * @method module:store/dom~DomStore#addOrUpdate
  * @param {String} key - Key string.
  * @param value - Value that is going to be added or updated to the store.
- * @param {Function} success - Callback for a successful add or update operation.</param>
- * @param {Function} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.</param>
+ * @param {Function} success - Callback for a successful add or update operation.
+ * @param {Function} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.
  */
 DomStore.prototype.addOrUpdate = function (key, value, success, error) {
     error = error || this.defaultError;
@@ -175,8 +177,8 @@ DomStore.prototype.addOrUpdate = function (key, value, success, error) {
 /** In case of an error, this method will not restore any keys that might have been deleted at that point.
  * @summary Removes all the data associated with this store object.
  * @method module:store/dom~DomStore#clear
- * @param {Function} success - Callback for a successful clear operation.</param>
- * @param {Function} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.</param>
+ * @param {Function} success - Callback for a successful clear operation.
+ * @param {Function} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.
  */
 DomStore.prototype.clear = function (success, error) {
 
@@ -209,8 +211,8 @@ DomStore.prototype.close = function () {
 /** Checks whether a key exists in the store.
  * @method module:store/dom~DomStore#contains
  * @param {String} key - Key string.
- * @param {Function} success - Callback indicating whether the store contains the key or not.</param>
- * @param {Function} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.</param>
+ * @param {Function} success - Callback indicating whether the store contains the key or not.
+ * @param {Function} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.
 */
 DomStore.prototype.contains = function (key, success, error) {
     error = error || this.defaultError;
@@ -227,8 +229,8 @@ DomStore.prototype.defaultError = throwErrorCallback;
 
 /** Gets all the keys that exist in the store.
  * @method module:store/dom~DomStore#getAllKeys
- * @param {Function} success - Callback for a successful get operation.</param>
- * @param {Function} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.</param>
+ * @param {Function} success - Callback for a successful get operation.
+ * @param {Function} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.
  */
 DomStore.prototype.getAllKeys = function (success, error) {
 
@@ -288,8 +290,8 @@ DomStore.prototype.read = function (key, success, error) {
 /** Removes a key and its value from the store.
  * @method module:store/dom~DomStore#remove
  * @param {String} key - Key string.
- * @param {Funtion} success - Callback for a successful remove operation.</param>
- * @param {Funtion} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.</param>
+ * @param {Function} success - Callback for a successful remove operation.
+ * @param {Function} [error] - Callback for handling errors. If not specified then store.defaultError is invoked.
  */
 DomStore.prototype.remove = function (key, success, error) {
     error = error || this.defaultError;

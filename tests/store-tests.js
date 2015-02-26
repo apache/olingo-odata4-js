@@ -72,7 +72,7 @@
          */
         var implementation = mechanismImplementations[mechanism];
         return implementation && implementation.canCreate();
-    }
+    };
     var makeUnexpectedErrorHandler = function (fail) {
         return function (err) {
             djstest.fail("error: " + err.name + " -- message: " + err.message);
@@ -433,7 +433,7 @@
 
                 job.queue(function (success, fail) {
                     store.remove("Key1", function () {
-                        djstest.pass("Key1 was removed from the store")
+                        djstest.pass("Key1 was removed from the store");
                         success();
                     }, makeUnexpectedErrorHandler(fail));
                 });
@@ -660,8 +660,9 @@
 
         var i, len;
         for (i = 0, len = tests.length; i < len; i++) {
+            var test = tests[i];
             try {
-                var test = tests[i];
+
                 var store = odatajs.store.createStore("testStore" + i, tests[i].mechanism);
 
                 if (!test.exception) {

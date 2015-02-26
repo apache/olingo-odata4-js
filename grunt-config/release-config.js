@@ -53,8 +53,8 @@ module.exports = function(grunt) {
           destination: './_dist/<%= artifactname %>/doc',
           verbose : false 
         }
-      },
-    },
+      }
+    }
   });
 
   // copy
@@ -91,10 +91,10 @@ module.exports = function(grunt) {
             { dot: true, expand: true, cwd: './', src: ['**'], dest: './_dist/<%= artifactname %>/sources/odatajs',
             filter: function(srcPath)  {
               // no node_modules
-              if (srcPath === 'node_modules' || contains(srcPath, 'node_modules\\')|| contains(srcPath, 'node_modules/')) {
+              if (srcPath === 'node_modules' || contains(srcPath, 'node_modules')) {
                 return false; 
               }
-              if (srcPath === 'extern-tools' || contains(srcPath, 'extern-tools\\')|| contains(srcPath, 'extern-tools/')) {
+              if (srcPath === 'extern-tools' || contains(srcPath, 'extern-tools')) {
                 return false; 
               }
 
@@ -154,7 +154,7 @@ module.exports = function(grunt) {
               return true;
             }},
           ]
-      },
+      }
     }
   });
 
@@ -180,7 +180,7 @@ module.exports = function(grunt) {
           {expand: true, cwd: './_dist/<%= artifactname %>/sources', src: ['**'], dest: '/'},
         ]
       }
-    },
+    }
   });
 
 

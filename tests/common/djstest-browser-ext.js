@@ -34,7 +34,7 @@ var init = function init () {
     localDjstest.indexedDB = window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.indexedDB;
 
     /** Cleans all the test data saved in the IndexedDb database.
-     * @param {Array} storeNames - Array of store objects with a property that is the name of the store
+     * @param {Array} storeObjects - Array of store objects with a property that is the name of the store
      * @param {Function} done - Callback function
      */
     localDjstest.cleanStoreOnIndexedDb = function (storeObjects, done) {
@@ -50,7 +50,7 @@ var init = function init () {
         if (localDjstest.indexedDB) {
             job = new djstest.Job();
             for ( var i = 0 ; i < storeObjects.length ; i ++) {
-                storeObject = storeObjects[i];
+                var storeObject = storeObjects[i];
                 job.queue((function (storeObject) {
                     return function (success, fail) {
                         var dbname = "_datajs_" + storeObject.name;

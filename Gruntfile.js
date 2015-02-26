@@ -55,11 +55,11 @@ module.exports = function(grunt) {
     "jsdoc" : {
       "src" : {
           src: ["src/**/*.js"], 
-          options: { destination: "_build/doc-src", verbose : false }
+          options: { destination: "_build/doc-src", verbose : true, debug : true, pedantic : true }
       },
       "test" : {
           src: ["tests/**/*.js"], 
-          options: { destination: "_build/doc-test", verbose : false }
+          options: { destination: "_build/doc-test", verbose : true, debug : true, pedantic : true }
       }
     },
     "nugetpack" : { // create nuget pagckage

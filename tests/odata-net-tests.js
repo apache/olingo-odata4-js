@@ -65,7 +65,7 @@
             //Cleanup and finish the test after all requests have been sent and processed. Poll every 50 ms
             var timer = setInterval(function () {
                 if (sentCount === tests.length) {
-                    clearInterval(timer)
+                    clearInterval(timer);
                     window.odatajs.oData.net.defaultHttpClient.enableJsonpCallback = oldEnableJsonpCallback;
                     window.XMLHttpRequest = oldXmlHttpRequest;
                     MockXMLHttpRequest.reset();
@@ -160,7 +160,7 @@
                 testDone = true;
             };
 
-            result = window.odatajs.oData.net.defaultHttpClient.request(
+            var result = window.odatajs.oData.net.defaultHttpClient.request(
                { requestUri: "http://test1", headers: {} },
                function (response) {
                    djstest.pass("success method was hit");

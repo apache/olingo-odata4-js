@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+'use strict';
  
 
 /** @module datajs/xml */
@@ -240,7 +241,7 @@ function xmlQualifiedName(prefix, name) {
 
 /** Appends a text node into the specified DOM element node.
  * @param domNode - DOM node for the element.
- * @param {String} text - Text to append as a child of element.
+ * @param {String} textNode - Text to append as a child of element.
 */
 function xmlAppendText(domNode, textNode) {
     if (hasLeadingOrTrailingWhitespace(textNode.data)) {
@@ -308,7 +309,7 @@ function xmlBaseURI(domNode, baseURI) {
 
 
 /** Iterates through the XML element's child DOM elements and invokes the callback function for each one.
- * @param element - DOM Node containing the DOM elements to iterate over.
+ * @param domNode - DOM Node containing the DOM elements to iterate over.
  * @param {Function} onElementCallback - Callback function to invoke for each child DOM element.
 */
 function xmlChildElements(domNode, onElementCallback) {
@@ -343,7 +344,7 @@ function xmlFindElementByPath(root, namespaceURI, path) {
  * @param root - DOM element node from which to get the descendant node.
  * @param {String} namespaceURI - The namespace URI of the node to match.
  * @param {String} path - Path to the desired descendant node.
- * @return The node specified by path and namespace URI.</returns>
+ * @return The node specified by path and namespace URI.
 
 * This function will traverse the path and match each node associated to a path segement against the namespace URI.
 * The traversal stops when the whole path has been exahusted or a node that doesn't belogong the specified namespace is encountered.
@@ -370,7 +371,7 @@ function xmlFindNodeByPath(root, namespaceURI, path) {
  * @param domNode - DOM node from which the child DOM element is going to be retrieved.
  * @param {String} [namespaceURI] - 
  * @param {String} [localName] - 
- * @return The node's first child DOM element that matches the specified namespace URI and local name; null otherwise.</returns>
+ * @return The node's first child DOM element that matches the specified namespace URI and local name; null otherwise.
  */
 function xmlFirstChildElement(domNode, namespaceURI, localName) {
 
@@ -418,7 +419,7 @@ function xmlFirstElementMaybeRecursive(domNode, namespaceURI, localName, recursi
 }
 
 /** Gets the concatenated value of all immediate child text and CDATA nodes for the specified element.
- * @param domElement - Element to get values for.
+ * @param xmlElement - Element to get values for.
  * @returns {String} Text for all direct children.
  */
 function xmlInnerText(xmlElement) {
@@ -474,7 +475,7 @@ function xmlLocalName(domNode) {
 }
 
 /** Returns the namespace URI of a XML node.
- * @param node - DOM node to get the value from.
+ * @param domNode - DOM node to get the value from.
  * @returns {String} Namespace URI of domNode.
  */
 function xmlNamespaceURI(domNode) {
@@ -483,7 +484,7 @@ function xmlNamespaceURI(domNode) {
 }
 
 /** Returns the value or the inner text of a XML node.
- * @param node - DOM node to get the value from.
+ * @param domNode - DOM node to get the value from.
  * @return Value of the domNode or the inner text if domNode represents a DOM element node.
  */
 function xmlNodeValue(domNode) {
@@ -499,6 +500,7 @@ function xmlNodeValue(domNode) {
  * @param {Boolean} recursive
  * - True if the traversal should include all the descenants of the DOM node.
  * - False if the traversal should be scoped only to the direct children of the DOM node.
+ * @param {Boolean} onChildCallback - Called for each child
  * @returns {String} Namespace URI of node.
  */
 function xmlTraverse(domNode, recursive, onChildCallback) {
@@ -521,7 +523,7 @@ function xmlTraverse(domNode, recursive, onChildCallback) {
  * @param domNode - DOM node from which the next sibling is going to be retrieved.
  * @param {String} [namespaceURI] - 
  * @param {String} [localName] - 
- * @return The node's next sibling DOM element, null if there is none.</returns>
+ * @return The node's next sibling DOM element, null if there is none.
  */
 function xmlSiblingElement(domNode, namespaceURI, localName) {
 
@@ -541,7 +543,7 @@ function xmlSiblingElement(domNode, namespaceURI, localName) {
 }
 
 /** Creates a new empty DOM document node.
- * @return New DOM document node.</returns>
+ * @return New DOM document node.
  *
  * This function will first try to create a native DOM document using
  * the browsers createDocument function.  If the browser doesn't
@@ -560,7 +562,7 @@ function xmlDom() {
 /** Appends a collection of child nodes or string values to a parent DOM node.
  * @param parent - DOM node to which the children will be appended.
  * @param {Array} children - Array containing DOM nodes or string values that will be appended to the parent.
- * @return The parent with the appended children or string values.</returns>
+ * @return The parent with the appended children or string values.
  *  If a value in the children collection is a string, then a new DOM text node is going to be created
  *  for it and then appended to the parent.
  */
@@ -579,7 +581,7 @@ function xmlAppendChildren(parent, children) {
 /** Appends a child node or a string value to a parent DOM node.
  * @param parent - DOM node to which the child will be appended.
  * @param child - Child DOM node or string value to append to the parent.
- * @return The parent with the appended child or string value.</returns>
+ * @return The parent with the appended child or string value.
  * If child is a string value, then a new DOM text node is going to be created
  * for it and then appended to the parent.
  */
@@ -601,8 +603,9 @@ function xmlAppendChild(parent, child) {
 
 /** Creates a new DOM attribute node.
  * @param dom - DOM document used to create the attribute.
- * @param {String} prefix - Namespace prefix.
  * @param {String} namespaceURI - Namespace URI.
+ * @param {String} qualifiedName - Qualified OData name
+ * @param {String} value - Value of the new attribute
  * @return DOM attribute node for the namespace declaration.
  */
 function xmlNewAttribute(dom, namespaceURI, qualifiedName, value) {
@@ -620,11 +623,11 @@ function xmlNewAttribute(dom, namespaceURI, qualifiedName, value) {
  * @param {String} namespaceURI - Namespace URI of the new DOM element.
  * @param {String} qualifiedName - Qualified name in the form of "prefix:name" of the new DOM element.
  * @param {Array} [children] Collection of child DOM nodes or string values that are going to be appended to the new DOM element.
- * @return New DOM element.</returns>
+ * @return New DOM element.
  * If a value in the children collection is a string, then a new DOM text node is going to be created
  * for it and then appended to the new DOM element.
  */
-function xmlNewElement(dom, nampespaceURI, qualifiedName, children) {
+function xmlNewElement(dom, namespaceURI, qualifiedName, children) {
     var element =
         dom.createElementNS && dom.createElementNS(nampespaceURI, qualifiedName) ||
         dom.createNode(1, qualifiedName, nampespaceURI || undefined);
@@ -636,7 +639,7 @@ function xmlNewElement(dom, nampespaceURI, qualifiedName, children) {
  * @param dom - DOM document used to create the attribute.
  * @param {String} namespaceURI - Namespace URI.
  * @param {String} prefix - Namespace prefix.
- * @return DOM attribute node for the namespace declaration.</returns>
+ * @return DOM attribute node for the namespace declaration.
  */
 function xmlNewNSDeclaration(dom, namespaceURI, prefix) {
     return xmlNewAttribute(dom, xmlnsNS, xmlQualifiedName("xmlns", prefix), namespaceURI);
@@ -666,7 +669,7 @@ function xmlNewFragment(dom, text) {
 /** Creates new DOM text node.
  * @param dom - DOM document used to create the text node.
  * @param {String} text - Text value for the DOM text node.
- * @return DOM text node.</returns>
+ * @return DOM text node.
  */ 
 function xmlNewText(dom, text) {
     return dom.createTextNode(text);
@@ -676,9 +679,9 @@ function xmlNewText(dom, text) {
  * @param dom - DOM document used to create the new node.
  * @param root - DOM element node used as root of the subtree on which the new nodes are going to be created.
  * @param {String} namespaceURI - Namespace URI of the new DOM element or attribute.
- * @param {String} namespacePrefix - Prefix used to qualify the name of the new DOM element or attribute.
- * @param {String} Path - Path string describing the location of the new DOM element or attribute from the root element.
- * @return DOM element or attribute node for the last segment of the path.</returns>
+ * @param {String} prefix - Prefix used to qualify the name of the new DOM element or attribute.
+ * @param {String} path - Path string describing the location of the new DOM element or attribute from the root element.
+ * @return DOM element or attribute node for the last segment of the path.
 
  * This function will traverse the path and will create a new DOM element with the specified namespace URI and prefix
  * for each segment that doesn't have a matching element under root.
@@ -712,7 +715,7 @@ function xmlNewNodeByPath(dom, root, namespaceURI, prefix, path) {
 }
 
 /** Returns the text representation of the document to which the specified node belongs.
- * @param root - Wrapped element in the document to serialize.
+ * @param domNode - Wrapped element in the document to serialize.
  * @returns {String} Serialized document.
 */
 function xmlSerialize(domNode) {
@@ -730,7 +733,7 @@ function xmlSerialize(domNode) {
 }
 
 /** Returns the XML representation of the all the descendants of the node.
- * @param domNode - Node to serialize.</param>
+ * @param domNode - Node to serialize.
  * @returns {String} The XML representation of all the descendants of the node.
  */
 function xmlSerializeDescendants(domNode) {

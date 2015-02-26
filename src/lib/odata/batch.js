@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+'use strict';
 
 /** @module odata/batch */
 
@@ -36,19 +37,14 @@ var normalizeHeaders = odataUtils.normalizeHeaders;
 var prepareRequest = odataUtils.prepareRequest;
 
 
-
-
-
 // Imports
-
-
 
 // CONTENT START
 var batchMediaType = "multipart/mixed";
 var responseStatusRegex = /^HTTP\/1\.\d (\d{3}) (.*)$/i;
 var responseHeaderRegex = /^([^()<>@,;:\\"\/[\]?={} \t]+)\s?:\s?(.*)/;
 
-/* Calculates a random 16 bit number and returns it in hexadecimal format.
+/** Calculates a random 16 bit number and returns it in hexadecimal format.
  * @returns {String} A 16-bit number in hex format.
  */
 function hex16() {
@@ -56,7 +52,7 @@ function hex16() {
     return Math.floor((1 + Math.random()) * 0x10000).toString(16).substr(1);
 }
 
-/* Creates a string that can be used as a multipart request boundary.
+/** Creates a string that can be used as a multipart request boundary.
  * @param {String} [prefix] - 
  * @returns {String} Boundary string of the format: <prefix><hex16>-<hex16>-<hex16>
  */
@@ -65,7 +61,7 @@ function createBoundary(prefix) {
     return prefix + hex16() + "-" + hex16() + "-" + hex16();
 }
 
-/* Gets the handler for data serialization of individual requests / responses in a batch.
+/** Gets the handler for data serialization of individual requests / responses in a batch.
  * @param context - Context used for data serialization.
  * @returns Handler object
  */
@@ -74,7 +70,7 @@ function partHandler(context) {
     return context.handler.partHandler;
 }
 
-/* Gets the current boundary used for parsing the body of a multipart response.
+/** Gets the current boundary used for parsing the body of a multipart response.
  * @param context - Context used for parsing a multipart response.
  * @returns {String} Boundary string.
  */
@@ -109,7 +105,7 @@ function batchSerializer(handler, data, context) {
     }
 }
 
-/* Parses a multipart/mixed response body from from the position defined by the context.
+/** Parses a multipart/mixed response body from from the position defined by the context.
  * @param {String}  text - Body of the multipart/mixed response.
  * @param context - Context used for parsing.
  * @return Array of objects representing the individual responses.
@@ -125,7 +121,7 @@ function readBatch(text, context) {
 
     // Read the batch parts
     var responses = [];
-    var partEnd;
+    var partEnd = null;
 
     while (partEnd !== "--" && context.position < text.length) {
         var partHeaders = readHeaders(text, context);
@@ -173,11 +169,11 @@ function readBatch(text, context) {
     return responses;
 }
 
-/* Parses the http headers in the text from the position defined by the context.
-* @param {String} text - Text containing an http response's headers</param>
-* @param context - Context used for parsing.
-* @returns Object containing the headers as key value pairs.
-* This function doesn't support split headers and it will stop reading when it hits two consecutive line breaks.
+/** Parses the http headers in the text from the position defined by the context.
+ * @param {String} text - Text containing an http response's headers
+ * @param context - Context used for parsing.
+ * @returns Object containing the headers as key value pairs.
+ * This function doesn't support split headers and it will stop reading when it hits two consecutive line breaks.
 */
 function readHeaders(text, context) {
     var headers = {};
@@ -202,7 +198,7 @@ function readHeaders(text, context) {
     return headers;
 }
 
-/* Parses an HTTP response.
+/** Parses an HTTP response.
  * @param {String} text -Text representing the http response.
  * @param context optional - Context used for parsing.
  * @param {String} delimiter -String used as delimiter of the multipart response parts.
@@ -245,8 +241,8 @@ function readLine(text, context) {
 }
 
 /** Returns a substring from the position given by the context up to value defined by the str parameter and increments the position in the context.
- * @param {String} text - Input string.</param>
- * @param context - Context used for reading the input string.</param>
+ * @param {String} text - Input string.
+ * @param context - Context used for reading the input string.
  * @param {String} [str] - Substring to read up to.
  * @returns {String} Substring to the first ocurrence of str or the end of the input string if str is not specified. Null if the marker is not found.
  */
@@ -294,7 +290,7 @@ function writeBatch(data, context) {
 }
 
 /** Creates the delimiter that indicates that start or end of an individual request.
- * @param {String} boundary Boundary string used to indicate the start of the request</param>
+ * @param {String} boundary Boundary string used to indicate the start of the request
  * @param {Boolean} close - Flag indicating that a close delimiter string should be generated
  * @returns {String} Delimiter string
  */
@@ -309,8 +305,8 @@ function writeBatchPartDelimiter(boundary, close) {
 
 /** Serializes a part of a batch request to a string. A part can be either a GET request or
  * a change set grouping several CUD (create, update, delete) requests.
- * @param part - Request or change set object in payload representation format</param>
- * @param context - Object containing context information used for the serialization</param>
+ * @param part - Request or change set object in payload representation format
+ * @param context - Object containing context information used for the serialization
  * @param {boolean} [nested] - 
  * @returns {String} String representing the serialized part
  * A change set is an array of request objects and they cannot be nested inside other change sets.
@@ -348,8 +344,8 @@ function writeBatchPart(part, context, nested) {
     return result;
 }
 
-/* Serializes a request object to a string.
- * @param request - Request object to serialize</param>
+/** Serializes a request object to a string.
+ * @param request - Request object to serialize
  * @returns {String} String representing the serialized request
  */
 function writeRequest(request) {
@@ -373,5 +369,9 @@ function writeRequest(request) {
 
 /** batchHandler (see {@link module:odata/batch~batchParser}) */
 exports.batchHandler = handler(batchParser, batchSerializer, batchMediaType, MAX_DATA_SERVICE_VERSION);
+
+/** batchSerializer (see {@link module:odata/batch~batchSerializer}) */
 exports.batchSerializer = batchSerializer;
+
+/** writeRequest (see {@link module:odata/batch~writeRequest}) */
 exports.writeRequest = writeRequest;

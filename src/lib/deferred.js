@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+'use strict';
 
 /** @module datajs/deferred */
 
@@ -177,7 +178,7 @@ function createDeferred() {
     } else {
         return new DjsDeferred();
     }
-};
+}
 
 
 

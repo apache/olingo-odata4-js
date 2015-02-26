@@ -18,7 +18,7 @@
  */
 
 (function (window, undefined) {
-    OData.defaultHandler.accept = "application/json;q=0.9, */*;q=0.1";
+    odatajs.oData.defaultHandler.accept = "application/json;q=0.9, */*;q=0.1";
     var unexpectedErrorHandler = function (err) {
         djstest.assert(false, "Unexpected call to error handler with error: " + djstest.toString(err));
         djstest.done();
@@ -96,7 +96,7 @@
     var subset = function (object, subsetObject) {
         if (typeof (object) == "object" && typeof (subsetObject) == "object") {
             var result = {};
-            for (subsetProp in subsetObject) {
+            for (var subsetProp in subsetObject) {
                 result[subsetProp] = subset(object[subsetProp], subsetObject[subsetProp]);
             }
             return result;

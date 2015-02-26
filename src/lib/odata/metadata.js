@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+'use strict';
 
 /** @module odata/metadata */
 
@@ -363,7 +364,7 @@ var schema = {
 /** Converts a Pascal-case identifier into a camel-case identifier.
  * @param {String} text - Text to convert.
  * @returns {String} Converted text.
- * If the text starts with multiple uppercase characters, it is left as-is.</remarks>
+ * If the text starts with multiple uppercase characters, it is left as-is.
  */
 function scriptCase(text) {
 
@@ -459,7 +460,6 @@ function parseConceptualModelElement(element) {
         // Currently, only m: for metadata is supported as a prefix in the internal schema table,
         // un-prefixed element names imply one a CSDL element.
         var schemaName = null;
-        var handled = false;
         if (isEdmNamespace(nsURI) || nsURI === null) {
             schemaName = "";
         } else if (nsURI === odataMetaXmlNs) {
@@ -503,7 +503,7 @@ function parseConceptualModelElement(element) {
 /** Parses a metadata document.
  * @param handler - This handler.
  * @param {String} text - Metadata text.
- * @returns An object representation of the conceptual model.</returns>
+ * @returns An object representation of the conceptual model.
  */
 function metadataParser(handler, text) {
 

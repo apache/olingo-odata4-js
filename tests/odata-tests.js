@@ -23,20 +23,21 @@
     var localFeed = "./endpoints/FoodStoreDataService.svc/Foods";
     var northwindFeed = northwindService + "Suppliers";
 
+    /** Count the number of IFRAMES in the page
+     * @returns {Number} The number of IFRAMES
+     */
     var countIFrames = function () {
-        /** Count the number of IFRAMES in the page
-         * @returns {Integer} The number of IFRAMES
-         */
+
         return document.getElementsByTagName("IFRAME").length;
-    }
+    };
 
     module("Unit");
 
     var originalEnableJsonpCallback = OData.defaultHttpClient.enableJsonpCallback;
 
+    /** Restores OData.defaultHttpClient.enableJsonpCallback to the library default.
+     */
     var restoreJsonpCallback = function () {
-        /** Restores OData.defaultHttpClient.enableJsonpCallback to the library default.
-        */
         OData.defaultHttpClient.enableJsonpCallback = originalEnableJsonpCallback;
     };
 

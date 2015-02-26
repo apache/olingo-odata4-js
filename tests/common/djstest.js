@@ -190,6 +190,14 @@ var init = function init () {
     /** Add the unit test cases
      * @param disable - Indicate whether this test case should be disabled
     */
+    /**
+     * storeObjects
+     * @param disable - Indicate whether this test case should be disabled
+     * @param fn - Textfunction
+     * @param name - Name for logging
+     * @param arg - Agruments
+     * @param timeout - Timeout
+     */
     djstest.addFullTest = function (disable, fn, name, arg, timeout) {
 
         if (disable !== true) {
@@ -198,7 +206,10 @@ var init = function init () {
     };
 
     /** Add the unit test cases
-     * @param disable - Indicate whether this test case should be disabled
+     * @param fn - Textfunction
+     * @param name - Name for logging
+     * @param arg - Agruments
+     * @param timeout - Timeout
     */
     djstest.addTest = function (fn, name, arg, timeout) {
         if (!name) {

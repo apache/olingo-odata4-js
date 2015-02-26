@@ -18,7 +18,8 @@
  */
 
 (function (window, undefined) {
-    OData.defaultHandler.accept = "application/json;q=0.9, */*;q=0.1";
+
+    odatajs.oData.defaultHandler.accept = "application/json;q=0.9, */*;q=0.1";
 
     var unexpectedErrorHandler = function (err) {
         djstest.assert(false, "Unexpected call to error handler with error: " + djstest.toString(err));
@@ -47,7 +48,7 @@
                 djstest.assertAreEqual(data.__batchResponses.length, batchRequests.length, "Verify batch response count");
                 verifyBatchResponses(batchRequests, elementTypes, serviceRoot, data.__batchResponses, done);
             },
-            unexpectedErrorHandler, OData.batch.batchHandler);
+            unexpectedErrorHandler, odatajs.oData.batch.batchHandler);
     };
 
     var verifyBatchResponses = function (batchRequests, elementTypes, serviceRoot, batchResponses, done) {
@@ -64,7 +65,7 @@
                 verifyChangeResponses(batchRequest.__changeRequests, batchResponses[index].__changeResponses, function () { doneOne(); });
             }
         }, done);
-    }
+    };
 
     var verifyChangeResponses = function (changeRequests, changeResponses, done) {
         forEachAsync(changeRequests, function (index, changeRequest, doneOne) {
@@ -89,7 +90,7 @@
                 doneOne();
             }
         }, done);
-    }
+    };
 
     var forEachAsync = function (array, callback, done) {
         var count = 0;
@@ -98,7 +99,7 @@
             if (count == array.length) {
                 done();
             }
-        }
+        };
 
         $.each(array, function (index, element) { callback(index, element, doneOne); });
     };
@@ -272,7 +273,7 @@
                 batchRequests.splice(3, 1);
                 batchResponses.splice(3, 1);
                 verifyBatchResponses(batchRequests, ["entry", null], service, batchResponses, function () { djstest.done(); });
-            }, unexpectedErrorHandler, OData.batch.batchHandler);
+            }, unexpectedErrorHandler, odatajs.oData.batch.batchHandler);
         }, "Retrieve inside changeset： mimeType = " + mimeType, {mimeHeaders: mimeHeaders });
     });
 
@@ -285,7 +286,7 @@
             function (data, response) {
                 djstest.assert(response.body.indexOf("An error occurred while processing this request.") == -1, "Verify that there is no error occurred.");
                 djstest.done();
-            }, unexpectedErrorHandler, OData.batch.batchHandler
+            }, unexpectedErrorHandler, odatajs.oData.batch.batchHandler
         );
     }, "Update outside changeset");
 })(this);

@@ -42,8 +42,9 @@
         { service: largeCollectionService, uri: largeCollectionService + "Customers", mimeType: "application/json;odata.metadata=minimal" },
         { service: largeCollectionService, uri: largeCollectionService + "Customers", mimeType: "application/json;odata.metadata=full" },
         { service: largeCollectionService, uri: largeCollectionService + "Customers", mimeType: "application/json;odata.metadata=none" },
-        { service: largeCollectionService, uri: largeCollectionService + "Suppliers", mimeType: "application/json" },
-        { service: null, uri: "http://odata.netflix.com/Catalog/Titles", mimeType: "application/json" }
+        { service: largeCollectionService, uri: largeCollectionService + "Suppliers", mimeType: "application/json" }
+        /*{ service: null, uri: "http://odata.netflix.com/Catalog/Titles", mimeType: "application/json" }*/
+        /* netflix service not available anymore */
     ];
 
     module("Performance", {

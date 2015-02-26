@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+'use strict';
 
  /** @module odata */
 
@@ -165,7 +166,7 @@ exports.request = function (request, success, error, handler, httpClient, metada
 };
 
 /** Parses the csdl metadata to DataJS metatdata format. This method can be used when the metadata is retrieved using something other than DataJS
- * @param {string} csdlMetadata - A string that represents the entire csdl metadata.
+ * @param {string} csdlMetadataDocument - A string that represents the entire csdl metadata.
  * @returns {Object} An object that has the representation of the metadata in Datajs format.
  */
 exports.parseMetadata = function (csdlMetadataDocument) {
@@ -176,3 +177,4 @@ exports.parseMetadata = function (csdlMetadataDocument) {
 // Configure the batch handler to use the default handler for the batch parts.
 exports.batch.batchHandler.partHandler = exports.defaultHandler;
 exports.metadataHandler =  odataMetadata.metadataHandler;
+exports.jsonHandler =  odataJson.jsonHandler;

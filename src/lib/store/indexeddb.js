@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+'use strict';
 
 /** @module store/indexeddb */
 var utils = require('./../utils.js');
@@ -122,7 +123,7 @@ function openStoreDb(store, success, error) {
 
 /** Opens a new transaction to the store
  * @param {IndexedDBStore} store - The store object
- * @param {Short} mode - The read/write mode of the transaction (constants from IDBTransaction)
+ * @param {Integer} mode - The read/write mode of the transaction (constants from IDBTransaction)
  * @param {Function} success - The success callback
  * @param {Function} error - The error callback
  */
@@ -266,6 +267,7 @@ IndexedDBStore.prototype.clear = function (success, error) {
         transaction.objectStore(name).clear();
     }, error);
 };
+
 /** Closes the connection to the database
  * @method module:store/indexeddb~IndexedDBStore#close
 */

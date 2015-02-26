@@ -16,14 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
+'use strict';
 /** @module odata/net */
 
 
 var http = require('http');
 var utils    = require('./../utils.js');
 var url = require("url");
-// Imports.
+
 
 var defined = utils.defined;
 var delay = utils.delay;
@@ -52,8 +52,8 @@ function canUseJSONP(request) {
 */
 function isAbsoluteUrl(url) {
     return url.indexOf("http://") === 0 ||
-        url.indexOf("https://") === 0 ||
-        url.indexOf("file://") === 0;
+           url.indexOf("https://") === 0 ||
+           url.indexOf("file://") === 0;
 }
 
 /** Checks whether the specified URL is local to the current context.
@@ -74,15 +74,13 @@ function isLocalUrl(url) {
 
 
 /** Reads response headers into array.
- * @param {XMLHttpRequest} xhr - HTTP request with response available.
- * @param {Array} headers - Target array to fill with name/value pairs.
+ * @param {Object} inHeader
+ * @param {Array} outHeader
  */
 function readResponseHeaders(inHeader, outHeader) {
     for (var property in inHeader) {
         
         if (inHeader.hasOwnProperty(property)) {
-            //console.log(property);
-            //console.log(inHeader[property]);
             outHeader[property] = inHeader[property];
         }
     }
@@ -120,11 +118,9 @@ exports.defaultHttpClient = {
         }   
         
 
-        //console.log('options'+JSON.stringify(options));
         var xhr = http.request(options);
 
         result.abort = function () {
-            //console.log('_4');
             if (done) {
                 return;
             }
@@ -140,7 +136,6 @@ exports.defaultHttpClient = {
 
         // Set the timeout if available.
         if (request.timeoutMS) {
-            //console.log('_6');
             xhr.setTimeout(request.timeoutMS,function () {
                 if (!done) {
                     done = true;
@@ -151,40 +146,31 @@ exports.defaultHttpClient = {
         }
 
         xhr.on('error', function(e) {
-            //console.log('_22'+e);
             var response = { requestUri: url, statusCode: 400, statusText: e.message };
             error({ message: "HTTP request failed", request: request, response: response });
         });
              
 
         xhr.on('response', function (resp) {
-            //console.log('1');
             if (done || xhr === null) {
                 return;
             }
-            //console.log('2');
-            
+
             var headers = [];
             readResponseHeaders(resp.headers, headers);
                         
             var body = '';
 
             resp.on('data', function(chunk) {
-                ///console.log('chunk'+JSON.stringify(chunk));
                 body+=chunk;
-                //console.log('3');
-                
             });
             resp.on('end', function() {
-                //console.log('4');
                 // do what you do
                 var response = { requestUri: url, statusCode: resp.statusCode, statusText: '', headers: headers, body: body };
 
                 done = true;
                 xhr = null;
                 if (resp.statusCode >= 200 && resp.statusCode <= 299) {
-                    //console.log('5');
-                    //console.log(response);
                     success(response);
                 } else {
                     error({ message: "HTTP request failed", request: request, response: response });
@@ -193,16 +179,11 @@ exports.defaultHttpClient = {
         });
 
         //xhr.open(request.method || "GET", url, true,);
-        //console.log(request.body);
-        //console.log('_1');
         if (request.body) {
-            //console.log('_2');
             xhr.write(request.body);
         }
-        //console.log('_3');
         xhr.end();
-        //console.log('_4');
-         
+
         return result;
     }
 };

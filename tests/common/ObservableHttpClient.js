@@ -71,7 +71,7 @@
     Session.prototype.clear = function () {
         this.requests = [];
         this.responses = [];
-    }
+    };
 
     Session.prototype.end = function () {
         $(this.client).unbind("request", this.requestHandler);

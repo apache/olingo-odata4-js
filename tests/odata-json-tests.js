@@ -864,7 +864,7 @@
         djstest.assertAreEqualDeep(response.data, expected, message);
     };
 
-    var getPointValue =  { edmType : 'GeographyPoint', value : {
+    var getPointValue =  { edmType : '#GeographyPoint', value : {
                 type: "Point",
                 coordinates: [1.0, 2.0],
                 crs: {
@@ -875,7 +875,7 @@
                 }
               }};
 
-    var getLineStringValue =  { edmType : 'GeographyLineString', value : {
+    var getLineStringValue =  { edmType : '#GeographyLineString', value : {
                 "type": "LineString",
                 "coordinates": [ [100.0, 0.0], [101.0, 1.0] ],
                 crs: {
@@ -886,7 +886,7 @@
                 }
               }};
 
-    var getPolygonValue =  { edmType : 'GeographyPolygon', value : {
+    var getPolygonValue =  { edmType : '#GeographyPolygon', value : {
                 "type": "Polygon",
                 "coordinates": [
                   [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],
@@ -900,7 +900,7 @@
                 }
               }};
 
-    var getMultiPointValue =  { edmType : 'GeographyMultiPoint', value : {
+    var getMultiPointValue =  { edmType : '#GeographyMultiPoint', value : {
                 "type": "MultiPoint",
                 "coordinates": [ [100.0, 0.0], [101.0, 1.0] ],
                 crs: {
@@ -911,7 +911,7 @@
                 }
               }};
 
-    var getMultiLineStringValue =  { edmType : 'GeographyMultiLineString', value : {
+    var getMultiLineStringValue =  { edmType : '#GeographyMultiLineString', value : {
                   "type": "MultiLineString",
                   "coordinates": [
                       [ [100.0, 0.0], [101.0, 1.0] ],
@@ -924,7 +924,7 @@
                     }
                 }
               }};
-      var getMultiPolygonStringValue =  { edmType : 'GeographyMultiPolygon', value : {
+      var getMultiPolygonStringValue =  { edmType : '#GeographyMultiPolygon', value : {
                   "type": "MultiPolygon",
                   "coordinates": [
                     [[[102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0]]],
@@ -975,7 +975,7 @@
         var expected = {
             "@odata.context": "http://someUri#Edm."+item.edmType,
             value: item.value,
-            "value@odata.type" : item.edmType,
+            "value@odata.type" : item.edmType
         };
 
         verifyReadJsonLightDataMetadataMinimal(input, expected, "Json light top level primitive property was read properly.", {});

@@ -109,20 +109,20 @@
             odatajs.oData.read(metadataUri, function (metadata) {
                 serviceMetadata = metadata;
                 callback(metadata);
-            }, unexpectedErrorHandler, OData.metadataHandler);
+            }, unexpectedErrorHandler, odatajs.oData.metadataHandler);
         }
         else {
             callback(serviceMetadata);
         }
-    }
+    };
 
     module("Functional", {
         setup: function () {
             djstest.wait(function (done) {
                 $.post(service + "/ResetData", done);
             });
-            OData.defaultMetadata = [];
-            OData.jsonHandler.recognizeDates = false;
+            odatajs.oData.defaultMetadata = [];
+            odatajs.oData.jsonHandler.recognizeDates = false;
         }
     });
 
@@ -131,7 +131,7 @@
             var entryUri = feedUris["true"] + "(0)?$select=" + propertyToSelect;
             djstest.assertsExpected(2);
             getMetadata(function (metadata) {
-                OData.defaultMetadata.push(metadata);
+                odatajs.oData.defaultMetadata.push(metadata);
                 odatajs.oData.read({ requestUri: entryUri, headers: acceptHeaders }, function (data, response) {
                     djstest.assertAreEqual(response.statusCode, httpStatusCode.ok, "Verify response code");
                     ODataVerifyReader.readJson(entryUri, function (expectedData) {
@@ -139,7 +139,7 @@
                         djstest.done();
                     })
                 }, unexpectedErrorHandler);
-            }, unexpectedErrorHandler, OData.metadataHandler);
+            }, unexpectedErrorHandler, odatajs.oData.metadataHandler);
         }, "GET with mapped properties selecting " + selectProperty + " with keepInContent = true", selectProperty);
     });
 
@@ -147,7 +147,7 @@
         var feedUri = feedUris[keepInContent];
 
         $.each(testEntries, function (entryIndex, testEntry) {
-            params = {
+            var params = {
                 feedUri: feedUri,
                 testEntry: $.extend(true, {}, testEntry, {
                     data: {
@@ -160,7 +160,7 @@
                 var entryUri = params.feedUri + "(" + entryIndex + ")";
                 djstest.assertsExpected(2);
                 getMetadata(function (metadata) {
-                    OData.defaultMetadata.push(metadata);
+                    odatajs.oData.defaultMetadata.push(metadata);
                     odatajs.oData.read({ requestUri: entryUri, headers: acceptHeaders }, function (data, response) {
                         djstest.assertAreEqual(response.statusCode, httpStatusCode.ok, "Verify response code");
                         ODataVerifyReader.readJson(entryUri, function (expectedData) {
@@ -168,7 +168,7 @@
                             djstest.done();
                         })
                     }, unexpectedErrorHandler);
-                }, unexpectedErrorHandler, OData.metadataHandler);
+                }, unexpectedErrorHandler, odatajs.oData.metadataHandler);
             }, "GET " + params.testEntry.description + " with mapped properties: keepInContent = " + keepInContent, params);
 
             djstest.addTest(function postMappedEntry(params) {
@@ -182,14 +182,14 @@
                             djstest.done();
                         })
                     }, unexpectedErrorHandler, undefined, undefined, metadata);
-                }, unexpectedErrorHandler, OData.metadataHandler);
+                }, unexpectedErrorHandler, odatajs.oData.metadataHandler);
             }, "POST " + params.testEntry.description + " with mapped properties: keepInContent = " + keepInContent, params);
 
             djstest.addTest(function putMappedEntry(params) {
                 var entryUri = params.feedUri + "(0)";
                 djstest.assertsExpected(2);
                 getMetadata(function (metadata) {
-                    OData.defaultMetadata.push(metadata);
+                    odatajs.oData.defaultMetadata.push(metadata);
                     odatajs.oData.request({ requestUri: entryUri, method: "PUT", headers: djstest.clone(mimeHeaders), data: params.testEntry.data }, function (data, response) {
                         djstest.assertAreEqual(response.statusCode, httpStatusCode.noContent, "Verify response code");
                         ODataVerifyReader.readJson(entryUri, function (actualData) {
@@ -197,7 +197,7 @@
                             djstest.done();
                         })
                     }, unexpectedErrorHandler);
-                }, unexpectedErrorHandler, OData.metadataHandler);
+                }, unexpectedErrorHandler, odatajs.oData.metadataHandler);
             }, "PUT " + params.testEntry.description + " with mapped properties: keepInContent = " + keepInContent, params);
         });
     });
@@ -215,7 +215,7 @@
                         djstest.done();
                     })
                 }, unexpectedErrorHandler, undefined, undefined, metadata);
-            }, unexpectedErrorHandler, OData.metadataHandler);
+            }, unexpectedErrorHandler, odatajs.oData.metadataHandler);
         }, "GET " + descriptions[index] + " with mapped properties: keepInContent = false", index);
     });
 
@@ -225,7 +225,7 @@
             var specialDaysEndpoint = foodStoreDataService + "/SpecialDays";
 
             djstest.assertsExpected(1);
-            OData.jsonHandler.recognizeDates = params.recognizeDates;
+            odatajs.oData.jsonHandler.recognizeDates = params.recognizeDates;
             odatajs.oData.read(foodStoreDataService + "/$metadata", function (metadata) {
                 odatajs.oData.read({ requestUri: specialDaysEndpoint, headers: { Accept: params.accept} }, function (data, response) {
                     // Because our verifier isn't metadata aware, it is not 100% correct, so we will pass in recognizeDates = true
@@ -237,7 +237,7 @@
                         djstest.done();
                     }, params.accept, true);
                 }, unexpectedErrorHandler, undefined, undefined, metadata);
-            }, unexpectedErrorHandler, OData.metadataHandler);
+            }, unexpectedErrorHandler, odatajs.oData.metadataHandler);
         }, "GET metadata-aware JSON dates with recognizeDates=" + recognizeDates, { recognizeDates: recognizeDates, accept: "application/json;odata.metadata=minimal" });
     });
 })(this);

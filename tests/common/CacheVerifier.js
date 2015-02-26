@@ -26,9 +26,9 @@
     var CacheVerifier = function (baseUri, pageSize, total, cacheSize) {
         /** Creates a new CacheVerifier
          * @param {String} baseUri - The base URI of the collection
-         * @param {Integer} pageSize - The page size used in the cache
-         * @param {Integer} total - The total number of items in the collection
-         * @param {Integer} cacheSize - Cache size in bytes
+         * @param {Number} pageSize - The page size used in the cache
+         * @param {Number} total - The total number of items in the collection
+         * @param {Number} cacheSize - Cache size in bytes
          */
         this.baseUri = baseUri;
         this.pageSize = pageSize;
@@ -78,7 +78,7 @@
             default:
                 return false;
         }
-    }
+    };
 
     CacheVerifier.prototype.clear = function () {
         /** Clears the cache in the verifier
@@ -87,14 +87,14 @@
         this.actualSize = 0;
         this.actualCount = 0;
         this.overflowed = this.cacheSize === 0;
-    }
+    };
 
     CacheVerifier.prototype.verifyRequests = function (requests, responses, index, count, description, backwards, isPrefetch) {
         /** Verifies the HTTP requests for a single data request, and updates the verifier with cached pages
          * @param {Array} requests - The sequence of request objects (from OData.defaultHttpClient)
          * @param {Array} responses - The sequence of response objects (from OData.defaultHttpClient)
-         * @param {Integer} index - The starting index of the read
-         * @param {Integer} count - The count of items in the read
+         * @param {Number} index - The starting index of the read
+         * @param {Number} count - The count of items in the read
          * @param {String} description - The description of the requests being verified
          * @param {Boolean} backwards - Whether or not filterBack is being verified
          * @param {Boolean} isPrefetch - Whether the requests being verified come from the prefetcher
@@ -102,11 +102,11 @@
         var that = this;
 
         index = (index < 0 ? 0 : index);
+        /** Returns the page index that the given item index belongs to
+         * @param {Number} index - The item index
+         * @returns The page index
+         */
         var pageIndex = function (index) {
-            /** Returns the page index that the given item index belongs to
-             * @param {Integer} index - The item index
-             * @returns The page index
-             */
             return Math.floor(index / that.pageSize);
         };
 

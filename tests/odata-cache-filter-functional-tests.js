@@ -18,7 +18,7 @@
  */
 
 (function (window, undefined) {
-    OData.defaultHandler.accept = "application/json;q=0.9, */*;q=0.1";
+    odatajs.oData.defaultHandler.accept = "application/json;q=0.9, */*;q=0.1";
     var feeds = [
         { feed: "./endpoints/FoodStoreDataServiceV4.svc/Foods" }
     ];
@@ -142,17 +142,18 @@
         };
     };
 
+    /** Runs filter and validates the results and network requests
+     * @param {Object} feed - The feed being read from
+     * @param {Object} cache - The cache to perform the filter on
+     * @param {Integer} index - The index value
+     * @param {Integer} count - The count value
+     * @param {Object} predicate - Filter string to append to the feed to validate the predicate
+     * @param {Function} finished - Callback function called after data is verified
+     * @param {Boolean} backwards - Use filterBack
+     * @param {Object} session - Session object to validate the network requests
+     * @param {Object} cacheVerifier - CacheVerifier object to validate the network requests
+     */
     var validateFilterResultsAndRequests = function (feed, cache, index, count, predicate, finished, backwards, session, cacheVerifier) {
-        /** Runs filter and validates the results and network requests
-         * @param {Object} feed - The feed being read from
-         * @param {Object} cache - The cache to perform the filter on
-         * @param {Integer} index - The index value
-         * @param {Integer} count - The count value
-         * @param {Object} predicate - Filter string to append to the feed to validate the predicate
-         * @param {Function} finished - Callback function called after data is verified
-         * @param {Object} session - Session object to validate the network requests
-         * @param {Object} cacheVerifier - CacheVerifier object to validate the network requests
-         */
 
         if (count < 0) {
             count = itemsInCollection;
@@ -184,7 +185,7 @@
             }
             else {
                 cache.filterForward(index, count, predicate).then(function (actualResults) {
-                    var expectedResults = CacheVerifier.getExpectedFilterResults(expectData, index, count, predicate, backwards)
+                    var expectedResults = CacheVerifier.getExpectedFilterResults(expectData, index, count, predicate, backwards);
                     djstest.assertAreEqualDeep(actualResults, expectedResults, "results for " + "filterForward requests");
 
                     if (session && cacheVerifier) {
@@ -277,7 +278,7 @@
             else {
                 return cache.filterForward(index, count, predicate)
             }
-        }
+        };
 
         filterMethod(params.firstIndex, params.firstCount, params.predicate, params.backwards).then(
             function (results) {

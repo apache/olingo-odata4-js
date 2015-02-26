@@ -18,7 +18,7 @@
  */
 
 (function (window, undefined) {
-    OData.defaultHandler.accept = "application/json;q=0.9, */*;q=0.1";
+    odatajs.oData.defaultHandler.accept = "application/json;q=0.9, */*;q=0.1";
     var feeds = [
         { uri: "./endpoints/FoodStoreDataServiceV4.svc/Foods" }
     ];
@@ -43,12 +43,13 @@
         function (observable) { return observable.Where(function (item) { return item.FoodID % 2 === 1; }); }
     ];
 
+    /** Asserts two finite observables generate the same sequence
+     * @param {Object} actual - The actual observable
+     * @param {Object} expected - The expected observable
+     * @param {Function} done - The callback function when asserts are done
+     */
     var assertObservables = function (actual, expected, done) {
-        /** Asserts two finite observables generate the same sequence
-         * @param {IObservable} actual - The actual observable
-         * @param {IObservable} expected - The expected observable
-         * @param {Function} done - The callback function when asserts are done
-         */
+
         var toArray = function (observable, callback) {
             var arr = [];
             observable.Subscribe(

@@ -18,7 +18,7 @@
  */
 
 (function (window, undefined) {
-    OData.defaultHandler.accept = "application/json;q=0.9, */*;q=0.1";
+    odatajs.oData.defaultHandler.accept = "application/json;q=0.9, */*;q=0.1";
     var unexpectedErrorHandler = function (err) {
         djstest.assert(false, "Unexpected call to error handler with error: " + djstest.toString(err));
         djstest.done();
@@ -515,7 +515,7 @@
                             );
                         },
                         unexpectedErrorHandler,
-                        OData.metadataHandler
+                    odatajs.oData.metadataHandler
                     );
             }, "Testing valid read metadata " + parameters.handlerAccept + " on service " + parameters.serviceName, parameters);
         });
@@ -535,7 +535,7 @@
                             djstest.assertAreEqual(err.response.statusCode, httpStatusCode.unsupportedMediaType, "Response status code");
                             djstest.done();
                         },
-                        OData.metadataHandler
+                    odatajs.oData.metadataHandler
                     );
             }, "Testing read metadata with invalid MIME type " + parameters.handlerAccept + " on service " + parameters.serviceName, parameters);
         });
@@ -554,7 +554,7 @@
                 response.headers["Content-Type"] = "application/xml";
                 success(response);
             }, error);
-        }
+        };
 
         window.odatajs.oData.net.defaultHttpClient = modifyTypeHttpClient;
 

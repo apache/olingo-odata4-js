@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+'use strict';
 
  /** @module cache */
 
@@ -147,7 +148,7 @@ function removeFromArray(arr, item) {
 /** Estimates the size of an object in bytes.
  * Object trees are traversed recursively
  * @param {Object} object - Object to determine the size of.
- * @returns {Integer} Estimated size of the object in bytes.
+ * @returns {Number} Estimated size of the object in bytes.
  */
 function estimateSize(object) {
     var size = 0;
@@ -216,16 +217,7 @@ var READ_STATE_SOURCE = "source";
  */
 function DataCacheOperation(stateMachine, promise, isCancelable, index, count, data, pending) {
 
-    /// <field name="p" type="DjsDeferred">Promise for requested values.</field>
-    /// <field name="i" type="Number">Index of first item requested.</field>
-    /// <field name="c" type="Number">Count of items requested.</field>
-    /// <field name="d" type="Array">Array with the items requested by the operation.</field>
-    /// <field name="s" type="Array">Current state of the operation.</field>
-    /// <field name="canceled" type="Boolean">Whether the operation has been canceled.</field>
-    /// <field name="pending" type="Number">Total number of pending prefetch records.</field>
-    /// <field name="oncomplete" type="Function">Callback executed when the operation reaches the end state.</field>
-
-    var stateData;
+   var stateData;
     var cacheState;
     var that = this;
 
@@ -240,7 +232,7 @@ function DataCacheOperation(stateMachine, promise, isCancelable, index, count, d
     that.oncomplete = null;
 
     /** Transitions this operation to the cancel state and sets the canceled flag to true.
-     * The function is a no-op if the operation is non-cancelable.</summary>
+     * The function is a no-op if the operation is non-cancelable.
      * @method DataCacheOperation#cancel
      */
     that.cancel = function cancel() {
@@ -350,7 +342,7 @@ function DataCacheOperation(stateMachine, promise, isCancelable, index, count, d
                     var handled = stateMachine(that, opTargetState, cacheState, data);
                     djsassert(handled, "Bad operation state: " + opTargetState + " cacheState: " + cacheState, this);
                 } else {
-                    // DATAJS INTERNAL END 
+                    // DATAJS INTERNAL END
                     stateMachine(that, opTargetState, cacheState, data);
                     // DATAJS INTERNAL START
                 }
@@ -366,13 +358,12 @@ function DataCacheOperation(stateMachine, promise, isCancelable, index, count, d
      * @param {Object} state - State to transition the operation to.
      * @param {Object} [data] - 
      */
-    var transition = function (state, data) {
+
+    that.transition = function (state, data) {
         that.s = state;
         stateData = data;
         operationStateMachine(state, cacheState, data);
     };
-    
-    that.transition = transition;
     
     return that;
 }
@@ -599,6 +590,7 @@ function DataCache(options) {
             throw cacheFailure;
         }
 
+        //return window.Rx.Observable.create(function (obs) {
         return new window.Rx.Observable(function (obs) {
             var disposed = false;
             var index = 0;
@@ -615,10 +607,12 @@ function DataCache(options) {
                     for (i = 0, len = data.value.length; i < len; i++) {
                         // The wrapper automatically checks for Dispose
                         // on the observer, so we don't need to check it here.
+                        //obs.next(data.value[i]);
                         obs.onNext(data.value[i]);
                     }
 
                     if (data.value.length < pageSize) {
+                        //obs.completed();
                         obs.onCompleted();
                     } else {
                         index += pageSize;
@@ -670,7 +664,7 @@ function DataCache(options) {
     /** Updates the cache's state and signals all pending operations of the change.
      * @method DataCache~changeState
      * @param {Object} newState - New cache state.
-     * This method is a no-op if the cache's current state and the new state are the same.</remarks>
+     * This method is a no-op if the cache's current state and the new state are the same.
      */
     var changeState = function (newState) {
 
@@ -719,7 +713,7 @@ function DataCache(options) {
     /** Removes an operation from the caches queues and changes the cache state to idle.
      * @method DataCache~dequeueOperation
      * @param {DataCacheOperation} operation - Operation to dequeue.
-     * This method is used as a handler for the operation's oncomplete event.</remarks>
+     * This method is used as a handler for the operation's oncomplete event.
     */
     var dequeueOperation = function (operation) {
 
@@ -1014,7 +1008,6 @@ function DataCache(options) {
     /** Creates a function that handles a store error.
      * @method DataCache~storeFailureCallback    
      * @param {DjsDeferred} deferred - Deferred object to resolve.
-     * @param {String} message - Message text.
      * @returns {Function} Function to use as error callback.
     
      * This function will specifically handle problems when interacting with the store.
