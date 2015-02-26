@@ -50,6 +50,9 @@ exports.createStore = function (name, mechanism) {
     throw { message: "Failed to create store", name: name, mechanism: mechanism };
 };
 
+exports.DomStore       = DomStore       = require('./store/dom.js');
+exports.IndexedDBStore = IndexedDBStore = require('./store/indexeddb.js');
+exports.MemoryStore    = MemoryStore    = require('./store/memory.js');
 
 var mechanisms = {
     indexeddb: IndexedDBStore,
@@ -60,7 +63,5 @@ var mechanisms = {
 exports.mechanisms = mechanisms;
 
 
-exports.DomStore       = DomStore       = require('./store/dom.js');
-exports.IndexedDBStore = IndexedDBStore = require('./store/indexeddb.js');
-exports.MemoryStore    = MemoryStore    = require('./store/memory.js');
+
 

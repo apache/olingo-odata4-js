@@ -539,7 +539,7 @@
                 $("#fuzz-status").text(text);
             }
 
-            OData.read("url", readCallback, readCallback, undefined, fakeHttpClient);
+            odatajs.oData.read("url", readCallback, readCallback, undefined, fakeHttpClient);
         }
 
         $(document).ready(function () {

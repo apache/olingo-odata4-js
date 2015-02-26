@@ -27,7 +27,7 @@
     <meta http-equiv="expires" content="-1" />
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.4.js"></script>
-    <script type="text/javascript" src="../build/lib/odatajs-latest.js"></script>
+    <script type="text/javascript" src="../_build/lib/odatajs-latest.js"></script>
     <script type="text/javascript" src="common/common.js"></script>
     <script type="text/javascript" src="common/djstest.js"></script>
     <script type="text/javascript" src="common/djstest-browser-ext.js"></script>
@@ -125,8 +125,8 @@
             if (inputHours !== undefined && typeof inputHours === "number" && !isNaN(inputHours) && isFinite(inputHours) && inputHours > 0) {
                 goalRunTimeMS = hourMS * inputHours;
             }
-            OData.defaultHttpClient.enableJsonpCallback = true;
-            cache = datajs.cache.createDataCache({ name: "cache" + new Date().valueOf(), source: testFeed, pageSize: 5, prefetchSize: prefetchSize });
+            odatajs.oData.net.defaultHttpClient.enableJsonpCallback = true;
+            cache = odatajs.cache.createDataCache({ name: "cache" + new Date().valueOf(), source: testFeed, pageSize: 5, prefetchSize: prefetchSize });
             failureCount = 0;
             iterationsRun = 0;
             currentRunTimeMS = 0;

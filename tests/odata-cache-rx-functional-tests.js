@@ -35,12 +35,24 @@
     ];
 
     var operatorTests = [
-        function (observable) { return observable.Take(0); },
-        function (observable) { return observable.Take(1); },
-        function (observable) { return observable.Skip(1); },
-        function (observable) { return observable.Skip(2).Take(4); },
-        function (observable) { return observable.Select(function (item) { return item.Name; }); },
-        function (observable) { return observable.Where(function (item) { return item.FoodID % 2 === 1; }); }
+        function (observable) {
+            return observable.take(0);
+        },
+        function (observable) {
+            return observable.take(1);
+        },
+        function (observable) {
+            return observable.skip(1);
+        },
+        function (observable) {
+            return observable.skip(2).take(4);
+        },
+        function (observable) {
+            return observable.select(function (item) { return item.Name; });
+        },
+        function (observable) {
+            return observable.where(function (item) { return item.FoodID % 2 === 1; });
+        }
     ];
 
     /** Asserts two finite observables generate the same sequence
@@ -52,7 +64,7 @@
 
         var toArray = function (observable, callback) {
             var arr = [];
-            observable.Subscribe(
+            observable.subscribe(
                 function (item) { arr.push(item); },
                 function (err) { arr.push({ "__error__": err }); },
                 function () { callback(arr); });
@@ -77,7 +89,7 @@
                     var cache = odatajs.cache.createDataCache(options);
 
                     ODataVerifyReader.readJsonAcrossServerPages(params.feedUri, function (collection) {
-                        assertObservables(params.operator(cache.toObservable()), params.operator(window.Rx.Observable.FromArray(collection.value)), function () {
+                        assertObservables(params.operator(cache.toObservable()), params.operator(window.Rx.Observable.fromArray(collection.value)), function () {
                             djstest.destroyCacheAndDone(cache);
                         });
                     });
