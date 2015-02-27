@@ -23,41 +23,37 @@ module.exports = function(grunt) {
   grunt.config('rat', {
     dist:  { 
       options: { 
-        dest : './build/tmp', 
+        dest : './_build/tmp',
         exclude: [
-          "node_modules","extern-tools",".gitignore",
+          "node_modules","_extern-tools",".gitignore","package.json","JSLib",
           "DEPENDENCIES","LICENSE","NOTICE",
-          "JSLib.sln","package.json", "mocha.opts"
+          "JSLib.sln","package.json", "mocha.opts","info.txt"
         ] },
       files: [
         /*{ src: ['./../_dist/<%= artifactname %>/doc'], options:{ tag:"dist-doc"}},generated*/
-        /*{ src: ['./../_dist/<%= artifactname %>/lib'], options:{ tag:"dist-lib"}},very slow*/
-        { src: ['./../_dist/<%= artifactname %>/sources'], options:{ tag:"dist-src"}},
-      ]
-    },
-    "manual-dist":  { 
-      options: { xml:false, 
-        dest : './build/tmp', 
-        exclude: [
-          "node_modules","extern-tools",".gitignore",
-          "DEPENDENCIES","LICENSE","NOTICE",
-          "JSLib.sln","package.json", "mocha.opts"
-        ] },
-      files: [
-        /*{ src: ['./../_dist/<%= artifactname %>/doc'], options:{ tag:"dist-doc"}},generated*/
-        /*{ src: ['./../_dist/<%= artifactname %>/lib'], options:{ tag:"dist-lib"}},very slow*/
-        { src: ['./../_dist/<%= artifactname %>/sources'], options:{ tag:"dist-src"}},
+        { src: ['./src'], options:{ tag:"src"}},
+        { src: ['./tests'], options:{ tag:"tests"}},
+        { src: ['./demo'], options:{ tag:"demo"}},
+        { src: ['./grunt-config'], options:{ tag:"grunt-config" }},
+        { src: ['./_dist/<%= artifactname %>/lib'], options:{ tag:"dist-lib"}},
+        { src: ['./_dist/<%= artifactname %>/sources'], options:{ tag:"dist-src"}}
       ]
     },
     manual:  {  // with txt output
       options: { xml:false, 
-        dest : './build/tmp', 
-        exclude: ["node_modules","extern-tools",".gitignore"] },
+        dest : './_build/tmp',
+        exclude: [
+          "node_modules","_extern-tools",".gitignore","package.json","JSLib",
+          "DEPENDENCIES","LICENSE","NOTICE",
+          "JSLib.sln","package.json", "mocha.opts","info.txt"
+        ] },
       files: [
         { src: ['./src'], options:{ tag:"src"}},
         { src: ['./tests'], options:{ tag:"tests"}},
         { src: ['./demo'], options:{ tag:"demo"}},
-        { src: ['./grunt-config'], options:{ tag:"grunt-config" }}
+        { src: ['./grunt-config'], options:{ tag:"grunt-config" }},
+        { src: ['./_dist/<%= artifactname %>/lib'], options:{ tag:"dist-lib"}},
+        { src: ['./_dist/<%= artifactname %>/sources'], options:{ tag:"dist-src"}}
       ]
     }
   });

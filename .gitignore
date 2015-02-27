@@ -1,7 +1,7 @@
-# ignore local stuff
+# ignore local stuff starting with an underscore
 _*
 
-# ignore IDE
+# ignore IDE settings
 .idea
 
 # ignore local config

@@ -94,7 +94,7 @@ module.exports = function(grunt) {
               if (srcPath === 'node_modules' || contains(srcPath, 'node_modules')) {
                 return false; 
               }
-              if (srcPath === 'extern-tools' || contains(srcPath, 'extern-tools')) {
+              if (srcPath === '_extern-tools' || contains(srcPath, '_extern-tools')) {
                 return false; 
               }
 

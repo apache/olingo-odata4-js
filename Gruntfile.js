@@ -19,6 +19,7 @@
  */
 module.exports = function(grunt) {
   'use strict';
+  var intUse = '-internal use only-';
   var pkg = grunt.file.readJSON('package.json');
 
   // Build artifact base name
@@ -56,10 +57,6 @@ module.exports = function(grunt) {
       "src" : {
           src: ["src/**/*.js"], 
           options: { destination: "_build/doc-src", verbose : true, debug : true, pedantic : true }
-      },
-      "test" : {
-          src: ["tests/**/*.js"], 
-          options: { destination: "_build/doc-test", verbose : true, debug : true, pedantic : true }
       }
     },
     "nugetpack" : { // create nuget pagckage
@@ -110,24 +107,25 @@ module.exports = function(grunt) {
   grunt.renameTask('clean','priv-clean'); //rat-config.js/sign-config.js/release-config.js
 
   //    Avoid problems with apache-rat tool
-  grunt.registerTask('clearEnv', 'clear JAVA_TOOL_OPTIONS', function() {
+  grunt.registerTask('clearEnv', intUse, function() {
     process.env['JAVA_TOOL_OPTIONS'] = ''; 
   });
 
 
-  //    E N D U S E R   T A S K S 
+  //    E N D U S E R   T A S K S
 
-  grunt.registerTask('clean', ['priv-clean:build']);
+  grunt.registerTask('default' , 'Show help', function() { grunt.log.write('Use grunt --help to get a list of tasks')});
+
+  grunt.registerTask('clean', 'Clean the temporary build directories', ['priv-clean:build']);
 
   //    BUILD the odatajs library
-  grunt.registerTask('build', ['clean:build','toBrowser:release', 'uglify:browser', 'copy:to-latest', 'nugetpack']);
+  grunt.registerTask('build', 'Build the odatajs library', ['clean:build','toBrowser:release', 'uglify:browser', 'copy:to-latest', 'nugetpack']);
 
   //    Create DOCumentation in /_build/doc
-  grunt.registerTask('doc', ['clearEnv', 'jsdoc:src']);
-  grunt.registerTask('doc-test', ['clearEnv', 'jsdoc:test']);
+  grunt.registerTask('doc', 'Create documentation in folder ./_build/doc-src',['clearEnv', 'jsdoc:src']);
 
   //    R E L E A S E    T A S K S ( tasts defined in release-config.js)
-  grunt.registerTask('release',[
+  grunt.registerTask('release','Build the odatajs library, run checks and package it in folder ./_dist',[
     'priv-clean:release-dist',
     'build',
     'doc',
@@ -137,12 +135,11 @@ module.exports = function(grunt) {
   ]);
 
   
-  grunt.registerTask('release:sign',[
+  grunt.registerTask('release:sign','Sign the files which are released (run "grunt release" before"',[
     'sign:release','sign:asc','sign:asc-verify'
   ]);
 
   //    Runs the license header check to verify the any source file contains a license header
-  grunt.registerTask('license-check', ['rat:manual']);
-
+  grunt.registerTask('license-check','Check files for the existence of the license header', ['rat:manual','rat:dist']);
 };
 
