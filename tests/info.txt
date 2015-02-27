@@ -1,18 +1,18 @@
-FAIL  70 /  75  odata-batch-functional-tests.html
-OK   904 /  904 odata-cache-filter-functional-tests.html
-OK    12 /   12 odata-cache-fperf-tests.html
-OK  1062 / 1062 odata-cache-functional-tests.html
-OK    42 /   42 odata-cache-rx-functional-tests.html
-??OK            odata-fuzz.html
-OK     1 /    1 odata-json-parse-tests.html
-OK    16 /   16 odata-links-functional-tests.html
-FAIL  23 /   52 odata-metadata-awareness-functional-tests.html ----> Tests 1-6 OK; Tests 7-27 are using old __metadata
-OK    36 /   36 odata-perf-tests.html ------> calls to nexflix defect --> removed
-OK   975 /  975 odata-qunit-tests.htm
-FAIL     0 /  31  odata-read-crossdomain-functional-tests.html ---->calls to odatasampleservices.azurewebsites.net fail
-OK  124/124     odata-read-functional-tests.html
-OK   52/ 52     odata-request-functional-tests.html
-OK   41/ 42     odatajs-cache-large-collection-functional-tests.html ------> one timeout on server side
-FAIL            odatajs-cache-long-haul-tests.html  -------> Uses netflix
-OK    1/  1     odatajs-startup-perf-test.html
-??              test-manager.html
+*FAIL  70 /   75 odata-batch-functional-tests.html
+*OK   904 /  904 odata-cache-filter-functional-tests.html
+*OK    12 /   12 odata-cache-fperf-tests.html
+*OK  1062 / 1062 odata-cache-functional-tests.html
+*OK    42 /   42 odata-cache-rx-functional-tests.html
+*OK              odata-fuzz.html
+*OK     1 /    1 odata-json-parse-tests.html
+*OK    16 /   16 odata-links-functional-tests.html
+FAIL   23 /   52 odata-metadata-awareness-functional-tests.html ----> Tests 1-6 OK; Tests 7-27 are using old __metadata
+*OK    36 /   36 odata-perf-tests.html ------> calls to nexflix defect --> removed
+*OK   975 /  975 odata-qunit-tests.htm
+FAIL     0 /  31 odata-read-crossdomain-functional-tests.html ---->calls to odatasampleservices.azurewebsites.net fail
+*OK  124/124     odata-read-functional-tests.html
+*OK   52/ 52     odata-request-functional-tests.html
+*OK   41/ 42     odatajs-cache-large-collection-functional-tests.html ------> one timeout on server side
+FAIL             odatajs-cache-long-haul-tests.html  -------> Uses netflix
+*OK    1/  1     odatajs-startup-perf-test.html
+??               test-manager.html

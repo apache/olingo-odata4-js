@@ -244,7 +244,7 @@ function DataCacheOperation(stateMachine, promise, isCancelable, index, count, d
         var state = that.s;
         if (state !== OPERATION_STATE_ERROR && state !== OPERATION_STATE_END && state !== OPERATION_STATE_CANCEL) {
             that.canceled = true;
-            transition(OPERATION_STATE_CANCEL, stateData);
+            that.transition(OPERATION_STATE_CANCEL, stateData);
         }
     };
 
@@ -254,7 +254,7 @@ function DataCacheOperation(stateMachine, promise, isCancelable, index, count, d
     that.complete = function () {
 
         djsassert(that.s !== OPERATION_STATE_END, "DataCacheOperation.complete() - operation is in the end state", that);
-        transition(OPERATION_STATE_END, stateData);
+        that.transition(OPERATION_STATE_END, stateData);
     };
 
     /** Transitions this operation to the error state.
@@ -264,7 +264,7 @@ function DataCacheOperation(stateMachine, promise, isCancelable, index, count, d
         if (!that.canceled) {
             djsassert(that.s !== OPERATION_STATE_END, "DataCacheOperation.error() - operation is in the end state", that);
             djsassert(that.s !== OPERATION_STATE_ERROR, "DataCacheOperation.error() - operation is in the error state", that);
-            transition(OPERATION_STATE_ERROR, err);
+            that.transition(OPERATION_STATE_ERROR, err);
         }
     };
 
@@ -284,7 +284,7 @@ function DataCacheOperation(stateMachine, promise, isCancelable, index, count, d
     that.wait = function (data) {
 
         djsassert(that.s !== OPERATION_STATE_END, "DataCacheOperation.wait() - operation is in the end state", that);
-        transition(OPERATION_STATE_WAIT, data);
+        that.transition(OPERATION_STATE_WAIT, data);
     };
 
     /** State machine that describes all operations common behavior.
@@ -312,7 +312,7 @@ function DataCacheOperation(stateMachine, promise, isCancelable, index, count, d
                 // Cancel state.
                 stateMachine(that, opTargetState, cacheState, data);
                 that.fireCanceled();
-                transition(OPERATION_STATE_END);
+                that.transition(OPERATION_STATE_END);
                 break;
 
             case OPERATION_STATE_ERROR:
@@ -320,7 +320,7 @@ function DataCacheOperation(stateMachine, promise, isCancelable, index, count, d
                 stateMachine(that, opTargetState, cacheState, data);
                 that.canceled = true;
                 that.fireRejected(data);
-                transition(OPERATION_STATE_END);
+                that.transition(OPERATION_STATE_END);
                 break;
 
             case OPERATION_STATE_END:
@@ -358,7 +358,6 @@ function DataCacheOperation(stateMachine, promise, isCancelable, index, count, d
      * @param {Object} state - State to transition the operation to.
      * @param {Object} [data] - 
      */
-
     that.transition = function (state, data) {
         that.s = state;
         stateData = data;

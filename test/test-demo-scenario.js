@@ -1111,13 +1111,11 @@ var testDataJsonParserMetadataFull = [{
             "SpatialData@odata.type": "#GeometryCollection",
             "SpatialData": {
                 "type": "GeometryCollection",
-                "geometries": [{"type": "Point", "coordinates": [5, 5], "type@odata.type": "#String"}],
+                "geometries": [{"type": "Point", "coordinates": [5, 5]}],
                 "crs": {
                     "type": "name",
-                    "properties": {"name": "EPSG:4326", "name@odata.type": "#String"},
-                    "type@odata.type": "#String"
-                },
-                "type@odata.type": "#String"
+                    "properties": {"name": "EPSG:4326"}
+                }
             },
             "Category@odata.navigationLink": "Foods(0)/Category",
             "FoodID@odata.type": "#Int32",
@@ -1421,13 +1419,11 @@ var testDataJsonParserMetadataFull = [{
         "SpatialData@odata.type": "#GeometryCollection",
         "SpatialData": {
             "type": "GeometryCollection",
-            "geometries": [{"type": "Point", "coordinates": [5, 5], "type@odata.type": "#String"}],
+            "geometries": [{"type": "Point", "coordinates": [5, 5]}],
             "crs": {
                 "type": "name",
-                "properties": {"name": "EPSG:4326", "name@odata.type": "#String"},
-                "type@odata.type": "#String"
-            },
-            "type@odata.type": "#String"
+                "properties": {"name": "EPSG:4326"}
+            }
         },
         "Category@odata.navigationLink": "Foods(0)/Category",
         "FoodID@odata.type": "#Int32",
