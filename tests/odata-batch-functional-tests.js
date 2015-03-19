@@ -106,6 +106,7 @@
 
     var cloneHeadersWithContentId = function (mimeHeaders, count) {
         var headers = djstest.clone(mimeHeaders);
+        if (!headers) { headers = {} };
         headers["Content-ID"] = count;
         return headers;
     };
