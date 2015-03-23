@@ -31,7 +31,7 @@ module.exports = function(grunt) {
         var options = this.options({ types : [] });
         var workLoad = [];
         var writeToLogOk = function(data) { grunt.log.ok(data.toString()); };
-        
+        //console.log("this.files" +JSON.stringify(this.files));
         // fill workLoad
         for(var i = 0; i < this.files.length; i++) {
           for(var ii = 0; ii < this.files[i].src.length; ii++) {

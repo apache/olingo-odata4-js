@@ -130,12 +130,12 @@ module.exports = function(grunt) {
     'build',
     'doc',
     'copy:release-lib','copy:release-doc','copy:release-sources',
-    /*'rat:dist', // check the license headers
-    'compress:release-lib','compress:release-doc','compress:release-sources',*/
+    'rat:dist', // check the license headers
+    'compress:release-lib','compress:release-doc','compress:release-sources'
   ]);
 
   
-  grunt.registerTask('release:sign','Sign the files which are released (run "grunt release" before"',[
+  grunt.registerTask('release_sign','Sign the files which are released (run "grunt release" before"',[
     'sign:release','sign:asc','sign:asc-verify'
   ]);
 

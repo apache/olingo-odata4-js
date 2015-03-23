@@ -19,7 +19,7 @@
 'use strict';
  
 
-/** @module datajs/xml */
+/** @module odatajs/xml */
 
 var utils    = require('./utils.js');
 

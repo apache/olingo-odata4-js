@@ -165,9 +165,9 @@ exports.request = function (request, success, error, handler, httpClient, metada
 
 };
 
-/** Parses the csdl metadata to DataJS metatdata format. This method can be used when the metadata is retrieved using something other than DataJS
+/** Parses the csdl metadata to ODataJS metatdata format. This method can be used when the metadata is retrieved using something other than odatajs
  * @param {string} csdlMetadataDocument - A string that represents the entire csdl metadata.
- * @returns {Object} An object that has the representation of the metadata in Datajs format.
+ * @returns {Object} An object that has the representation of the metadata in odatajs format.
  */
 exports.parseMetadata = function (csdlMetadataDocument) {
 

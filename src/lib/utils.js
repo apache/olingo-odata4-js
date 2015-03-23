@@ -18,7 +18,7 @@
  */
 'use strict';
 
-/** @module datajs/utils */
+/** @module odatajs/utils */
 
 
 function inBrowser() {
@@ -92,7 +92,6 @@ function delay(callback) {
  * @param {String} message - Message explaining the assertion.
  * @param {Object} data - Additional data to be included in the exception.
  */
-// DATAJS INTERNAL START
 function djsassert(condition, message, data) {
 
 
@@ -100,7 +99,6 @@ function djsassert(condition, message, data) {
         throw { message: "Assert fired: " + message, data: data };
     }
 }
-// DATAJS INTERNAL END
 
 /** Extends the target with the specified values.
  * @param {Object} target - Object to add properties to.

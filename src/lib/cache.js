@@ -336,17 +336,17 @@ function DataCacheOperation(stateMachine, promise, isCancelable, index, count, d
 
             default:
                 // Any other state is passed down to the state machine describing the operation's specific behavior.
-                // DATAJS INTERNAL START 
+
                 if (true) {
                     // Check that the state machine actually handled the sate.
                     var handled = stateMachine(that, opTargetState, cacheState, data);
                     djsassert(handled, "Bad operation state: " + opTargetState + " cacheState: " + cacheState, this);
                 } else {
-                    // DATAJS INTERNAL END
+
                     stateMachine(that, opTargetState, cacheState, data);
-                    // DATAJS INTERNAL START
+
                 }
-                // DATAJS INTERNAL END
+
                 break;
         }
     };

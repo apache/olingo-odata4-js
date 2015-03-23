@@ -75,7 +75,7 @@ function getError(error, defaultError) {
 function openStoreDb(store, success, error) {
 
     var storeName = store.name;
-    var dbName = "_datajs_" + storeName;
+    var dbName = "_odatajs_" + storeName;
 
     var request = indexedDB.open(dbName);
     request.onblocked = error;

@@ -25,7 +25,7 @@ module.exports = function(grunt) {
       'release' : {
         options: { types : ['md5', 'sha']},
         expand : true,
-        cwd : './../dist/<%= artifactname %>/',
+        cwd : './_dist/<%= artifactname %>/',
         src : [ 
           '<%= artifactname %>-lib.zip',
           'odatajs.4.0.0-beta01.nupkg',
@@ -36,7 +36,7 @@ module.exports = function(grunt) {
       'asc' : {
         options: { types : ['asc']},
         expand : true,
-        cwd : './../dist/<%= artifactname %>/',
+        cwd : './_dist/<%= artifactname %>/',
         src : [ 
           '<%= artifactname %>-lib.zip',
           'odatajs.4.0.0-beta01.nupkg',
@@ -47,7 +47,7 @@ module.exports = function(grunt) {
       'asc-verify' : {
         options: { types : ['asc-verify']},
         expand : true,
-        cwd : './../dist/<%= artifactname %>/',
+        cwd : './_dist/<%= artifactname %>/',
         src : [ 
           '<%= artifactname %>-lib.zip',
           'odatajs.4.0.0-beta01.nupkg',

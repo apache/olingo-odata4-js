@@ -18,7 +18,7 @@
  */
 'use strict';
 
-/** @module datajs/deferred */
+/** @module odatajs/deferred */
 
 
 

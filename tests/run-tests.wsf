@@ -20,7 +20,7 @@
 -->
 <job>
     <runtime>
-        <description>Test driver for running datajs tests - run from the same directory as the script</description>
+        <description>Test driver for running odatajs tests - run from the same directory as the script</description>
         <comment>
             Result codes:
             0 - success
