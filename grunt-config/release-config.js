@@ -48,7 +48,7 @@ module.exports = function(grunt) {
   grunt.config.merge( { 
     'jsdoc' : { // generate documentation
       "release-doc-src" : {
-        src: ['src/**/*.js'], 
+        src: ['**/*.js'],
         options: {
           destination: './_dist/<%= artifactname %>/doc',
           verbose : false 
@@ -71,7 +71,7 @@ module.exports = function(grunt) {
       },
       "release-nuget": {
           files: [
-              { expand: true, cwd: '_build', src: ['odatajs.4.0.0-beta01.nupkg'], dest: './_dist/<%= artifactname %>', filter: 'isFile' },
+              { expand: true, cwd: '_build', src: ['odatajs.4.0.0.nupkg'], dest: './_dist/<%= artifactname %>', filter: 'isFile' },
           ]
       },
       "release-doc" : {

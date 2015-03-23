@@ -36,8 +36,8 @@ module.exports = function(grunt) {
 
     "toBrowser" : {
       "release" : {
-          options: { index : "src/index-browser.js" },
-          src: ["src/lib/**/*.js", '!**/*-node.*'], 
+          options: { index : "index-browser.js" },
+          src: ["lib/**/*.js", '!**/*-node.*'],
           dest: "_build/lib/<%= artifactname %>.js"
       }
     },
@@ -55,7 +55,7 @@ module.exports = function(grunt) {
     },
     "jsdoc" : {
       "src" : {
-          src: ["src/**/*.js"], 
+          src: ["index.js","lib/**/*.js"],
           options: { destination: "_build/doc-src", verbose : true, debug : true, pedantic : true }
       }
     },
@@ -135,7 +135,7 @@ module.exports = function(grunt) {
   ]);
 
   
-  grunt.registerTask('release_sign','Sign the files which are released (run "grunt release" before"',[
+  grunt.registerTask('release-sign','Sign the files which are released (run "grunt release" before"',[
     'sign:release','sign:asc','sign:asc-verify'
   ]);
 

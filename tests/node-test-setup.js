@@ -24,7 +24,7 @@ MockHttpClient = require("./common/mockHttpClient.js").init({});
 
 //lib
 datajs = require('././lib/datajs.js');
-OData = require('./../src/lib/odata.js');
+OData = require('././odata.js');
 
 
 

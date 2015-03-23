@@ -1,4 +1,3 @@
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 module.exports = function(grunt) {
   
   
@@ -31,7 +31,7 @@ module.exports = function(grunt) {
         ] },
       files: [
         /*{ src: ['./../_dist/<%= artifactname %>/doc'], options:{ tag:"dist-doc"}},generated*/
-        { src: ['./src'], options:{ tag:"src"}},
+        { src: ['./lib'], options:{ tag:"lib"}},
         { src: ['./tests'], options:{ tag:"tests"}},
         { src: ['./demo'], options:{ tag:"demo"}},
         { src: ['./grunt-config'], options:{ tag:"grunt-config" }},
@@ -48,7 +48,7 @@ module.exports = function(grunt) {
           "JSLib.sln","package.json", "mocha.opts","info.txt"
         ] },
       files: [
-        { src: ['./src'], options:{ tag:"src"}},
+        { src: ['./lib'], options:{ tag:"lib"}},
         { src: ['./tests'], options:{ tag:"tests"}},
         { src: ['./demo'], options:{ tag:"demo"}},
         { src: ['./grunt-config'], options:{ tag:"grunt-config" }},

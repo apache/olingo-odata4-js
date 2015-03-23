@@ -18,7 +18,7 @@
  */
 'use strict';
 
-var odatajs = require('./../src/index-node.js');
+var odatajs = require('./../index.js');
 var chai = require('chai');
 var assert = chai.assert;
 

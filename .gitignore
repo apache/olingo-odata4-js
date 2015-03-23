@@ -8,7 +8,7 @@ _*
 localgrunt.config
 
 # testing copies
-../demo/scripts/odatajs-4.0.0-beta-01*
+../demo/scripts/odatajs-4.0.0-*
 
 # build artefacts
 #build/
