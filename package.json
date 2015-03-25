@@ -1,7 +1,7 @@
 {
   "name": "odatajs",
   "version": "4.0.0",
-  "postfix": "",
+  "postfix": "RC-01",
   "releaseCandidate": "",
   "title": "Olingo OData Client for JavaScript",
   "description": "the Olingo OData Client for JavaScript library is a new cross-browser JavaScript library that enables data-centric web applications by leveraging modern protocols such as JSON and OData and HTML5-enabled browser features. It's designed to be small, fast and easy to use.",
