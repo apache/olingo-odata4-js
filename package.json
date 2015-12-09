@@ -6,8 +6,7 @@
   "title": "Olingo OData Client for JavaScript",
   "description": "the Olingo OData Client for JavaScript library is a new cross-browser JavaScript library that enables data-centric web applications by leveraging modern protocols such as JSON and OData and HTML5-enabled browser features. It's designed to be small, fast and easy to use.",
   "homepage": "http://olingo.apache.org",
-  "main": "index-node.js",
-  "main-browser": "index.js",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "http://git-wip-us.apache.org/repos/asf/olingo-odata4-js.git"
