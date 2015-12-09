@@ -24,7 +24,7 @@ module.exports = function(grunt) {
 
         var path = require('path');
         var fs = require( 'fs' );
-        var chalk = require('./rat/node_modules/chalk');
+        var chalk = require('chalk');
         
         var globalDone = this.async();
         

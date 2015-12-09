@@ -18,9 +18,6 @@
     "grunt": "~0.4.0",
     "xml2js": "^0.4.4"
   },
-  "peerDependencies": {
-    "grunt": "~0.4.0"
-  },
   "engines": {
     "node": ">=0.8.0"
   }
