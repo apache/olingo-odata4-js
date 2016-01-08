@@ -1,5 +1,5 @@
 {
-  "name": "odatajs",
+  "name": "jaydata-odatajs",
   "version": "4.0.0",
   "postfix": "",
   "releaseCandidate": "",
@@ -9,7 +9,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "http://git-wip-us.apache.org/repos/asf/olingo-odata4-js.git"
+    "url": "http://github.com/jaystack/olingo-odata4-js.git"
   },
   "engines": {
     "node": ">= 0.10.0"
@@ -26,6 +26,10 @@
     {
       "name": "Challen He",
       "email": "challenh@apache.org"
+    },
+    {
+      "name": "Viktor Lázár",
+      "email": "viktor.lazar@jaystack.com"
     }
   ],
   "dependencies": {
