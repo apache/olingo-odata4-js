@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+(function(){
 var init = function(exports, module, require) {
   '<% initFunction %>'
 };
@@ -29,7 +30,6 @@ var require = function(path) {
     if (modules[name]) { return modules[name].exports; }
 
     modules[name] = { exports : {}};
-    console.log(name);
     if (name === 'sou') {
       var i = 0;
     }
@@ -39,5 +39,5 @@ var require = function(path) {
 
 window.odatajs = {};
 init.call(this,window.odatajs,window.odatajs,require);
-
+})();
 

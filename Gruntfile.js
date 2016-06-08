@@ -36,7 +36,7 @@ module.exports = function(grunt) {
 
     "toBrowser" : {
       "release" : {
-          options: { index : "index-browser.js" },
+          options: { index : "index.js" },
           src: ["lib/**/*.js", '!**/*-node.*'],
           dest: "_build/lib/<%= artifactname %>.js"
       }

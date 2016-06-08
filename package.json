@@ -1,6 +1,6 @@
 {
   "name": "jaydata-odatajs",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "postfix": "",
   "releaseCandidate": "",
   "title": "Olingo OData Client for JavaScript",
@@ -30,6 +30,10 @@
     {
       "name": "Viktor Lázár",
       "email": "viktor.lazar@jaystack.com"
+    },
+    {
+      "name": "Viktor Borza",
+      "email": "viktor.borza@jaystack.com"
     }
   ],
   "dependencies": {
