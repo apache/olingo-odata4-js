@@ -49,13 +49,13 @@ module.exports = function(grunt) {
 
           //console.log('exists :'+srcPath+srcName+'-browser.js' );
           tarName = srcName;
-          if (srcName.indexOf('-browser') > 0) {
-            tarName = tarName.substring(0,srcName.indexOf('-browser'));
-            //console.log('new srcName :'+srcName );
-          } else if (grunt.file.exists(srcPath+srcName+'-browser.js')) {
-            //console.log('exists :yes');
-            continue; //skip that file
-          }
+        //   if (srcName.indexOf('-browser') > 0) {
+        //     tarName = tarName.substring(0,srcName.indexOf('-browser'));
+        //     //console.log('new srcName :'+srcName );
+        //   } else if (grunt.file.exists(srcPath+srcName+'-browser.js')) {
+        //     //console.log('exists :yes');
+        //     continue; //skip that file
+        //   }
           
 
           workLoad.push({
