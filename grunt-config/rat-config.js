@@ -27,7 +27,7 @@ module.exports = function(grunt) {
         exclude: [
           "node_modules","_extern-tools",".gitignore","package.json","JSLib",
           "DEPENDENCIES","LICENSE","NOTICE",
-          "JSLib.sln","package.json", "mocha.opts","info.txt"
+          "JSLib.sln","package.json", "mocha.opts","info.txt","olingo-odata4-js.iml"
         ] },
       files: [
         /*{ src: ['./../_dist/<%= artifactname %>/doc'], options:{ tag:"dist-doc"}},generated*/
@@ -45,7 +45,7 @@ module.exports = function(grunt) {
         exclude: [
           "node_modules","_extern-tools",".gitignore","package.json","JSLib",
           "DEPENDENCIES","LICENSE","NOTICE",
-          "JSLib.sln","package.json", "mocha.opts","info.txt"
+          "JSLib.sln","package.json", "mocha.opts","info.txt","olingo-odata4-js.iml"
         ] },
       files: [
         { src: ['./lib'], options:{ tag:"lib"}},

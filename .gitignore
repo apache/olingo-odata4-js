@@ -3,6 +3,7 @@ _*
 
 # ignore IDE settings
 .idea
+olingo-odata4-js.iml
 
 # ignore local config
 localgrunt.config

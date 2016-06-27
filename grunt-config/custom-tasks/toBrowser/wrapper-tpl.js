@@ -29,10 +29,6 @@ var require = function(path) {
     if (modules[name]) { return modules[name].exports; }
 
     modules[name] = { exports : {}};
-    console.log(name);
-    if (name === 'sou') {
-      var i = 0;
-    }
     datas[name].call(this,modules[name].exports,modules[name],require);
     return modules[name].exports;
   };

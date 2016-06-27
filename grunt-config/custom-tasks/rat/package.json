@@ -14,12 +14,9 @@
     "chalk": "~0.4.0"
   },
   "devDependencies": {
-    "async": "^0.9.0",
-    "grunt": "~0.4.0",
-    "xml2js": "^0.4.4"
-  },
-  "peerDependencies": {
-    "grunt": "~0.4.0"
+    "async": "0.9.0",
+    "grunt": "0.4.0",
+    "xml2js": "0.4.4"
   },
   "engines": {
     "node": ">=0.8.0"
