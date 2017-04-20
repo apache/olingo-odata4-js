@@ -1,6 +1,9 @@
 # ignore local stuff starting with an underscore
 _*
 
+# extensions
+*.tgz
+
 # ignore IDE settings
 .idea
 olingo-odata4-js.iml
@@ -14,6 +17,7 @@ localgrunt.config
 # build artefacts
 dist/
 doc/
+tmp/
 
 # nodejs temporary objects
 node_modules/

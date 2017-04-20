@@ -4,6 +4,9 @@
 .idea
 olingo-odata4-js.iml
 
+# extensions
+*.tgz
+
 # build artefacts
 demo/
 doc/

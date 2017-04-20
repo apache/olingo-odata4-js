@@ -76,7 +76,7 @@ module.exports = function(grunt) {
     "priv-clean": {
       options: {force: true},
       "build": {
-          src: [ "dist/*", "doc/*", "tmp/*" ]
+          src: [ "dist", "doc", "tmp" ]
       }
     }
   };
