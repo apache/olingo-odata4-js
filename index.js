@@ -22,7 +22,7 @@ var odatajs = {};
 odatajs.version = {
     major: 4,
     minor: 0,
-    build: 0
+    build: 1
 };
 
 // core stuff, alway needed
@@ -37,11 +37,13 @@ odatajs.oData = require('./lib/odata.js');
 odatajs.store = require('./lib/store.js');
 odatajs.cache = require('./lib/cache.js');
 
-if (typeof window !== 'undefined') {
+if (odatajs.utils.inBrowser()) {
     //expose to browsers window object
     window.odatajs = odatajs;
-} else {
+}
+
+if (typeof module !== 'undefined') {
     //expose in commonjs style
-    odatajs.node = "node";
+    odatajs.node = 'node';
     module.exports = odatajs;
 }

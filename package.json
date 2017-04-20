@@ -1,16 +1,16 @@
 {
-  "name": "odatajs",
+  "name": "ts-odatajs",
   "version": "4.0.1",
   "postfix": "",
   "releaseCandidate": "",
-  "title": "Olingo OData Client for JavaScript",
-  "description": "the Olingo OData Client for JavaScript library is a new cross-browser JavaScript library that enables data-centric web applications by leveraging modern protocols such as JSON and OData and HTML5-enabled browser features. It's designed to be small, fast and easy to use.",
+  "title": "Olingo OData Client for JavaScript + TypeScript",
+  "description": "the Olingo OData Client for JavaScript library is a new cross-browser JavaScript library that enables data-centric web applications by leveraging modern protocols such as JSON and OData and HTML5-enabled browser features. It's designed to be small, fast and easy to use. Includes typings for TypeScript.",
   "homepage": "http://olingo.apache.org",
   "main": "index-node.js",
   "main-browser": "index.js",
   "repository": {
     "type": "git",
-    "url": "http://git-wip-us.apache.org/repos/asf/olingo-odata4-js.git"
+    "url": "https://github.com/tschettler/olingo-odata4-js.git"
   },
   "engines": {
     "node": ">= 0.12.0"
@@ -27,10 +27,13 @@
     {
       "name": "Challen He",
       "email": "challenh@apache.org"
+    },
+    {
+      "name": "Travis Schettler",
+      "email": "travis_schettler@hotmail.com"
     }
   ],
   "scripts": {
-    "preinstall": "npm --prefix ./grunt-config/custom-tasks/rat install"
   },
   "devDependencies": {
     "chai": "2.0.0",

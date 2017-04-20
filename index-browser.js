@@ -18,7 +18,7 @@
  */
 
 // version information 
-exports.version = { major: 4, minor: 0, build: 0 };
+exports.version = { major: 4, minor: 0, build: 1 };
 
 // core stuff, always needed
 exports.deferred = require('./lib/deferred.js');
