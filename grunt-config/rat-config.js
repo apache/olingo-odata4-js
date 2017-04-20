@@ -23,37 +23,35 @@ module.exports = function(grunt) {
   grunt.config('rat', {
     dist:  { 
       options: { 
-        dest : './_build/tmp',
+        dest : './tmp',
         exclude: [
           "node_modules","_extern-tools",".gitignore","package.json","JSLib",
           "DEPENDENCIES","LICENSE","NOTICE",
-          "JSLib.sln","package.json", "mocha.opts","info.txt","olingo-odata4-js.iml"
+          "JSLib.sln","package.json", "mocha.opts","info.txt","olingo-odata4-js.iml", "*.nupkg"
         ] },
       files: [
-        /*{ src: ['./../_dist/<%= artifactname %>/doc'], options:{ tag:"dist-doc"}},generated*/
+        /*{ src: ['./../<%= artifactname %>/doc'], options:{ tag:"dist-doc"}},generated*/
         { src: ['./lib'], options:{ tag:"lib"}},
         { src: ['./tests'], options:{ tag:"tests"}},
         { src: ['./demo'], options:{ tag:"demo"}},
         { src: ['./grunt-config'], options:{ tag:"grunt-config" }},
-        { src: ['./_dist/<%= artifactname %>/lib'], options:{ tag:"dist-lib"}},
-        { src: ['./_dist/<%= artifactname %>/sources'], options:{ tag:"dist-src"}}
+        { src: ['./dist'], options:{ tag:"dist-lib"}}
       ]
     },
     manual:  {  // with txt output
       options: { xml:false, 
-        dest : './_build/tmp',
+        dest : './tmp',
         exclude: [
           "node_modules","_extern-tools",".gitignore","package.json","JSLib",
           "DEPENDENCIES","LICENSE","NOTICE",
-          "JSLib.sln","package.json", "mocha.opts","info.txt","olingo-odata4-js.iml"
+          "JSLib.sln","package.json", "mocha.opts","info.txt","olingo-odata4-js.iml", "*.nupkg"
         ] },
       files: [
         { src: ['./lib'], options:{ tag:"lib"}},
         { src: ['./tests'], options:{ tag:"tests"}},
         { src: ['./demo'], options:{ tag:"demo"}},
         { src: ['./grunt-config'], options:{ tag:"grunt-config" }},
-        { src: ['./_dist/<%= artifactname %>/lib'], options:{ tag:"dist-lib"}},
-        { src: ['./_dist/<%= artifactname %>/sources'], options:{ tag:"dist-src"}}
+        { src: ['./dist'], options:{ tag:"dist-lib"}}
       ]
     }
   });

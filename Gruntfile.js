@@ -40,43 +40,43 @@ module.exports = function(grunt) {
       "release" : {
           options: { index : "index.js" },
           src: ["lib/**/*.js", '!**/*-node.*'],
-          dest: "_build/lib/<%= artifactname %>.js"
+          dest: "dist/<%= artifactname %>.js"
       }
     },
     "uglify": { // uglify and minify the lib
       options: {
         sourceMap : true,
-        sourceMapName : "_build/lib/<%= artifactname %>.map",
+        sourceMapName : "dist/<%= artifactname %>.map",
         sourceMapIncludeSources : true,
         banner : "<%= banner %>"
       },
       "browser": {
-          src: "_build/lib/<%= artifactname %>.js",
-          dest: "_build/lib/<%= artifactname %>.min.js"
+          src: "dist/<%= artifactname %>.js",
+          dest: "dist/<%= artifactname %>.min.js"
       }
     },
     "jsdoc" : {
       "src" : {
           src: ["index.js","lib/**/*.js"],
-          options: { destination: "_build/doc-src", verbose : true, debug : true, pedantic : true }
+          options: { destination: "doc", verbose : true, debug : true, pedantic : true }
       }
     },
     "nugetpack" : { // create nuget package
       "dist": {
           src: 'grunt-config/nugetpack.nuspec',
-          dest: '_build/'
+          dest: 'dist/'
       }
     },
     "copy" : {
       "to-latest" : {
-          src :"_build/lib/<%= artifactname %>.js",
-          dest: "_build/lib/<%= pkgName %>-latest.js"
+          src :"dist/<%= artifactname %>.js",
+          dest: "dist/<%= pkgName %>-latest.js"
       }
     },
     "priv-clean": {
       options: {force: true},
       "build": {
-          src: [ "_build/*", "_dist/*" ]
+          src: [ "dist/*", "doc/*", "tmp/*" ]
       }
     }
   };
@@ -124,16 +124,15 @@ module.exports = function(grunt) {
   grunt.registerTask('build', 'Build the odatajs library', ['clean:build','toBrowser:release', 'uglify:browser', 'copy:to-latest', 'nugetpack']);
 
   //    Create DOCumentation in /_build/doc
-  grunt.registerTask('doc', 'Create documentation in folder ./_build/doc-src',['clearEnv', 'jsdoc:src']);
+  grunt.registerTask('doc', 'Create documentation in folder ./doc',['clearEnv', 'jsdoc:src']);
 
   //    R E L E A S E    T A S K S ( tasts defined in release-config.js)
-  grunt.registerTask('release','Build the odatajs library, run checks and package it in folder ./_dist',[
+  grunt.registerTask('release','Build the odatajs library, run checks and package it in folder ./dist',[
     'priv-clean:release-dist',
     'build',
     'doc',
-    'copy:release-lib','copy:release-doc','copy:release-sources',
     'rat:dist', // check the license headers
-    'compress:release-lib','compress:release-doc','compress:release-sources'
+    'compress:release-dist','compress:release-doc','compress:release-lib'
   ]);
 
   

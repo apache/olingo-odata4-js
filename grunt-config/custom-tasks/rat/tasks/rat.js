@@ -29,7 +29,7 @@ module.exports = function (grunt) {
     var globalCB = this.async();
     
     var ratJarFile =  path.resolve(__dirname,'./../_extern-tools/apache-rat-0.11/apache-rat-0.11.jar');
-    var options = this.options({ xml : true, dest : './_dist/tmp'});
+    var options = this.options({ xml : true, dest : './tmp'});
 
     //check output directory
     if(!fs.existsSync(options.dest)){
@@ -58,7 +58,7 @@ module.exports = function (grunt) {
       var options = data.options;
       var outPutFile = options.dest + '/'+ 'rat_' + (options.tag ? options.tag:'') + (options.xml ? '.xml' : '.txt');
       
-      //sample command java -jar apache-rat-0.10.jar -x -d ./src > ./_dist/tmp/rat.txt
+      //sample command java -jar apache-rat-0.10.jar -x -d ./src > ./tmp/rat.txt
       var cmd = 'java -jar ' + ratJarFile+ ' ';
       cmd += options.xml ? ' -x' : '';
       cmd += ' --force -d ' + checkDir;

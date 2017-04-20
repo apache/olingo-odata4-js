@@ -25,34 +25,34 @@ module.exports = function(grunt) {
       'release' : {
         options: { types : ['md5', 'sha']},
         expand : true,
-        cwd : './_dist/<%= artifactname %>/',
+        cwd : './dist/',
         src : [ 
-          '<%= artifactname %>-lib.zip',
+          '<%= artifactname %>-dist.zip',
           '<%= artifactname %>.nupkg',
           '<%= artifactname %>-doc.zip',
-          '<%= artifactname %>-sources.zip'
+          '<%= artifactname %>-src.zip'
         ]
       },
       'asc' : {
         options: { types : ['asc']},
         expand : true,
-        cwd : './_dist/<%= artifactname %>/',
+        cwd : './dist/',
         src : [ 
-          '<%= artifactname %>-lib.zip',
+          '<%= artifactname %>-dist.zip',
           '<%= artifactname %>.nupkg',
           '<%= artifactname %>-doc.zip',
-          '<%= artifactname %>-sources.zip'
+          '<%= artifactname %>-src.zip'
         ]
       },
       'asc-verify' : {
         options: { types : ['asc-verify']},
         expand : true,
-        cwd : './_dist/<%= artifactname %>/',
+        cwd : './dist/',
         src : [ 
-          '<%= artifactname %>-lib.zip',
+          '<%= artifactname %>-dist.zip',
           '<%= artifactname %>.nupkg',
           '<%= artifactname %>-doc.zip',
-          '<%= artifactname %>-sources.zip'
+          '<%= artifactname %>-src.zip'
         ]
       }
     },

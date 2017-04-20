@@ -12,7 +12,8 @@ localgrunt.config
 ../demo/scripts/odatajs-4.0.1*
 
 # build artefacts
-#build/
+dist/
+doc/
 
 # nodejs temporary objects
 node_modules/

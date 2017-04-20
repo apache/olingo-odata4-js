@@ -1,0 +1,25 @@
+.npmignore
+
+# ignore IDE settings
+.idea
+olingo-odata4-js.iml
+
+# build artefacts
+demo/
+doc/
+grunt-config/
+test/
+tests/
+tmp/
+dist/*.zip
+dist/*.nupkg
+
+# nodejs temporary objects
+node_modules/
+
+# .NET objects
+bin/
+obj/
+packages/
+*.config
+JSLib.*
