@@ -96,7 +96,7 @@ module.exports = function (grunt) {
           }
           
           if (checkRatLogFile(result)) {
-            grunt.fail.warn('rat --> check license error:  ' + 'Missing or Invalied license header detected ( see "'+outFile+'")', 1);
+            grunt.fail.warn('rat --> check license error:  ' + 'Missing or Invalid license header detected ( see "'+outFile+'")', 1);
           }
           
           grunt.log.ok('rat --> check on ' + data.dir + ' ok -> see'  + outFile);

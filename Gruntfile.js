@@ -24,19 +24,21 @@ module.exports = function(grunt) {
 
   // Build artifact base name
   //<%= pkg.name %>-<%= pkg.version %>-<%= pkg.postfix %>-<%= pkg.releaseCandidate %>'
-  var artifactname = pkg.name + '-' + pkg.version +
+  var pkgName = pkg.name.split('-').pop();
+  var artifactname = pkgName + '-' + pkg.version +
      (pkg.postfix.length > 0 ? "-" : "") + pkg.postfix +
      (pkg.releaseCandidate.length > 0 ? "-" : "") + pkg.releaseCandidate;
 
   //options
   var init = {
     pkg: pkg,
+    pkgName: pkgName,
     banner: grunt.file.read('grunt-config/banner.txt'),
     artifactname : artifactname,
 
     "toBrowser" : {
       "release" : {
-          options: { index : "index-browser.js" },
+          options: { index : "index.js" },
           src: ["lib/**/*.js", '!**/*-node.*'],
           dest: "_build/lib/<%= artifactname %>.js"
       }
@@ -59,7 +61,7 @@ module.exports = function(grunt) {
           options: { destination: "_build/doc-src", verbose : true, debug : true, pedantic : true }
       }
     },
-    "nugetpack" : { // create nuget pagckage
+    "nugetpack" : { // create nuget package
       "dist": {
           src: 'grunt-config/nugetpack.nuspec',
           dest: '_build/'
@@ -68,13 +70,13 @@ module.exports = function(grunt) {
     "copy" : {
       "to-latest" : {
           src :"_build/lib/<%= artifactname %>.js",
-          dest: "_build/lib/odatajs-latest.js"
+          dest: "_build/lib/<%= pkgName %>-latest.js"
       }
     },
     "priv-clean": {
       options: {force: true},
       "build": {
-          src: [ "_build/*"]
+          src: [ "_build/*", "_dist/*" ]
       }
     }
   };

@@ -71,7 +71,7 @@ module.exports = function(grunt) {
       },
       "release-nuget": {
           files: [
-              { expand: true, cwd: '_build', src: ['odatajs.4.0.1.nupkg'], dest: './_dist/<%= artifactname %>', filter: 'isFile' },
+              { expand: true, cwd: '_build', src: ['<%= artifactname %>.nupkg'], dest: './_dist/<%= artifactname %>', filter: 'isFile' },
           ]
       },
       "release-doc" : {
