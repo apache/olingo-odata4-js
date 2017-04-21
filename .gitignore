@@ -15,7 +15,8 @@ localgrunt.config
 ../demo/scripts/odatajs-4.0.1*
 
 # build artefacts
-dist/
+dist/*.zip
+dist/*.nupkg
 doc/
 tmp/
 

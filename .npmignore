@@ -16,6 +16,7 @@ tests/
 tmp/
 dist/*.zip
 dist/*.nupkg
+Gruntfile.js
 
 # nodejs temporary objects
 node_modules/
