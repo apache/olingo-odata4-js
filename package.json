@@ -4,7 +4,7 @@
   "postfix": "",
   "releaseCandidate": "",
   "title": "Olingo OData Client for TypeScript",
-  "description": "the Olingo OData Client for TypeScript library is a new cross-browser TypeScript library that enables data-centric web applications by leveraging modern protocols such as JSON and OData and HTML5-enabled browser features. It's designed to be small, fast and easy to use.",
+  "description": "The Olingo OData Client for JavaScript (and TypeScript) is a new cross-browser library that enables data-centric web applications by leveraging modern protocols such as JSON and OData and HTML5-enabled browser features. It's designed to be small, fast and easy to use. Contains typings for use with TypeScript.",
   "license": "Apache-2.0",
   "homepage": "http://olingo.apache.org",
   "main": "index.js",
