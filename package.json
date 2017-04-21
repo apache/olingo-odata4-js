@@ -1,10 +1,10 @@
 {
-  "name": "ts-odatajs",
+  "name": "ts-odata",
   "version": "4.0.1",
   "postfix": "",
   "releaseCandidate": "",
-  "title": "Olingo OData Client for JavaScript + TypeScript",
-  "description": "the Olingo OData Client for JavaScript library is a new cross-browser JavaScript library that enables data-centric web applications by leveraging modern protocols such as JSON and OData and HTML5-enabled browser features. It's designed to be small, fast and easy to use. Includes typings for TypeScript.",
+  "title": "Olingo OData Client for TypeScript",
+  "description": "the Olingo OData Client for TypeScript library is a new cross-browser TypeScript library that enables data-centric web applications by leveraging modern protocols such as JSON and OData and HTML5-enabled browser features. It's designed to be small, fast and easy to use.",
   "license": "Apache-2.0",
   "homepage": "http://olingo.apache.org",
   "main": "index.js",
@@ -34,8 +34,7 @@
       "email": "travis_schettler@hotmail.com"
     }
   ],
-  "scripts": {
-  },
+  "scripts": {},
   "devDependencies": {
     "async": "^2.3.0",
     "catharsis": "^0.8.8",
@@ -56,5 +55,11 @@
     "xmldom": "0.1.19"
   },
   "module": "index.js",
-  "typings": "index.d.ts"
+  "typings": "index.d.ts",
+  "keywords": [
+    "odata",
+    "odatajs",
+    "olingo",
+    "typescript"
+  ]
 }
