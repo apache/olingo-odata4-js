@@ -4,7 +4,7 @@
     <title>Olingo OData Client for JavaScript</title>
     <id>odatajs</id>
     <tags>restful api open protocol odata client javascript</tags>
-    <version>4.0.0</version>
+    <version>4.0.1</version>
     <authors>Apache Olingo (Challen He, Kobler-Morris Sven)</authors>
     <owners>Apache Olingo</owners>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
@@ -22,6 +22,6 @@
     <file src="..\LICENS*E" target="odatajs\" />
     <file src="..\NOTIC*E" target="odatajs\" />
     <file src="..\DEPENDENCIE*S" target="odatajs\" />
-    <file src="..\_build\lib\*" target="odatajs\" />
+    <file src="..\dist\*" target="odatajs\" />
   </files>
 </package>

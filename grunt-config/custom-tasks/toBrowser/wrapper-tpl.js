@@ -16,24 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-var init = function(exports, module, require) {
-  '<% initFunction %>'
-};
+(function () {
+  var init = function (exports, module, require) {
+    '<% initFunction %>'
+  };
 
-var datas = '<% filesAsFunctionList %>';
+  var datas = '<% filesAsFunctionList %>';
 
-var modules = {};
+  var modules = {};
 
-var require = function(path) {
-    var name = path.substring(path.lastIndexOf('/')+1,path.length-3);
+  var require = function (path) {
+    var name = path.substring(path.lastIndexOf('/') + 1, path.length - 3);
     if (modules[name]) { return modules[name].exports; }
 
-    modules[name] = { exports : {}};
-    datas[name].call(this,modules[name].exports,modules[name],require);
+    modules[name] = { exports: {} };
+    datas[name].call(this, modules[name].exports, modules[name], require);
     return modules[name].exports;
   };
 
-window.odatajs = {};
-init.call(this,window.odatajs,window.odatajs,require);
-
-
+  window.odatajs = {};
+  init.call(this, window.odatajs, window.odatajs, require);
+})();

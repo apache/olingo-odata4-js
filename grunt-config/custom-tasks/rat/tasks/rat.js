@@ -27,59 +27,61 @@ module.exports = function (grunt) {
     var xml2js = require('xml2js');
 
     var globalCB = this.async();
-    
-    var ratJarFile =  path.resolve(__dirname,'./../_extern-tools/apache-rat-0.11/apache-rat-0.11.jar');
-    var options = this.options({ xml : true, dest : './_dist/tmp'});
+
+    var ratJarFile = path.resolve(__dirname, './../_extern-tools/apache-rat-0.12/apache-rat-0.12.jar');
+    var ratExcludes = path.resolve(__dirname, './../../../.rat-excludes');
+    var options = this.options({ xml: true, dest: './tmp' });
 
     //check output directory
-    if(!fs.existsSync(options.dest)){
-      grunt.file.mkdir(options.dest,0766);
+    if (!fs.existsSync(options.dest)) {
+      grunt.file.mkdir(options.dest, 0766);
     }
-    
+
     //collect directories which should be checked
     var checkDirs = [];
-    for(var i = 0; i < this.files.length; i++) {
-      for(var ii = 0; ii < this.files[i].src.length; ii++) {
+    for (var i = 0; i < this.files.length; i++) {
+      for (var ii = 0; ii < this.files[i].src.length; ii++) {
         var checkDir = {
-          dir : this.files[i].src[ii],
-          options : {
-            xml : options.xml,
-            dest : options.dest,
-            tag : this.files[i].options.tag,
-            exclude : options.exclude || this.files[i].options.exclude
+          dir: this.files[i].src[ii],
+          options: {
+            xml: options.xml,
+            dest: options.dest,
+            tag: this.files[i].options.tag,
+            exclude: options.exclude || this.files[i].options.exclude
           }
         };
         checkDirs.push(checkDir);
       }
     }
 
-    var processDirectory = function processDirectory(data,cb) {
-      var checkDir = data.dir; 
+    var processDirectory = function processDirectory(data, cb) {
+      var checkDir = data.dir;
       var options = data.options;
-      var outPutFile = options.dest + '/'+ 'rat_' + (options.tag ? options.tag:'') + (options.xml ? '.xml' : '.txt');
-      
-      //sample command java -jar apache-rat-0.10.jar -x -d ./src > ./_dist/tmp/rat.txt
-      var cmd = 'java -jar ' + ratJarFile+ ' ';
+      var outPutFile = options.dest + '/' + 'rat_' + (options.tag ? options.tag : '') + (options.xml ? '.xml' : '.txt');
+
+      //sample command java -jar apache-rat-0.10.jar -x -d ./src > ./tmp/rat.txt
+      var cmd = 'java -jar ' + ratJarFile;
       cmd += options.xml ? ' -x' : '';
       cmd += ' --force -d ' + checkDir;
+      cmd += ' -E ' + ratExcludes;
       //cmd += ' -E ./grunt-config/custom-tasks/rat/.rat-excludes'
-      if (options.exclude)  {
-        for (var i = 0;  i< options.exclude.length; i ++) {
-          cmd += ' -e '+ options.exclude[i];
+      if (options.exclude) {
+        for (var i = 0; i < options.exclude.length; i++) {
+          cmd += ' -e ' + options.exclude[i];
         }
       }
-      cmd +=  ' > ' + outPutFile;
+      cmd += ' > ' + outPutFile;
 
       grunt.verbose.writeln('Command:', chalk.yellow(cmd));
       var cp = childProcess.exec(cmd, options.execOptions, function (error, stdout, stderr) {
         if (error) {
           grunt.fail.warn('rat --> ' + error, 1); //exit grunt with error code 1
         }
-        checkOutFile(outPutFile,data,cb);
+        checkOutFile(outPutFile, data, cb);
       });
     };
 
-    var checkOutFile = function(outFile,data,cb) {
+    var checkOutFile = function (outFile, data, cb) {
       //check out files
       if (path.extname(outFile) !== '.xml') {
         //grunt.log.writeln(chalk.yellow('\nrat --> ' + 'No XML output: ('+outFile+') skipped!\n'));
@@ -91,22 +93,22 @@ module.exports = function (grunt) {
       var parser = new xml2js.Parser();
 
       parser.parseString(xml, function (err, result) {
-          if (err) {
-            grunt.fail.warn('rat --> XML parse error: ' + err, 1); 
-          }
-          
-          if (checkRatLogFile(result)) {
-            grunt.fail.warn('rat --> check license error:  ' + 'Missing or Invalied license header detected ( see "'+outFile+'")', 1);
-          }
-          
-          grunt.log.ok('rat --> check on ' + data.dir + ' ok -> see'  + outFile);
+        if (err) {
+          grunt.fail.warn('rat --> XML parse error: ' + err, 1);
+        }
+
+        if (checkRatLogFile(result)) {
+          grunt.fail.warn('rat --> check license error:  ' + 'Missing or Invalid license header detected ( see "' + outFile + '")', 1);
+        }
+
+        grunt.log.ok('rat --> check on ' + data.dir + ' ok -> see' + outFile);
       });
       cb();
     };
 
-    var checkRatLogFile = function(result) {
+    var checkRatLogFile = function (result) {
       var list = result['rat-report']['resource'];
-      for (var i = 0; i < list.length; i++ ){
+      for (var i = 0; i < list.length; i++) {
         var item = list[i];
 
         var headerType = list[i]['header-type'];
@@ -130,25 +132,25 @@ module.exports = function (grunt) {
 
     //files
     async.each(checkDirs,
-      function (checkDir,cb) {
-        processDirectory(checkDir,cb);
+      function (checkDir, cb) {
+        processDirectory(checkDir, cb);
       },
-      function(err) {
+      function (err) {
         grunt.log.ok('rat --> finished');
         globalCB();
       }
     );
 
-    
-  /*
-    captureOutput(cp.stdout, process.stdout);
-      captureOutput(cp.stderr, process.stderr);
 
-    if (options.stdin) {
-      process.stdin.resume();
-      process.stdin.setEncoding('utf8');
-      process.stdin.pipe(cp.stdin);
-    }*/
+    /*
+      captureOutput(cp.stdout, process.stdout);
+        captureOutput(cp.stderr, process.stderr);
+  
+      if (options.stdin) {
+        process.stdin.resume();
+        process.stdin.setEncoding('utf8');
+        process.stdin.pipe(cp.stdin);
+      }*/
   });
 };
 
