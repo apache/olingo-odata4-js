@@ -17,7 +17,7 @@ under the License.
 
 -------------------------
 ## Olingo OData Client for JavaScript (and TypeScript)
-The Olingo OData Client for JavaScript (odatajs) is a library written in JavaScript that enables browser based frontend applications to easily use the OData protocol for communication with application servers.
+The Olingo OData Client for JavaScript (odatajs) is a library written in JavaScript that enables browser based frontend applications to easily use the OData protocol for communication with application servers. Typings for TypeScript have been added to support use within TypeScript.
 
 This library "odatajs-4.0.1.min.js" supports only the OData V4 protocol.
 
