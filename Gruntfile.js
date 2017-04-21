@@ -57,7 +57,7 @@ module.exports = function(grunt) {
     },
     "jsdoc" : {
       "src" : {
-          src: ["index.js","lib/**/*.js"],
+          src: ["index.js","lib"],
           options: { destination: "doc", verbose : true, debug : true, pedantic : true }
       }
     },
