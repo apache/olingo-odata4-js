@@ -54,7 +54,7 @@ export function xmlAttributeValue(domNode: any, localName: string, nsURI: string
  * @param [baseURI] - Base URI used to normalize the value of the xml:base attribute ( may be null)
  * @returns {String} Value of the xml:base attribute if found; the baseURI or null otherwise.
  */
-export function xmlBaseURI(domNode: any, baseURI: any): string;
+export function xmlBaseURI(domNode: any, baseURI?: any): string;
 /** Iterates through the XML element's child DOM elements and invokes the callback function for each one.
  * @param domNode - DOM Node containing the DOM elements to iterate over.
  * @param {Function} onElementCallback - Callback function to invoke for each child DOM element.
@@ -86,14 +86,14 @@ export function xmlFindNodeByPath(root: any, namespaceURI: string, path: string)
  * @param {String} [localName] - Local name of the attribute.
  * @return The node's first child DOM element that matches the specified namespace URI and local name; null otherwise.
  */
-export function xmlFirstChildElement(domNode: any, namespaceURI: string, localName: string): any;
+export function xmlFirstChildElement(domNode: any, namespaceURI?: string, localName?: string): any;
 /** Returns the first descendant DOM element under the specified DOM node that matches the specified namespace URI and local name.
  * @param domNode - DOM node from which the descendant DOM element is going to be retrieved.
  * @param {String} [namespaceURI] - The namespace URI of the node to match.
  * @param {String} [localName] - Local name of the attribute.
  * @return The node's first descendant DOM element that matches the specified namespace URI and local name; null otherwise.
 */
-export function xmlFirstDescendantElement(domNode: any, namespaceURI: string, localName: string): any;
+export function xmlFirstDescendantElement(domNode: any, namespaceURI?: string, localName?: string): any;
 /** Gets the concatenated value of all immediate child text and CDATA nodes for the specified element.
  * @param xmlElement - Element to get values for.
  * @returns {String} Text for all direct children.
@@ -142,7 +142,7 @@ export function xmlNewAttribute(dom: any, namespaceURI: any, qualifiedName: any,
  * If a value in the children collection is a string, then a new DOM text node is going to be created
  * for it and then appended to the new DOM element.
  */
-export function xmlNewElement(dom: any, namespaceURI: string, qualifiedName: string, children: any[]): any;
+export function xmlNewElement(dom: any, namespaceURI: string, qualifiedName: string, children?: any[]): any;
 /** Creates a new DOM document fragment node for the specified xml text.
  * @param dom - DOM document from which the fragment node is going to be created.
  * @param {String} text XML text to be represented by the XmlFragment.
@@ -200,8 +200,8 @@ export function xmlSerialize(domNode: any): any;
 export function xmlSerializeDescendants(domNode: any): any;
 /** Returns the next sibling DOM element of the specified DOM node.
  * @param domNode - DOM node from which the next sibling is going to be retrieved.
- * @param {String} [namespaceURI] -
- * @param {String} [localName] -
+ * @param {String} [namespaceURI] - The namespace URI of the node to match.
+ * @param {String} [localName] - Local name of the attribute.
  * @return The node's next sibling DOM element, null if there is none.
  */
-export function xmlSiblingElement(domNode: any, namespaceURI: string, localName: string): any;
+export function xmlSiblingElement(domNode: any, namespaceURI?: string, localName?: string): any;

@@ -2,12 +2,12 @@
 
 /** Gets the type name of a data item value that belongs to a feed, an entry, a complex type property, or a collection property
  * @param {string} value - Value of the data item from which the type name is going to be retrieved.
- * @param {object} [metadata] - Object containing metadata about the data tiem.
+ * @param {object} [metadata] - Object containing metadata about the data item.
  * @returns {string} Data item type name; null if the type name cannot be found within the value or the metadata
  * This function will first try to get the type name from the data item's value itself if it is an object with a __metadata property; otherwise
  * it will try to recover it from the metadata.  If both attempts fail, it will return null.
  */
-export var dataItemTypeName: (value: string, metadata: any) => string;
+export var dataItemTypeName: (value: string, metadata?: any) => string;
 export var EDM_BINARY: string;
 export var EDM_BOOLEAN: string;
 export var EDM_BYTE: string;
@@ -253,7 +253,7 @@ export function maxVersion(left: string, right: string): string;
  * @param {Object} [propertyModel] - Object that describes the navigation property in an OData conceptual schema.
  * @returns {String} String value describing the kind of the navigation property; null if the kind cannot be determined.
  */
-export function navigationPropertyKind(value: any, propertyModel: any): "deferred" | "entry" | "feed";
+export function navigationPropertyKind(value: any, propertyModel?: any): "deferred" | "entry" | "feed";
 /** Normalizes headers so they can be found with consistent casing.
  * @param {Object} headers - Dictionary of name/value pairs.
  */
