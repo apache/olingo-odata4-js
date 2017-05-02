@@ -59,7 +59,7 @@ module.exports = function(grunt) {
                 pipeTo = workItem.src+'.md5';
 
                 grunt.log.writeln(chalk.yellow('Signing ('+workItem.type+') ' + fileName + " ..."));
-                //openssl dgst -md5 odatajs.4.0.1.nupkg
+                //openssl dgst -md5 odatajs.4.0.2.nupkg
                 taskOptions = { 
                     cmd : 'openssl', 
                     args: ['dgst','-md5',fileName],
@@ -70,7 +70,7 @@ module.exports = function(grunt) {
 
                 grunt.log.writeln(chalk.yellow('Signing ('+workItem.type+') ' + fileName + " ..."));
 
-                //gpg --print-md SHA512 odatajs-4.0.1-doc.zip
+                //gpg --print-md SHA512 odatajs-4.0.2-doc.zip
                 taskOptions = { 
                     cmd : 'gpg', 
                     args: ['--print-md','SHA512',fileName],
@@ -81,7 +81,7 @@ module.exports = function(grunt) {
 
                 grunt.log.writeln(chalk.yellow('Signing ('+workItem.type+') ' + fileName + " ..."));
                 
-                //gpg --armor --detach-sign odatajs-4.0.1-sources.zip
+                //gpg --armor --detach-sign odatajs-4.0.2-sources.zip
                 taskOptions = { 
                     cmd : 'gpg', 
                     args: ['--armor','--detach-sign',fileName],
@@ -93,7 +93,7 @@ module.exports = function(grunt) {
 
                 grunt.log.writeln(chalk.yellow('Verify ('+workItem.type+') ' +fileName+ '.asc' + " ..."));
                 
-                //gpg --verify --detach-sign odatajs-4.0.1-sources.zip.asc
+                //gpg --verify --detach-sign odatajs-4.0.2-sources.zip.asc
                 taskOptions = { 
                     cmd : 'gpg', 
                     args: ['--verify', fileName+'.asc'],

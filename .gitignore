@@ -12,7 +12,7 @@ olingo-odata4-js.iml
 localgrunt.config
 
 # testing copies
-../demo/scripts/odatajs-4.0.1*
+../demo/scripts/odatajs-4.0.*
 
 # build artefacts
 dist/*.zip
