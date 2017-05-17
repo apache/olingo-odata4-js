@@ -21,7 +21,7 @@
     
 
 // version information 
-exports.version = { major: 4, minor: 0, build: 1 };
+exports.version = { major: 4, minor: 0, build: 2 };
 
 // core stuff, always needed
 exports.deferred = require('./lib/deferred.js');
@@ -3566,7 +3566,7 @@ function createPayloadInfo(data, model) {
 function jsonGetEntryKey(data, entityModel) {
 
     var entityInstanceKey;
-    var entityKeys = entityModel.key[0].propertyRef;
+    var entityKeys = entityModel.key.propertyRef;
     var type;
     entityInstanceKey = "(";
     if (entityKeys.length == 1) {
@@ -3779,7 +3779,7 @@ var schema = {
         ),
         EntityType: schemaElement(
         /*attributes*/["Name", "BaseType", "Abstract", "OpenType", "HasStream"],
-        /*elements*/["Key*", "Property*", "NavigationProperty*", "Annotation*"]
+        /*elements*/["Key", "Property*", "NavigationProperty*", "Annotation*"]
         ),
         EnumMember: schemaElement(
         /*attributes*/null,
@@ -3838,7 +3838,7 @@ var schema = {
         ),
         NavigationProperty: schemaElement(
         /*attributes*/["Name", "Type", "Nullable", "Partner", "ContainsTarget"],
-        /*elements*/["ReferentialConstraint*", "OnDelete*", "Annotation*"]
+        /*elements*/["ReferentialConstraint*", "OnDelete", "Annotation*"]
         ),
         NavigationPropertyBinding: schemaElement(
         /*attributes*/["Path", "Target"]
