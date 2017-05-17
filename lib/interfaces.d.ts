@@ -4,17 +4,20 @@ export interface Action {
     entitySetPath?: string;
     returnType?: ReturnType;
     parameter?: Parameter[];
+    annotation?: Annotation[];
 }
 
 export interface ActionImport {
     name: string;
     action: string;
     entitySet?: string;
+    annotation?: Annotation[];
 }
 
 export interface Annotation {
     term: string;
     qualifier?: string;
+    annotation?: Annotation[];
 }
 
 export interface Annotations {
@@ -49,6 +52,7 @@ export interface ComplexType {
     openType?: boolean;
     property?: Property[];
     navigationProperty?: NavigationProperty[];
+    annotation?: Annotation[];
 }
 
 export interface ConstraintMember {
@@ -64,6 +68,7 @@ export interface EntityContainer {
     actionImport?: ActionImport[];
     functionImport?: FunctionImport[];
     associationSet?: Association[];
+    annotation?: Annotation[];
 }
 
 export interface EntitySet {
@@ -71,6 +76,7 @@ export interface EntitySet {
     entityType: string;
     includeInServiceDocument?: boolean;
     navigationPropertyBinding?: NavigationPropertyBinding[];
+    annotation?: Annotation[];
 }
 
 export interface EntityType {
@@ -82,6 +88,7 @@ export interface EntityType {
     key?: Key;
     property?: Property[];
     navigationProperty?: NavigationProperty[];
+    annotation?: Annotation[];
 }
 
 export interface EnumType {
@@ -89,6 +96,7 @@ export interface EnumType {
     underlyingType?: "Edm.Byte" | "Edm.SByte" | "Edm.Int16" | "Edm.Int32" | "Edm.Int64";
     isFlags?: boolean;
     member: Member[];
+    annotation?: Annotation[];
 }
 
 export interface Function {
@@ -98,6 +106,7 @@ export interface Function {
     entitySetPath?: string;
     returnType?: ReturnType;
     parameter?: Parameter[];
+    annotation?: Annotation[];
 }
 
 export interface FunctionImport {
@@ -105,6 +114,7 @@ export interface FunctionImport {
     function: string;
     entitySet?: string;
     includeInServiceDocument?: boolean;
+    annotation?: Annotation[];
 }
 
 export interface Key {
@@ -114,6 +124,7 @@ export interface Key {
 export interface Member {
     name: string;
     value?: number;
+    annotation?: Annotation[];
 }
 
 export interface NavigationProperty {
@@ -126,6 +137,7 @@ export interface NavigationProperty {
     relationship?: string;
     fromRole?: string;
     toRole?: string;
+    annotation?: Annotation[];
 }
 
 export interface NavigationPropertyBinding {
@@ -141,6 +153,7 @@ export interface Parameter {
     precision?: number;
     scale?: number | "variable";
     srid?: number | "variable";
+    annotation?: Annotation[];
 }
 
 export interface Property {
@@ -153,6 +166,7 @@ export interface Property {
     unicode?: boolean;
     srid?: number | "variable";
     defaultValue?: any;
+    annotation?: Annotation[];
 }
 
 export interface PropertyRef {
@@ -163,6 +177,7 @@ export interface PropertyRef {
 export interface ReferentialConstraint {
     property: string;
     referencedProperty: string;
+    annotation?: Annotation[];
 }
 
 export interface ReturnType {
@@ -172,6 +187,7 @@ export interface ReturnType {
     precision?: number;
     scale?: number | "variable";
     srid?: number | "variable";
+    annotation?: Annotation[];
 }
 
 export interface Schema {
@@ -194,6 +210,7 @@ export interface Singleton {
     name: string;
     type: string;
     navigationPropertyBinding?: NavigationPropertyBinding[];    
+    annotation?: Annotation[];
 }
 
 export interface Term {
@@ -207,6 +224,7 @@ export interface Term {
     scale?: number | "variable";
     srid?: number | "variable";
     defaultValue?: any;
+    annotation?: Annotation[];
 }
 
 export interface TypeDefinition {
@@ -217,4 +235,5 @@ export interface TypeDefinition {
     scale?: number | "variable";
     unicode?: boolean;
     srid?: number | "variable";
+    annotation?: Annotation[];
 }
