@@ -45,6 +45,12 @@ export interface AssociationEndpoint {
     type: string;
 }
 
+export interface BaseProperty {
+    name: string;
+    type: string;
+    annotation?: Annotation[];
+}
+
 export interface ComplexType {
     name: string;
     baseType?: string;
@@ -127,9 +133,7 @@ export interface Member {
     annotation?: Annotation[];
 }
 
-export interface NavigationProperty {
-    name: string;
-    type: string;
+export interface NavigationProperty extends BaseProperty {
     partner?: string;
     containsTarget?: boolean;
     referentialConstraint?: ReferentialConstraint[];
@@ -137,7 +141,6 @@ export interface NavigationProperty {
     relationship?: string;
     fromRole?: string;
     toRole?: string;
-    annotation?: Annotation[];
 }
 
 export interface NavigationPropertyBinding {
@@ -156,9 +159,7 @@ export interface Parameter {
     annotation?: Annotation[];
 }
 
-export interface Property {
-    name: string;
-    type: string;
+export interface Property extends BaseProperty {
     nullable?: boolean;
     maxLength?: number;
     precision?: number;
