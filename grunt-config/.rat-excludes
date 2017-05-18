@@ -1,0 +1,17 @@
+.rat-excludes
+node_modules
+_extern-tools
+.gitignore
+package.json
+JSLib
+DEPENDENCIES
+LICENSE
+NOTICE
+README.txt
+JSLib.sln
+package.json
+mocha.opts
+info.txt
+olingo-odata4-js.iml
+.*nupkg
+.*ts
