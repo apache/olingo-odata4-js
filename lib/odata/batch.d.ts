@@ -3,43 +3,6 @@
 import { isBatch, normalizeHeaders, prepareRequest } from './odatautils';
 import { Handler } from './handler';
 
-export interface BatchRequest {
-    __batchRequests: ChangeRequestSet[];
-}
-
-export interface ChangeRequestSet {
-    __changeRequests: ChangeRequest[];
-}
-
-export interface ChangeRequest {
-    headers: { [name: string]: string; };
-    requestUri: string;
-    method: string;
-    data?: any;
-}
-
-export interface BatchResponse {
-    __batchResponses: ChangeResponseSet[];
-}
-
-export interface ChangeResponseSet {
-    __changeResponses: (ChangeResponse | FailedResponse)[];
-}
-
-export interface ChangeResponse {
-    [x: string]: any;
-    statusCode: string;
-    statusText: string;
-    headers: { [name: string]: string; };
-    body: string;
-    data?: any;
-}
-
-export interface FailedResponse {
-    message: string;
-    response: ChangeResponse;
-}
-
 export interface BatchHandler extends Handler {
     partHandler: Handler;
 }

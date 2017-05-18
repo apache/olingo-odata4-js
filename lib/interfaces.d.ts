@@ -1,3 +1,42 @@
+export namespace Batch {
+    export interface BatchRequest {
+        __batchRequests: ChangeRequestSet[];
+    }
+
+    export interface ChangeRequestSet {
+        __changeRequests: ChangeRequest[];
+    }
+
+    export interface ChangeRequest {
+        headers: { [name: string]: string; };
+        requestUri: string;
+        method: string;
+        data?: any;
+    }
+
+    export interface BatchResponse {
+        __batchResponses: ChangeResponseSet[];
+    }
+
+    export interface ChangeResponseSet {
+        __changeResponses: (ChangeResponse | FailedResponse)[];
+    }
+
+    export interface ChangeResponse {
+        [x: string]: any;
+        statusCode: string;
+        statusText: string;
+        headers: { [name: string]: string; };
+        body: string;
+        data?: any;
+    }
+
+    export interface FailedResponse {
+        message: string;
+        response: ChangeResponse;
+    }
+}
+
 export namespace Edm {
 
     export interface Action extends Base.NamedExpression, Base.Annotatable {
@@ -42,7 +81,7 @@ export namespace Edm {
         navigationProperty?: NavigationProperty[];
     }
 
-    export interface EntityContainer extends Base.NamedExpression , Base.Annotatable {
+    export interface EntityContainer extends Base.NamedExpression, Base.Annotatable {
         extends?: string;
         entitySet: EntitySet[];
         singleton?: Singleton[];
@@ -236,7 +275,7 @@ export namespace Edm {
     export interface UrlRef extends Base.ASingleExpression, Base.Annotatable { }
 
     export namespace Base {
-        
+
         export interface AMultiExpression {
             binary?: Text[];
             bool?: Text[];
