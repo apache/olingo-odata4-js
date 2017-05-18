@@ -1,82 +1,63 @@
 export namespace Edm {
-    export interface Action {
-        name: string;
+
+    export interface Action extends Base.NamedExpression, Base.Annotatable {
         isBound?: string; /*boolean;*/
         entitySetPath?: string;
         returnType?: ReturnType;
         parameter?: Parameter[];
-        annotation?: Annotation[];
     }
 
-    export interface ActionImport {
-        name: string;
+    export interface ActionImport extends Base.NamedExpression, Base.Annotatable {
         action: string;
         entitySet?: string;
-        annotation?: Annotation[];
     }
 
-    export interface Annotation extends ASingleExpression {
+    export interface And extends Base.ASingleExpression, Base.Annotatable { }
+
+    export interface Annotation extends Base.ASingleExpression, Base.Annotatable {
         term: string;
         qualifier?: string;
-
-        annotation?: Annotation[];
     }
 
-    export interface Annotations {
+    export interface Annotations extends Base.Annotatable {
         target: string;
         qualifier?: string;
-
-        annotation: Annotation[];
     }
 
-    export interface Apply extends AMultiExpression {
+    export interface Apply extends Base.AMultiExpression, Base.Annotatable {
         function: string;
-
-        annotation: Annotation[];
     }
 
-    export interface Cast extends ASingleExpression {
+    export interface Cast extends Base.ASingleExpression, Base.Annotatable {
         type: string;
-
-        annotation?: Annotation[];
     }
 
-    export interface Collection extends AMultiExpression { }
+    export interface Collection extends Base.AMultiExpression { }
 
-    export interface ComplexType {
-        name: string;
+    export interface ComplexType extends Base.NamedExpression, Base.Annotatable {
         baseType?: string;
         abstract?: string; /*boolean;*/
         openType?: string; /*boolean;*/
         property?: Property[];
         navigationProperty?: NavigationProperty[];
-
-        annotation?: Annotation[];
     }
 
-    export interface EntityContainer {
-        name: string;
+    export interface EntityContainer extends Base.NamedExpression , Base.Annotatable {
         extends?: string;
         entitySet: EntitySet[];
         singleton?: Singleton[];
         actionImport?: ActionImport[];
         functionImport?: FunctionImport[];
         associationSet?: EdmExtra.Association[];
-
-        annotation?: Annotation[];
     }
 
-    export interface EntitySet {
-        name: string;
+    export interface EntitySet extends Base.NamedExpression, Base.Annotatable {
         entityType: string;
         includeInServiceDocument?: string; /*boolean;*/
         navigationPropertyBinding?: NavigationPropertyBinding[];
-
-        annotation?: Annotation[];
     }
 
-    export interface EntityType {
-        name: string;
+    export interface EntityType extends Base.NamedExpression, Base.Annotatable {
         baseType?: string;
         abstract?: string; /*boolean;*/
         openType?: string; /*boolean;*/
@@ -84,72 +65,61 @@ export namespace Edm {
         key?: Key;
         property?: Property[];
         navigationProperty?: NavigationProperty[];
-
-        annotation?: Annotation[];
     }
 
-    export interface EnumType {
-        name: string;
+    export interface EnumType extends Base.NamedExpression, Base.Annotatable {
         underlyingType?: "Edm.Byte" | "Edm.SByte" | "Edm.Int16" | "Edm.Int32" | "Edm.Int64";
         isFlags?: string; /*boolean;*/
         member: Member[];
-
-        annotation?: Annotation[];
     }
 
-    export interface Function {
-        name: string;
+    export interface Eq extends Base.ASingleExpression, Base.Annotatable { }
+
+    export interface Function extends Base.NamedExpression, Base.Annotatable {
         isBound?: string; /*boolean;*/
         isComposable?: string; /*boolean;*/
         entitySetPath?: string;
         returnType?: ReturnType;
         parameter?: Parameter[];
-
-        annotation?: Annotation[];
     }
 
-    export interface FunctionImport {
-        name: string;
+    export interface FunctionImport extends Base.NamedExpression, Base.Annotatable {
         function: string;
         entitySet?: string;
         includeInServiceDocument?: string; /*boolean;*/
-
-        annotation?: Annotation[];
     }
 
-    export interface If extends AMultiExpression {
-        annotation?: Annotation[];
-    }
+    export interface Ge extends Base.ASingleExpression, Base.Annotatable { }
 
-    export interface IsOf extends ASingleExpression {
+    export interface Gt extends Base.ASingleExpression, Base.Annotatable { }
+
+    export interface If extends Base.AMultiExpression, Base.Annotatable { }
+
+    export interface IsOf extends Base.ASingleExpression, Base.Annotatable {
         type: string;
 
         maxLength?: string; /*number;*/
         precision?: string; /*number;*/
         scale?: string; /*number | "variable";*/
         SRID?: string; /*number | "variable";*/
-
-        annotation?: Annotation[];
-    }
-
-    export interface LabeledElement extends ASingleExpression {
-        name: string;
-
-        annotation?: Annotation[];
     }
 
     export interface Key {
         propertyRef: PropertyRef[];
     }
 
-    export interface Member {
-        name: string;
-        value?: string; /*number;*/
+    export interface LabeledElement extends Base.ASingleExpression, Base.NamedExpression, Base.Annotatable { }
 
-        annotation?: Annotation[];
+    export interface Le extends Base.ASingleExpression, Base.Annotatable { }
+
+    export interface Lt extends Base.ASingleExpression, Base.Annotatable { }
+
+    export interface Member extends Base.NamedExpression, Base.Annotatable {
+        value?: string; /*number;*/
     }
 
-    export interface NavigationProperty extends BaseProperty {
+    export interface NavigationProperty extends Base.NamedExpression, Base.Annotatable {
+        type: string;
         partner?: string;
         containsTarget?: string; /*boolean;*/
         referentialConstraint?: ReferentialConstraint[];
@@ -157,8 +127,6 @@ export namespace Edm {
         relationship?: string;
         fromRole?: string;
         toRole?: string;
-
-        annotation?: Annotation[];
     }
 
     export interface NavigationPropertyBinding {
@@ -166,29 +134,29 @@ export namespace Edm {
         target: string;
     }
 
-    export interface Null {
-        annotation?: Annotation[];
-    }
+    export interface Ne extends Base.ASingleExpression, Base.Annotatable { }
 
-    export interface OnDelete {
+    export interface Not extends Base.ASingleExpression, Base.Annotatable { }
+
+    export interface Null extends Base.Annotatable { }
+
+    export interface OnDelete extends Base.Annotatable {
         action: "Cascade" | "None" | "SetNull" | "SetDefault";
-
-        annotation?: Annotation[];
     }
 
-    export interface Parameter {
-        name: string;
+    export interface Or extends Base.ASingleExpression, Base.Annotatable { }
+
+    export interface Parameter extends Base.NamedExpression, Base.Annotatable {
         type: string;
         nullable?: string; /*boolean;*/
         maxLength?: string; /*number;*/
         precision?: string; /*number;*/
         scale?: string; /*number | "variable";*/
         SRID?: string; /*number | "variable";*/
-
-        annotation?: Annotation[];
     }
 
-    export interface Property extends BaseProperty {
+    export interface Property extends Base.NamedExpression, Base.Annotatable {
+        type: string;
         nullable?: string; /*boolean;*/
         maxLength?: string; /*number;*/
         precision?: string; /*number;*/
@@ -196,46 +164,35 @@ export namespace Edm {
         unicode?: string; /*boolean;*/
         SRID?: string; /*number | "variable";*/
         defaultValue?: any;
-
-        annotation?: Annotation[];
     }
 
-    export interface PropertyRef {
-        name: string;
+    export interface PropertyRef extends Base.NamedExpression {
         alias?: string;
     }
 
-    export interface PropertyValue extends ASingleExpression {
+    export interface PropertyValue extends Base.ASingleExpression, Base.Annotatable {
         property: string;
-
-        annotation?: Annotation[];
     }
 
-    export interface Record {
+    export interface Record extends Base.Annotatable {
         propertyValue?: PropertyValue[];
-
-        annotation?: Annotation[];
     }
 
-    export interface ReferentialConstraint {
+    export interface ReferentialConstraint extends Base.Annotatable {
         property: string;
         referencedProperty: string;
-
-        annotation?: Annotation[];
     }
 
-    export interface ReturnType {
+    export interface ReturnType extends Base.Annotatable {
         type: string;
         nullable?: string; /*boolean;*/
         maxLength?: string; /*number;*/
         precision?: string; /*number;*/
         scale?: string; /*number | "variable";*/
         SRID?: string; /*number | "variable";*/
-
-        annotation?: Annotation[];
     }
 
-    export interface Schema {
+    export interface Schema extends Base.Annotatable {
         namespace: string;
         alias?: string;
         action?: Action[];
@@ -248,20 +205,14 @@ export namespace Edm {
         term?: Term[];
         typeDefinition?: TypeDefinition[];
         association?: EdmExtra.Association[];
-
-        annotation?: Annotation[];
     }
 
-    export interface Singleton {
-        name: string;
+    export interface Singleton extends Base.NamedExpression, Base.Annotatable {
         type: string;
         navigationPropertyBinding?: NavigationPropertyBinding[];
-
-        annotation?: Annotation[];
     }
 
-    export interface Term {
-        name: string;
+    export interface Term extends Base.NamedExpression, Base.Annotatable {
         type: string;
         baseTerm?: string;
         appliesTo?: string;
@@ -271,145 +222,118 @@ export namespace Edm {
         scale?: string; /*number | "variable";*/
         SRID?: string; /*number | "variable";*/
         defaultValue?: any;
-
-        annotation?: Annotation[];
     }
 
-    export interface TypeDefinition {
-        name: string;
+    export interface TypeDefinition extends Base.NamedExpression, Base.Annotatable {
         underlyingType: string;
         maxLength?: string; /*number;*/
         precision?: string; /*number;*/
         scale?: string; /*number | "variable";*/
         unicode?: string; /*boolean;*/
-        srid?: string; /*number | "variable";*/
-
-        annotation?: Annotation[];
+        SRID?: string; /*number | "variable";*/
     }
 
-    export interface UrlRef extends ASingleExpression {
-        annotation?: Annotation[];
-    }
+    export interface UrlRef extends Base.ASingleExpression, Base.Annotatable { }
 
-    export interface And extends ASingleExpression {
-        annotation?: Annotation[];
-    }
-    export interface Or extends ASingleExpression {
-        annotation?: Annotation[];
-    }
-    export interface Not extends ASingleExpression {
-        annotation?: Annotation[];
-    }
-    export interface Eq extends ASingleExpression {
-        annotation?: Annotation[];
-    }
-    export interface Ne extends ASingleExpression {
-        annotation?: Annotation[];
-    }
-    export interface Gt extends ASingleExpression {
-        annotation?: Annotation[];
-    }
-    export interface Ge extends ASingleExpression {
-        annotation?: Annotation[];
-    }
-    export interface Lt extends ASingleExpression {
-        annotation?: Annotation[];
-    }
-    export interface Le extends ASingleExpression {
-        annotation?: Annotation[];
-    }
+    export namespace Base {
+        
+        export interface AMultiExpression {
+            binary?: Text[];
+            bool?: Text[];
+            date?: Text[];
+            dateTimeOffset?: Text[];
+            decimal?: Text[];
+            duration?: Text[];
+            enumMember?: Text[];
+            float?: Text[];
+            guid?: Text[];
+            int?: Text[];
+            string?: Text[];
+            timeOfDay?: Text[];
+            annotationPath?: Text[];
+            navigationPropertyPath?: Text[];
+            path?: Text[];
+            propertyPath?: Text[];
+            urlRef?: UrlRef[];
 
-    export interface ASingleExpression {
-        binary?: string | Text;
-        bool?: string | Text; /*boolean;*/
-        date?: string | Text;
-        dateTimeOffset?: string | Text; /*Date;*/
-        decimal?: string | Text; /*number;*/
-        duration?: string | Text;
-        enumMember?: string | Text;
-        float?: string | Text; /*number;*/
-        guid?: string | Text;
-        int?: string | Text; /*number;*/
-        string?: string | Text;
-        timeOfDay?: string | Text;
-        annotationPath?: string | Text;
-        navigationPropertyPath?: string | Text;
-        path?: string | Text;
-        propertyPath?: string | Text;
-        urlRef?: string | UrlRef;
+            and?: And[];
+            or?: Or[];
+            not?: Not[];
+            eq?: Eq[];
+            ne?: Ne[];
+            gt?: Gt[];
+            ge?: Ge[];
+            lt?: Lt[];
+            le?: Le[];
 
-        and?: And;
-        or?: Or;
-        not?: Not;
-        eq?: Eq;
-        ne?: Ne;
-        gt?: Gt;
-        ge?: Ge;
-        lt?: Lt;
-        le?: Le;
+            apply?: Apply[];
+            cast?: Cast[];
+            collection?: Collection[];
+            if?: If[];
+            isOf?: IsOf[];
+            labeledElement?: LabeledElement[];
+            labeledElementReference?: Text[];
+            null?: Null[];
+            record?: Record[];
+        }
 
-        apply?: Apply;
-        cast?: Cast;
-        collection?: Collection;
-        if?: If;
-        isOf?: IsOf;
-        labeledElement?: LabeledElement;
-        labeledElementReference?: Text;
-        null?: Null;
-        record?: Record;
-    }
+        export interface Annotatable {
+            annotation?: Annotation[];
+        }
 
-    export interface AMultiExpression {
-        binary?: Text[];
-        bool?: Text[];
-        date?: Text[];
-        dateTimeOffset?: Text[];
-        decimal?: Text[];
-        duration?: Text[];
-        enumMember?: Text[];
-        float?: Text[];
-        guid?: Text[];
-        int?: Text[];
-        string?: Text[];
-        timeOfDay?: Text[];
-        annotationPath?: Text[];
-        navigationPropertyPath?: Text[];
-        path?: Text[];
-        propertyPath?: Text[];
-        urlRef?: UrlRef[];
+        export interface ASingleExpression {
+            binary?: string | Text;
+            bool?: string | Text; /*boolean;*/
+            date?: string | Text;
+            dateTimeOffset?: string | Text; /*Date;*/
+            decimal?: string | Text; /*number;*/
+            duration?: string | Text;
+            enumMember?: string | Text;
+            float?: string | Text; /*number;*/
+            guid?: string | Text;
+            int?: string | Text; /*number;*/
+            string?: string | Text;
+            timeOfDay?: string | Text;
+            annotationPath?: string | Text;
+            navigationPropertyPath?: string | Text;
+            path?: string | Text;
+            propertyPath?: string | Text;
+            urlRef?: string | UrlRef;
 
-        and?: And[];
-        or?: Or[];
-        not?: Not[];
-        eq?: Eq[];
-        ne?: Ne[];
-        gt?: Gt[];
-        ge?: Ge[];
-        lt?: Lt[];
-        le?: Le[];
+            and?: And;
+            or?: Or;
+            not?: Not;
+            eq?: Eq;
+            ne?: Ne;
+            gt?: Gt;
+            ge?: Ge;
+            lt?: Lt;
+            le?: Le;
 
-        apply?: Apply[];
-        cast?: Cast[];
-        collection?: Collection[];
-        if?: If[];
-        isOf?: IsOf[];
-        labeledElement?: LabeledElement[];
-        labeledElementReference?: Text[];
-        null?: Null[];
-        record?: Record[];
-    }
+            apply?: Apply;
+            cast?: Cast;
+            collection?: Collection;
+            if?: If;
+            isOf?: IsOf;
+            labeledElement?: LabeledElement;
+            labeledElementReference?: Text;
+            null?: Null;
+            record?: Record;
+        }
 
-    export interface BaseProperty {
-        name: string;
-        type: string;
-    }
+        export interface NamedExpression {
+            name: string;
+        }
 
-    export interface Text {
-        text: string;
+        export interface Text {
+            text: string;
+        }
+
     }
 }
 
 export namespace Edmx {
+
     export interface DataServices {
         schema: Edm.Schema[];
     }
@@ -420,12 +344,10 @@ export namespace Edmx {
         dataServices: DataServices;
     }
 
-    export interface Reference {
+    export interface Reference extends Edm.Base.Annotatable {
         uri: string;
         include?: Include[];
         includeAnnotations?: IncludeAnnotations[];
-
-        annotation?: Edm.Annotation[];
     }
 
     export interface Include {
@@ -438,9 +360,11 @@ export namespace Edmx {
         qualifier?: string;
         targetNamespace?: string;
     }
+
 }
 
 export namespace EdmExtra {
+
     export interface Association {
         association: string;
         end: AssociationEndpoint[];
@@ -464,4 +388,5 @@ export namespace EdmExtra {
         propertyRef: Edm.PropertyRef[];
         role: string;
     }
+
 }
