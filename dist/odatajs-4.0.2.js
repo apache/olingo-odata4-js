@@ -2406,7 +2406,7 @@ function contentTypeToString(contentType) {
  * @param contentType - Object with media type and properties dictionary.
  * @param {String} dataServiceVersion - String indicating the version of the protocol to use.
  * @param context - Operation context.
- * @param handler - Handler object that is processing a resquest or response.
+ * @param handler - Handler object that is processing a request or response.
  * @return Context object.
  */
 function createReadWriteContext(contentType, dataServiceVersion, context, handler) {

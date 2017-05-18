@@ -35,7 +35,7 @@ export function handler(parseCallback: (handler: Handler, body: any, readContext
  * @param {ContentType} contentType - Object with media type and properties dictionary.
  * @param {String} dataServiceVersion - String indicating the version of the protocol to use.
  * @param context - Operation context.
- * @param handler - Handler object that is processing a resquest or response.
+ * @param handler - Handler object that is processing a request or response.
  * @return Context object.
  */
 export function createReadWriteContext(contentType: ContentType, dataServiceVersion: string, context: any, handler: Handler): Object;
