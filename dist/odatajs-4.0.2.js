@@ -21,7 +21,7 @@
     
 
 // version information 
-exports.version = { major: 4, minor: 0, build: 1 };
+exports.version = { major: 4, minor: 0, build: 2 };
 
 // core stuff, always needed
 exports.deferred = require('./lib/deferred.js');
@@ -2406,7 +2406,7 @@ function contentTypeToString(contentType) {
  * @param contentType - Object with media type and properties dictionary.
  * @param {String} dataServiceVersion - String indicating the version of the protocol to use.
  * @param context - Operation context.
- * @param handler - Handler object that is processing a resquest or response.
+ * @param handler - Handler object that is processing a request or response.
  * @return Context object.
  */
 function createReadWriteContext(contentType, dataServiceVersion, context, handler) {
@@ -3566,7 +3566,7 @@ function createPayloadInfo(data, model) {
 function jsonGetEntryKey(data, entityModel) {
 
     var entityInstanceKey;
-    var entityKeys = entityModel.key[0].propertyRef;
+    var entityKeys = entityModel.key.propertyRef;
     var type;
     entityInstanceKey = "(";
     if (entityKeys.length == 1) {
@@ -3667,7 +3667,7 @@ var schema = {
         ),
         Annotation: schemaElement(
         /*attributes*/["Term", "Qualifier", "Binary", "Bool", "Date", "DateTimeOffset", "Decimal", "Duration", "EnumMember", "Float", "Guid", "Int", "String", "TimeOfDay", "AnnotationPath", "NavigationPropertyPath", "Path", "PropertyPath", "UrlRef"],
-        /*elements*/["Binary*", "Bool*", "Date*", "DateTimeOffset*", "Decimal*", "Duration*", "EnumMember*", "Float*", "Guid*", "Int*", "String*", "TimeOfDay*", "And*", "Or*", "Not*", "Eq*", "Ne*", "Gt*", "Ge*", "Lt*", "Le*", "AnnotationPath*", "Apply*", "Cast*", "Collection*", "If*", "IsOf*", "LabeledElement*", "LabeledElementReference*", "Null*", "NavigationPropertyPath*", "Path*", "PropertyPath*", "Record*", "UrlRef*", "Annotation*"]
+        /*elements*/["Binary", "Bool", "Date", "DateTimeOffset", "Decimal", "Duration", "EnumMember", "Float", "Guid", "Int", "String", "TimeOfDay", "And", "Or", "Not", "Eq", "Ne", "Gt", "Ge", "Lt", "Le", "AnnotationPath", "Apply", "Cast", "Collection", "If", "IsOf", "LabeledElement", "LabeledElementReference", "Null", "NavigationPropertyPath", "Path", "PropertyPath", "Record", "UrlRef", "Annotation*"]
         ),
         AnnotationPath: schemaElement(
         /*attributes*/null,
@@ -3680,52 +3680,43 @@ var schema = {
         ),
         Apply: schemaElement(
         /*attributes*/["Function"],
-        /*elements*/["String*", "Path*", "LabeledElement*", "Annotation*"]
+        /*elements*/["Binary*", "Bool*", "Date*", "DateTimeOffset*", "Decimal*", "Duration*", "EnumMember*", "Float*", "Guid*", "Int*", "String*", "TimeOfDay*", "And*", "Or*", "Not*", "Eq*", "Ne*", "Gt*", "Ge*", "Lt*", "Le*", "AnnotationPath*", "Apply*", "Cast*", "Collection*", "If*", "IsOf*", "LabeledElement*", "LabeledElementReference*", "Null*", "NavigationPropertyPath*", "Path*", "PropertyPath*", "Record*", "UrlRef*", "Annotation*"]
         ),
         And: schemaElement(
         /*attributes*/null,
-        /*elements*/null,
-        /*text*/true
+        /*elements*/["Binary", "Bool", "Date", "DateTimeOffset", "Decimal", "Duration", "EnumMember", "Float", "Guid", "Int", "String", "TimeOfDay", "And", "Or", "Not", "Eq", "Ne", "Gt", "Ge", "Lt", "Le", "AnnotationPath", "Apply", "Cast", "Collection", "If", "IsOf", "LabeledElement", "LabeledElementReference", "Null", "NavigationPropertyPath", "Path", "PropertyPath", "Record", "UrlRef", "Annotation*"]
         ),
         Or: schemaElement(
         /*attributes*/null,
-        /*elements*/null,
-        /*text*/true
+        /*elements*/["Binary", "Bool", "Date", "DateTimeOffset", "Decimal", "Duration", "EnumMember", "Float", "Guid", "Int", "String", "TimeOfDay", "And", "Or", "Not", "Eq", "Ne", "Gt", "Ge", "Lt", "Le", "AnnotationPath", "Apply", "Cast", "Collection", "If", "IsOf", "LabeledElement", "LabeledElementReference", "Null", "NavigationPropertyPath", "Path", "PropertyPath", "Record", "UrlRef", "Annotation*"]
         ),
         Not: schemaElement(
         /*attributes*/null,
-        /*elements*/null,
-        /*text*/true
+        /*elements*/["Binary", "Bool", "Date", "DateTimeOffset", "Decimal", "Duration", "EnumMember", "Float", "Guid", "Int", "String", "TimeOfDay", "And", "Or", "Not", "Eq", "Ne", "Gt", "Ge", "Lt", "Le", "AnnotationPath", "Apply", "Cast", "Collection", "If", "IsOf", "LabeledElement", "LabeledElementReference", "Null", "NavigationPropertyPath", "Path", "PropertyPath", "Record", "UrlRef", "Annotation*"]
         ),
         Eq: schemaElement(
         /*attributes*/null,
-        /*elements*/null,
-        /*text*/true
+        /*elements*/["Binary", "Bool", "Date", "DateTimeOffset", "Decimal", "Duration", "EnumMember", "Float", "Guid", "Int", "String", "TimeOfDay", "And", "Or", "Not", "Eq", "Ne", "Gt", "Ge", "Lt", "Le", "AnnotationPath", "Apply", "Cast", "Collection", "If", "IsOf", "LabeledElement", "LabeledElementReference", "Null", "NavigationPropertyPath", "Path", "PropertyPath", "Record", "UrlRef", "Annotation*"]
         ),
         Ne: schemaElement(
         /*attributes*/null,
-        /*elements*/null,
-        /*text*/true
+        /*elements*/["Binary", "Bool", "Date", "DateTimeOffset", "Decimal", "Duration", "EnumMember", "Float", "Guid", "Int", "String", "TimeOfDay", "And", "Or", "Not", "Eq", "Ne", "Gt", "Ge", "Lt", "Le", "AnnotationPath", "Apply", "Cast", "Collection", "If", "IsOf", "LabeledElement", "LabeledElementReference", "Null", "NavigationPropertyPath", "Path", "PropertyPath", "Record", "UrlRef", "Annotation*"]
         ),
         Gt: schemaElement(
         /*attributes*/null,
-        /*elements*/null,
-        /*text*/true
+        /*elements*/["Binary", "Bool", "Date", "DateTimeOffset", "Decimal", "Duration", "EnumMember", "Float", "Guid", "Int", "String", "TimeOfDay", "And", "Or", "Not", "Eq", "Ne", "Gt", "Ge", "Lt", "Le", "AnnotationPath", "Apply", "Cast", "Collection", "If", "IsOf", "LabeledElement", "LabeledElementReference", "Null", "NavigationPropertyPath", "Path", "PropertyPath", "Record", "UrlRef", "Annotation*"]
         ),
         Ge: schemaElement(
         /*attributes*/null,
-        /*elements*/null,
-        /*text*/true
+        /*elements*/["Binary", "Bool", "Date", "DateTimeOffset", "Decimal", "Duration", "EnumMember", "Float", "Guid", "Int", "String", "TimeOfDay", "And", "Or", "Not", "Eq", "Ne", "Gt", "Ge", "Lt", "Le", "AnnotationPath", "Apply", "Cast", "Collection", "If", "IsOf", "LabeledElement", "LabeledElementReference", "Null", "NavigationPropertyPath", "Path", "PropertyPath", "Record", "UrlRef", "Annotation*"]
         ),
         Lt: schemaElement(
         /*attributes*/null,
-        /*elements*/null,
-        /*text*/true
+        /*elements*/["Binary", "Bool", "Date", "DateTimeOffset", "Decimal", "Duration", "EnumMember", "Float", "Guid", "Int", "String", "TimeOfDay", "And", "Or", "Not", "Eq", "Ne", "Gt", "Ge", "Lt", "Le", "AnnotationPath", "Apply", "Cast", "Collection", "If", "IsOf", "LabeledElement", "LabeledElementReference", "Null", "NavigationPropertyPath", "Path", "PropertyPath", "Record", "UrlRef", "Annotation*"]
         ),
         Le: schemaElement(
         /*attributes*/null,
-        /*elements*/null,
-        /*text*/true
+        /*elements*/["Binary", "Bool", "Date", "DateTimeOffset", "Decimal", "Duration", "EnumMember", "Float", "Guid", "Int", "String", "TimeOfDay", "And", "Or", "Not", "Eq", "Ne", "Gt", "Ge", "Lt", "Le", "AnnotationPath", "Apply", "Cast", "Collection", "If", "IsOf", "LabeledElement", "LabeledElementReference", "Null", "NavigationPropertyPath", "Path", "PropertyPath", "Record", "UrlRef", "Annotation*"]
         ),
         Binary: schemaElement(
         /*attributes*/null,
@@ -3739,7 +3730,7 @@ var schema = {
         ),
         Cast: schemaElement(
         /*attributes*/["Type"],
-        /*elements*/["Path*", "Annotation*"]
+        /*elements*/["Binary", "Bool", "Date", "DateTimeOffset", "Decimal", "Duration", "EnumMember", "Float", "Guid", "Int", "String", "TimeOfDay", "And", "Or", "Not", "Eq", "Ne", "Gt", "Ge", "Lt", "Le", "AnnotationPath", "Apply", "Cast", "Collection", "If", "IsOf", "LabeledElement", "LabeledElementReference", "Null", "NavigationPropertyPath", "Path", "PropertyPath", "Record", "UrlRef", "Annotation*"]
         ),
         Collection: schemaElement(
         /*attributes*/null,
@@ -3779,7 +3770,7 @@ var schema = {
         ),
         EntityType: schemaElement(
         /*attributes*/["Name", "BaseType", "Abstract", "OpenType", "HasStream"],
-        /*elements*/["Key*", "Property*", "NavigationProperty*", "Annotation*"]
+        /*elements*/["Key", "Property*", "NavigationProperty*", "Annotation*"]
         ),
         EnumMember: schemaElement(
         /*attributes*/null,
@@ -3809,7 +3800,7 @@ var schema = {
         ),
         If: schemaElement(
         /*attributes*/null,
-        /*elements*/["Path*", "String*", "Annotation*"]
+        /*elements*/["Binary*", "Bool*", "Date*", "DateTimeOffset*", "Decimal*", "Duration*", "EnumMember*", "Float*", "Guid*", "Int*", "String*", "TimeOfDay*", "And*", "Or*", "Not*", "Eq*", "Ne*", "Gt*", "Ge*", "Lt*", "Le*", "AnnotationPath*", "Apply*", "Cast*", "Collection*", "If*", "IsOf*", "LabeledElement*", "LabeledElementReference*", "Null*", "NavigationPropertyPath*", "Path*", "PropertyPath*", "Record*", "UrlRef*", "Annotation*"]
         ),
         Int: schemaElement(
         /*attributes*/null,
@@ -3817,8 +3808,8 @@ var schema = {
         /*text*/true
         ),
         IsOf: schemaElement(
-        /*attributes*/["Type", "MaxLength", "Precision", "Scale", "Unicode", "SRID", "DefaultValue", "Annotation*"],
-        /*elements*/["Path*"]
+        /*attributes*/["Type", "MaxLength", "Precision", "Scale", "SRID", "Annotation*"],
+        /*elements*/["Binary", "Bool", "Date", "DateTimeOffset", "Decimal", "Duration", "EnumMember", "Float", "Guid", "Int", "String", "TimeOfDay", "And", "Or", "Not", "Eq", "Ne", "Gt", "Ge", "Lt", "Le", "AnnotationPath", "Apply", "Cast", "Collection", "If", "IsOf", "LabeledElement", "LabeledElementReference", "Null", "NavigationPropertyPath", "Path", "PropertyPath", "Record", "UrlRef", "Annotation*"]
         ),
         Key: schemaElement(
         /*attributes*/null,
@@ -3826,11 +3817,12 @@ var schema = {
         ),
         LabeledElement: schemaElement(
         /*attributes*/["Name"],
-        /*elements*/["Binary*", "Bool*", "Date*", "DateTimeOffset*", "Decimal*", "Duration*", "EnumMember*", "Float*", "Guid*", "Int*", "String*", "TimeOfDay*", "And*", "Or*", "Not*", "Eq*", "Ne*", "Gt*", "Ge*", "Lt*", "Le*", "AnnotationPath*", "Apply*", "Cast*", "Collection*", "If*", "IsOf*", "LabeledElement*", "LabeledElementReference*", "Null*", "NavigationPropertyPath*", "Path*", "PropertyPath*", "Record*", "UrlRef*", "Annotation*"]
+        /*elements*/["Binary", "Bool", "Date", "DateTimeOffset", "Decimal", "Duration", "EnumMember", "Float", "Guid", "Int", "String", "TimeOfDay", "And", "Or", "Not", "Eq", "Ne", "Gt", "Ge", "Lt", "Le", "AnnotationPath", "Apply", "Cast", "Collection", "If", "IsOf", "LabeledElement", "LabeledElementReference", "Null", "NavigationPropertyPath", "Path", "PropertyPath", "Record", "UrlRef", "Annotation*"]
         ),
         LabeledElementReference: schemaElement(
-        /*attributes*/["Term"],
-        /*elements*/["Binary*", "Bool*", "Date*", "DateTimeOffset*", "Decimal*", "Duration*", "EnumMember*", "Float*", "Guid*", "Int*", "String*", "TimeOfDay*", "And*", "Or*", "Not*", "Eq*", "Ne*", "Gt*", "Ge*", "Lt*", "Le*", "AnnotationPath*", "Apply*", "Cast*", "Collection*", "If*", "IsOf*", "LabeledElement*", "LabeledElementReference*", "Null*", "NavigationPropertyPath*", "Path*", "PropertyPath*", "Record*", "UrlRef*"]
+        /*attributes*/null,
+        /*elements*/null,
+        /*text*/true
         ),
         Member: schemaElement(
         /*attributes*/["Name", "Value"],
@@ -3838,7 +3830,7 @@ var schema = {
         ),
         NavigationProperty: schemaElement(
         /*attributes*/["Name", "Type", "Nullable", "Partner", "ContainsTarget"],
-        /*elements*/["ReferentialConstraint*", "OnDelete*", "Annotation*"]
+        /*elements*/["ReferentialConstraint*", "OnDelete", "Annotation*"]
         ),
         NavigationPropertyBinding: schemaElement(
         /*attributes*/["Path", "Target"]
@@ -3878,12 +3870,12 @@ var schema = {
         /*attributes*/["Name", "Alias"]
         ),
         PropertyValue: schemaElement(
-        /*attributes*/["Property", "Path"],
-        /*elements*/["Binary*", "Bool*", "Date*", "DateTimeOffset*", "Decimal*", "Duration*", "EnumMember*", "Float*", "Guid*", "Int*", "String*", "TimeOfDay*", "And*", "Or*", "Not*", "Eq*", "Ne*", "Gt*", "Ge*", "Lt*", "Le*", "AnnotationPath*", "Apply*", "Cast*", "Collection*", "If*", "IsOf*", "LabeledElement*", "LabeledElementReference*", "Null*", "NavigationPropertyPath*", "Path*", "PropertyPath*", "Record*", "UrlRef*", "Annotation*"]
+        /*attributes*/["Property", "Binary", "Bool", "Date", "DateTimeOffset", "Decimal", "Duration", "EnumMember", "Float", "Guid", "Int", "String", "TimeOfDay", "AnnotationPath", "NavigationPropertyPath", "Path", "PropertyPath", "UrlRef"],
+        /*elements*/["Binary", "Bool", "Date", "DateTimeOffset", "Decimal", "Duration", "EnumMember", "Float", "Guid", "Int", "String", "TimeOfDay", "And", "Or", "Not", "Eq", "Ne", "Gt", "Ge", "Lt", "Le", "AnnotationPath", "Apply", "Cast", "Collection", "If", "IsOf", "LabeledElement", "LabeledElementReference", "Null", "NavigationPropertyPath", "Path", "PropertyPath", "Record", "UrlRef", "Annotation*"]
         ),
         Record: schemaElement(
         /*attributes*/null,
-        /*Elements*/["PropertyValue*", "Property*", "Annotation*"]
+        /*Elements*/["PropertyValue*", "Annotation*"]
         ),
         ReferentialConstraint: schemaElement(
         /*attributes*/["Property", "ReferencedProperty", "Annotation*"]
@@ -3919,7 +3911,7 @@ var schema = {
         ),
         UrlRef: schemaElement(
         /*attributes*/null,
-        /*elements*/["Binary*", "Bool*", "Date*", "DateTimeOffset*", "Decimal*", "Duration*", "EnumMember*", "Float*", "Guid*", "Int*", "String*", "TimeOfDay*", "And*", "Or*", "Not*", "Eq*", "Ne*", "Gt*", "Ge*", "Lt*", "Le*", "AnnotationPath*", "Apply*", "Cast*", "Collection*", "If*", "IsOf*", "LabeledElement*", "LabeledElementReference*", "Null*", "NavigationPropertyPath*", "Path*", "PropertyPath*", "Record*", "UrlRef*", "Annotation*"]
+        /*elements*/["Binary", "Bool", "Date", "DateTimeOffset", "Decimal", "Duration", "EnumMember", "Float", "Guid", "Int", "String", "TimeOfDay", "And", "Or", "Not", "Eq", "Ne", "Gt", "Ge", "Lt", "Le", "AnnotationPath", "Apply", "Cast", "Collection", "If", "IsOf", "LabeledElement", "LabeledElementReference", "Null", "NavigationPropertyPath", "Path", "PropertyPath", "Record", "UrlRef", "Annotation*"]
         ),
 
         // See http://msdn.microsoft.com/en-us/library/dd541238(v=prot.10) for an EDMX reference.
@@ -3937,13 +3929,21 @@ var schema = {
         ),
         Reference: schemaElement(
         /*attributes*/["Uri"],
-        /*elements*/["Include*", "IncludeAnnotations*", "Annotation*"]
+        /*elements*/["Include*", "IncludeAnnotations*", "Annotation*"],
+        /*text*/false,
+        /*ns*/edmxNs
         ),
         Include: schemaElement(
-        /*attributes*/["Namespace", "Alias"]
+        /*attributes*/["Namespace", "Alias"],
+        /*elements*/null,
+        /*text*/false,
+        /*ns*/edmxNs
         ),
         IncludeAnnotations: schemaElement(
-        /*attributes*/["TermNamespace", "Qualifier", "TargetNamespace"]
+        /*attributes*/["TermNamespace", "Qualifier", "TargetNamespace"],
+        /*elements*/null,
+        /*text*/false,
+        /*ns*/edmxNs
         )
     }
 };

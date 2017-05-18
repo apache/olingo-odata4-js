@@ -11,7 +11,7 @@ export var defaultStoreMechanism: string;
  * @param {String} [mechanism] - 
  * @returns {Object} Store object.
 */
-export function createStore(name: string, mechanism: string): Object;
+export function createStore(name: string, mechanism?: string): Object;
 
 export var mechanisms: {
     indexeddb: IndexedDBStore;

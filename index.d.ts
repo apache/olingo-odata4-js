@@ -14,3 +14,5 @@ import * as store from './lib/store';
 import * as cache from './lib/cache';
 
 export { deferred, utils, xml, oData, store, cache };
+
+export { Batch, Edm, Edmx, EdmExtra } from './lib/interfaces';

@@ -12,7 +12,7 @@ export var activeXObject: (progId: string) => Object;
  * @param [value] Value to check ( may be null)
  * @returns {Boolean} true if the value is assigned; false otherwise.
 */
-export function assigned(value: any): boolean;
+export function assigned(value?: any): boolean;
 /** Checks whether the specified item is in the array.
  * @param {Array} [arr] Array to check in.
  * @param item - Item to look for.

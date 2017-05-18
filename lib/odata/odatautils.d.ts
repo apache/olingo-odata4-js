@@ -2,12 +2,14 @@
 
 /** Gets the type name of a data item value that belongs to a feed, an entry, a complex type property, or a collection property
  * @param {string} value - Value of the data item from which the type name is going to be retrieved.
- * @param {object} [metadata] - Object containing metadata about the data tiem.
+ * @param {object} [metadata] - Object containing metadata about the data item.
  * @returns {string} Data item type name; null if the type name cannot be found within the value or the metadata
  * This function will first try to get the type name from the data item's value itself if it is an object with a __metadata property; otherwise
  * it will try to recover it from the metadata.  If both attempts fail, it will return null.
  */
-export var dataItemTypeName: (value: string, metadata: any) => string;
+import { Edm } from "../interfaces";
+
+export var dataItemTypeName: (value: string, metadata?: any) => string;
 export var EDM_BINARY: string;
 export var EDM_BOOLEAN: string;
 export var EDM_BYTE: string;
@@ -166,48 +168,48 @@ export function isPrimitiveEdmType(typeName: string): boolean;
  * @param metadata - Metadata store; one of edmx, schema, or an array of any of them.
  * @returns A complex type description if the name is found; null otherwise.
  */
-export function lookupComplexType(name: string, metadata: any): any;
+export function lookupComplexType(name: string, metadata: any): Edm.ComplexType;
 /** Looks up an
  * @param metadata - Metadata store; one of edmx, schema, or an array of any of them.
  * @returns An entity container description if the name is found; null otherwise.
  */
-export function lookupDefaultEntityContainer(metadata: any): any;
+export function lookupDefaultEntityContainer(metadata: any): Edm.EntityContainer;
 /** Looks up an entity container object by name.
  * @param {String} name - Name, possibly null or empty.
  * @param metadata - Metadata store; one of edmx, schema, or an array of any of them.
  * @returns An entity container description if the name is found; null otherwise.
  */
-export function lookupEntityContainer(name: string, metadata: any): any;
+export function lookupEntityContainer(name: string, metadata: any): Edm.EntityContainer;
 /** Looks up a entity set by name.
  * @param {Array} entitySets - Array of entity set objects as per EDM metadata( may be null)
  * @param {String} name - Name to look for.
  * @returns {Object} The entity set object; null if not found.
  */
-export function lookupEntitySet(entitySets: any[], name: string): any;
+export function lookupEntitySet(entitySets: Edm.EntitySet[], name: string): Edm.EntitySet;
 /** Looks up a entity set by name.
  * @param {Array} singletons - Array of entity set objects as per EDM metadata (may be null)
  * @param {String} name - Name to look for.
  * @returns {Object} The entity set object; null if not found.
  */
-export function lookupSingleton(singletons: any[], name: string): any;
+export function lookupSingleton(singletons: Edm.Singleton[], name: string): Edm.Singleton;
 /** Looks up an entity type object by name.
  * @param {String} name - Name, possibly null or empty.
  * @param metadata - Metadata store; one of edmx, schema, or an array of any of them.
  * @returns An entity type description if the name is found; null otherwise.
  */
-export function lookupEntityType(name: string, metadata: any): any;
+export function lookupEntityType(name: string, metadata: any): Edm.EntityType;
 /** Looks up a function import by name.
  * @param {Array} functionImports - Array of function import objects as per EDM metadata (May be null)
  * @param {String} name - Name to look for.
  * @returns {Object} The entity set object; null if not found.
  */
-export function lookupFunctionImport(functionImports: any[], name: string): any;
+export function lookupFunctionImport(functionImports: Edm.FunctionImport[], name: string): Edm.FunctionImport;
 /** Looks up the target entity type for a navigation property.
  * @param {Object} navigationProperty -
  * @param {Object} metadata -
  * @returns {String} The entity type name for the specified property, null if not found.
  */
-export function lookupNavigationPropertyType(navigationProperty: any, metadata: any): string;
+export function lookupNavigationPropertyType(navigationProperty: Edm.NavigationProperty, metadata: any): string;
 /** Looks up the target entityset name for a navigation property.
  * @param {Object} navigationProperty -
  * @param {Object} sourceEntitySetName -
@@ -215,20 +217,20 @@ export function lookupNavigationPropertyType(navigationProperty: any, metadata: 
  * metadata
  * @returns {String} The entityset name for the specified property, null if not found.
  */
-export function lookupNavigationPropertyEntitySet(navigationProperty: any, sourceEntitySetName: string, metadata: any): string;
+export function lookupNavigationPropertyEntitySet(navigationProperty: Edm.NavigationProperty, sourceEntitySetName: string, metadata: any): string;
 /** Looks up a schema object by name.
  * @param {String} name - Name (assigned).
  * @param schema - Schema object as per EDM metadata.
  * @param {String} kind - Kind of object to look for as per EDM metadata.
  * @returns An entity type description if the name is found; null otherwise.
  */
-export function lookupInSchema(name: string, schema: any, kind: string): any;
+export function lookupInSchema(name: string, schema: Edm.Schema, kind: string): any;
 /** Looks up a property by name.
  * @param {Array} properties - Array of property objects as per EDM metadata (may be null)
  * @param {String} name - Name to look for.
  * @returns {Object} The property object; null if not found.
  */
-export function lookupProperty(properties: any[], name: string): any;
+export function lookupProperty(properties: Edm.Property[], name: string): Edm.Property;
 /** Looks up a type object by name.
  * @param {String} name - Name, possibly null or empty.
  * @param metadata - Metadata store; one of edmx, schema, or an array of any of them.
@@ -241,7 +243,7 @@ export function lookupInMetadata(name: string, metadata: any, kind: string): any
  * @param {Object} metadata -
  * @returns {Object} The info about the entitySet.
  */
-export function getEntitySetInfo(entitySetName: string, metadata: any): any;
+export function getEntitySetInfo(entitySetName: string, metadata: any): { entitySet: Edm.EntitySet, containerName: string, functionImport: Edm.FunctionImport[] };
 /** Compares to version strings and returns the higher one.
  * @param {String} left - Version string in the form "major.minor.rev"
  * @param {String} right - Version string in the form "major.minor.rev"
@@ -253,7 +255,7 @@ export function maxVersion(left: string, right: string): string;
  * @param {Object} [propertyModel] - Object that describes the navigation property in an OData conceptual schema.
  * @returns {String} String value describing the kind of the navigation property; null if the kind cannot be determined.
  */
-export function navigationPropertyKind(value: any, propertyModel: any): "deferred" | "entry" | "feed";
+export function navigationPropertyKind(value: any, propertyModel?: any): "deferred" | "entry" | "feed";
 /** Normalizes headers so they can be found with consistent casing.
  * @param {Object} headers - Dictionary of name/value pairs.
  */
