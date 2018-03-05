@@ -10,6 +10,7 @@ NOTICE
 README.txt
 JSLib.sln
 package.json
+package-lock.json
 mocha.opts
 info.txt
 olingo-odata4-js.iml

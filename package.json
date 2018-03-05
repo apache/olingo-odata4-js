@@ -34,9 +34,7 @@
       "email": "travis_schettler@hotmail.com"
     }
   ],
-  "scripts": {
-    "prepublish": "grunt release"
-  },
+  "scripts": {},
   "dependencies": {
     "xmldom": "0.1.19"
   },
