@@ -27,5 +27,5 @@ node_modules/
 bin/
 obj/
 packages/
-JSLib.suo
-JSLib.csproj.user
+*.suo
+*.user
