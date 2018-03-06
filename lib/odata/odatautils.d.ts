@@ -192,6 +192,18 @@ export function lookupEntitySet(entitySets: Edm.EntitySet[], name: string): Edm.
  * @returns {Object} The entity set object; null if not found.
  */
 export function lookupSingleton(singletons: Edm.Singleton[], name: string): Edm.Singleton;
+/** Looks up an action by name.
+ * @param {String} name - Name, possibly null or empty.
+ * @param metadata - Metadata store; one of edmx, schema, or an array of any of them.
+ * @returns An action description if the name is found; null otherwise.
+ */
+export function lookupAction(name: string, metadata: any): Edm.Action;
+/** Looks up a function by name.
+ * @param {String} name - Name, possibly null or empty.
+ * @param metadata - Metadata store; one of edmx, schema, or an array of any of them.
+ * @returns A function description if the name is found; null otherwise.
+ */
+export function lookupFunction(name: string, metadata: any): Edm.Function;
 /** Looks up an entity type object by name.
  * @param {String} name - Name, possibly null or empty.
  * @param metadata - Metadata store; one of edmx, schema, or an array of any of them.
@@ -201,9 +213,15 @@ export function lookupEntityType(name: string, metadata: any): Edm.EntityType;
 /** Looks up a function import by name.
  * @param {Array} functionImports - Array of function import objects as per EDM metadata (May be null)
  * @param {String} name - Name to look for.
- * @returns {Object} The entity set object; null if not found.
+ * @returns {Object} The function import object; null if not found.
  */
 export function lookupFunctionImport(functionImports: Edm.FunctionImport[], name: string): Edm.FunctionImport;
+/** Looks up an action import by name.
+ * @param {Array} actionImports - Array of action import objects as per EDM metadata (May be null)
+ * @param {String} name - Name to look for.
+ * @returns {Object} The action import object; null if not found.
+ */
+export function lookupActionImport(actionImports: Edm.ActionImport[], name: string): Edm.ActionImport;
 /** Looks up the target entity type for a navigation property.
  * @param {Object} navigationProperty -
  * @param {Object} metadata -

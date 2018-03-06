@@ -1,6 +1,6 @@
 {
   "name": "ts-odatajs",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "postfix": "",
   "releaseCandidate": "",
   "title": "Olingo OData Client for TypeScript",
@@ -35,6 +35,9 @@
     }
   ],
   "scripts": {},
+  "dependencies": {
+    "xmldom": "0.1.19"
+  },
   "devDependencies": {
     "async": "^2.3.0",
     "catharsis": "^0.8.8",
@@ -51,8 +54,7 @@
     "grunt-nuget": "0.1.3",
     "mocha": "2.1.0",
     "taffydb": "^2.7.3",
-    "xml2js": "^0.4.17",
-    "xmldom": "0.1.19"
+    "xml2js": "^0.4.17"
   },
   "module": "index.js",
   "typings": "index.d.ts",

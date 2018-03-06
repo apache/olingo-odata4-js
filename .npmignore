@@ -6,6 +6,7 @@ olingo-odata4-js.iml
 
 # extensions
 *.tgz
+*.bat
 
 # build artefacts
 demo/
