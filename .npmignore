@@ -28,3 +28,4 @@ obj/
 packages/
 *.config
 JSLib.*
+package-lock.json
