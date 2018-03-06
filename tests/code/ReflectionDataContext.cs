@@ -24,10 +24,10 @@ namespace DataJS.Tests
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using Microsoft.OData.Service;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
+    using System.Data.Services;
 
     /// <summary>
     /// Provides a reflection-based, updatable data context.

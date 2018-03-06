@@ -17,46 +17,39 @@
  * under the License.
  */
 
-module.exports = function(grunt) {
-  
-  
+module.exports = function (grunt) {
+
+
   grunt.config('rat', {
-    dist:  { 
-      options: { 
-        dest : './_build/tmp',
-        exclude: [
-          "node_modules","_extern-tools",".gitignore","package.json","JSLib",
-          "DEPENDENCIES","LICENSE","NOTICE",
-          "JSLib.sln","package.json", "mocha.opts","info.txt","olingo-odata4-js.iml"
-        ] },
+    dist: {
+      options: {
+        dest: './tmp',
+        exclude: [ /* .rat-excludes */]
+      },
       files: [
-        /*{ src: ['./../_dist/<%= artifactname %>/doc'], options:{ tag:"dist-doc"}},generated*/
-        { src: ['./lib'], options:{ tag:"lib"}},
-        { src: ['./tests'], options:{ tag:"tests"}},
-        { src: ['./demo'], options:{ tag:"demo"}},
-        { src: ['./grunt-config'], options:{ tag:"grunt-config" }},
-        { src: ['./_dist/<%= artifactname %>/lib'], options:{ tag:"dist-lib"}},
-        { src: ['./_dist/<%= artifactname %>/sources'], options:{ tag:"dist-src"}}
+        /*{ src: ['./../<%= artifactname %>/doc'], options:{ tag:"dist-doc"}},generated*/
+        { src: ['./lib'], options: { tag: "lib" } },
+        { src: ['./tests'], options: { tag: "tests" } },
+        { src: ['./demo'], options: { tag: "demo" } },
+        { src: ['./grunt-config'], options: { tag: "grunt-config" } },
+        { src: ['./dist'], options: { tag: "dist-lib" } }
       ]
     },
-    manual:  {  // with txt output
-      options: { xml:false, 
-        dest : './_build/tmp',
-        exclude: [
-          "node_modules","_extern-tools",".gitignore","package.json","JSLib",
-          "DEPENDENCIES","LICENSE","NOTICE",
-          "JSLib.sln","package.json", "mocha.opts","info.txt","olingo-odata4-js.iml"
-        ] },
+    manual: {  // with txt output
+      options: {
+        xml: false,
+        dest: './tmp',
+        exclude: [ /* .rat-excludes */]
+      },
       files: [
-        { src: ['./lib'], options:{ tag:"lib"}},
-        { src: ['./tests'], options:{ tag:"tests"}},
-        { src: ['./demo'], options:{ tag:"demo"}},
-        { src: ['./grunt-config'], options:{ tag:"grunt-config" }},
-        { src: ['./_dist/<%= artifactname %>/lib'], options:{ tag:"dist-lib"}},
-        { src: ['./_dist/<%= artifactname %>/sources'], options:{ tag:"dist-src"}}
+        { src: ['./lib'], options: { tag: "lib" } },
+        { src: ['./tests'], options: { tag: "tests" } },
+        { src: ['./demo'], options: { tag: "demo" } },
+        { src: ['./grunt-config'], options: { tag: "grunt-config" } },
+        { src: ['./dist'], options: { tag: "dist-lib" } }
       ]
     }
   });
 
-  
+
 };
