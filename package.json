@@ -1,6 +1,6 @@
 {
   "name": "ts-odatajs",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "postfix": "",
   "releaseCandidate": "",
   "title": "Olingo OData Client for TypeScript",
