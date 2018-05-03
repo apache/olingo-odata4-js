@@ -17,20 +17,33 @@
  * under the License.
  */
 
-// version information 
-exports.version = { major: 4, minor: 0, build: 0 };
+var odatajs = {};
 
-// core stuff, always needed
-exports.deferred = require('./lib/deferred.js');
-exports.utils = require('./lib/utils.js');
+odatajs.version = {
+    major: 4,
+    minor: 0,
+    build: 2
+};
 
-// only needed for xml metadata 
-exports.xml = require('./lib/xml.js');
+// core stuff, alway needed
+odatajs.deferred = require('./lib/deferred.js');
+odatajs.utils = require('./lib/utils.js');
+
+// only neede for xml metadata
+odatajs.xml = require('./lib/xml.js');
 
 // only need in browser case
-exports.oData = require('./lib/odata.js');
-exports.store = require('./lib/store.js');
-exports.cache = require('./lib/cache.js');
+odatajs.oData = require('./lib/odata.js');
+odatajs.store = require('./lib/store.js');
+odatajs.cache = require('./lib/cache.js');
 
+if (odatajs.utils.inBrowser()) {
+    //expose to browsers window object
+    window.odatajs = odatajs;
+}
 
-
+if (typeof module !== 'undefined') {
+    //expose in commonjs style
+    odatajs.node = 'node';
+    module.exports = odatajs;
+}

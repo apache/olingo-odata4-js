@@ -1,6 +1,9 @@
 # ignore local stuff starting with an underscore
 _*
 
+# extensions
+*.tgz
+
 # ignore IDE settings
 .idea
 olingo-odata4-js.iml
@@ -9,10 +12,13 @@ olingo-odata4-js.iml
 localgrunt.config
 
 # testing copies
-../demo/scripts/odatajs-4.0.0-*
+../demo/scripts/odatajs-4.0.*
 
 # build artefacts
-#build/
+dist/*.zip
+dist/*.nupkg
+doc/
+tmp/
 
 # nodejs temporary objects
 node_modules/
@@ -21,5 +27,5 @@ node_modules/
 bin/
 obj/
 packages/
-JSLib.suo
-JSLib.csproj.user
+*.suo
+*.user

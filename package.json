@@ -1,16 +1,17 @@
 {
-  "name": "odatajs",
-  "version": "4.0.1",
+  "name": "ts-odatajs",
+  "version": "4.0.3",
   "postfix": "",
   "releaseCandidate": "",
-  "title": "Olingo OData Client for JavaScript",
-  "description": "the Olingo OData Client for JavaScript library is a new cross-browser JavaScript library that enables data-centric web applications by leveraging modern protocols such as JSON and OData and HTML5-enabled browser features. It's designed to be small, fast and easy to use.",
+  "title": "Olingo OData Client for TypeScript",
+  "description": "The Olingo OData Client for JavaScript (and TypeScript) is a new cross-browser library that enables data-centric web applications by leveraging modern protocols such as JSON and OData and HTML5-enabled browser features. It's designed to be small, fast and easy to use. Contains typings for use with TypeScript.",
+  "license": "Apache-2.0",
   "homepage": "http://olingo.apache.org",
-  "main": "index-node.js",
-  "main-browser": "index.js",
+  "main": "index.js",
+  "main-browser": "index-browser.js",
   "repository": {
     "type": "git",
-    "url": "http://git-wip-us.apache.org/repos/asf/olingo-odata4-js.git"
+    "url": "https://github.com/tschettler/olingo-odata4-js.git"
   },
   "engines": {
     "node": ">= 0.12.0"
@@ -27,13 +28,21 @@
     {
       "name": "Challen He",
       "email": "challenh@apache.org"
+    },
+    {
+      "name": "Travis Schettler",
+      "email": "travis_schettler@hotmail.com"
     }
   ],
-  "scripts": {
-    "preinstall": "npm --prefix ./grunt-config/custom-tasks/rat install"
+  "scripts": {},
+  "dependencies": {
+    "xmldom": "0.1.19"
   },
   "devDependencies": {
+    "async": "^2.3.0",
+    "catharsis": "^0.8.8",
     "chai": "2.0.0",
+    "chalk": "^1.1.3",
     "grunt": "0.4.5",
     "grunt-connect-proxy": "0.1.10",
     "grunt-contrib-clean": "0.6.0",
@@ -44,6 +53,15 @@
     "grunt-jsdoc": "0.5.6",
     "grunt-nuget": "0.1.3",
     "mocha": "2.1.0",
-    "xmldom": "0.1.19"
-  }
+    "taffydb": "^2.7.3",
+    "xml2js": "^0.4.17"
+  },
+  "module": "index.js",
+  "typings": "index.d.ts",
+  "keywords": [
+    "odata",
+    "odatajs",
+    "olingo",
+    "typescript"
+  ]
 }
